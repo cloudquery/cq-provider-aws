@@ -24,7 +24,9 @@ func NewClient(awsConfig aws.Config, db *database.Database, log *zap.Logger,
 		log:       log,
 		accountID: accountID,
 		region:    region,
-		svc:       cloudtrail.NewFromConfig(awsConfig),
+		svc:       cloudtrail.NewFromConfig(awsConfig, func(o *cloudtrail.Options) {
+			o.Region = region
+		}),
 	}
 }
 

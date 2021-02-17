@@ -24,7 +24,9 @@ func NewClient(awsConfig aws.Config, db *database.Database, log *zap.Logger,
 		log:       log,
 		accountID: accountID,
 		region:    region,
-		svc:       directconnect.NewFromConfig(awsConfig),
+		svc:       directconnect.NewFromConfig(awsConfig, func(options *directconnect.Options) {
+			options.Region = region
+		}),
 	}
 }
 

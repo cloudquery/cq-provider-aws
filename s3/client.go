@@ -26,7 +26,9 @@ func NewClient(awsConfig aws.Config, db *database.Database, log *zap.Logger,
 		log:       log,
 		accountID: accountID,
 		region:    "us-east-1",
-		svc:       s3.NewFromConfig(awsConfig),
+		svc:       s3.NewFromConfig(awsConfig, func(options *s3.Options) {
+			options.Region = "us-east-1"
+		}),
 		awsConfig: awsConfig,
 	}
 }

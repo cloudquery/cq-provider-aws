@@ -24,7 +24,9 @@ func NewClient(awsConfig aws.Config, db *database.Database, log *zap.Logger,
 		log:       log,
 		accountID: accountID,
 		region:    region,
-		svc:       cloudwatch.NewFromConfig(awsConfig),
+		svc:       cloudwatch.NewFromConfig(awsConfig, func(o *cloudwatch.Options) {
+			o.Region = region
+		}),
 	}
 }
 

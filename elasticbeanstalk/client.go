@@ -24,7 +24,9 @@ func NewClient(awsConfig aws.Config, db *database.Database, log *zap.Logger,
 		log:       log,
 		accountID: accountID,
 		region:    region,
-		svc:       elasticbeanstalk.NewFromConfig(awsConfig),
+		svc:       elasticbeanstalk.NewFromConfig(awsConfig, func(options *elasticbeanstalk.Options) {
+			options.Region = region
+		}),
 	}
 }
 
