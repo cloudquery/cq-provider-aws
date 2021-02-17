@@ -208,7 +208,7 @@ func (c *Client) transformBucket(value *types.Bucket) (*Bucket, error) {
 		return nil, err
 	}
 	var EncryptionRules []*BucketEncryptionRule
-	if encryptionOutput.ServerSideEncryptionConfiguration != nil {
+	if encryptionOutput != nil && encryptionOutput.ServerSideEncryptionConfiguration != nil {
 		EncryptionRules = c.transformEncryptionRules(&encryptionOutput.ServerSideEncryptionConfiguration.Rules)
 	}
 
@@ -218,11 +218,17 @@ func (c *Client) transformBucket(value *types.Bucket) (*Bucket, error) {
 		CreationDate:    value.CreationDate,
 		Name:            value.Name,
 		Grants:          c.transformGrants(&aclOutput.Grants),
-		CORSRules:       c.transformBucketCorsRules(&CORSOutput.CORSRules),
 		EncryptionRules: EncryptionRules,
-		Policy:          policyOutput.Policy,
 		Status:          aws.String(string(versioningOutput.Status)),
 		MFADelete:       aws.String(string(versioningOutput.MFADelete)),
+	}
+
+	if policyOutput != nil {
+		res.Policy = policyOutput.Policy
+	}
+
+	if CORSOutput != nil {
+		res.CORSRules = c.transformBucketCorsRules(&CORSOutput.CORSRules)
 	}
 
 	if loggingOutput.LoggingEnabled != nil {
