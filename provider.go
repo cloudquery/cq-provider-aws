@@ -27,48 +27,17 @@ import (
 	"github.com/cloudquery/cq-provider-aws/s3"
 	"github.com/cloudquery/cq-provider-aws/sns"
 
-	//"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
-	"github.com/cloudquery/cq-provider-aws/autoscaling"
-	"github.com/cloudquery/cq-provider-aws/cloudtrail"
-
-	//"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/cloudquery/cloudquery/cqlog"
 	"github.com/cloudquery/cloudquery/sdk"
+	"github.com/cloudquery/cq-provider-aws/autoscaling"
+	"github.com/cloudquery/cq-provider-aws/cloudtrail"
 	"log"
 	"strings"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	//"github.com/aws/aws-sdk-go-v2/services/sts"
-	//"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
-	//"github.com/aws/aws-sdk-go/aws/awserr"
-	//"github.com/aws/aws-sdk-go/aws/credentials"
-	//"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	//"github.com/aws/aws-sdk-go/aws/endpoints"
-	//"github.com/aws/aws-sdk-go/aws/session"
-	//"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/cloudquery/cloudquery/database"
-	//"github.com/cloudquery/cq-provider-aws/autoscaling"
-	//"github.com/cloudquery/cq-provider-aws/cloudtrail"
-	//"github.com/cloudquery/cq-provider-aws/cloudwatch"
-	//"github.com/cloudquery/cq-provider-aws/cloudwatchlogs"
-	//"github.com/cloudquery/cq-provider-aws/directconnect"
-	//"github.com/cloudquery/cq-provider-aws/ec2"
-	//"github.com/cloudquery/cq-provider-aws/ecr"
-	//"github.com/cloudquery/cq-provider-aws/ecs"
-	//"github.com/cloudquery/cq-provider-aws/efs"
-	//"github.com/cloudquery/cq-provider-aws/elasticbeanstalk"
-	//"github.com/cloudquery/cq-provider-aws/elbv2"
-	//"github.com/cloudquery/cq-provider-aws/emr"
-	//"github.com/cloudquery/cq-provider-aws/fsx"
-	//"github.com/cloudquery/cq-provider-aws/iam"
-	//"github.com/cloudquery/cq-provider-aws/kms"
-	//"github.com/cloudquery/cq-provider-aws/organizations"
-	//"github.com/cloudquery/cq-provider-aws/rds"
-	//"github.com/cloudquery/cq-provider-aws/redshift"
 	"github.com/cloudquery/cq-provider-aws/resource"
-	//"github.com/cloudquery/cq-provider-aws/s3"
-	//"github.com/cloudquery/cq-provider-aws/sns"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 )
@@ -229,7 +198,6 @@ var allRegions = []string {
 	"ap-south-1",
 	"ap-northeast-1",
 	"ap-northeast-2",
-	"ap-northeast-3",
 	"ap-southeast-1",
 	"ap-southeast-2",
 	"ca-central-1",
@@ -248,6 +216,7 @@ var allRegions = []string {
 func (p *Provider) Fetch(data []byte) error {
 	err := yaml.Unmarshal(data, &p.config)
 	ctx := context.Background()
+	var ae smithy.APIError
 	if err != nil {
 		return err
 	}
@@ -259,15 +228,6 @@ func (p *Provider) Fetch(data []byte) error {
 	regions := p.config.Regions
 	if len(regions) == 0 {
 		regions = allRegions
-		//resolver := endpoints.DefaultResolver()
-		//partitions := resolver.(endpoints.EnumPartitions).Partitions()
-		//for _, p := range partitions {
-		//	if p.ID() == "aws" {
-		//		for id, _ := range p.Regions() {
-		//			regions = append(regions, id)
-		//		}
-		//	}
-		//}
 		p.log.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(regions)))
 	}
 
@@ -311,6 +271,19 @@ func (p *Provider) Fetch(data []byte) error {
 
 		for _, region := range regions {
 			p.region = region
+
+			// Find a better way in AWS SDK V2 to decide if a region is disabled.
+			_, err := svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
+				o.Region = region
+			})
+			if err != nil {
+				if errors.As(err, &ae) && (ae.ErrorCode() == "InvalidClientTokenId" || ae.ErrorCode() == "OptInRequired") {
+					p.log.Info("region disabled. skipping...", zap.String("region", region))
+					continue
+				}
+				return err
+			}
+
 			p.initRegionalClients()
 			var wg sync.WaitGroup
 			for _, resource := range p.config.Resources {
@@ -370,7 +343,10 @@ func (p *Provider) collectResource(wg *sync.WaitGroup, fullResourceName string, 
 		if errors.As(err, &ae) {
 			switch ae.ErrorCode() {
 			case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation":
-				p.log.Info("Skipping resource. Access denied", zap.String("account_id", p.accountID), zap.String("resource", fullResourceName), zap.Error(err))
+				p.log.Info("Skipping resource. Access denied", zap.String("account_id", p.accountID), zap.String("region", p.region), zap.String("resource", fullResourceName), zap.Error(err))
+				return
+			case "OptInRequired", "SubscriptionRequiredException":
+				p.log.Info("Skipping resource. Service disabled", zap.String("account_id", p.accountID), zap.String("region", p.region), zap.String("resource", fullResourceName), zap.Error(err))
 				return
 			}
 		}
