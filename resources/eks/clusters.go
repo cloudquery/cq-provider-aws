@@ -175,32 +175,38 @@ func (c *Client) transformEKSClusters(values *[]types.Cluster) []*Cluster {
 	var tValues []*Cluster
 	for _, value := range *values {
 		tValue := Cluster{
-			AccountID:                c.accountID,
-			Region:                   c.region,
-			Name:                     value.Name,
-			Arn:                      value.Arn,
-			CertificateAuthorityData: value.CertificateAuthority.Data,
-			CreatedAt:                value.CreatedAt,
-			Endpoint:                 value.Endpoint,
-			PlatformVersion:          value.PlatformVersion,
-			VpcID:                    value.ResourcesVpcConfig.VpcId,
-			SecurityGroupID:          value.ResourcesVpcConfig.ClusterSecurityGroupId,
-			EndpointPrivateAccess:    value.ResourcesVpcConfig.EndpointPrivateAccess,
-			EndpointPublicAccess:     value.ResourcesVpcConfig.EndpointPublicAccess,
-			RoleArn:                  value.RoleArn,
-			Status:                   string(value.Status),
-			Version:                  value.Version,
-			Tags:                     c.transformClusterTags(&value.Tags),
-			LoggingConfigurations:    c.transformClusterLoggingConfigurations(&value.Logging.ClusterLogging),
-			PublicAccessCidrs:        c.transformClusterPublicAccessCidrs(&value.ResourcesVpcConfig.PublicAccessCidrs),
-			SecurityGroups:           c.transformClusterSecurityGroups(&value.ResourcesVpcConfig.SecurityGroupIds),
-			Subnets:                  c.transformClusterSubnets(&value.ResourcesVpcConfig.SubnetIds),
+			AccountID:       c.accountID,
+			Region:          c.region,
+			Name:            value.Name,
+			Arn:             value.Arn,
+			CreatedAt:       value.CreatedAt,
+			Endpoint:        value.Endpoint,
+			PlatformVersion: value.PlatformVersion,
+			RoleArn:         value.RoleArn,
+			Status:          string(value.Status),
+			Version:         value.Version,
+			Tags:            c.transformClusterTags(&value.Tags),
+		}
+		if value.CertificateAuthority != nil {
+			tValue.CertificateAuthorityData = value.CertificateAuthority.Data
 		}
 		if value.Identity != nil && value.Identity.Oidc != nil {
 			tValue.OidcIssuer = value.Identity.Oidc.Issuer
 		}
 		if value.KubernetesNetworkConfig != nil {
 			tValue.ServiceIpv4Cidr = value.KubernetesNetworkConfig.ServiceIpv4Cidr
+		}
+		if value.Logging != nil && value.Logging.ClusterLogging != nil {
+			tValue.LoggingConfigurations = c.transformClusterLoggingConfigurations(&value.Logging.ClusterLogging)
+		}
+		if value.ResourcesVpcConfig != nil {
+			tValue.PublicAccessCidrs = c.transformClusterPublicAccessCidrs(&value.ResourcesVpcConfig.PublicAccessCidrs)
+			tValue.SecurityGroups = c.transformClusterSecurityGroups(&value.ResourcesVpcConfig.SecurityGroupIds)
+			tValue.Subnets = c.transformClusterSubnets(&value.ResourcesVpcConfig.SubnetIds)
+			tValue.VpcID = value.ResourcesVpcConfig.VpcId
+			tValue.SecurityGroupID = value.ResourcesVpcConfig.ClusterSecurityGroupId
+			tValue.EndpointPrivateAccess = value.ResourcesVpcConfig.EndpointPrivateAccess
+			tValue.EndpointPublicAccess = value.ResourcesVpcConfig.EndpointPublicAccess
 		}
 		tValues = append(tValues, &tValue)
 	}
