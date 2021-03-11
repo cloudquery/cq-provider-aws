@@ -46,7 +46,6 @@ type Provider struct {
 	db              *database.Database
 	config          Config
 	Logger          hclog.Logger
-	retryOpt        config.LoadOptionsFunc
 	regions         []string
 }
 
@@ -142,6 +141,12 @@ var tablesArr = [][]interface{}{
 	sns.TopicTables,
 }
 
+func (p *Provider) NewRetryer() func() aws.Retryer {
+	return func() aws.Retryer {
+		return retry.AddWithMaxBackoffDelay(retry.AddWithMaxAttempts(retry.NewStandard(), p.config.MaxRetries), time.Second*time.Duration(p.config.MaxBackoff))
+	}
+}
+
 func (p *Provider) Init(driver string, dsn string, verbose bool) error {
 	var err error
 	p.db, err = database.Open(driver, dsn)
@@ -217,7 +222,9 @@ func (p *Provider) fetchAccount(accountID string, awsCfg aws.Config, svc *sts.Cl
 
 	innerLog := p.Logger.With("account_id", accountID)
 	for serviceName, newFunc := range globalServices {
-		resourceClients[serviceName] = newFunc(awsCfg,
+		cfg := awsCfg.Copy()
+		cfg.Retryer = p.NewRetryer()
+		resourceClients[serviceName] = newFunc(cfg,
 			p.db, innerLog, accountID, "us-east-1")
 	}
 	globalServicesFetched := map[string]bool{}
@@ -236,7 +243,9 @@ func (p *Provider) fetchAccount(accountID string, awsCfg aws.Config, svc *sts.Cl
 
 		innerLog := p.Logger.With("account_id", accountID, "region", region)
 		for serviceName, newFunc := range regionalServices {
-			resourceClients[serviceName] = newFunc(awsCfg,
+			cfg := awsCfg.Copy()
+			cfg.Retryer = p.NewRetryer()
+			resourceClients[serviceName] = newFunc(cfg,
 				p.db, innerLog, accountID, region)
 		}
 
@@ -305,30 +314,28 @@ func (p *Provider) Fetch(data []byte) error {
 		})
 	}
 	p.Logger.Info("Configuring SDK retryer", "retry_attempts", p.config.MaxRetries, "max_backoff", p.config.MaxBackoff)
-	p.retryOpt = config.WithRetryer(func() aws.Retryer {
-		return retry.AddWithMaxBackoffDelay(retry.AddWithMaxAttempts(retry.NewStandard(), p.config.MaxRetries), time.Second*time.Duration(p.config.MaxBackoff))
-	})
 
 	g := errgroup.Group{}
 	for _, account := range p.config.Accounts {
 		var err error
 		if account.ID != "default" && account.RoleARN != "" {
 			// assume role if specified (SDK takes it from default or env var: AWS_PROFILE)
-			awsCfg, err = config.LoadDefaultConfig(ctx, p.retryOpt)
+			awsCfg, err = config.LoadDefaultConfig(ctx)
 			if err != nil {
 				_ = g.Wait()
 				return err
 			}
 			awsCfg.Credentials = stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN)
 		} else if account.ID != "default" {
-			awsCfg, err = config.LoadDefaultConfig(ctx, config.WithSharedConfigProfile(account.ID), p.retryOpt)
+			awsCfg, err = config.LoadDefaultConfig(ctx, config.WithSharedConfigProfile(account.ID))
 		} else {
-			awsCfg, err = config.LoadDefaultConfig(ctx, p.retryOpt)
+			awsCfg, err = config.LoadDefaultConfig(ctx)
 		}
 		if err != nil {
 			_ = g.Wait()
 			return err
 		}
+		awsCfg.Retryer = p.NewRetryer()
 		svc := sts.NewFromConfig(awsCfg)
 		output, err := svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
 			o.Region = "us-east-1"
