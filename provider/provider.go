@@ -222,9 +222,8 @@ func (p *Provider) fetchAccount(accountID string, awsCfg aws.Config, svc *sts.Cl
 
 	innerLog := p.Logger.With("account_id", accountID)
 	for serviceName, newFunc := range globalServices {
-		cfg := awsCfg.Copy()
-		cfg.Retryer = p.NewRetryer()
-		resourceClients[serviceName] = newFunc(cfg,
+		awsCfg.Retryer = p.NewRetryer()
+		resourceClients[serviceName] = newFunc(awsCfg,
 			p.db, innerLog, accountID, "us-east-1")
 	}
 	globalServicesFetched := map[string]bool{}
@@ -243,9 +242,8 @@ func (p *Provider) fetchAccount(accountID string, awsCfg aws.Config, svc *sts.Cl
 
 		innerLog := p.Logger.With("account_id", accountID, "region", region)
 		for serviceName, newFunc := range regionalServices {
-			cfg := awsCfg.Copy()
-			cfg.Retryer = p.NewRetryer()
-			resourceClients[serviceName] = newFunc(cfg,
+			awsCfg.Retryer = p.NewRetryer()
+			resourceClients[serviceName] = newFunc(awsCfg,
 				p.db, innerLog, accountID, region)
 		}
 
