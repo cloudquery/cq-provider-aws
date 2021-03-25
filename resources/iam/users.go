@@ -285,7 +285,7 @@ func (c *Client) transformUser(ctx context.Context, user *types.User, reportUser
 
 func getMatchingReportUser(reportUsers []*ReportUser, user types.User) *ReportUser {
 	for _, reportUser := range reportUsers {
-		if user.Arn == &reportUser.ARN {
+		if *user.Arn == reportUser.ARN {
 			return reportUser
 		}
 	}
