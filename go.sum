@@ -76,6 +76,8 @@ github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudquery/cq-provider-sdk v0.1.0 h1:tn//kOIHVSJHaENfs28IG+zain2qcm1uKBz6D0+MKNY=
 github.com/cloudquery/cq-provider-sdk v0.1.0/go.mod h1:lTfA7/UyjxuY45TjkKL2IL+k3ij3sqrxx/CKntlDX7Y=
+github.com/cloudquery/cq-provider-sdk v0.1.1 h1:uOKtHigAw18PsookVit1NFwTlC6wmmMCJxS5A4TrI04=
+github.com/cloudquery/cq-provider-sdk v0.1.1/go.mod h1:lTfA7/UyjxuY45TjkKL2IL+k3ij3sqrxx/CKntlDX7Y=
 github.com/cloudquery/faker/v3 v3.7.1 h1:+pT6bm2/itqLdaMIoDrzgzGwbehz2UZwQUNYDjISHxY=
 github.com/cloudquery/faker/v3 v3.7.1/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=
 github.com/cloudquery/go-funk v0.8.2-0.20210404151606-aacdb5e7797f h1:3cGpvb8FXWyW/u33zmilsLAPBcQ/GQNyba/GUjnmThk=
