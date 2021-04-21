@@ -113,7 +113,7 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 	params := sns.GetTopicAttributesInput{
 		TopicArn: topic.TopicArn,
 	}
-	output, err := svc.GetTopicAttributes(ctx, &params,func(o *sns.Options) {
+	output, err := svc.GetTopicAttributes(ctx, &params, func(o *sns.Options) {
 		o.Region = c.Region
 	})
 	if err != nil {
