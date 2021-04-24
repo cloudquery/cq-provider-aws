@@ -6,6 +6,10 @@ github.com/aws/aws-sdk-go-v2 v1.2.1/go.mod h1:hTQc/9pYq5bfFACIUY9tc/2SYWd9Vnmw+t
 github.com/aws/aws-sdk-go-v2 v1.3.0/go.mod h1:hTQc/9pYq5bfFACIUY9tc/2SYWd9Vnmw+testmuQeRY=
 github.com/aws/aws-sdk-go-v2 v1.3.1 h1:KKstwh6zsuUhQH3GvSor7M3am/+imPqydFOZHzlkTKc=
 github.com/aws/aws-sdk-go-v2 v1.3.1/go.mod h1:5SmWRTjN6uTRFNCc7rR69xHsdcUJnthmaRHGDsYhpTE=
+github.com/aws/aws-sdk-go-v2 v1.3.2 h1:RQj8l98yKUm0UV2Wd3w/Ms+TXV9Rs1E6Kr5tRRMfyU4=
+github.com/aws/aws-sdk-go-v2 v1.3.2/go.mod h1:7OaACgj2SX3XGWnrIjGlJM22h6yD6MEWKvm7levnnM8=
+github.com/aws/aws-sdk-go-v2 v1.3.4 h1:+XY8285OZTxWstzoHHvMewMULowmFSUs2PnU31OSr9I=
+github.com/aws/aws-sdk-go-v2 v1.3.4/go.mod h1:7OaACgj2SX3XGWnrIjGlJM22h6yD6MEWKvm7levnnM8=
 github.com/aws/aws-sdk-go-v2/config v1.1.2 h1:H2r6cwMvvINFpEC55Y7jcNaR/oc7zYIChrG2497wmBI=
 github.com/aws/aws-sdk-go-v2/config v1.1.2/go.mod h1:77yIk+qmCS/94JlxbwV1d+YEyu6Z8FBlCGcSz3TdM6A=
 github.com/aws/aws-sdk-go-v2/credentials v1.1.2 h1:YoNqfhxAJGZI+lStIbqgx30UcCqQ86fr7FjTLUvrFOc=
@@ -14,6 +18,8 @@ github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.0.3 h1:d3bKAGy4XdJyK8hz3Nx3WJJ4
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.0.3/go.mod h1:Zr1Mj+KUMGVQ+WJvTT68EZJxqhjiie2PWSPGEUPaNY0=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0 h1:7dqTi+BP80MdTWZdnYDJwkl7t/4fD51+uuTPXZ0LhE0=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0/go.mod h1:F9sOgLk8RCWpkJ9DgH5LQCDqHnJzW1e28ShymxCM7Cw=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v1.3.0 h1:8fOeCj6bb2JtkWvxP6McS4RR/CV20IG4JzZWYz4Z12E=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v1.3.0/go.mod h1:J04vwlb6n/oVJNtNyT+sLx2KDgzyo7nDRyHPnnZQYnk=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.1.2 h1:TQG/DLTpnn2tOPqQ/eYA2MsDR+ALiRTEDdc02fpgTrc=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.1.2/go.mod h1:+mjnjZE8B5Kav2pwoc00jS36ffTYVYeC3HV9wIcbBL4=
 github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.1.2 h1:/deTIzCUutEJMf2M9m+kJ+NxOREzWztaZfUF44bP49A=
@@ -69,6 +75,8 @@ github.com/aws/aws-sdk-go-v2/service/sts v1.1.2/go.mod h1:zu7rotIY9P4Aoc6ytqLP9j
 github.com/aws/smithy-go v1.2.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/aws/smithy-go v1.3.0 h1:awbB2OJBZ/Txj+c4q+qhDQs3Ob0sRhBuIIkOD4Aq8yc=
 github.com/aws/smithy-go v1.3.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
+github.com/aws/smithy-go v1.3.1 h1:xJFO4pK0y9J8fCl34uGsSJX5KNnGbdARDlA5BPhXnwE=
+github.com/aws/smithy-go v1.3.1/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudquery/cq-provider-sdk v0.1.6 h1:CCmSItk6XRT7I4KZs5ZuQWLoHUw9uLEEddMwpinCZaQ=

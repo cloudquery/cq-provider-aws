@@ -65,6 +65,7 @@ var allRegions = []string{
 
 type Services struct {
 	Autoscaling      AutoscalingClient
+	Cloudfront       CloudfrontClient
 	Cloudtrail       CloudtrailClient
 	Cloudwatch       CloudwatchClient
 	CloudwatchLogs   CloudwatchLogsClient
