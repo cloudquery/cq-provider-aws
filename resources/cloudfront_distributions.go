@@ -2,8 +2,10 @@ package resources
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -197,10 +199,59 @@ func CloudfrontDistributions() *schema.Table {
 				Name: "price_class",
 				Type: schema.TypeString,
 			},
+			// Restrictions start
+			{
+				Name:     "restrictions_geo_restriction_restriction_type",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("Restrictions.GeoRestriction.RestrictionType"),
+			},
+			{
+				Name:     "restrictions_geo_restriction_restriction_items",
+				Type:     schema.TypeStringArray,
+				Resolver: schema.PathResolver("Restrictions.GeoRestriction.Items"),
+			},
+			// Restrictions End
 			{
 				Name: "status",
 				Type: schema.TypeString,
 			},
+			//ViewerCertificate start
+			{
+				Name:     "viewer_certificate_acm_certificate_arn",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.ACMCertificateArn"),
+			},
+			{
+				Name:     "viewer_certificate_certificate",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.Certificate"),
+			},
+			{
+				Name:     "viewer_certificate_certificate_source",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.CertificateSource"),
+			},
+			{
+				Name:     "viewer_certificate_cloudfront_default_certificate",
+				Type:     schema.TypeBool,
+				Resolver: schema.PathResolver("ViewerCertificate.CloudFrontDefaultCertificate"),
+			},
+			{
+				Name:     "viewer_certificate_iam_certificate_id",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.IAMCertificateId"),
+			},
+			{
+				Name:     "viewer_certificate_minimum_protocol_version",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.MinimumProtocolVersion"),
+			},
+			{
+				Name:     "viewer_certificate_ssl_support_method",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ViewerCertificate.SSLSupportMethod"),
+			},
+			//ViewerCertificate end
 			{
 				Name: "web_acl_id",
 				Type: schema.TypeString,
@@ -208,14 +259,262 @@ func CloudfrontDistributions() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			//todo learn how to add DefaultCacheBehavior.LambdaFunctionsAssociations
-			//todo add CacheBehaviors.Items
-			//todo add CustomErrorResponses.Items
-			//todo add DefaultCacheBehavior or add it to root object
-			//todo add Origins
-			//todo add Restrictions
-			//todo add ViewerCertificate
-			//todo add AliasICPRecordals
-			//todo add OriginGroups
+			{
+				Name:     "aws_cloudfront_distribution_cache_behaviour",
+				Resolver: fetchCloudfrontCacheBehaviours,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "path_pattern",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("PathPattern"),
+					},
+					{
+						Name:     "target_origin_id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("TargetOriginId"),
+					},
+					{
+						Name:     "viewer_protocol_policy",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("ViewerProtocolPolicy"),
+					},
+					{
+						Name:     "allowed_methods",
+						Type:     schema.TypeStringArray,
+						Resolver: schema.PathResolver("AllowedMethods.Items"),
+					},
+					{
+						Name:     "cached_methods",
+						Type:     schema.TypeStringArray,
+						Resolver: schema.PathResolver("AllowedMethods.CachedMethods.Items"),
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_custom_error_response",
+				Resolver: fetchCloudfrontCustomErrorResponses,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "error_code",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("ErrorCode"),
+					},
+					{
+						Name:     "error_caching_min_ttl",
+						Type:     schema.TypeBigInt,
+						Resolver: schema.PathResolver("ErrorCachingMinTTL"),
+					},
+					{
+						Name:     "response_code",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("ResponseCode"),
+					},
+					{
+						Name:     "response_page_path",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("ResponsePagePath"),
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_origin",
+				Resolver: fetchCloudfrontOrigins,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "domain_name",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("DomainName"),
+					},
+					{
+						Name:     "id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"),
+					},
+					{
+						Name:     "connection_attempts",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("ConnectionAttempts"),
+					},
+					{
+						Name:     "connection_timeout",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("ConnectionTimeout"),
+					},
+					{
+						Name:     "custom_headers",
+						Type:     schema.TypeJSON,
+						Resolver: resolveCloudfrontOriginCustomHeaders,
+					},
+					{
+						Name:     "custom_origin_config_http_port",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.HTTPPort"),
+					},
+					{
+						Name:     "custom_origin_config_https_port",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.HTTPSPort"),
+					},
+					{
+						Name:     "custom_origin_config_origin_protocol_policy",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
+					},
+					{
+						Name:     "custom_origin_config_origin_path",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginPath"),
+					},
+					{
+						Name:     "custom_origin_config_origin_shield_enabled",
+						Type:     schema.TypeBool,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.Enabled"),
+					},
+					{
+						Name:     "custom_origin_config_origin_shield_region",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.OriginShieldRegion"),
+					},
+					{
+						Name:     "custom_origin_config_s3_origin_config_origin_access_identity",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.S3OriginConfig.OriginAccessIdentity"),
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_viewer_certificate",
+				Resolver: fetchCloudfrontViewerCertificates,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "domain_name",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("DomainName"),
+					},
+					{
+						Name:     "id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"),
+					},
+					{
+						Name:     "connection_attempts",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("ConnectionAttempts"),
+					},
+					{
+						Name:     "connection_timeout",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("ConnectionTimeout"),
+					},
+					{
+						Name:     "custom_headers",
+						Type:     schema.TypeJSON,
+						Resolver: resolveCloudfrontOriginCustomHeaders,
+					},
+					{
+						Name:     "custom_origin_config_http_port",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.HTTPPort"),
+					},
+					{
+						Name:     "custom_origin_config_https_port",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.HTTPSPort"),
+					},
+					{
+						Name:     "custom_origin_config_origin_protocol_policy",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
+					},
+					{
+						Name:     "custom_origin_config_origin_path",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginPath"),
+					},
+					{
+						Name:     "custom_origin_config_origin_shield_enabled",
+						Type:     schema.TypeBool,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.Enabled"),
+					},
+					{
+						Name:     "custom_origin_config_origin_shield_region",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.OriginShieldRegion"),
+					},
+					{
+						Name:     "custom_origin_config_s3_origin_config_origin_access_identity",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CustomOriginConfig.S3OriginConfig.OriginAccessIdentity"),
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_alias_icp_recordal",
+				Resolver: fetchCloudfrontAliasICPRecordals,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "cname",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("CNAME"),
+					},
+					{
+						Name:     "icp_recordal_status",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("ICPRecordalStatus"), //todo remove redundant path resolvers
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_origin_group",
+				Resolver: fetchCloudfrontOriginGroups,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "failover_criteria_statuscodes_items",
+						Type:     schema.TypeIntArray,
+						Resolver: schema.PathResolver("FailoverCriteria.StatusCodes.Items"),
+					},
+					{
+						Name:     "id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"), //todo remove redundant path resolvers
+					},
+					{
+						Name:     "members_origin_ids",
+						Type:     schema.TypeStringArray,
+						Resolver: resolveCloudfrontOriginGroupMembers,
+					},
+				},
+			},
 		},
 	}
 }
@@ -240,5 +539,79 @@ func fetchCloudfrontDistributions(ctx context.Context, meta schema.ClientMeta, _
 		}
 		config.Marker = response.DistributionList.Marker
 	}
+	return nil
+}
+
+func fetchCloudfrontCacheBehaviours(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.CacheBehaviors.Items
+	return nil
+}
+
+func fetchCloudfrontCustomErrorResponses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.CustomErrorResponses.Items
+	return nil
+}
+
+func resolveCloudfrontOriginCustomHeaders(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
+	r := resource.Item.(types.Origin)
+	tags := map[string]*string{}
+	for _, t := range r.CustomHeaders.Items {
+		tags[*t.HeaderName] = t.HeaderValue
+	}
+	resource.Set("custom_headers", tags)
+	return nil
+}
+
+func fetchCloudfrontOrigins(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.Origins.Items
+	return nil
+}
+
+func fetchCloudfrontViewerCertificates(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.ViewerCertificate
+	return nil
+}
+
+func fetchCloudfrontAliasICPRecordals(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.AliasICPRecordals
+	return nil
+}
+
+func fetchCloudfrontOriginGroups(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	instance, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- instance.OriginGroups.Items
+	return nil
+}
+
+func resolveCloudfrontOriginGroupMembers(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
+	r := resource.Item.(types.OriginGroup)
+	members := make([]string, 0, *r.Members.Quantity)
+	for _, t := range r.Members.Items {
+		members = append(members, *t.OriginId)
+	}
+	resource.Set("members_origin_ids", members)
 	return nil
 }
