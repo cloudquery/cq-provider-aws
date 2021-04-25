@@ -291,7 +291,7 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_default_cache_behaviour_lambda_function_associations",
+				Name:     "aws_cloudfront_distribution_default_cache_behaviour_lambda_function_associations", //todo check if this kind of relation is correct
 				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
 				Columns: []schema.Column{
 					{
@@ -356,8 +356,9 @@ func CloudfrontDistributions() *schema.Table {
 						Type: schema.TypeString,
 					},
 					{
-						Name: "id",
-						Type: schema.TypeString,
+						Name:     "origin_id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"),
 					},
 					{
 						Name: "connection_attempts",
@@ -445,11 +446,12 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("FailoverCriteria.StatusCodes.Items"),
 					},
 					{
-						Name: "id",
-						Type: schema.TypeString,
+						Name:     "origin_group_id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"),
 					},
 					{
-						Name:     "members_origin_ids",
+						Name:     "members_origin_ids", //todo check naming of the field
 						Type:     schema.TypeStringArray,
 						Resolver: resolveCloudfrontDistributionOriginGroupMembers,
 					},
