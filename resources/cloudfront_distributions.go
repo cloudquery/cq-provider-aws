@@ -170,7 +170,6 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Items"),
 			},
 			// DefaultCacheBehavior end
-
 			{
 				Name: "domain_name",
 				Type: schema.TypeString,
@@ -258,10 +257,9 @@ func CloudfrontDistributions() *schema.Table {
 			},
 		},
 		Relations: []*schema.Table{
-			//todo learn how to add DefaultCacheBehavior.LambdaFunctionsAssociations
 			{
-				Name:     "aws_cloudfront_distribution_cache_behaviour",
-				Resolver: fetchCloudfrontCacheBehaviours,
+				Name:     "aws_cloudfront_distribution_cache_behaviours",
+				Resolver: fetchCloudfrontDistributionCacheBehaviours,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_id",
@@ -269,19 +267,16 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.ParentIdResolver,
 					},
 					{
-						Name:     "path_pattern",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("PathPattern"),
+						Name: "path_pattern",
+						Type: schema.TypeString,
 					},
 					{
-						Name:     "target_origin_id",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("TargetOriginId"),
+						Name: "target_origin_id",
+						Type: schema.TypeString,
 					},
 					{
-						Name:     "viewer_protocol_policy",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("ViewerProtocolPolicy"),
+						Name: "viewer_protocol_policy",
+						Type: schema.TypeString,
 					},
 					{
 						Name:     "allowed_methods",
@@ -296,8 +291,8 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_custom_error_response",
-				Resolver: fetchCloudfrontCustomErrorResponses,
+				Name:     "aws_cloudfront_distribution_default_cache_behaviour_lambda_function_associations",
+				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_id",
@@ -305,9 +300,32 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.ParentIdResolver,
 					},
 					{
-						Name:     "error_code",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("ErrorCode"),
+						Name: "event_type",
+						Type: schema.TypeString,
+					},
+					{
+						Name:     "lambda_function_arn",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("LambdaFunctionARN"),
+					},
+					{
+						Name: "include_body",
+						Type: schema.TypeBool,
+					},
+				},
+			},
+			{
+				Name:     "aws_cloudfront_distribution_custom_error_responses",
+				Resolver: fetchCloudfrontDistributionCustomErrorResponses,
+				Columns: []schema.Column{
+					{
+						Name:     "distribution_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name: "error_code",
+						Type: schema.TypeInt,
 					},
 					{
 						Name:     "error_caching_min_ttl",
@@ -315,20 +333,18 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("ErrorCachingMinTTL"),
 					},
 					{
-						Name:     "response_code",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("ResponseCode"),
+						Name: "response_code",
+						Type: schema.TypeString,
 					},
 					{
-						Name:     "response_page_path",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("ResponsePagePath"),
+						Name: "response_page_path",
+						Type: schema.TypeString,
 					},
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_origin",
-				Resolver: fetchCloudfrontOrigins,
+				Name:     "aws_cloudfront_distribution_origins",
+				Resolver: fetchCloudfrontDistributionOrigins,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_id",
@@ -336,29 +352,25 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.ParentIdResolver,
 					},
 					{
-						Name:     "domain_name",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("DomainName"),
+						Name: "domain_name",
+						Type: schema.TypeString,
 					},
 					{
-						Name:     "id",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("Id"),
+						Name: "id",
+						Type: schema.TypeString,
 					},
 					{
-						Name:     "connection_attempts",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("ConnectionAttempts"),
+						Name: "connection_attempts",
+						Type: schema.TypeInt,
 					},
 					{
-						Name:     "connection_timeout",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("ConnectionTimeout"),
+						Name: "connection_timeout",
+						Type: schema.TypeInt,
 					},
 					{
 						Name:     "custom_headers",
 						Type:     schema.TypeJSON,
-						Resolver: resolveCloudfrontOriginCustomHeaders,
+						Resolver: resolveCloudfrontDistributionOriginCustomHeaders,
 					},
 					{
 						Name:     "custom_origin_config_http_port",
@@ -398,79 +410,8 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_viewer_certificate",
-				Resolver: fetchCloudfrontViewerCertificates,
-				Columns: []schema.Column{
-					{
-						Name:     "distribution_id",
-						Type:     schema.TypeUUID,
-						Resolver: schema.ParentIdResolver,
-					},
-					{
-						Name:     "domain_name",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("DomainName"),
-					},
-					{
-						Name:     "id",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("Id"),
-					},
-					{
-						Name:     "connection_attempts",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("ConnectionAttempts"),
-					},
-					{
-						Name:     "connection_timeout",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("ConnectionTimeout"),
-					},
-					{
-						Name:     "custom_headers",
-						Type:     schema.TypeJSON,
-						Resolver: resolveCloudfrontOriginCustomHeaders,
-					},
-					{
-						Name:     "custom_origin_config_http_port",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("CustomOriginConfig.HTTPPort"),
-					},
-					{
-						Name:     "custom_origin_config_https_port",
-						Type:     schema.TypeInt,
-						Resolver: schema.PathResolver("CustomOriginConfig.HTTPSPort"),
-					},
-					{
-						Name:     "custom_origin_config_origin_protocol_policy",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
-					},
-					{
-						Name:     "custom_origin_config_origin_path",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginPath"),
-					},
-					{
-						Name:     "custom_origin_config_origin_shield_enabled",
-						Type:     schema.TypeBool,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.Enabled"),
-					},
-					{
-						Name:     "custom_origin_config_origin_shield_region",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.OriginShieldRegion"),
-					},
-					{
-						Name:     "custom_origin_config_s3_origin_config_origin_access_identity",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.S3OriginConfig.OriginAccessIdentity"),
-					},
-				},
-			},
-			{
-				Name:     "aws_cloudfront_distribution_alias_icp_recordal",
-				Resolver: fetchCloudfrontAliasICPRecordals,
+				Name:     "aws_cloudfront_distribution_alias_icp_recordals",
+				Resolver: fetchCloudfrontDistributionAliasICPRecordals,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_id",
@@ -485,13 +426,13 @@ func CloudfrontDistributions() *schema.Table {
 					{
 						Name:     "icp_recordal_status",
 						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("ICPRecordalStatus"), //todo remove redundant path resolvers
+						Resolver: schema.PathResolver("ICPRecordalStatus"),
 					},
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_origin_group",
-				Resolver: fetchCloudfrontOriginGroups,
+				Name:     "aws_cloudfront_distribution_origin_groups",
+				Resolver: fetchCloudfrontDistributionOriginGroups,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_id",
@@ -504,14 +445,13 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("FailoverCriteria.StatusCodes.Items"),
 					},
 					{
-						Name:     "id",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("Id"), //todo remove redundant path resolvers
+						Name: "id",
+						Type: schema.TypeString,
 					},
 					{
 						Name:     "members_origin_ids",
 						Type:     schema.TypeStringArray,
-						Resolver: resolveCloudfrontOriginGroupMembers,
+						Resolver: resolveCloudfrontDistributionOriginGroupMembers,
 					},
 				},
 			},
@@ -542,25 +482,25 @@ func fetchCloudfrontDistributions(ctx context.Context, meta schema.ClientMeta, _
 	return nil
 }
 
-func fetchCloudfrontCacheBehaviours(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionCacheBehaviours(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- instance.CacheBehaviors.Items
+	res <- distribution.CacheBehaviors.Items
 	return nil
 }
 
-func fetchCloudfrontCustomErrorResponses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionCustomErrorResponses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- instance.CustomErrorResponses.Items
+	res <- distribution.CustomErrorResponses.Items
 	return nil
 }
 
-func resolveCloudfrontOriginCustomHeaders(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
+func resolveCloudfrontDistributionOriginCustomHeaders(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.Origin)
 	tags := map[string]*string{}
 	for _, t := range r.CustomHeaders.Items {
@@ -570,48 +510,48 @@ func resolveCloudfrontOriginCustomHeaders(_ context.Context, _ schema.ClientMeta
 	return nil
 }
 
-func fetchCloudfrontOrigins(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionOrigins(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- instance.Origins.Items
+	res <- distribution.Origins.Items
 	return nil
 }
 
-func fetchCloudfrontViewerCertificates(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionAliasICPRecordals(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- instance.ViewerCertificate
+	res <- distribution.AliasICPRecordals
 	return nil
 }
 
-func fetchCloudfrontAliasICPRecordals(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionOriginGroups(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- instance.AliasICPRecordals
+	res <- distribution.OriginGroups.Items
 	return nil
 }
 
-func fetchCloudfrontOriginGroups(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.DistributionSummary)
-	if !ok {
-		return fmt.Errorf("not cloudfront distribution")
-	}
-	res <- instance.OriginGroups.Items
-	return nil
-}
-
-func resolveCloudfrontOriginGroupMembers(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
+func resolveCloudfrontDistributionOriginGroupMembers(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
 	members := make([]string, 0, *r.Members.Quantity)
 	for _, t := range r.Members.Items {
 		members = append(members, *t.OriginId)
 	}
 	resource.Set("members_origin_ids", members)
+	return nil
+}
+
+func fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not cloudfront distribution")
+	}
+	res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
 	return nil
 }
