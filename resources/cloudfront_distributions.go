@@ -440,7 +440,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.ParentIdResolver,
 					},
 					{
-						Name:     "failover_criteria_statuscodes_items",
+						Name:     "failover_criteria_status_codes_items",
 						Type:     schema.TypeIntArray,
 						Resolver: schema.PathResolver("FailoverCriteria.StatusCodes.Items"),
 					},
