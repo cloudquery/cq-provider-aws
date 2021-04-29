@@ -21,11 +21,12 @@ If the service to which the resource belongs has not been used before in cq-prov
 ### Skeleton
 
 1. In [client/services.go](./client/services.go), update the service interface and add the method(s) that you will be using to fetch the data from the aws sdk.
-2. Run `go generate client/services.go` to create a mock for your new methods. This will update [client/mocks/services.go](./client/mocks/services.go) automatically
-3. Create a file under `resources/` that follows the pattern of `<service>_<resource>`.
-4. In that file, create a function that returns a `*schema.Table`
-5. In [resources/provider.go](./resources/provider.go), add a mapping between the function you just created and the name of the resource that will be used in the config yml file.
-6. In [client/config.go](./client/config.go), add the key that you used in the map in the previous step to the config template
+1. Run `go generate client/services.go` to create a mock for your new methods. This will update [client/mocks/services.go](./client/mocks/services.go) automatically
+1. Create a file under `resources/` that follows the pattern of `<service>_<resource>`.
+1. In that file, create a function that returns a `*schema.Table`
+1. In [resources/provider.go](./resources/provider.go), add a mapping between the function you just created and the name of the resource that will be used in the config yml file.
+1. In [client/config.go](./client/config.go), add the key that you used in the map in the previous step to the config template
+1. Add a test in [clients/mocks/mock_test.go](./clients/../client/mocks/mock_test.go) for the resource following the existing examples
 
 ### Implementation
 
