@@ -319,27 +319,6 @@ func Ec2Instances() *schema.Table {
 						Resolver: schema.PathResolver("Ebs.VolumeId"),
 					},
 				},
-				//Relations: []*schema.Table{
-				//	{
-				//		Name:     "aws_ec2_ebs_volumes",
-				//		Resolver: fetchEc2EbsVolumes,
-				//		Columns: []schema.Column{
-				//			{
-				//				Name:     "ebs_volume_id",
-				//				Type:     schema.TypeString,
-				//				Resolver: schema.PathResolver("VolumeId"),
-				//			},
-				//			{
-				//				Name: "encrypted",
-				//				Type: schema.TypeBool,
-				//			},
-				//			{
-				//				Name: "iops",
-				//				Type: schema.TypeInt,
-				//			},
-				//		},
-				//	},
-				//},
 			},
 			{
 				Name:     "aws_ec2_instance_elastic_gpu_associations",
@@ -655,21 +634,6 @@ func fetchEc2Instances(ctx context.Context, meta schema.ClientMeta, _ *schema.Re
 		res <- reservation.Instances
 	}
 
-	return nil
-}
-func fetchEc2EbsVolumes(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
-	c := meta.(*client.Client)
-	svc := c.Services().EC2
-
-	response, err := svc.DescribeVolumes(ctx, &ec2.DescribeVolumesInput{}, func(o *ec2.Options) {
-		o.Region = c.Region
-	})
-	if err != nil {
-		return err
-	}
-	for _, volume := range response.Volumes {
-		res <- volume
-	}
 	return nil
 }
 func resolveEc2instanceTags(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
