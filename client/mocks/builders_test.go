@@ -395,96 +395,70 @@ func buildEc2Subnets(t *testing.T, ctrl *gomock.Controller) client.Services {
 	}
 }
 
-func buildEc2TransitGatewayAttachments(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGatewayAttachment{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeTransitGatewayAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&ec2.DescribeTransitGatewayAttachmentsOutput{
-			TransitGatewayAttachments: []ec2Types.TransitGatewayAttachment{l},
-		}, nil)
-	return client.Services{
-		EC2: m,
-	}
-}
-
-func buildEc2TransitGatewayMulticastDomains(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGatewayMulticastDomain{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeTransitGatewayMulticastDomains(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&ec2.DescribeTransitGatewayMulticastDomainsOutput{
-			TransitGatewayMulticastDomains: []ec2Types.TransitGatewayMulticastDomain{l},
-		}, nil)
-	return client.Services{
-		EC2: m,
-	}
-}
-
-func buildEc2TransitGatewayRouteTables(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGatewayRouteTable{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeTransitGatewayRouteTables(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&ec2.DescribeTransitGatewayRouteTablesOutput{
-			TransitGatewayRouteTables: []ec2Types.TransitGatewayRouteTable{l},
-		}, nil)
-	return client.Services{
-		EC2: m,
-	}
-}
-
-func buildEc2TransitGatewayPeeringAttachments(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGatewayPeeringAttachment{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeTransitGatewayPeeringAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&ec2.DescribeTransitGatewayPeeringAttachmentsOutput{
-			TransitGatewayPeeringAttachments: []ec2Types.TransitGatewayPeeringAttachment{l},
-		}, nil)
-	return client.Services{
-		EC2: m,
-	}
-}
-
-func buildEc2TransitGatewayVpcAttachments(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGatewayVpcAttachment{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeTransitGatewayVpcAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&ec2.DescribeTransitGatewayVpcAttachmentsOutput{
-			TransitGatewayVpcAttachments: []ec2Types.TransitGatewayVpcAttachment{l},
-		}, nil)
-	return client.Services{
-		EC2: m,
-	}
-}
-
 func buildEc2TransitGateways(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockEc2Client(ctrl)
-	l := ec2Types.TransitGateway{}
-	err := faker.FakeData(&l)
+	tgw := ec2Types.TransitGateway{}
+	err := faker.FakeData(&tgw)
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	tgwvpca := ec2Types.TransitGatewayVpcAttachment{}
+	err = faker.FakeData(&tgwvpca)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwpeera := ec2Types.TransitGatewayPeeringAttachment{}
+	err = faker.FakeData(&tgwpeera)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwrt := ec2Types.TransitGatewayRouteTable{}
+	err = faker.FakeData(&tgwrt)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwmcd := ec2Types.TransitGatewayMulticastDomain{}
+	err = faker.FakeData(&tgwmcd)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwa := ec2Types.TransitGatewayAttachment{}
+	err = faker.FakeData(&tgwa)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeTransitGatewayVpcAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayVpcAttachmentsOutput{
+			TransitGatewayVpcAttachments: []ec2Types.TransitGatewayVpcAttachment{tgwvpca},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayPeeringAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayPeeringAttachmentsOutput{
+			TransitGatewayPeeringAttachments: []ec2Types.TransitGatewayPeeringAttachment{tgwpeera},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayRouteTables(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayRouteTablesOutput{
+			TransitGatewayRouteTables: []ec2Types.TransitGatewayRouteTable{tgwrt},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayMulticastDomains(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayMulticastDomainsOutput{
+			TransitGatewayMulticastDomains: []ec2Types.TransitGatewayMulticastDomain{tgwmcd},
+		}, nil)
+	m.EXPECT().DescribeTransitGatewayAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayAttachmentsOutput{
+			TransitGatewayAttachments: []ec2Types.TransitGatewayAttachment{tgwa},
+		}, nil)
 	m.EXPECT().DescribeTransitGateways(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeTransitGatewaysOutput{
-			TransitGateways: []ec2Types.TransitGateway{l},
+			TransitGateways: []ec2Types.TransitGateway{tgw},
 		}, nil)
 	return client.Services{
 		EC2: m,
