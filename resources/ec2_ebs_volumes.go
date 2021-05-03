@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -89,6 +90,43 @@ func Ec2EbsVolumes() *schema.Table {
 				Type: schema.TypeString,
 			},
 		},
+		Relations: []*schema.Table{
+			{
+				Name:     "aws_ec2_ebs_volume_attachments",
+				Resolver: fetchEc2EbsVolumeAttachments,
+				Columns: []schema.Column{
+					{
+						Name:     "ebs_volume_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name: "attach_time",
+						Type: schema.TypeTimestamp,
+					},
+					{
+						Name: "delete_on_termination",
+						Type: schema.TypeBool,
+					},
+					{
+						Name: "device",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "instance_id",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "state",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "volume_id",
+						Type: schema.TypeString,
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -117,5 +155,13 @@ func resolveEc2EbsVolumeTags(_ context.Context, _ schema.ClientMeta, resource *s
 		tags[*t.Key] = t.Value
 	}
 	resource.Set("tags", tags)
+	return nil
+}
+func fetchEc2EbsVolumeAttachments(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	volume, ok := parent.Item.(types.Volume)
+	if !ok {
+		return fmt.Errorf("not ec2 ebs volume")
+	}
+	res <- volume.Attachments
 	return nil
 }
