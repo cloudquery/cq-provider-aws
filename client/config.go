@@ -37,7 +37,10 @@ const DefaultConfigYaml = `
       - name: cloudwatch.alarms
       - name: cloudwatchlogs.filters
       - name: directconnect.gateways
+      - name: directconnect.virtual_gateways
+      - name: directconnect.virtual_interfaces
       - name: ec2.customer_gateways
+      - name: ec2.ebs_volumes
       - name: ec2.flow_logs
       - name: ec2.images
       - name: ec2.instances
@@ -47,6 +50,7 @@ const DefaultConfigYaml = `
       - name: ec2.route_tables
       - name: ec2.security_groups
       - name: ec2.subnets
+      - name: ec2.transit_gateways
       - name: ec2.vpc_peering_connections
       - name: ec2.vpcs
       - name: ecs.clusters

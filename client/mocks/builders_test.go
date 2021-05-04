@@ -274,6 +274,38 @@ func buildDirectconnectGatewaysMock(t *testing.T, ctrl *gomock.Controller) clien
 	}
 }
 
+func buildDirectconnectVirtualGatewaysMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockDirectconnectClient(ctrl)
+	l := directconnectTypes.VirtualGateway{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeVirtualGateways(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&directconnect.DescribeVirtualGatewaysOutput{
+			VirtualGateways: []directconnectTypes.VirtualGateway{l},
+		}, nil)
+	return client.Services{
+		Directconnect: m,
+	}
+}
+
+func buildDirectconnectVirtualInterfacesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockDirectconnectClient(ctrl)
+	l := directconnectTypes.VirtualInterface{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeVirtualInterfaces(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&directconnect.DescribeVirtualInterfacesOutput{
+			VirtualInterfaces: []directconnectTypes.VirtualInterface{l},
+		}, nil)
+	return client.Services{
+		Directconnect: m,
+	}
+}
+
 func buildEc2ByoipCidrsMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockEc2Client(ctrl)
 	l := ec2Types.ByoipCidr{}
@@ -300,6 +332,22 @@ func buildEc2CustomerGateways(t *testing.T, ctrl *gomock.Controller) client.Serv
 	m.EXPECT().DescribeCustomerGateways(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeCustomerGatewaysOutput{
 			CustomerGateways: []ec2Types.CustomerGateway{l},
+		}, nil)
+	return client.Services{
+		EC2: m,
+	}
+}
+
+func buildEc2EbsVolumes(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockEc2Client(ctrl)
+	l := ec2Types.Volume{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeVolumes(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeVolumesOutput{
+			Volumes: []ec2Types.Volume{l},
 		}, nil)
 	return client.Services{
 		EC2: m,
@@ -399,6 +447,76 @@ func buildEc2Subnets(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m.EXPECT().DescribeSubnets(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeSubnetsOutput{
 			Subnets: []ec2Types.Subnet{l},
+		}, nil)
+	return client.Services{
+		EC2: m,
+	}
+}
+
+func buildEc2TransitGateways(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockEc2Client(ctrl)
+	tgw := ec2Types.TransitGateway{}
+	err := faker.FakeData(&tgw)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwvpca := ec2Types.TransitGatewayVpcAttachment{}
+	err = faker.FakeData(&tgwvpca)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwpeera := ec2Types.TransitGatewayPeeringAttachment{}
+	err = faker.FakeData(&tgwpeera)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwrt := ec2Types.TransitGatewayRouteTable{}
+	err = faker.FakeData(&tgwrt)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwmcd := ec2Types.TransitGatewayMulticastDomain{}
+	err = faker.FakeData(&tgwmcd)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tgwa := ec2Types.TransitGatewayAttachment{}
+	err = faker.FakeData(&tgwa)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeTransitGatewayVpcAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayVpcAttachmentsOutput{
+			TransitGatewayVpcAttachments: []ec2Types.TransitGatewayVpcAttachment{tgwvpca},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayPeeringAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayPeeringAttachmentsOutput{
+			TransitGatewayPeeringAttachments: []ec2Types.TransitGatewayPeeringAttachment{tgwpeera},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayRouteTables(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayRouteTablesOutput{
+			TransitGatewayRouteTables: []ec2Types.TransitGatewayRouteTable{tgwrt},
+		}, nil)
+
+	m.EXPECT().DescribeTransitGatewayMulticastDomains(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayMulticastDomainsOutput{
+			TransitGatewayMulticastDomains: []ec2Types.TransitGatewayMulticastDomain{tgwmcd},
+		}, nil)
+	m.EXPECT().DescribeTransitGatewayAttachments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewayAttachmentsOutput{
+			TransitGatewayAttachments: []ec2Types.TransitGatewayAttachment{tgwa},
+		}, nil)
+	m.EXPECT().DescribeTransitGateways(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeTransitGatewaysOutput{
+			TransitGateways: []ec2Types.TransitGateway{tgw},
 		}, nil)
 	return client.Services{
 		EC2: m,
@@ -933,6 +1051,7 @@ func buildOrganizationsAccounts(t *testing.T, ctrl *gomock.Controller) client.Se
 }
 
 func buildS3Buckets(t *testing.T, ctrl *gomock.Controller) client.Services {
+	mgr := mocks.NewMockS3ManagerClient(ctrl)
 	m := mocks.NewMockS3Client(ctrl)
 	b := s3Types.Bucket{}
 	err := faker.FakeData(&b)
@@ -981,8 +1100,6 @@ func buildS3Buckets(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&s3.ListBucketsOutput{
 			Buckets: []s3Types.Bucket{b},
 		}, nil)
-	m.EXPECT().GetBucketLocation(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&bloc, nil)
 	m.EXPECT().GetBucketLogging(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&blog, nil)
 	m.EXPECT().GetBucketPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
@@ -999,7 +1116,10 @@ func buildS3Buckets(t *testing.T, ctrl *gomock.Controller) client.Services {
 		}, nil)
 	m.EXPECT().GetBucketEncryption(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&bencryption, nil)
+	mgr.EXPECT().GetBucketRegion(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		"us-east-1", nil)
 	return client.Services{
-		S3: m,
+		S3:        m,
+		S3Manager: mgr,
 	}
 }
