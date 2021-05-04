@@ -480,7 +480,11 @@ func fetchCloudfrontDistributions(ctx context.Context, meta schema.ClientMeta, _
 		if err != nil {
 			return err
 		}
-		res <- response.DistributionList.Items
+
+		if response.DistributionList != nil {
+			res <- response.DistributionList.Items
+		}
+
 		if aws.ToString(response.DistributionList.Marker) == "" {
 			break
 		}
@@ -494,7 +498,9 @@ func fetchCloudfrontDistributionCacheBehaviours(_ context.Context, _ schema.Clie
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- distribution.CacheBehaviors.Items
+	if distribution.CacheBehaviors != nil {
+		res <- distribution.CacheBehaviors.Items
+	}
 	return nil
 }
 
@@ -503,17 +509,21 @@ func fetchCloudfrontDistributionCustomErrorResponses(_ context.Context, _ schema
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- distribution.CustomErrorResponses.Items
+	if distribution.CustomErrorResponses != nil {
+		res <- distribution.CustomErrorResponses.Items
+	}
 	return nil
 }
 
 func resolveCloudfrontDistributionOriginCustomHeaders(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.Origin)
-	tags := map[string]*string{}
-	for _, t := range r.CustomHeaders.Items {
-		tags[*t.HeaderName] = t.HeaderValue
+	if r.CustomHeaders != nil {
+		tags := map[string]string{}
+		for _, t := range r.CustomHeaders.Items {
+			tags[*t.HeaderName] = *t.HeaderValue
+		}
+		resource.Set("custom_headers", tags)
 	}
-	resource.Set("custom_headers", tags)
 	return nil
 }
 
@@ -522,7 +532,9 @@ func fetchCloudfrontDistributionOrigins(_ context.Context, _ schema.ClientMeta, 
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- distribution.Origins.Items
+	if distribution.Origins != nil {
+		res <- distribution.Origins.Items
+	}
 	return nil
 }
 
@@ -540,28 +552,33 @@ func fetchCloudfrontDistributionOriginGroups(_ context.Context, _ schema.ClientM
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- distribution.OriginGroups.Items
+	if distribution.OriginGroups != nil {
+		res <- distribution.OriginGroups.Items
+	}
 	return nil
 }
 
 func resolveCloudfrontDistributionOriginGroupMembers(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
-	members := make([]string, 0, *r.Members.Quantity)
-	for _, t := range r.Members.Items {
-		members = append(members, *t.OriginId)
+	if r.Members != nil {
+		members := make([]string, 0, *r.Members.Quantity)
+		for _, t := range r.Members.Items {
+			members = append(members, *t.OriginId)
+		}
+		resource.Set("members_origin_ids", members)
 	}
-	resource.Set("members_origin_ids", members)
 	return nil
 }
 
 func resolveInt32Array(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
-	members := make([]int, 0, *r.Members.Quantity)
-	for _, item := range r.FailoverCriteria.StatusCodes.Items {
-		members = append(members, int(item))
+	if r.FailoverCriteria != nil && r.FailoverCriteria.StatusCodes != nil {
+		members := make([]int, 0, *r.Members.Quantity)
+		for _, item := range r.FailoverCriteria.StatusCodes.Items {
+			members = append(members, int(item))
+		}
+		resource.Set(c.Name, members)
 	}
-
-	resource.Set(c.Name, members)
 	return nil
 }
 
@@ -570,6 +587,8 @@ func fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations(
 	if !ok {
 		return fmt.Errorf("not cloudfront distribution")
 	}
-	res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
+	if distribution.DefaultCacheBehavior != nil && distribution.DefaultCacheBehavior.LambdaFunctionAssociations != nil {
+		res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
+	}
 	return nil
 }
