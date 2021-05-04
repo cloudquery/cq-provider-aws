@@ -30,8 +30,9 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name: "arn",
-				Type: schema.TypeString,
+				Name:     "arn",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("ARN"),
 			},
 			{
 				Name:     "aliases_items",
@@ -45,127 +46,112 @@ func CloudfrontDistributions() *schema.Table {
 
 			// DefaultCacheBehavior start
 			{
-				Name:     "default_cache_behaviour_target_origin_id",
+				Name:     "cache_behaviour_target_origin_id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TargetOriginId"),
 			},
 			{
-				Name:     "default_cache_behaviour_viewer_protocol_policy",
+				Name:     "cache_behaviour_viewer_protocol_policy",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ViewerProtocolPolicy"),
 			},
 			{
-				Name:     "default_cache_behaviour_allowed_methods",
+				Name:     "cache_behaviour_allowed_methods",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.AllowedMethods.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_allowed_methods_cached_methods",
+				Name:     "cache_behaviour_allowed_methods_cached_methods",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_cache_policy_id",
+				Name:     "cache_behaviour_cache_policy_id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.CachePolicyId"),
 			},
 			{
-				Name:     "default_cache_behaviour_compress",
+				Name:     "cache_behaviour_compress",
 				Type:     schema.TypeBool,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.Compress"),
 			},
 			{
-				Name:     "default_cache_behaviour_default_ttl",
+				Name:     "cache_behaviour_default_ttl",
 				Type:     schema.TypeBigInt,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.DefaultTTL"),
 			},
 			{
-				Name:     "default_cache_behaviour_field_level_encryption_id",
+				Name:     "cache_behaviour_field_level_encryption_id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.FieldLevelEncryptionId"),
 			},
 			{
-				Name:     "default_cache_behaviour_field_level_encryption_id",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("DefaultCacheBehavior.FieldLevelEncryptionId"),
-			},
-			{
-				Name:     "default_cache_behaviour_field_level_encryption_id",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("DefaultCacheBehavior.FieldLevelEncryptionId"),
-			},
-			{
-				Name:     "default_cache_behaviour_forwarded_values_cookies_forward",
+				Name:     "cache_behaviour_forwarded_values_cookies_forward",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.Forward"),
 			},
 			{
-				Name:     "default_cache_behaviour_forwarded_values_cookies_forward",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.Forward"),
-			},
-			{
-				Name:     "default_cache_behaviour_forwarded_values_cookies_white_listed_names",
+				Name:     "cache_behaviour_forwarded_values_cookies_white_listed_names",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_forwarded_values_query_string",
+				Name:     "cache_behaviour_forwarded_values_query_string",
 				Type:     schema.TypeBool,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryString"),
 			},
 			{
-				Name:     "default_cache_behaviour_forwarded_values_headers",
+				Name:     "cache_behaviour_forwarded_values_headers",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Headers.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_forwarded_values_query_string_cache_keys",
+				Name:     "cache_behaviour_forwarded_values_query_string_cache_keys",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_max_ttl",
+				Name:     "cache_behaviour_max_ttl",
 				Type:     schema.TypeBigInt,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.MaxTTL"),
 			},
 			{
-				Name:     "default_cache_behaviour_min_ttl",
+				Name:     "cache_behaviour_min_ttl",
 				Type:     schema.TypeBigInt,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.MinTTL"),
 			},
 			{
-				Name:     "default_cache_behaviour_origin_request_policy_id",
+				Name:     "cache_behaviour_origin_request_policy_id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.OriginRequestPolicyId"),
 			},
 			{
-				Name:     "default_cache_behaviour_realtime_log_config_arn",
+				Name:     "cache_behaviour_realtime_log_config_arn",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.RealtimeLogConfigArn"),
 			},
 			{
-				Name:     "default_cache_behaviour_smooth_streaming",
+				Name:     "cache_behaviour_smooth_streaming",
 				Type:     schema.TypeBool,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.SmoothStreaming"),
 			},
 			{
-				Name:     "default_cache_behaviour_trusted_key_groups_enabled",
+				Name:     "cache_behaviour_trusted_key_groups_enabled",
 				Type:     schema.TypeBool,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Enabled"),
 			},
 			{
-				Name:     "default_cache_behaviour_trusted_key_groups",
+				Name:     "cache_behaviour_trusted_key_groups",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Items"),
 			},
 			{
-				Name:     "default_cache_behaviour_trusted_signers_enabled",
+				Name:     "cache_behaviour_trusted_signers_enabled",
 				Type:     schema.TypeBool,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Enabled"),
 			},
 			{
-				Name:     "default_cache_behaviour_trusted_signers",
+				Name:     "cache_behaviour_trusted_signers",
 				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Items"),
 			},
@@ -183,12 +169,14 @@ func CloudfrontDistributions() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "id",
-				Type: schema.TypeString,
+				Name:     "resource_id",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("Id"),
 			},
 			{
-				Name: "ip_v6_enabled",
-				Type: schema.TypeBool,
+				Name:     "ip_v6_enabled",
+				Type:     schema.TypeBool,
+				Resolver: schema.PathResolver("IsIPV6Enabled"),
 			},
 			{
 				Name: "last_modified_time",
@@ -252,8 +240,9 @@ func CloudfrontDistributions() *schema.Table {
 			},
 			//ViewerCertificate end
 			{
-				Name: "web_acl_id",
-				Type: schema.TypeString,
+				Name:     "web_acl_id",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("WebACLId"),
 			},
 		},
 		Relations: []*schema.Table{
@@ -291,7 +280,7 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_default_cache_behaviour_lambda_function_associations", //todo check if this kind of relation is correct
+				Name:     "default_cache_behaviour_lambda_function_associations", //todo check if this kind of relation is correct
 				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
 				Columns: []schema.Column{
 					{
@@ -389,24 +378,40 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
 					},
 					{
-						Name:     "custom_origin_config_origin_path",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginPath"),
+						Name:     "custom_origin_config_origin_keepalive_timeout",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginKeepaliveTimeout"),
 					},
 					{
-						Name:     "custom_origin_config_origin_shield_enabled",
+						Name:     "custom_origin_config_origin_read_timeout",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginReadTimeout"),
+					},
+					{
+						Name:     "custom_origin_config_origin_ssl_protocols",
+						Type:     schema.TypeStringArray,
+						Resolver: schema.PathResolver("CustomOriginConfig.OriginSslProtocols.Items"),
+					},
+					{
+						Name: "origin_path",
+						Type: schema.TypeString,
+						//Resolver: schema.PathResolver("CustomOriginConfig.OriginPath"),
+					},
+
+					{
+						Name:     "origin_shield_enabled",
 						Type:     schema.TypeBool,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.Enabled"),
+						Resolver: schema.PathResolver("OriginShield.Enabled"),
 					},
 					{
-						Name:     "custom_origin_config_origin_shield_region",
+						Name:     "origin_shield_region",
 						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.OriginShield.OriginShieldRegion"),
+						Resolver: schema.PathResolver("OriginShield.OriginShieldRegion"),
 					},
 					{
-						Name:     "custom_origin_config_s3_origin_config_origin_access_identity",
+						Name:     "s3_origin_config_origin_access_identity",
 						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("CustomOriginConfig.S3OriginConfig.OriginAccessIdentity"),
+						Resolver: schema.PathResolver("S3OriginConfig.OriginAccessIdentity"),
 					},
 				},
 			},
@@ -443,7 +448,7 @@ func CloudfrontDistributions() *schema.Table {
 					{
 						Name:     "failover_criteria_status_codes_items",
 						Type:     schema.TypeIntArray,
-						Resolver: schema.PathResolver("FailoverCriteria.StatusCodes.Items"),
+						Resolver: resolveInt32Array,
 					},
 					{
 						Name:     "origin_group_id",
@@ -546,6 +551,17 @@ func resolveCloudfrontDistributionOriginGroupMembers(_ context.Context, _ schema
 		members = append(members, *t.OriginId)
 	}
 	resource.Set("members_origin_ids", members)
+	return nil
+}
+
+func resolveInt32Array(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.OriginGroup)
+	members := make([]int, 0, *r.Members.Quantity)
+	for _, item := range r.FailoverCriteria.StatusCodes.Items {
+		members = append(members, int(item))
+	}
+
+	resource.Set(c.Name, members)
 	return nil
 }
 

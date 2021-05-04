@@ -271,6 +271,11 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.EcsClusters(),
 			mockBuilder: buildEcsClusterMock,
 		},
+		{
+			resource:    "cloudfront.distributions",
+			mainTable:   resources.CloudfrontDistributions(),
+			mockBuilder: buildCloudfrontDistributionsMock,
+		},
 	}
 	for _, tc := range testResourcesTable {
 		t.Run(tc.resource, func(t *testing.T) {

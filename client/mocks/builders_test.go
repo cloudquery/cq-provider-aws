@@ -1,6 +1,8 @@
 package mocks_test
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -85,6 +87,30 @@ func buildEcsClusterMock(t *testing.T, ctrl *gomock.Controller) client.Services 
 		ClusterArns: []string{"randomClusteArn"},
 	}
 	m.EXPECT().ListClusters(gomock.Any(), gomock.Any(), gomock.Any()).Return(ecsListOutput, nil)
+	return services
+}
+
+func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockCloudfrontClient(ctrl)
+	services := client.Services{
+		Cloudfront: m,
+	}
+
+	ds := cloudfrontTypes.DistributionSummary{}
+	err := faker.FakeData(&ds)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cloudfrontOutput := &cloudfront.ListDistributionsOutput{
+		DistributionList: &cloudfrontTypes.DistributionList{
+			Items: []cloudfrontTypes.DistributionSummary{ds},
+		},
+	}
+
+	m.EXPECT().ListDistributions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		cloudfrontOutput,
+		nil,
+	)
 	return services
 }
 
