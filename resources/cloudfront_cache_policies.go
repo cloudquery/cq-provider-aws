@@ -15,7 +15,7 @@ func CloudfrontCachePolicies() *schema.Table {
 		Resolver:     fetchCloudfrontCachePolicies,
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
