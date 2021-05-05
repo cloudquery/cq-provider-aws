@@ -345,6 +345,12 @@ func TestResources(t *testing.T) {
 			mockBuilder:        buildCloudfrontDistributionsMock,
 			verifyEmptyColumns: true,
 		},
+		{
+			resource:           "ec2.vpc_endpoints",
+			mainTable:          resources.CloudfrontDistributions(),
+			mockBuilder:        buildEc2VpcEndpoints,
+			verifyEmptyColumns: true,
+		},
 	}
 	for _, tc := range testResourcesTable {
 		t.Run(tc.resource, func(t *testing.T) {
