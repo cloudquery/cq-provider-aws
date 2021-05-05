@@ -125,7 +125,6 @@ func buildCloudfrontCachePoliciesMock(t *testing.T, ctrl *gomock.Controller) cli
 			Items: []cloudfrontTypes.CachePolicySummary{cp},
 		},
 	}
-	cloudfrontOutput.CachePolicyList = nil
 	m.EXPECT().ListCachePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		cloudfrontOutput,
 		nil,
