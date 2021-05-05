@@ -121,9 +121,9 @@ func fetchCloudfrontCachePolicies(ctx context.Context, meta schema.ClientMeta, p
 			return err
 		}
 
-		//if response.CachePolicyList != nil {
-		res <- response.CachePolicyList.Items
-		//}
+		if response.CachePolicyList != nil {
+			res <- response.CachePolicyList.Items
+		}
 
 		if aws.ToString(response.CachePolicyList.NextMarker) == "" {
 			break
