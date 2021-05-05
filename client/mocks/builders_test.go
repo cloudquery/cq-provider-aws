@@ -119,11 +119,13 @@ func buildCloudfrontCachePoliciesMock(t *testing.T, ctrl *gomock.Controller) cli
 	if err := faker.FakeData(&cp); err != nil {
 		t.Fatal(err)
 	}
+
 	cloudfrontOutput := &cloudfront.ListCachePoliciesOutput{
 		CachePolicyList: &cloudfrontTypes.CachePolicyList{
 			Items: []cloudfrontTypes.CachePolicySummary{cp},
 		},
 	}
+	cloudfrontOutput.CachePolicyList = nil
 	m.EXPECT().ListCachePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		cloudfrontOutput,
 		nil,

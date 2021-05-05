@@ -11,10 +11,11 @@ import (
 
 func CloudfrontCachePolicies() *schema.Table {
 	return &schema.Table{
-		Name:        "aws_cloudfront_cache_policies",
-		Resolver:    fetchCloudfrontCachePolicies,
-		Multiplex:   client.AccountRegionMultiplex,
-		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+		Name:         "aws_cloudfront_cache_policies",
+		Resolver:     fetchCloudfrontCachePolicies,
+		Multiplex:    client.AccountRegionMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountRegionFilter,
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -120,9 +121,9 @@ func fetchCloudfrontCachePolicies(ctx context.Context, meta schema.ClientMeta, p
 			return err
 		}
 
-		if response.CachePolicyList != nil {
-			res <- response.CachePolicyList.Items
-		}
+		//if response.CachePolicyList != nil {
+		res <- response.CachePolicyList.Items
+		//}
 
 		if aws.ToString(response.CachePolicyList.NextMarker) == "" {
 			break
