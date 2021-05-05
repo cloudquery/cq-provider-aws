@@ -243,13 +243,10 @@ func buildRedshiftSubnetGroupsMock(t *testing.T, ctrl *gomock.Controller) client
 
 func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockRoute53Client(ctrl)
-
 	h := route53Types.HostedZone{}
-
 	if err := faker.FakeData(&h); err != nil {
 		t.Fatal(err)
 	}
-
 	m.EXPECT().ListHostedZones(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&route53.ListHostedZonesOutput{
 			HostedZones: []route53Types.HostedZone{h},
