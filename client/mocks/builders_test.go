@@ -1,9 +1,12 @@
 package mocks_test
 
 import (
+	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
-	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	autoscalingTypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
@@ -40,6 +43,7 @@ import (
 	rdsTypes "github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	redshiftTypes "github.com/aws/aws-sdk-go-v2/service/redshift/types"
+	route53Types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	s3Types "github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
@@ -234,6 +238,24 @@ func buildRedshiftSubnetGroupsMock(t *testing.T, ctrl *gomock.Controller) client
 		}, nil)
 	return client.Services{
 		Redshift: m,
+	}
+}
+
+func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockRoute53Client(ctrl)
+
+	h := route53Types.HostedZone{}
+
+	if err := faker.FakeData(&h); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListHostedZones(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListHostedZonesOutput{
+			HostedZones: []route53Types.HostedZone{h},
+		}, nil)
+	return client.Services{
+		Route53: m,
 	}
 }
 

@@ -85,6 +85,7 @@ type Services struct {
 	KMS              KmsClient
 	Organizations    OrganizationsClient
 	Redshift         RedshiftClient
+	Route53          Route53Client
 	RDS              RdsClient
 	S3               S3Client
 	S3Manager        S3ManagerClient

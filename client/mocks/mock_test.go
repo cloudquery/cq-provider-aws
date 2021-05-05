@@ -345,6 +345,12 @@ func TestResources(t *testing.T) {
 			mockBuilder:        buildCloudfrontDistributionsMock,
 			verifyEmptyColumns: true,
 		},
+		{
+			resource:           "route53.hosted_zones",
+			mainTable:          resources.Route53HostedZones(),
+			mockBuilder:        buildRoute53ListHostedZonesMock,
+			verifyEmptyColumns: true,
+		},
 	}
 	for _, tc := range testResourcesTable {
 		t.Run(tc.resource, func(t *testing.T) {
