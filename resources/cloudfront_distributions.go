@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
@@ -18,7 +19,6 @@ func CloudfrontDistributions() *schema.Table {
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Columns: []schema.Column{
-			//todo check columns
 			{
 				Name:     "account_id",
 				Type:     schema.TypeString,
