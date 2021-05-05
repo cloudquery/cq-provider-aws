@@ -209,12 +209,12 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver: schema.PathResolver("ViewerCertificate.ACMCertificateArn"),
 			},
 			{
-				Name:     "viewer_certificate_certificate",
+				Name:     "viewer_certificate",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("ViewerCertificate.Certificate"),
 			},
 			{
-				Name:     "viewer_certificate_certificate_source",
+				Name:     "viewer_certificate_source",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("ViewerCertificate.CertificateSource"),
 			},
@@ -280,7 +280,7 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "default_cache_behaviour_lambda_function_associations", //todo check if this kind of relation is correct
+				Name:     "cache_behaviour_lambda_function_associations",
 				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
 				Columns: []schema.Column{
 					{
@@ -373,22 +373,22 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("CustomOriginConfig.HTTPSPort"),
 					},
 					{
-						Name:     "custom_origin_config_origin_protocol_policy",
+						Name:     "custom_origin_config_protocol_policy",
 						Type:     schema.TypeString,
 						Resolver: schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
 					},
 					{
-						Name:     "custom_origin_config_origin_keepalive_timeout",
+						Name:     "custom_origin_config_keepalive_timeout",
 						Type:     schema.TypeInt,
 						Resolver: schema.PathResolver("CustomOriginConfig.OriginKeepaliveTimeout"),
 					},
 					{
-						Name:     "custom_origin_config_origin_read_timeout",
+						Name:     "custom_origin_config_read_timeout",
 						Type:     schema.TypeInt,
 						Resolver: schema.PathResolver("CustomOriginConfig.OriginReadTimeout"),
 					},
 					{
-						Name:     "custom_origin_config_origin_ssl_protocols",
+						Name:     "custom_origin_config_ssl_protocols",
 						Type:     schema.TypeStringArray,
 						Resolver: schema.PathResolver("CustomOriginConfig.OriginSslProtocols.Items"),
 					},
@@ -448,7 +448,7 @@ func CloudfrontDistributions() *schema.Table {
 					{
 						Name:     "failover_criteria_status_codes_items",
 						Type:     schema.TypeIntArray,
-						Resolver: resolveInt32Array,
+						Resolver: resolveFailoverCriteriaStatusCodeItems,
 					},
 					{
 						Name:     "origin_group_id",
@@ -456,7 +456,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: schema.PathResolver("Id"),
 					},
 					{
-						Name:     "members_origin_ids", //todo check naming of the field
+						Name:     "members_origin_ids",
 						Type:     schema.TypeStringArray,
 						Resolver: resolveCloudfrontDistributionOriginGroupMembers,
 					},
@@ -517,13 +517,14 @@ func fetchCloudfrontDistributionCustomErrorResponses(_ context.Context, _ schema
 
 func resolveCloudfrontDistributionOriginCustomHeaders(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.Origin)
-	if r.CustomHeaders != nil {
-		tags := map[string]string{}
-		for _, t := range r.CustomHeaders.Items {
-			tags[*t.HeaderName] = *t.HeaderValue
-		}
-		resource.Set("custom_headers", tags)
+	if r.CustomHeaders == nil {
+		return nil
 	}
+	tags := map[string]string{}
+	for _, t := range r.CustomHeaders.Items {
+		tags[*t.HeaderName] = *t.HeaderValue
+	}
+	resource.Set("custom_headers", tags)
 	return nil
 }
 
@@ -560,25 +561,27 @@ func fetchCloudfrontDistributionOriginGroups(_ context.Context, _ schema.ClientM
 
 func resolveCloudfrontDistributionOriginGroupMembers(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
-	if r.Members != nil {
-		members := make([]string, 0, *r.Members.Quantity)
-		for _, t := range r.Members.Items {
-			members = append(members, *t.OriginId)
-		}
-		resource.Set("members_origin_ids", members)
+	if r.Members == nil {
+		return nil
 	}
+	members := make([]string, 0, *r.Members.Quantity)
+	for _, t := range r.Members.Items {
+		members = append(members, *t.OriginId)
+	}
+	resource.Set("members_origin_ids", members)
 	return nil
 }
 
-func resolveInt32Array(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveFailoverCriteriaStatusCodeItems(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
-	if r.FailoverCriteria != nil && r.FailoverCriteria.StatusCodes != nil {
-		members := make([]int, 0, *r.Members.Quantity)
-		for _, item := range r.FailoverCriteria.StatusCodes.Items {
-			members = append(members, int(item))
-		}
-		resource.Set(c.Name, members)
+	if r.FailoverCriteria == nil || r.FailoverCriteria.StatusCodes == nil {
+		return nil
 	}
+	members := make([]int, 0, *r.Members.Quantity)
+	for _, item := range r.FailoverCriteria.StatusCodes.Items {
+		members = append(members, int(item))
+	}
+	resource.Set(c.Name, members)
 	return nil
 }
 

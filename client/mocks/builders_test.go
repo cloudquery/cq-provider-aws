@@ -30,8 +30,6 @@ import (
 	elbv2Types "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	emrTypes "github.com/aws/aws-sdk-go-v2/service/emr/types"
-	"github.com/aws/aws-sdk-go-v2/service/fsx"
-	fsxTypes "github.com/aws/aws-sdk-go-v2/service/fsx/types"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	iamTypes "github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
@@ -95,10 +93,8 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 	services := client.Services{
 		Cloudfront: m,
 	}
-
 	ds := cloudfrontTypes.DistributionSummary{}
-	err := faker.FakeData(&ds)
-	if err != nil {
+	if err := faker.FakeData(&ds); err != nil {
 		t.Fatal(err)
 	}
 	cloudfrontOutput := &cloudfront.ListDistributionsOutput{
@@ -106,7 +102,6 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 			Items: []cloudfrontTypes.DistributionSummary{ds},
 		},
 	}
-
 	m.EXPECT().ListDistributions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		cloudfrontOutput,
 		nil,
@@ -697,23 +692,6 @@ func buildEksClusters(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&l, nil)
 	return client.Services{
 		Eks: m,
-	}
-}
-
-func buildFsxBackups(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockFsxClient(ctrl)
-	l := fsxTypes.Backup{}
-	err := faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	m.EXPECT().DescribeBackups(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&fsx.DescribeBackupsOutput{
-			Backups: []fsxTypes.Backup{l},
-		}, nil)
-	return client.Services{
-		FSX: m,
 	}
 }
 

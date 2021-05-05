@@ -88,15 +88,15 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "directconnect.virtual_gateways",
-			mockBuilder: buildDirectconnectVirtualGatewaysMock,
-			mainTable:   resources.DirectconnectVirtualGateways(),
+			resource:           "directconnect.virtual_gateways",
+			mockBuilder:        buildDirectconnectVirtualGatewaysMock,
+			mainTable:          resources.DirectconnectVirtualGateways(),
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "directconnect.virtual_interfaces",
-			mockBuilder: buildDirectconnectVirtualInterfacesMock,
-			mainTable:   resources.DirectconnectVirtualInterfaces(),
+			resource:           "directconnect.virtual_interfaces",
+			mockBuilder:        buildDirectconnectVirtualInterfacesMock,
+			mainTable:          resources.DirectconnectVirtualInterfaces(),
 			verifyEmptyColumns: true,
 		},
 		{
@@ -106,15 +106,15 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "ec2.ebs_volumes",
-			mockBuilder: buildEc2EbsVolumes,
-			mainTable:   resources.Ec2EbsVolumes(),
+			resource:           "ec2.ebs_volumes",
+			mockBuilder:        buildEc2EbsVolumes,
+			mainTable:          resources.Ec2EbsVolumes(),
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "ec2.flow_logs",
-			mockBuilder: buildEc2FlowLogsMock,
-			mainTable:   resources.Ec2FlowLogs(),
+			resource:           "ec2.flow_logs",
+			mockBuilder:        buildEc2FlowLogsMock,
+			mainTable:          resources.Ec2FlowLogs(),
 			verifyEmptyColumns: true,
 		},
 		{
@@ -166,15 +166,15 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "ec2.transit_gateways",
-			mockBuilder: buildEc2TransitGateways,
-			mainTable:   resources.Ec2TransitGateways(),
+			resource:           "ec2.transit_gateways",
+			mockBuilder:        buildEc2TransitGateways,
+			mainTable:          resources.Ec2TransitGateways(),
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:    "ec2.vpcs",
-			mockBuilder: buildEc2Vpcs,
-			mainTable:   resources.Ec2Vpcs(),
+			resource:           "ec2.vpcs",
+			mockBuilder:        buildEc2Vpcs,
+			mainTable:          resources.Ec2Vpcs(),
 			verifyEmptyColumns: true,
 		},
 		{
@@ -350,7 +350,7 @@ func TestResources(t *testing.T) {
 		t.Run(tc.resource, func(t *testing.T) {
 			cfg := client.Config{
 				Regions:    []string{"us-east-1"},
-				Accounts:   []client.Account{{"testAccount", ""}},
+				Accounts:   []client.Account{{ID: "testAccount", RoleARN: ""}},
 				AWSDebug:   false,
 				MaxRetries: 3,
 				MaxBackoff: 60,
