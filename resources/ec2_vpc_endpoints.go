@@ -146,7 +146,7 @@ func Ec2VpcEndpoints() *schema.Table {
 func fetchEc2VpcEndpoints(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeVpcEndpointsInput
 	c := meta.(*client.Client)
-	svc := meta.(*client.Client).Services().EC2
+	svc := c.Services().EC2
 	for {
 		output, err := svc.DescribeVpcEndpoints(ctx, &config, func(o *ec2.Options) {
 			o.Region = c.Region

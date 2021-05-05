@@ -347,7 +347,7 @@ func TestResources(t *testing.T) {
 		},
 		{
 			resource:           "ec2.vpc_endpoints",
-			mainTable:          resources.CloudfrontDistributions(),
+			mainTable:          resources.Ec2VpcEndpoints(),
 			mockBuilder:        buildEc2VpcEndpoints,
 			verifyEmptyColumns: true,
 		},
