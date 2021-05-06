@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -271,6 +273,7 @@ func initServices(awsCfg aws.Config) Services {
 		Organizations:    organizations.NewFromConfig(awsCfg),
 		RDS:              rds.NewFromConfig(awsCfg),
 		Redshift:         redshift.NewFromConfig(awsCfg),
+		Route53:          route53.NewFromConfig(awsCfg),
 		S3Manager:        newS3ManagerFromConfig(awsCfg),
 	}
 }
