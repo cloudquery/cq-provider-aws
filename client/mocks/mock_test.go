@@ -346,10 +346,16 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
+      resource:           "cloudfront.cache_policies",
+			mainTable:          resources.CloudfrontCachePolicies(),
+			mockBuilder:        buildCloudfrontCachePoliciesMock,
+			verifyEmptyColumns: true,
+		},
+    }
 			resource:           "route53.hosted_zones",
 			mainTable:          resources.Route53HostedZones(),
 			mockBuilder:        buildRoute53ListHostedZonesMock,
-			verifyEmptyColumns: true,
+      verifyEmptyColumns: true,
 		},
 	}
 	for _, tc := range testResourcesTable {
