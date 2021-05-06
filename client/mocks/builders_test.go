@@ -271,6 +271,17 @@ func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) clie
 		&route53.ListHostedZonesOutput{
 			HostedZones: []route53Types.HostedZone{h},
 		}, nil)
+
+	tag := route53Types.Tag{}
+	if err := faker.FakeData(&tag); err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTagsForResourceOutput{
+			ResourceTagSet: &route53Types.ResourceTagSet{
+				Tags: []route53Types.Tag{tag},
+			},
+		}, nil)
 	return client.Services{
 		Route53: m,
 	}

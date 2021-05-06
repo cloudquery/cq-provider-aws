@@ -180,6 +180,7 @@ type RedshiftClient interface {
 
 type Route53Client interface {
 	ListHostedZones(ctx context.Context, params *route53.ListHostedZonesInput, optFns ...func(*route53.Options)) (*route53.ListHostedZonesOutput, error)
+	ListTagsForResource(ctx context.Context, params *route53.ListTagsForResourceInput, optFns ...func(*route53.Options)) (*route53.ListTagsForResourceOutput, error)
 }
 
 type S3ManagerClient interface {
