@@ -3,10 +3,10 @@ package mocks_test
 import (
 	"testing"
 
-	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
-	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	autoscalingTypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	cloudtrailTypes "github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
@@ -39,7 +39,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	rdsTypes "github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
-	redshiftTypes "github.com/aws/aws-sdk-go-v2/service/redshift/types"  
+	redshiftTypes "github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	route53Types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -567,6 +567,21 @@ func buildEc2Vpcs(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m.EXPECT().DescribeVpcs(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeVpcsOutput{
 			Vpcs: []ec2Types.Vpc{l},
+		}, nil)
+	return client.Services{
+		EC2: m,
+	}
+}
+
+func buildEc2VpcEndpoints(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockEc2Client(ctrl)
+	e := ec2Types.VpcEndpoint{}
+	if err := faker.FakeData(&e); err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeVpcEndpoints(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeVpcEndpointsOutput{
+			VpcEndpoints: []ec2Types.VpcEndpoint{e},
 		}, nil)
 	return client.Services{
 		EC2: m,
