@@ -346,6 +346,12 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
+			resource:           "cloudfront.cache_policies",
+			mainTable:          resources.CloudfrontCachePolicies(),
+			mockBuilder:        buildCloudfrontCachePoliciesMock,
+			verifyEmptyColumns: true,
+		},
+		{
 			resource:           "ec2.vpc_endpoints",
 			mainTable:          resources.Ec2VpcEndpoints(),
 			mockBuilder:        buildEc2VpcEndpoints,
