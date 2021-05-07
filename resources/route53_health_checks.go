@@ -206,7 +206,6 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	}
 	return nil
 }
-
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.HealthCheck)
 	if r.CloudWatchAlarmConfiguration == nil {
@@ -219,7 +218,6 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 	resource.Set(c.Name, tags)
 	return nil
 }
-
 func resolveRoute53healthCheckTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.HealthCheck)
 	svc := meta.(*client.Client).Services().Route53

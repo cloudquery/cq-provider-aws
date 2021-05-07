@@ -2280,6 +2280,26 @@ func (mr *MockRoute53ClientMockRecorder) ListTrafficPolicyInstancesByHostedZone(
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTrafficPolicyInstancesByHostedZone", reflect.TypeOf((*MockRoute53Client)(nil).ListTrafficPolicyInstancesByHostedZone), varargs...)
 }
 
+// ListVPCAssociationAuthorizations mocks base method.
+func (m *MockRoute53Client) ListVPCAssociationAuthorizations(arg0 context.Context, arg1 *route53.ListVPCAssociationAuthorizationsInput, arg2 ...func(*route53.Options)) (*route53.ListVPCAssociationAuthorizationsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListVPCAssociationAuthorizations", varargs...)
+	ret0, _ := ret[0].(*route53.ListVPCAssociationAuthorizationsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListVPCAssociationAuthorizations indicates an expected call of ListVPCAssociationAuthorizations.
+func (mr *MockRoute53ClientMockRecorder) ListVPCAssociationAuthorizations(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListVPCAssociationAuthorizations", reflect.TypeOf((*MockRoute53Client)(nil).ListVPCAssociationAuthorizations), varargs...)
+}
+
 // MockEcsClient is a mock of EcsClient interface.
 type MockEcsClient struct {
 	ctrl     *gomock.Controller

@@ -314,6 +314,16 @@ func buildRoute53HostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.S
 			TrafficPolicyInstances: []route53Types.TrafficPolicyInstance{tpi},
 		}, nil)
 
+	vpc := route53Types.VPC{}
+	if err := faker.FakeData(&vpc); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListVPCAssociationAuthorizations(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListVPCAssociationAuthorizationsOutput{
+			VPCs: []route53Types.VPC{vpc},
+		}, nil)
+
 	return client.Services{
 		Route53: m,
 	}
