@@ -26,11 +26,6 @@ func Route53HostedZones() *schema.Table {
 				Resolver: client.ResolveAWSAccount,
 			},
 			{
-				Name:     "resource_id",
-				Type:     schema.TypeString,
-				Resolver: resolveRoute53hostedZoneResourceID,
-			},
-			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
 				Resolver: resolveRoute53hostedZoneTags,
@@ -39,7 +34,11 @@ func Route53HostedZones() *schema.Table {
 				Name: "caller_reference",
 				Type: schema.TypeString,
 			},
-
+			{
+				Name:     "resource_id",
+				Type:     schema.TypeString,
+				Resolver: resolveRoute53hostedZoneResourceID,
+			},
 			{
 				Name: "name",
 				Type: schema.TypeString,
@@ -95,9 +94,14 @@ func Route53HostedZones() *schema.Table {
 				Resolver: fetchRoute53HostedZoneResourceRecordSets,
 				Columns: []schema.Column{
 					{
-						Name:     "hosted_zone_id2",
+						Name:     "hosted_zone_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name:     "resource_records",
+						Type:     schema.TypeStringArray,
+						Resolver: resolveRoute53hostedZoneResourceRecordSetResourceRecords,
 					},
 					{
 						Name: "name",
@@ -116,11 +120,6 @@ func Route53HostedZones() *schema.Table {
 						Name:     "evaluate_target_health",
 						Type:     schema.TypeBool,
 						Resolver: schema.PathResolver("AliasTarget.EvaluateTargetHealth"),
-					},
-					{
-						Name:     "hosted_zone_id1",
-						Type:     schema.TypeString,
-						Resolver: schema.PathResolver("AliasTarget.HostedZoneId"),
 					},
 					{
 						Name: "failover",
@@ -171,23 +170,6 @@ func Route53HostedZones() *schema.Table {
 						Type: schema.TypeBigInt,
 					},
 				},
-				Relations: []*schema.Table{
-					{
-						Name:     "aws_route53_hosted_zone_resource_record_set_resource_records",
-						Resolver: fetchRoute53HostedZoneResourceRecordSetResourceRecords,
-						Columns: []schema.Column{
-							{
-								Name:     "hosted_zone_resource_record_set_id",
-								Type:     schema.TypeUUID,
-								Resolver: schema.ParentIdResolver,
-							},
-							{
-								Name: "value",
-								Type: schema.TypeString,
-							},
-						},
-					},
-				},
 			},
 		},
 	}
@@ -214,10 +196,10 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
-
 func resolveRoute53hostedZoneTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.HostedZone)
 	svc := meta.(*client.Client).Services().Route53
-	resourceId := resource.Get("resource_id").(string)
+	resourceId := strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
 	tagsOutput, err := svc.ListTagsForResource(ctx, &route53.ListTagsForResourceInput{ResourceId: &resourceId, ResourceType: types.TagResourceTypeHostedzone}, func(options *route53.Options) {})
 	if err != nil {
 		return err
@@ -231,22 +213,21 @@ func resolveRoute53hostedZoneTags(ctx context.Context, meta schema.ClientMeta, r
 	for _, t := range tagsOutput.ResourceTagSet.Tags {
 		tags[*t.Key] = t.Value
 	}
-	resource.Set("tags", tags)
+	resource.Set(c.Name, tags)
 	return nil
 }
-
 func resolveRoute53hostedZoneResourceID(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.HostedZone)
 	resource.Set(c.Name, strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1))
 	return nil
 }
-
 func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r := parent.Item.(types.HostedZone)
 	svc := meta.(*client.Client).Services().Route53
-	resourceId := parent.Get("resource_id").(string)
+	resourceId := strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
 	config := route53.ListQueryLoggingConfigsInput{HostedZoneId: &resourceId}
 	for {
-		response, err := svc.ListQueryLoggingConfigs(ctx, &route53.ListQueryLoggingConfigsInput{HostedZoneId: &resourceId}, func(options *route53.Options) {})
+		response, err := svc.ListQueryLoggingConfigs(ctx, &config, func(options *route53.Options) {})
 		if err != nil {
 			return err
 		}
@@ -258,11 +239,26 @@ func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.
 	}
 	return nil
 }
-
 func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	panic("not implemented")
-}
+	r := parent.Item.(types.HostedZone)
+	svc := meta.(*client.Client).Services().Route53
+	resourceId := strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
+	config := route53.ListResourceRecordSetsInput{HostedZoneId: &resourceId}
 
-func fetchRoute53HostedZoneResourceRecordSetResourceRecords(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	panic("not implemented")
+	response, err := svc.ListResourceRecordSets(ctx, &config, func(options *route53.Options) {})
+	if err != nil {
+		return err
+	}
+	res <- response.ResourceRecordSets
+
+	return nil
+}
+func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ResourceRecordSet)
+	var recordSets []string
+	for _, t := range r.ResourceRecords {
+		recordSets = append(recordSets, *t.Value)
+	}
+	resource.Set(c.Name, recordSets)
+	return nil
 }

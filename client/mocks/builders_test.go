@@ -294,6 +294,16 @@ func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) clie
 			QueryLoggingConfigs: []route53Types.QueryLoggingConfig{qlc},
 		}, nil)
 
+	rrs := route53Types.ResourceRecordSet{}
+	if err := faker.FakeData(&rrs); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListResourceRecordSets(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListResourceRecordSetsOutput{
+			ResourceRecordSets: []route53Types.ResourceRecordSet{rrs},
+		}, nil)
+
 	return client.Services{
 		Route53: m,
 	}

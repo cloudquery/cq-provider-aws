@@ -2160,6 +2160,26 @@ func (mr *MockRoute53ClientMockRecorder) ListQueryLoggingConfigs(arg0, arg1 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListQueryLoggingConfigs", reflect.TypeOf((*MockRoute53Client)(nil).ListQueryLoggingConfigs), varargs...)
 }
 
+// ListResourceRecordSets mocks base method.
+func (m *MockRoute53Client) ListResourceRecordSets(arg0 context.Context, arg1 *route53.ListResourceRecordSetsInput, arg2 ...func(*route53.Options)) (*route53.ListResourceRecordSetsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListResourceRecordSets", varargs...)
+	ret0, _ := ret[0].(*route53.ListResourceRecordSetsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListResourceRecordSets indicates an expected call of ListResourceRecordSets.
+func (mr *MockRoute53ClientMockRecorder) ListResourceRecordSets(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListResourceRecordSets", reflect.TypeOf((*MockRoute53Client)(nil).ListResourceRecordSets), varargs...)
+}
+
 // ListTagsForResource mocks base method.
 func (m *MockRoute53Client) ListTagsForResource(arg0 context.Context, arg1 *route53.ListTagsForResourceInput, arg2 ...func(*route53.Options)) (*route53.ListTagsForResourceOutput, error) {
 	m.ctrl.T.Helper()
