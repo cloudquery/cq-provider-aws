@@ -2120,6 +2120,46 @@ func (m *MockRoute53Client) EXPECT() *MockRoute53ClientMockRecorder {
 	return m.recorder
 }
 
+// GetTrafficPolicy mocks base method.
+func (m *MockRoute53Client) GetTrafficPolicy(arg0 context.Context, arg1 *route53.GetTrafficPolicyInput, arg2 ...func(*route53.Options)) (*route53.GetTrafficPolicyOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetTrafficPolicy", varargs...)
+	ret0, _ := ret[0].(*route53.GetTrafficPolicyOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTrafficPolicy indicates an expected call of GetTrafficPolicy.
+func (mr *MockRoute53ClientMockRecorder) GetTrafficPolicy(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrafficPolicy", reflect.TypeOf((*MockRoute53Client)(nil).GetTrafficPolicy), varargs...)
+}
+
+// ListHealthChecks mocks base method.
+func (m *MockRoute53Client) ListHealthChecks(arg0 context.Context, arg1 *route53.ListHealthChecksInput, arg2 ...func(*route53.Options)) (*route53.ListHealthChecksOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListHealthChecks", varargs...)
+	ret0, _ := ret[0].(*route53.ListHealthChecksOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListHealthChecks indicates an expected call of ListHealthChecks.
+func (mr *MockRoute53ClientMockRecorder) ListHealthChecks(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListHealthChecks", reflect.TypeOf((*MockRoute53Client)(nil).ListHealthChecks), varargs...)
+}
+
 // ListHostedZones mocks base method.
 func (m *MockRoute53Client) ListHostedZones(arg0 context.Context, arg1 *route53.ListHostedZonesInput, arg2 ...func(*route53.Options)) (*route53.ListHostedZonesOutput, error) {
 	m.ctrl.T.Helper()
@@ -2198,6 +2238,46 @@ func (mr *MockRoute53ClientMockRecorder) ListTagsForResource(arg0, arg1 interfac
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockRoute53Client)(nil).ListTagsForResource), varargs...)
+}
+
+// ListTrafficPolicies mocks base method.
+func (m *MockRoute53Client) ListTrafficPolicies(arg0 context.Context, arg1 *route53.ListTrafficPoliciesInput, arg2 ...func(*route53.Options)) (*route53.ListTrafficPoliciesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTrafficPolicies", varargs...)
+	ret0, _ := ret[0].(*route53.ListTrafficPoliciesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTrafficPolicies indicates an expected call of ListTrafficPolicies.
+func (mr *MockRoute53ClientMockRecorder) ListTrafficPolicies(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTrafficPolicies", reflect.TypeOf((*MockRoute53Client)(nil).ListTrafficPolicies), varargs...)
+}
+
+// ListTrafficPolicyInstancesByHostedZone mocks base method.
+func (m *MockRoute53Client) ListTrafficPolicyInstancesByHostedZone(arg0 context.Context, arg1 *route53.ListTrafficPolicyInstancesByHostedZoneInput, arg2 ...func(*route53.Options)) (*route53.ListTrafficPolicyInstancesByHostedZoneOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTrafficPolicyInstancesByHostedZone", varargs...)
+	ret0, _ := ret[0].(*route53.ListTrafficPolicyInstancesByHostedZoneOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTrafficPolicyInstancesByHostedZone indicates an expected call of ListTrafficPolicyInstancesByHostedZone.
+func (mr *MockRoute53ClientMockRecorder) ListTrafficPolicyInstancesByHostedZone(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTrafficPolicyInstancesByHostedZone", reflect.TypeOf((*MockRoute53Client)(nil).ListTrafficPolicyInstancesByHostedZone), varargs...)
 }
 
 // MockEcsClient is a mock of EcsClient interface.

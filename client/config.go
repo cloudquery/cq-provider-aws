@@ -79,7 +79,9 @@ const DefaultConfigYaml = `
       - name: rds.instances
       - name: redshift.clusters
       - name: redshift.subnet_groups
+      - name: route53.health_checks
       - name: route53.hosted_zones
+      - name: route53.traffic_policies
       - name: s3.buckets
       - name: sns.subscriptions
       - name: sns.topics`

@@ -261,7 +261,7 @@ func buildRedshiftSubnetGroupsMock(t *testing.T, ctrl *gomock.Controller) client
 	}
 }
 
-func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+func buildRoute53HostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockRoute53Client(ctrl)
 	h := route53Types.HostedZone{}
 	if err := faker.FakeData(&h); err != nil {
@@ -302,6 +302,73 @@ func buildRoute53ListHostedZonesMock(t *testing.T, ctrl *gomock.Controller) clie
 	m.EXPECT().ListResourceRecordSets(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&route53.ListResourceRecordSetsOutput{
 			ResourceRecordSets: []route53Types.ResourceRecordSet{rrs},
+		}, nil)
+
+	tpi := route53Types.TrafficPolicyInstance{}
+	if err := faker.FakeData(&tpi); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListTrafficPolicyInstancesByHostedZone(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTrafficPolicyInstancesByHostedZoneOutput{
+			TrafficPolicyInstances: []route53Types.TrafficPolicyInstance{tpi},
+		}, nil)
+
+	return client.Services{
+		Route53: m,
+	}
+}
+
+func buildRoute53TrafficPoliciesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockRoute53Client(ctrl)
+	tps := route53Types.TrafficPolicySummary{}
+	if err := faker.FakeData(&tps); err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListTrafficPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTrafficPoliciesOutput{
+			TrafficPolicySummaries: []route53Types.TrafficPolicySummary{tps},
+		}, nil)
+
+	tp := route53Types.TrafficPolicy{}
+	if err := faker.FakeData(&tp); err != nil {
+		t.Fatal(err)
+	}
+
+	tp.Id = tps.Id
+
+	m.EXPECT().GetTrafficPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.GetTrafficPolicyOutput{
+			TrafficPolicy: &tp,
+		}, nil)
+
+	return client.Services{
+		Route53: m,
+	}
+}
+
+func buildRoute53HealthChecksMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockRoute53Client(ctrl)
+	hc := route53Types.HealthCheck{}
+	if err := faker.FakeData(&hc); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListHealthChecks(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListHealthChecksOutput{
+			HealthChecks: []route53Types.HealthCheck{hc},
+		}, nil)
+
+	tag := route53Types.Tag{}
+	if err := faker.FakeData(&tag); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTagsForResourceOutput{
+			ResourceTagSet: &route53Types.ResourceTagSet{
+				Tags: []route53Types.Tag{tag},
+			},
 		}, nil)
 
 	return client.Services{

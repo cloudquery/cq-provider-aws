@@ -352,15 +352,27 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
-			resource:           "route53.hosted_zones",
-			mainTable:          resources.Route53HostedZones(),
-			mockBuilder:        buildRoute53ListHostedZonesMock,
-			verifyEmptyColumns: true,
-		},
-		{
 			resource:           "ec2.vpc_endpoints",
 			mainTable:          resources.Ec2VpcEndpoints(),
 			mockBuilder:        buildEc2VpcEndpoints,
+			verifyEmptyColumns: true,
+		},
+		{
+			resource:           "route53.hosted_zones",
+			mainTable:          resources.Route53HostedZones(),
+			mockBuilder:        buildRoute53HostedZonesMock,
+			verifyEmptyColumns: true,
+		},
+		{
+			resource:           "route53.traffic_policies",
+			mainTable:          resources.Route53HostedZones(),
+			mockBuilder:        buildRoute53TrafficPoliciesMock,
+			verifyEmptyColumns: true,
+		},
+		{
+			resource:           "route53.health_checks",
+			mainTable:          resources.Route53HostedZones(),
+			mockBuilder:        buildRoute53HealthChecksMock,
 			verifyEmptyColumns: true,
 		},
 	}
