@@ -31,6 +31,11 @@ func Route53HostedZones() *schema.Table {
 				Resolver: resolveRoute53hostedZoneTags,
 			},
 			{
+				Name:     "delegation_set_id",
+				Type:     schema.TypeString,
+				Resolver: resolveRoute53hostedZoneDelegationSetID,
+			},
+			{
 				Name: "caller_reference",
 				Type: schema.TypeString,
 			},
@@ -282,6 +287,23 @@ func resolveRoute53hostedZoneTags(ctx context.Context, meta schema.ClientMeta, r
 	resource.Set(c.Name, tags)
 	return nil
 }
+func resolveRoute53hostedZoneDelegationSetID(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.HostedZone)
+	svc := meta.(*client.Client).Services().Route53
+	resourceId := strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
+	hostedZoneOutput, err := svc.GetHostedZone(ctx, &route53.GetHostedZoneInput{Id: &resourceId}, func(options *route53.Options) {})
+	if err != nil {
+		return err
+	}
+
+	if hostedZoneOutput.DelegationSet == nil {
+		return nil
+	}
+
+	resource.Set(c.Name, hostedZoneOutput.DelegationSet.Id)
+	return nil
+}
+
 func resolveRoute53hostedZoneResourceID(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.HostedZone)
 	resource.Set(c.Name, strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1))
@@ -346,7 +368,6 @@ func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta sche
 	}
 	return nil
 }
-
 func fetchRoute53HostedZoneVpcAssociationAuthorizations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r := parent.Item.(types.HostedZone)
 	resourceId := strings.Replace(*r.Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)

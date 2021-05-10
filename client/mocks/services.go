@@ -2120,6 +2120,26 @@ func (m *MockRoute53Client) EXPECT() *MockRoute53ClientMockRecorder {
 	return m.recorder
 }
 
+// GetHostedZone mocks base method.
+func (m *MockRoute53Client) GetHostedZone(arg0 context.Context, arg1 *route53.GetHostedZoneInput, arg2 ...func(*route53.Options)) (*route53.GetHostedZoneOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetHostedZone", varargs...)
+	ret0, _ := ret[0].(*route53.GetHostedZoneOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHostedZone indicates an expected call of GetHostedZone.
+func (mr *MockRoute53ClientMockRecorder) GetHostedZone(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostedZone", reflect.TypeOf((*MockRoute53Client)(nil).GetHostedZone), varargs...)
+}
+
 // GetTrafficPolicy mocks base method.
 func (m *MockRoute53Client) GetTrafficPolicy(arg0 context.Context, arg1 *route53.GetTrafficPolicyInput, arg2 ...func(*route53.Options)) (*route53.GetTrafficPolicyOutput, error) {
 	m.ctrl.T.Helper()
@@ -2218,6 +2238,26 @@ func (mr *MockRoute53ClientMockRecorder) ListResourceRecordSets(arg0, arg1 inter
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListResourceRecordSets", reflect.TypeOf((*MockRoute53Client)(nil).ListResourceRecordSets), varargs...)
+}
+
+// ListReusableDelegationSets mocks base method.
+func (m *MockRoute53Client) ListReusableDelegationSets(arg0 context.Context, arg1 *route53.ListReusableDelegationSetsInput, arg2 ...func(*route53.Options)) (*route53.ListReusableDelegationSetsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListReusableDelegationSets", varargs...)
+	ret0, _ := ret[0].(*route53.ListReusableDelegationSetsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListReusableDelegationSets indicates an expected call of ListReusableDelegationSets.
+func (mr *MockRoute53ClientMockRecorder) ListReusableDelegationSets(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListReusableDelegationSets", reflect.TypeOf((*MockRoute53Client)(nil).ListReusableDelegationSets), varargs...)
 }
 
 // ListTagsForResource mocks base method.

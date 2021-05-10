@@ -375,6 +375,12 @@ func TestResources(t *testing.T) {
 			mockBuilder:        buildRoute53HealthChecksMock,
 			verifyEmptyColumns: true,
 		},
+		{
+			resource:           "route53.reusable_delegation_sets",
+			mainTable:          resources.Route53ReusableDelegationSets(),
+			mockBuilder:        buildRoute53DelegationSetsMock,
+			verifyEmptyColumns: true,
+		},
 	}
 	for _, tc := range testResourcesTable {
 		t.Run(tc.resource, func(t *testing.T) {

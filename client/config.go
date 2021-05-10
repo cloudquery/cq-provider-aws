@@ -79,6 +79,7 @@ const DefaultConfigYaml = `
       - name: rds.instances
       - name: redshift.clusters
       - name: redshift.subnet_groups
+      - name: route53.reusable_delegation_sets
       - name: route53.health_checks
       - name: route53.hosted_zones
       - name: route53.traffic_policies
