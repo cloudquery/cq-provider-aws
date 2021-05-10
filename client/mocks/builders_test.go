@@ -347,9 +347,14 @@ func buildRoute53TrafficPoliciesMock(t *testing.T, ctrl *gomock.Controller) clie
 
 	tp.Id = tps.Id
 
-	m.EXPECT().GetTrafficPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.GetTrafficPolicyOutput{
-			TrafficPolicy: &tp,
+	//m.EXPECT().GetTrafficPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	//	&route53.GetTrafficPolicyOutput{
+	//		TrafficPolicy: &tp,
+	//	}, nil)
+
+	m.EXPECT().ListTrafficPolicyVersions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTrafficPolicyVersionsOutput{
+			TrafficPolicies: []route53Types.TrafficPolicy{tp},
 		}, nil)
 
 	return client.Services{

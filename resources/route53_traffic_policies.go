@@ -3,6 +3,8 @@ package resources
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/service/route53/types"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -23,29 +25,63 @@ func Route53TrafficPolicies() *schema.Table {
 				Resolver: client.ResolveAWSAccount,
 			},
 			{
-				Name: "document",
-				Type: schema.TypeString,
-			},
-			{
 				Name:     "resource_id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("Id"),
+			},
+			{
+				Name: "latest_version",
+				Type: schema.TypeInt,
 			},
 			{
 				Name: "name",
 				Type: schema.TypeString,
 			},
 			{
-				Name: "type",
-				Type: schema.TypeString,
-			},
-			{
-				Name: "version",
+				Name: "traffic_policy_count",
 				Type: schema.TypeInt,
 			},
 			{
-				Name: "comment",
+				Name: "type",
 				Type: schema.TypeString,
+			},
+		},
+		Relations: []*schema.Table{
+			{
+				Name:     "aws_route53_traffic_policy_versions",
+				Resolver: fetchRoute53TrafficPolicyVersions,
+				Columns: []schema.Column{
+					{
+						Name:     "traffic_policy_id",
+						Type:     schema.TypeUUID,
+						Resolver: schema.ParentIdResolver,
+					},
+					{
+						Name: "document",
+						Type: schema.TypeString,
+					},
+					{
+						Name:     "version_id",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Id"),
+					},
+					{
+						Name: "name",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "type",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "version",
+						Type: schema.TypeInt,
+					},
+					{
+						Name: "comment",
+						Type: schema.TypeString,
+					},
+				},
 			},
 		},
 	}
@@ -64,19 +100,29 @@ func fetchRoute53TrafficPolicies(ctx context.Context, meta schema.ClientMeta, pa
 		if err != nil {
 			return err
 		}
-
-		for _, tps := range response.TrafficPolicySummaries {
-			tpResponse, err := svc.GetTrafficPolicy(ctx, &route53.GetTrafficPolicyInput{Id: tps.Id}, func(o *route53.Options) {})
-			if err != nil {
-				return err
-			}
-			res <- tpResponse.TrafficPolicy
-		}
+		res <- response.TrafficPolicySummaries
 
 		if aws.ToString(response.TrafficPolicyIdMarker) == "" {
 			break
 		}
 		config.TrafficPolicyIdMarker = response.TrafficPolicyIdMarker
+	}
+	return nil
+}
+func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r := parent.Item.(types.TrafficPolicySummary)
+	config := route53.ListTrafficPolicyVersionsInput{Id: r.Id}
+	svc := meta.(*client.Client).Services().Route53
+	for {
+		response, err := svc.ListTrafficPolicyVersions(ctx, &config, func(o *route53.Options) {})
+		if err != nil {
+			return err
+		}
+		res <- response.TrafficPolicies
+		if aws.ToString(response.TrafficPolicyVersionMarker) == "" {
+			break
+		}
+		config.TrafficPolicyVersionMarker = response.TrafficPolicyVersionMarker
 	}
 	return nil
 }

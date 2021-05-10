@@ -188,6 +188,7 @@ type Route53Client interface {
 	GetTrafficPolicy(ctx context.Context, params *route53.GetTrafficPolicyInput, optFns ...func(*route53.Options)) (*route53.GetTrafficPolicyOutput, error)
 	ListHealthChecks(ctx context.Context, params *route53.ListHealthChecksInput, optFns ...func(*route53.Options)) (*route53.ListHealthChecksOutput, error)
 	ListVPCAssociationAuthorizations(ctx context.Context, params *route53.ListVPCAssociationAuthorizationsInput, optFns ...func(*route53.Options)) (*route53.ListVPCAssociationAuthorizationsOutput, error)
+	ListTrafficPolicyVersions(ctx context.Context, params *route53.ListTrafficPolicyVersionsInput, optFns ...func(*route53.Options)) (*route53.ListTrafficPolicyVersionsOutput, error)
 }
 
 type S3ManagerClient interface {
