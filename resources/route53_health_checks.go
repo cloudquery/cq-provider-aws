@@ -221,7 +221,7 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 func resolveRoute53healthCheckTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.HealthCheck)
 	svc := meta.(*client.Client).Services().Route53
-	tagsOutput, err := svc.ListTagsForResource(ctx, &route53.ListTagsForResourceInput{ResourceId: r.Id, ResourceType: types.TagResourceTypeHostedzone}, func(options *route53.Options) {})
+	tagsOutput, err := svc.ListTagsForResource(ctx, &route53.ListTagsForResourceInput{ResourceId: r.Id, ResourceType: types.TagResourceTypeHealthcheck}, func(options *route53.Options) {})
 	if err != nil {
 		return err
 	}
