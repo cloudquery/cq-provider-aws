@@ -6,6 +6,8 @@ package client
 import (
 	"context"
 
+	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
+
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -99,6 +101,11 @@ type ElasticbeanstalkClient interface {
 type ElbV2Client interface {
 	DescribeLoadBalancers(ctx context.Context, params *elbv2.DescribeLoadBalancersInput, optFns ...func(*elbv2.Options)) (*elbv2.DescribeLoadBalancersOutput, error)
 	DescribeTargetGroups(ctx context.Context, params *elbv2.DescribeTargetGroupsInput, optFns ...func(*elbv2.Options)) (*elbv2.DescribeTargetGroupsOutput, error)
+}
+
+type ElbV1Client interface {
+	DescribeLoadBalancers(ctx context.Context, params *elbv1.DescribeLoadBalancersInput, optFns ...func(*elbv1.Options)) (*elbv1.DescribeLoadBalancersOutput, error)
+	//DescribeTargetGroups(ctx context.Context, params *elbv1.Describe, optFns ...func(*elbv2.Options)) (*elbv2.DescribeTargetGroupsOutput, error)
 }
 
 type EmrClient interface {

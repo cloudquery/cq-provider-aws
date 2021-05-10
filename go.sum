@@ -7,6 +7,8 @@ github.com/aws/aws-sdk-go-v2 v1.3.0/go.mod h1:hTQc/9pYq5bfFACIUY9tc/2SYWd9Vnmw+t
 github.com/aws/aws-sdk-go-v2 v1.3.1/go.mod h1:5SmWRTjN6uTRFNCc7rR69xHsdcUJnthmaRHGDsYhpTE=
 github.com/aws/aws-sdk-go-v2 v1.3.2 h1:RQj8l98yKUm0UV2Wd3w/Ms+TXV9Rs1E6Kr5tRRMfyU4=
 github.com/aws/aws-sdk-go-v2 v1.3.2/go.mod h1:7OaACgj2SX3XGWnrIjGlJM22h6yD6MEWKvm7levnnM8=
+github.com/aws/aws-sdk-go-v2 v1.4.0 h1:Ryh4fNebT9SwLyCKPSk83dyEZj+KB6KzDyb1gXii7EI=
+github.com/aws/aws-sdk-go-v2 v1.4.0/go.mod h1:tI4KhsR5VkzlUa2DZAdwx7wCAYGwkZZ1H31PYrBFx1w=
 github.com/aws/aws-sdk-go-v2/config v1.1.6 h1:tg8KyxrxDt1CrYmZXWs9lc6IFE1yxtk9kn6eS/v2fdA=
 github.com/aws/aws-sdk-go-v2/config v1.1.6/go.mod h1:Kx90DDOgkMpRfSkzGbF13AVXHHfBNct1liO+95KxXsU=
 github.com/aws/aws-sdk-go-v2/credentials v1.1.6 h1:efaeh6FsO/jzyJ+U4ZxduKC6rRJDrUpu+Z0k5+guqHo=
@@ -39,6 +41,8 @@ github.com/aws/aws-sdk-go-v2/service/eks v1.2.1 h1:eNSGiZZKcrjT1/UlxOSL/v1gjR5be
 github.com/aws/aws-sdk-go-v2/service/eks v1.2.1/go.mod h1:XGNXr+eBGsXebPMHCHHJEaOWaenvyybnUU+dsdKpDXg=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.2.0 h1:vHZW6a3gZb81XNgsTL3/dnDzuPGn3+8WSr9OR2u2UIs=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.2.0/go.mod h1:KjNQ+Fqe7INQJHomPTkWW+y5QjP3B9T0Qjl2gSJAWVM=
+github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.2.3 h1:nM5GXAcrBJDxswsQjxKKI52PdzhZNbusRB5wARv94W4=
+github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.2.3/go.mod h1:vXSKeCB7J5+zTOJ8DiRk4QoxatBvxvpXu0ezHK2DNf0=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.2.0 h1:9lADbVulXuffsnKXULr1p82sHd9t8JiMF41jmgIRbkg=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.2.0/go.mod h1:78leP5ag2ke3L727+st+WAS6IxhLYzROUWMgSzvMonc=
 github.com/aws/aws-sdk-go-v2/service/emr v1.2.0 h1:JwDNxHv2oazaknN1la3lskZWvOS56cpyG+JZVJc7cIA=
@@ -75,6 +79,8 @@ github.com/aws/smithy-go v1.2.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAm
 github.com/aws/smithy-go v1.3.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/aws/smithy-go v1.3.1 h1:xJFO4pK0y9J8fCl34uGsSJX5KNnGbdARDlA5BPhXnwE=
 github.com/aws/smithy-go v1.3.1/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
+github.com/aws/smithy-go v1.4.0 h1:3rsQpgRe+OoQgJhEwGNpIkosl0fJLdmQqF4gSFRjg+4=
+github.com/aws/smithy-go v1.4.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudquery/cq-provider-sdk v0.1.7 h1:2jq93RngvyMfe1bLYE6lg3UHfT+vxd9tzxC5vH5XHC0=

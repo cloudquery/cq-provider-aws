@@ -81,6 +81,7 @@ type Services struct {
 	ElasticBeanstalk ElasticbeanstalkClient
 	EMR              EmrClient
 	SNS              SnsClient
+	ELBv1            ElbV1Client
 	ELBv2            ElbV2Client
 	FSX              FsxClient
 	IAM              IamClient

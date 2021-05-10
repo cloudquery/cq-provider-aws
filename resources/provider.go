@@ -43,6 +43,7 @@ func Provider() *provider.Provider {
 			"ecs.clusters":                      EcsClusters(),
 			"elasticbeanstalk.environments":     ElasticbeanstalkEnvironments(),
 			"elbv2.target_groups":               Elbv2TargetGroups(),
+			"elbv1.load_balancers":              Elbv1LoadBalancers(),
 			"elbv2.load_balancers":              Elbv2LoadBalancers(),
 			"emr.clusters":                      EmrClusters(),
 			"fsx.backups":                       FsxBackups(),
