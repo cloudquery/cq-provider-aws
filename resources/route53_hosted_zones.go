@@ -2,6 +2,10 @@ package resources
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
@@ -27,9 +31,8 @@ func Route53HostedZones() *schema.Table {
 				Type: schema.TypeJSON,
 			},
 			{
-				Name:     "delegation_set_id",
-				Type:     schema.TypeString,
-				Resolver: resolveRoute53hostedZoneDelegationSetID,
+				Name: "delegation_set_id",
+				Type: schema.TypeString,
 			},
 			{
 				Name: "caller_reference",
@@ -255,18 +258,24 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 		if err != nil {
 			return err
 		}
-		hostedZoneWrappers := make([]Route53HostedZoneWrapper, len(response.HostedZones))
+		hostedZoneWrappers := make([]Route53HostedZoneWrapper, 0, len(response.HostedZones))
 		tagsProcessed := 0
 		for i := range response.HostedZones {
-			parsedId := parseRoute53HostedZoneId(*response.HostedZones[i].Id)
-			response.HostedZones[i].Id = &parsedId
-			hostedZoneWrappers[i] = Route53HostedZoneWrapper{
-				response.HostedZones[i],
-				nil,
+			parsedId := strings.Replace(*response.HostedZones[i].Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
+			gotHostedZone, err := svc.GetHostedZone(ctx, &route53.GetHostedZoneInput{Id: &parsedId})
+			if err != nil {
+				return err
 			}
+			hostedZoneWrappers = append(hostedZoneWrappers, Route53HostedZoneWrapper{
+				*gotHostedZone.HostedZone,
+				nil,
+				gotHostedZone.DelegationSet.Id,
+				gotHostedZone.VPCs,
+			})
+			hostedZoneWrappers[i].Id = &parsedId
 
 			//retrieve aggregated tags for every 10 or a few last resources
-			if (i+1)%10 == 0 || i == len(hostedZoneWrappers)-1 {
+			if (i+1)%10 == 0 || i == len(response.HostedZones)-1 {
 				tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHostedzone, ResourceIds: make([]string, 0, i-tagsProcessed+1)}
 				for j := tagsProcessed; j < i+1; j++ {
 					tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *hostedZoneWrappers[j].Id)
@@ -296,24 +305,13 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
-func resolveRoute53hostedZoneDelegationSetID(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(Route53HostedZoneWrapper)
-	svc := meta.(*client.Client).Services().Route53
-	hostedZoneOutput, err := svc.GetHostedZone(ctx, &route53.GetHostedZoneInput{Id: r.Id}, func(options *route53.Options) {})
-	if err != nil {
-		return err
-	}
-
-	if hostedZoneOutput.DelegationSet == nil {
-		return nil
-	}
-
-	resource.Set(c.Name, hostedZoneOutput.DelegationSet.Id)
-	return nil
-}
 func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(Route53HostedZoneWrapper)
+	if !ok {
+		return errors.New(client.ResourceTypeAssertError)
+	}
 	svc := meta.(*client.Client).Services().Route53
-	config := route53.ListQueryLoggingConfigsInput{HostedZoneId: parent.Item.(Route53HostedZoneWrapper).Id}
+	config := route53.ListQueryLoggingConfigsInput{HostedZoneId: r.Id}
 	for {
 		response, err := svc.ListQueryLoggingConfigs(ctx, &config, func(options *route53.Options) {})
 		if err != nil {
@@ -328,8 +326,12 @@ func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.
 	return nil
 }
 func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(Route53HostedZoneWrapper)
+	if !ok {
+		return errors.New(client.ResourceTypeAssertError)
+	}
 	svc := meta.(*client.Client).Services().Route53
-	config := route53.ListResourceRecordSetsInput{HostedZoneId: parent.Item.(Route53HostedZoneWrapper).Id}
+	config := route53.ListResourceRecordSetsInput{HostedZoneId: r.Id}
 
 	response, err := svc.ListResourceRecordSets(ctx, &config, func(options *route53.Options) {})
 	if err != nil {
@@ -340,7 +342,10 @@ func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.C
 	return nil
 }
 func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ResourceRecordSet)
+	r, ok := resource.Item.(types.ResourceRecordSet)
+	if !ok {
+		return errors.New(client.ResourceTypeAssertError)
+	}
 	var recordSets []string
 	for _, t := range r.ResourceRecords {
 		recordSets = append(recordSets, *t.Value)
@@ -349,7 +354,11 @@ func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Contex
 	return nil
 }
 func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	config := route53.ListTrafficPolicyInstancesByHostedZoneInput{HostedZoneId: parent.Item.(Route53HostedZoneWrapper).Id}
+	r, ok := parent.Item.(Route53HostedZoneWrapper)
+	if !ok {
+		return errors.New(client.ResourceTypeAssertError)
+	}
+	config := route53.ListTrafficPolicyInstancesByHostedZoneInput{HostedZoneId: r.Id}
 	svc := meta.(*client.Client).Services().Route53
 	for {
 		response, err := svc.ListTrafficPolicyInstancesByHostedZone(ctx, &config)
@@ -365,18 +374,10 @@ func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta sche
 	return nil
 }
 func fetchRoute53HostedZoneVpcAssociationAuthorizations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	config := route53.ListVPCAssociationAuthorizationsInput{HostedZoneId: parent.Item.(Route53HostedZoneWrapper).Id}
-	svc := meta.(*client.Client).Services().Route53
-	for {
-		response, err := svc.ListVPCAssociationAuthorizations(ctx, &config)
-		if err != nil {
-			return err
-		}
-		res <- response.VPCs
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		config.NextToken = response.NextToken
+	r, ok := parent.Item.(Route53HostedZoneWrapper)
+	if !ok {
+		return errors.New(client.ResourceTypeAssertError)
 	}
+	res <- r.VPCs
 	return nil
 }

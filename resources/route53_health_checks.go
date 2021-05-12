@@ -206,7 +206,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 			})
 
 			//retrieve aggregated tags for every 10 or a few last resources
-			if (i+1)%10 == 0 || i == len(healthCheckWrappers)-1 {
+			if (i+1)%10 == 0 || i == len(response.HealthChecks)-1 {
 				tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, i-tagsProcessed+1)}
 				for j := tagsProcessed; j < i+1; j++ {
 					tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *healthCheckWrappers[j].Id)
@@ -240,7 +240,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(Route53HealthCheckWrapper)
 	if !ok {
-		return errors.New(resourceTypeAssertError)
+		return errors.New(client.ResourceTypeAssertError)
 	}
 
 	if r.CloudWatchAlarmConfiguration == nil {
