@@ -371,7 +371,7 @@ func TestResources(t *testing.T) {
 		},
 		{
 			resource:           "route53.health_checks",
-			mainTable:          resources.Route53HostedZones(),
+			mainTable:          resources.Route53HealthChecks(),
 			mockBuilder:        buildRoute53HealthChecksMock,
 			verifyEmptyColumns: true,
 		},

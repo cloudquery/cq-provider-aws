@@ -128,7 +128,10 @@ func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMe
 	return nil
 }
 func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	item := resource.Item.(types.TrafficPolicy)
+	item, ok := resource.Item.(types.TrafficPolicy)
+	if !ok {
+
+	}
 	var value interface{}
 	err := json.Unmarshal([]byte(*item.Document), &value)
 	if err != nil {

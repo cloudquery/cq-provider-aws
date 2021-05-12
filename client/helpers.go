@@ -2,11 +2,7 @@ package client
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
-	"strings"
-
-	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 
 	"github.com/aws/smithy-go"
 )
@@ -25,8 +21,4 @@ func IgnoreAccessDeniedServiceDisabled(err error) bool {
 		}
 	}
 	return false
-}
-
-func ParseRoute53HostedZoneId(id string) string {
-	return strings.Replace(id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
 }

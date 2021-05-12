@@ -1,6 +1,8 @@
 package mocks_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -275,10 +277,15 @@ func buildRoute53HostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.S
 	if err := faker.FakeData(&tag); err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListTagsForResourceOutput{
-			ResourceTagSet: &route53Types.ResourceTagSet{
-				Tags: []route53Types.Tag{tag},
+
+	hzId := strings.Replace(*h.Id, fmt.Sprintf("/%s/", route53Types.TagResourceTypeHostedzone), "", 1)
+	m.EXPECT().ListTagsForResources(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTagsForResourcesOutput{
+			ResourceTagSets: []route53Types.ResourceTagSet{
+				{
+					ResourceId: &hzId,
+					Tags:       []route53Types.Tag{tag},
+				},
 			},
 		}, nil)
 	qlc := route53Types.QueryLoggingConfig{}

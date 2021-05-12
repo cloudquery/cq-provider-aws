@@ -32,7 +32,6 @@ func Route53HealthChecks() *schema.Table {
 			{
 				Name: "tags",
 				Type: schema.TypeJSON,
-				//Resolver: resolveRoute53healthCheckTags,
 			},
 			{
 				Name: "caller_reference",
@@ -189,58 +188,45 @@ func Route53HealthChecks() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
-type HealthCheckWrapper struct {
-	types.HealthCheck
-	Tags map[string]interface{}
-}
-
 func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config route53.ListHealthChecksInput
 	c := meta.(*client.Client)
 	svc := c.Services().Route53
-
 	for {
 		response, err := svc.ListHealthChecks(ctx, &config)
 		if err != nil {
 			return err
 		}
-
-		healthCheckWrappers := make([]HealthCheckWrapper, len(response.HealthChecks))
-		processed := 0
+		healthCheckWrappers := make([]Route53HealthCheckWrapper, 0, len(response.HealthChecks))
+		tagsProcessed := 0
 		for i := range response.HealthChecks {
-			healthCheckWrappers[i] = HealthCheckWrapper{
+			healthCheckWrappers = append(healthCheckWrappers, Route53HealthCheckWrapper{
 				response.HealthChecks[i],
 				nil,
-			}
+			})
+
+			//retrieve aggregated tags for every 10 or a few last resources
 			if (i+1)%10 == 0 || i == len(healthCheckWrappers)-1 {
-				tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, i-processed+1)}
-				for j := processed; j < i+1; j++ {
+				tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, i-tagsProcessed+1)}
+				for j := tagsProcessed; j < i+1; j++ {
 					tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *healthCheckWrappers[j].Id)
 				}
 				tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
-
 				if err != nil {
 					return err
 				}
-
-				getTagForId := func(id *string, set []types.ResourceTagSet) []types.Tag {
-					for _, s := range set {
-						if *s.ResourceId == *id {
-							return s.Tags
-						}
+				for j := tagsProcessed; j < i+1; j++ {
+					tags := getRoute53tagsByResourceID(*healthCheckWrappers[j].Id, tagsResponse.ResourceTagSets)
+					if tags == nil || len(tags) == 0 {
+						continue
 					}
-					return nil
-				}
-
-				for j := processed; j < i+1; j++ {
-					tags := getTagForId(healthCheckWrappers[j].Id, tagsResponse.ResourceTagSets)
 					healthCheckWrappers[j].Tags = make(map[string]interface{}, len(tags))
 					for _, t := range tags {
 						healthCheckWrappers[j].Tags[*t.Key] = t.Value
 					}
 				}
 
-				processed = i
+				tagsProcessed = i
 			}
 		}
 		res <- healthCheckWrappers
@@ -251,12 +237,11 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	}
 	return nil
 }
-
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(HealthCheckWrapper)
+	r, ok := resource.Item.(Route53HealthCheckWrapper)
 	if !ok {
-		return errors.New("failed to assert type")
-	} // todo replace with unified error
+		return errors.New(resourceTypeAssertError)
+	}
 
 	if r.CloudWatchAlarmConfiguration == nil {
 		return nil
@@ -264,23 +249,6 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 	tags := map[string]*string{}
 	for _, t := range r.CloudWatchAlarmConfiguration.Dimensions {
 		tags[*t.Name] = t.Value
-	}
-	resource.Set(c.Name, tags)
-	return nil
-}
-func resolveRoute53healthCheckTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(HealthCheckWrapper)
-	svc := meta.(*client.Client).Services().Route53
-	tagsOutput, err := svc.ListTagsForResource(ctx, &route53.ListTagsForResourceInput{ResourceId: r.Id, ResourceType: types.TagResourceTypeHealthcheck}, func(options *route53.Options) {})
-	if err != nil {
-		return err
-	}
-	if tagsOutput.ResourceTagSet == nil {
-		return nil
-	}
-	tags := map[string]*string{}
-	for _, t := range tagsOutput.ResourceTagSet.Tags {
-		tags[*t.Key] = t.Value
 	}
 	resource.Set(c.Name, tags)
 	return nil
