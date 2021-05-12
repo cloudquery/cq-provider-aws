@@ -365,7 +365,7 @@ func TestResources(t *testing.T) {
 		},
 		{
 			resource:           "route53.traffic_policies",
-			mainTable:          resources.Route53HostedZones(),
+			mainTable:          resources.Route53TrafficPolicies(),
 			mockBuilder:        buildRoute53TrafficPoliciesMock,
 			verifyEmptyColumns: true,
 		},

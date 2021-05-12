@@ -2,6 +2,8 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
@@ -55,8 +57,9 @@ func Route53TrafficPolicies() *schema.Table {
 						Resolver: schema.ParentIdResolver,
 					},
 					{
-						Name: "document",
-						Type: schema.TypeString,
+						Name:     "document",
+						Type:     schema.TypeJSON,
+						Resolver: resolveRoute53trafficPolicyVersionDocument,
 					},
 					{
 						Name:     "version_id",
@@ -94,7 +97,7 @@ func fetchRoute53TrafficPolicies(ctx context.Context, meta schema.ClientMeta, pa
 	svc := c.Services().Route53
 
 	for {
-		response, err := svc.ListTrafficPolicies(ctx, &config, func(o *route53.Options) {})
+		response, err := svc.ListTrafficPolicies(ctx, &config)
 		if err != nil {
 			return err
 		}
@@ -112,7 +115,7 @@ func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMe
 	config := route53.ListTrafficPolicyVersionsInput{Id: r.Id}
 	svc := meta.(*client.Client).Services().Route53
 	for {
-		response, err := svc.ListTrafficPolicyVersions(ctx, &config, func(o *route53.Options) {})
+		response, err := svc.ListTrafficPolicyVersions(ctx, &config)
 		if err != nil {
 			return err
 		}
@@ -122,5 +125,15 @@ func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMe
 		}
 		config.TrafficPolicyVersionMarker = response.TrafficPolicyVersionMarker
 	}
+	return nil
+}
+func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	item := resource.Item.(types.TrafficPolicy)
+	var value interface{}
+	err := json.Unmarshal([]byte(*item.Document), &value)
+	if err != nil {
+		return err
+	}
+	resource.Set(c.Name, value)
 	return nil
 }

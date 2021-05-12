@@ -2280,6 +2280,26 @@ func (mr *MockRoute53ClientMockRecorder) ListTagsForResource(arg0, arg1 interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockRoute53Client)(nil).ListTagsForResource), varargs...)
 }
 
+// ListTagsForResources mocks base method.
+func (m *MockRoute53Client) ListTagsForResources(arg0 context.Context, arg1 *route53.ListTagsForResourcesInput, arg2 ...func(*route53.Options)) (*route53.ListTagsForResourcesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTagsForResources", varargs...)
+	ret0, _ := ret[0].(*route53.ListTagsForResourcesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTagsForResources indicates an expected call of ListTagsForResources.
+func (mr *MockRoute53ClientMockRecorder) ListTagsForResources(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResources", reflect.TypeOf((*MockRoute53Client)(nil).ListTagsForResources), varargs...)
+}
+
 // ListTrafficPolicies mocks base method.
 func (m *MockRoute53Client) ListTrafficPolicies(arg0 context.Context, arg1 *route53.ListTrafficPoliciesInput, arg2 ...func(*route53.Options)) (*route53.ListTrafficPoliciesOutput, error) {
 	m.ctrl.T.Helper()

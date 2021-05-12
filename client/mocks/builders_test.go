@@ -343,6 +343,8 @@ func buildRoute53TrafficPoliciesMock(t *testing.T, ctrl *gomock.Controller) clie
 		t.Fatal(err)
 	}
 	tp.Id = tps.Id
+	jsonStr := "{\"test\": \"test\"}"
+	tp.Document = &jsonStr
 	m.EXPECT().ListTrafficPolicyVersions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&route53.ListTrafficPolicyVersionsOutput{
 			TrafficPolicies: []route53Types.TrafficPolicy{tp},
@@ -381,10 +383,19 @@ func buildRoute53HealthChecksMock(t *testing.T, ctrl *gomock.Controller) client.
 	if err := faker.FakeData(&tag); err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListTagsForResourceOutput{
-			ResourceTagSet: &route53Types.ResourceTagSet{
-				Tags: []route53Types.Tag{tag},
+	//m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	//	&route53.ListTagsForResourceOutput{
+	//		ResourceTagSet: &route53Types.ResourceTagSet{
+	//			Tags: []route53Types.Tag{tag},
+	//		},
+	//	}, nil)
+	m.EXPECT().ListTagsForResources(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&route53.ListTagsForResourcesOutput{
+			ResourceTagSets: []route53Types.ResourceTagSet{
+				{
+					ResourceId: hc.Id,
+					Tags:       []route53Types.Tag{tag},
+				},
 			},
 		}, nil)
 	return client.Services{
