@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/service/route53"
-
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -253,6 +252,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 func initServices(awsCfg aws.Config) Services {
 	return Services{
 		Autoscaling:      autoscaling.NewFromConfig(awsCfg),
+		Cloudfront:       cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:       cloudtrail.NewFromConfig(awsCfg),
 		Cloudwatch:       cloudwatch.NewFromConfig(awsCfg),
 		CloudwatchLogs:   cloudwatchlogs.NewFromConfig(awsCfg),
