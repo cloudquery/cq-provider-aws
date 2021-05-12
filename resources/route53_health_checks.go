@@ -217,7 +217,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 				}
 				for j := tagsProcessed; j < i+1; j++ {
 					tags := getRoute53tagsByResourceID(*healthCheckWrappers[j].Id, tagsResponse.ResourceTagSets)
-					if tags == nil || len(tags) == 0 {
+					if len(tags) == 0 {
 						continue
 					}
 					healthCheckWrappers[j].Tags = make(map[string]interface{}, len(tags))

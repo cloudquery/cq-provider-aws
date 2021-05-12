@@ -286,7 +286,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 				}
 				for j := tagsProcessed; j < i+1; j++ {
 					tags := getRoute53tagsByResourceID(*hostedZoneWrappers[j].Id, tagsResponse.ResourceTagSets)
-					if tags == nil || len(tags) == 0 {
+					if len(tags) == 0 {
 						continue
 					}
 					hostedZoneWrappers[j].Tags = make(map[string]interface{}, len(tags))
@@ -346,7 +346,7 @@ func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Contex
 	if !ok {
 		return errors.New(client.ResourceTypeAssertError)
 	}
-	var recordSets []string
+	recordSets := make([]string, 0, len(r.ResourceRecords))
 	for _, t := range r.ResourceRecords {
 		recordSets = append(recordSets, *t.Value)
 	}
