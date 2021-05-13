@@ -226,6 +226,12 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
+			resource:           "elbv1.load_balancers",
+			mockBuilder:        buildElbv1LoadBalancers,
+			mainTable:          resources.Elbv1LoadBalancers(),
+			verifyEmptyColumns: true,
+		},
+		{
 			resource:           "elbv2.load_balancers",
 			mockBuilder:        buildElbv2LoadBalancers,
 			mainTable:          resources.Elbv2LoadBalancers(),

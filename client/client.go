@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
+
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -268,6 +270,7 @@ func initServices(awsCfg aws.Config) Services {
 		FSX:              fsx.NewFromConfig(awsCfg),
 		S3:               s3.NewFromConfig(awsCfg),
 		SNS:              sns.NewFromConfig(awsCfg),
+		ELBv1:            elasticloadbalancing.NewFromConfig(awsCfg),
 		ELBv2:            elbv2.NewFromConfig(awsCfg),
 		IAM:              iam.NewFromConfig(awsCfg),
 		KMS:              kms.NewFromConfig(awsCfg),

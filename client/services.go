@@ -1,7 +1,7 @@
 // We define interfaces so we can easily mock AWS calls
 package client
 
-//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,EcsClient,S3ManagerClient
+//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,EcsClient,S3ManagerClient
 
 import (
 	"context"
@@ -105,7 +105,9 @@ type ElbV2Client interface {
 
 type ElbV1Client interface {
 	DescribeLoadBalancers(ctx context.Context, params *elbv1.DescribeLoadBalancersInput, optFns ...func(*elbv1.Options)) (*elbv1.DescribeLoadBalancersOutput, error)
-	//DescribeTargetGroups(ctx context.Context, params *elbv1.Describe, optFns ...func(*elbv2.Options)) (*elbv2.DescribeTargetGroupsOutput, error)
+	DescribeLoadBalancerPolicies(ctx context.Context, params *elbv1.DescribeLoadBalancerPoliciesInput, optFns ...func(*elbv1.Options)) (*elbv1.DescribeLoadBalancerPoliciesOutput, error)
+	DescribeTags(ctx context.Context, params *elbv1.DescribeTagsInput, optFns ...func(*elbv1.Options)) (*elbv1.DescribeTagsOutput, error)
+	DescribeLoadBalancerAttributes(ctx context.Context, params *elbv1.DescribeLoadBalancerAttributesInput, optFns ...func(*elbv1.Options)) (*elbv1.DescribeLoadBalancerAttributesOutput, error)
 }
 
 type EmrClient interface {

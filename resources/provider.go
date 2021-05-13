@@ -71,5 +71,4 @@ func Provider() *provider.Provider {
 			return client.DefaultConfigYaml, nil
 		},
 	}
-
 }
