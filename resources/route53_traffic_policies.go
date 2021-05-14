@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"encoding/json"
-	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -112,7 +111,10 @@ func fetchRoute53TrafficPolicies(ctx context.Context, meta schema.ClientMeta, pa
 	return nil
 }
 func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r := parent.Item.(types.TrafficPolicySummary)
+	r, ok := parent.Item.(types.TrafficPolicySummary)
+	if !ok {
+		return client.ResourceTypeAssertError
+	}
 	config := route53.ListTrafficPolicyVersionsInput{Id: r.Id}
 	svc := meta.(*client.Client).Services().Route53
 	for {
@@ -131,7 +133,7 @@ func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMe
 func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(types.TrafficPolicy)
 	if !ok {
-		return errors.New(client.ResourceTypeAssertError)
+		return client.ResourceTypeAssertError
 	}
 	var value interface{}
 	err := json.Unmarshal([]byte(*r.Document), &value)

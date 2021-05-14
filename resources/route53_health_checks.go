@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -192,44 +191,56 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	var config route53.ListHealthChecksInput
 	c := meta.(*client.Client)
 	svc := c.Services().Route53
+
+	getAllHealthCheckWrappers := func(healthChecks []types.HealthCheck) ([]Route53HealthCheckWrapper, error) {
+		response := make([]Route53HealthCheckWrapper, 0, len(healthChecks))
+		tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, len(healthChecks))}
+		for _, h := range healthChecks {
+			tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *h.Id)
+		}
+		tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
+		if err != nil {
+			return nil, err
+		}
+		for _, h := range healthChecks {
+			tags := getRoute53tagsByResourceID(*h.Id, tagsResponse.ResourceTagSets)
+			if len(tags) == 0 {
+				continue
+			}
+			wrapper := Route53HealthCheckWrapper{
+				HealthCheck: h,
+				Tags:        make(map[string]interface{}, len(tags)),
+			}
+
+			for _, t := range tags {
+				wrapper.Tags[*t.Key] = t.Value
+			}
+
+			response = append(response, wrapper)
+		}
+		return response, nil
+	}
+
 	for {
 		response, err := svc.ListHealthChecks(ctx, &config)
 		if err != nil {
 			return err
 		}
-		healthCheckWrappers := make([]Route53HealthCheckWrapper, 0, len(response.HealthChecks))
-		tagsProcessed := 0
-		for i := range response.HealthChecks {
-			healthCheckWrappers = append(healthCheckWrappers, Route53HealthCheckWrapper{
-				response.HealthChecks[i],
-				nil,
-			})
 
-			//retrieve aggregated tags for every 10 or a few last resources
-			if (i+1)%10 == 0 || i == len(response.HealthChecks)-1 {
-				tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, i-tagsProcessed+1)}
-				for j := tagsProcessed; j < i+1; j++ {
-					tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *healthCheckWrappers[j].Id)
-				}
-				tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
-				if err != nil {
-					return err
-				}
-				for j := tagsProcessed; j < i+1; j++ {
-					tags := getRoute53tagsByResourceID(*healthCheckWrappers[j].Id, tagsResponse.ResourceTagSets)
-					if len(tags) == 0 {
-						continue
-					}
-					healthCheckWrappers[j].Tags = make(map[string]interface{}, len(tags))
-					for _, t := range tags {
-						healthCheckWrappers[j].Tags[*t.Key] = t.Value
-					}
-				}
+		for i := 0; i < len(response.HealthChecks); i += 10 {
+			end := i + 10
 
-				tagsProcessed = i
+			if end > len(response.HealthChecks) {
+				end = len(response.HealthChecks)
 			}
+			zones := response.HealthChecks[i:end]
+			wrapped, err := getAllHealthCheckWrappers(zones)
+			if err != nil {
+				return err
+			}
+			res <- wrapped
 		}
-		res <- healthCheckWrappers
+
 		if aws.ToString(response.Marker) == "" {
 			break
 		}
@@ -237,10 +248,11 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	}
 	return nil
 }
+
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(Route53HealthCheckWrapper)
 	if !ok {
-		return errors.New(client.ResourceTypeAssertError)
+		return client.ResourceTypeAssertError
 	}
 
 	if r.CloudWatchAlarmConfiguration == nil {
