@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -192,15 +193,14 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	c := meta.(*client.Client)
 	svc := c.Services().Route53
 
-	getAllHealthCheckWrappers := func(healthChecks []types.HealthCheck) ([]Route53HealthCheckWrapper, error) {
-		response := make([]Route53HealthCheckWrapper, 0, len(healthChecks))
+	processHealthChecksBundle := func(healthChecks []types.HealthCheck) error {
 		tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHealthcheck, ResourceIds: make([]string, 0, len(healthChecks))}
 		for _, h := range healthChecks {
 			tagsCfg.ResourceIds = append(tagsCfg.ResourceIds, *h.Id)
 		}
 		tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		for _, h := range healthChecks {
 			tags := getRoute53tagsByResourceID(*h.Id, tagsResponse.ResourceTagSets)
@@ -215,10 +215,9 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 			for _, t := range tags {
 				wrapper.Tags[*t.Key] = t.Value
 			}
-
-			response = append(response, wrapper)
+			res <- wrapper
 		}
-		return response, nil
+		return nil
 	}
 
 	for {
@@ -234,11 +233,10 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 				end = len(response.HealthChecks)
 			}
 			zones := response.HealthChecks[i:end]
-			wrapped, err := getAllHealthCheckWrappers(zones)
+			err := processHealthChecksBundle(zones)
 			if err != nil {
 				return err
 			}
-			res <- wrapped
 		}
 
 		if aws.ToString(response.Marker) == "" {
@@ -252,7 +250,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(Route53HealthCheckWrapper)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 healch check")
 	}
 
 	if r.CloudWatchAlarmConfiguration == nil {

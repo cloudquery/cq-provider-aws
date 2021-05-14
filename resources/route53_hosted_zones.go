@@ -252,8 +252,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().Route53
 
-	getAllHostedZoneWrappers := func(hostedZones []types.HostedZone) ([]Route53HostedZoneWrapper, error) {
-		response := make([]Route53HostedZoneWrapper, 0, len(hostedZones))
+	processHealthChecksBundle := func(hostedZones []types.HostedZone) error {
 		tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHostedzone, ResourceIds: make([]string, 0, len(hostedZones))}
 		for i := range hostedZones {
 			parsedId := strings.Replace(*hostedZones[i].Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
@@ -262,12 +261,12 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 		}
 		tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		for _, h := range hostedZones {
 			gotHostedZone, err := svc.GetHostedZone(ctx, &route53.GetHostedZoneInput{Id: h.Id})
 			if err != nil {
-				return nil, err
+				return err
 			}
 			tags := getRoute53tagsByResourceID(*h.Id, tagsResponse.ResourceTagSets)
 
@@ -281,10 +280,9 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 			for _, t := range tags {
 				wrapper.Tags[*t.Key] = t.Value
 			}
-
-			response = append(response, wrapper)
+			res <- wrapper
 		}
-		return response, nil
+		return nil
 	}
 
 	for {
@@ -300,11 +298,10 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 				end = len(response.HostedZones)
 			}
 			zones := response.HostedZones[i:end]
-			wrapped, err := getAllHostedZoneWrappers(zones)
+			err := processHealthChecksBundle(zones)
 			if err != nil {
 				return err
 			}
-			res <- wrapped
 		}
 
 		if aws.ToString(response.Marker) == "" {
@@ -317,7 +314,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(Route53HostedZoneWrapper)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 hosted zone")
 	}
 	svc := meta.(*client.Client).Services().Route53
 	config := route53.ListQueryLoggingConfigsInput{HostedZoneId: r.Id}
@@ -337,7 +334,7 @@ func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.
 func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(Route53HostedZoneWrapper)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 hosted zone")
 	}
 	svc := meta.(*client.Client).Services().Route53
 	config := route53.ListResourceRecordSetsInput{HostedZoneId: r.Id}
@@ -353,7 +350,7 @@ func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.C
 func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(types.ResourceRecordSet)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 hosted zone")
 	}
 	recordSets := make([]string, 0, len(r.ResourceRecords))
 	for _, t := range r.ResourceRecords {
@@ -365,7 +362,7 @@ func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Contex
 func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(Route53HostedZoneWrapper)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 hosted zone")
 	}
 	config := route53.ListTrafficPolicyInstancesByHostedZoneInput{HostedZoneId: r.Id}
 	svc := meta.(*client.Client).Services().Route53
@@ -385,7 +382,7 @@ func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta sche
 func fetchRoute53HostedZoneVpcAssociationAuthorizations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(Route53HostedZoneWrapper)
 	if !ok {
-		return client.ResourceTypeAssertError
+		return fmt.Errorf("not route53 hosted zone")
 	}
 	res <- r.VPCs
 	return nil
