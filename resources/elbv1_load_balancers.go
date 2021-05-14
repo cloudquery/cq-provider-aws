@@ -297,9 +297,42 @@ func Elbv1LoadBalancers() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var config elbv1.DescribeLoadBalancersInput
+
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv1
+	processLoadBalancers := func(loadBalancers []types.LoadBalancerDescription) error {
+		tagsCfg := &elbv1.DescribeTagsInput{LoadBalancerNames: make([]string, 0, len(loadBalancers))}
+		for _, lb := range loadBalancers {
+			tagsCfg.LoadBalancerNames = append(tagsCfg.LoadBalancerNames, *lb.LoadBalancerName)
+		}
+		tagsResponse, err := svc.DescribeTags(ctx, tagsCfg)
+		if err != nil {
+			return err
+		}
+		for _, lb := range loadBalancers {
+
+			tags := getTagsByLoadBalancerName(*lb.LoadBalancerName, tagsResponse.TagDescriptions)
+
+			loadBalancerAttributes, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv1.DescribeLoadBalancerAttributesInput{LoadBalancerName: lb.LoadBalancerName})
+			if err != nil {
+				return err
+			}
+
+			wrapper := ELBv1LoadBalancerWrapper{
+				LoadBalancerDescription: lb,
+				Tags:                    make(map[string]interface{}, len(tags)),
+				Attributes:              loadBalancerAttributes.LoadBalancerAttributes,
+			}
+
+			for _, t := range tags {
+				wrapper.Tags[*t.Key] = t.Value
+			}
+			res <- wrapper
+		}
+		return nil
+	}
+
+	var config elbv1.DescribeLoadBalancersInput
 	for {
 		response, err := svc.DescribeLoadBalancers(ctx, &config, func(options *elbv1.Options) {
 			options.Region = c.Region
@@ -308,64 +341,17 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			return err
 		}
 
-		getAllLoadBalancerWrappers := func(loadBalancers []types.LoadBalancerDescription) ([]ELBv1LoadBalancerWrapper, error) {
-			response := make([]ELBv1LoadBalancerWrapper, 0, len(loadBalancers))
-			tagsCfg := &elbv1.DescribeTagsInput{LoadBalancerNames: make([]string, 0, len(loadBalancers))}
-			for _, lb := range loadBalancers {
-				tagsCfg.LoadBalancerNames = append(tagsCfg.LoadBalancerNames, *lb.LoadBalancerName)
+		for i := 0; i < len(response.LoadBalancerDescriptions); i += 10 {
+			end := i + 20
+
+			if end > len(response.LoadBalancerDescriptions) {
+				end = len(response.LoadBalancerDescriptions)
 			}
-			tagsResponse, err := svc.DescribeTags(ctx, tagsCfg)
-			if err != nil {
-				return nil, err
-			}
-			for _, lb := range loadBalancers {
-
-				tags := getTagsByLoadBalancerName(*lb.LoadBalancerName, tagsResponse.TagDescriptions)
-
-				loadBalancerAttributes, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv1.DescribeLoadBalancerAttributesInput{LoadBalancerName: lb.LoadBalancerName})
-				if err != nil {
-					return nil, err
-				}
-
-				wrapper := ELBv1LoadBalancerWrapper{
-					LoadBalancerDescription: lb,
-					Tags:                    make(map[string]interface{}, len(tags)),
-					Attributes:              loadBalancerAttributes.LoadBalancerAttributes,
-				}
-
-				for _, t := range tags {
-					wrapper.Tags[*t.Key] = t.Value
-				}
-
-				response = append(response, wrapper)
-			}
-			return response, nil
-		}
-
-		for {
-			response, err := svc.DescribeLoadBalancers(ctx, &config)
+			loadBalancers := response.LoadBalancerDescriptions[i:end]
+			err := processLoadBalancers(loadBalancers)
 			if err != nil {
 				return err
 			}
-
-			for i := 0; i < len(response.LoadBalancerDescriptions); i += 10 {
-				end := i + 10
-
-				if end > len(response.LoadBalancerDescriptions) {
-					end = len(response.LoadBalancerDescriptions)
-				}
-				zones := response.LoadBalancerDescriptions[i:end]
-				wrapped, err := getAllLoadBalancerWrappers(zones)
-				if err != nil {
-					return err
-				}
-				res <- wrapped
-			}
-
-			if aws.ToString(response.NextMarker) == "" {
-				break
-			}
-			config.Marker = response.NextMarker
 		}
 
 		if aws.ToString(response.NextMarker) == "" {
@@ -373,6 +359,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 		}
 		config.Marker = response.NextMarker
 	}
+
 	return nil
 }
 func resolveElbv1loadBalancerAttributesAccessLogEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
