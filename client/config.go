@@ -68,6 +68,9 @@ const DefaultConfigYaml = `
       - name: iam.groups
       - name: iam.password_policies
       - name: iam.policies
+      - name: iam.user_policies
+      - name: iam.group_policies
+      - name: iam.role_policies
       - name: iam.roles
       - name: iam.users
       - name: iam.virtual_mfa_devices

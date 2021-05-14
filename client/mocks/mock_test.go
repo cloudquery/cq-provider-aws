@@ -304,6 +304,24 @@ func TestResources(t *testing.T) {
 			verifyEmptyColumns: true,
 		},
 		{
+			resource:           "iam.user_policies",
+			mainTable:          resources.IamUserPolicies(),
+			mockBuilder:        buildIamUserPoliciesMock,
+			verifyEmptyColumns: true,
+		},
+		{
+			resource:           "iam.group_policies",
+			mainTable:          resources.IamGroupPolicies(),
+			mockBuilder:        buildIamGroupPoliciesMock,
+			verifyEmptyColumns: true,
+		},
+		{
+			resource:           "iam.role_policies",
+			mainTable:          resources.IamRolePolicies(),
+			mockBuilder:        buildIamRolePoliciesMock,
+			verifyEmptyColumns: true,
+		},
+		{
 			resource:           "kms.keys",
 			mainTable:          resources.KmsKeys(),
 			mockBuilder:        buildKmsKeys,

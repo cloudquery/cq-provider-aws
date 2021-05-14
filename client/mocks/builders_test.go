@@ -877,6 +877,129 @@ func buildIamGroups(t *testing.T, ctrl *gomock.Controller) client.Services {
 	}
 }
 
+func buildIamRolePoliciesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockIamClient(ctrl)
+	//list roles
+	r := iamTypes.Role{}
+	err := faker.FakeData(&r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListRoles(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListRolesOutput{
+			Roles: []iamTypes.Role{r},
+		}, nil)
+
+	// list policies by role
+	var l []string
+	err = faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListRolePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListRolePoliciesOutput{
+			PolicyNames: l,
+		}, nil)
+
+	//get policy
+	p := iam.GetRolePolicyOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := "{\"test\": {\"t1\":1}}"
+	p.PolicyDocument = &document
+	m.EXPECT().GetRolePolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
+	return client.Services{
+		IAM: m,
+	}
+}
+
+func buildIamGroupPoliciesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockIamClient(ctrl)
+	//list groups
+	g := iamTypes.Group{}
+	err := faker.FakeData(&g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListGroupsOutput{
+			Groups: []iamTypes.Group{g},
+		}, nil)
+
+	//list policies
+	var l []string
+	err = faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListGroupPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListGroupPoliciesOutput{
+			PolicyNames: l,
+		}, nil)
+
+	//get policy
+	p := iam.GetGroupPolicyOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := "{\"test\": {\"t1\":1}}"
+	p.PolicyDocument = &document
+	m.EXPECT().GetGroupPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
+	return client.Services{
+		IAM: m,
+	}
+}
+
+func buildIamUserPoliciesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockIamClient(ctrl)
+	//credential report mock
+	m.EXPECT().GetCredentialReport(gomock.Any(), gomock.Any()).Return(
+		nil, nil)
+	//list users
+	u := iamTypes.User{}
+	err := faker.FakeData(&u)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListUsers(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListUsersOutput{
+			Users: []iamTypes.User{u},
+		}, nil)
+
+	//list policies
+	var l []string
+	err = faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListUserPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListUserPoliciesOutput{
+			PolicyNames: l,
+		}, nil)
+
+	//get policy
+	p := iam.GetUserPolicyOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := "{\"test\": {\"t1\":1}}"
+	p.PolicyDocument = &document
+	m.EXPECT().GetUserPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
+	return client.Services{
+		IAM: m,
+	}
+}
+
 func buildIamPolicies(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockIamClient(ctrl)
 	g := iamTypes.ManagedPolicyDetail{}
