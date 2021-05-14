@@ -270,9 +270,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 				return nil, err
 			}
 			tags := getRoute53tagsByResourceID(*h.Id, tagsResponse.ResourceTagSets)
-			if len(tags) == 0 {
-				continue
-			}
+
 			wrapper := Route53HostedZoneWrapper{
 				HostedZone:      h,
 				Tags:            make(map[string]interface{}, len(tags)),
