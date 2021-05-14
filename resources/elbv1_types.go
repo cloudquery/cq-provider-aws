@@ -7,3 +7,12 @@ type ELBv1LoadBalancerWrapper struct {
 	Tags       map[string]interface{}
 	Attributes *types.LoadBalancerAttributes
 }
+
+func getTagsByLoadBalancerName(id string, tagsResponse []types.TagDescription) []types.Tag {
+	for _, t := range tagsResponse {
+		if id == *t.LoadBalancerName {
+			return t.Tags
+		}
+	}
+	return nil
+}
