@@ -529,8 +529,8 @@ func Ec2Instances() *schema.Table {
 						},
 					},
 					{
-						Name:     "aws_ec2_instance_network_interface_private_ip_addresses",
-						Resolver: fetchEc2InstanceNetworkInterfacePrivateIpAddresses,
+						Name:     "aws_ec2_instance_network_interface_instance_private_ip_addresses",
+						Resolver: fetchEc2InstanceNetworkInterfaceInstancePrivateIpAddresses,
 						Columns: []schema.Column{
 							{
 								Name:     "instance_network_interface_id",
@@ -642,8 +642,7 @@ func resolveEc2instanceTags(_ context.Context, _ schema.ClientMeta, resource *sc
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	resource.Set("tags", tags)
-	return nil
+	return resource.Set("tags", tags)
 }
 func fetchEc2InstanceBlockDeviceMappings(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	instance, ok := parent.Item.(types.Instance)
@@ -701,7 +700,7 @@ func fetchEc2InstanceNetworkInterfaceIpv6Addresses(_ context.Context, _ schema.C
 	res <- instanceNetworkInterface.Ipv6Addresses
 	return nil
 }
-func fetchEc2InstanceNetworkInterfacePrivateIpAddresses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchEc2InstanceNetworkInterfaceInstancePrivateIpAddresses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	instanceNetworkInterface, ok := parent.Item.(types.InstanceNetworkInterface)
 	if !ok {
 		return fmt.Errorf("not ec2 instance network interface")
