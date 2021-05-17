@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
+	"github.com/hashicorp/go-hclog"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 
@@ -26,6 +26,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
+	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
@@ -38,7 +39,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"github.com/hashicorp/go-hclog"
 )
 
 // Provider Client passed as meta to all table fetchers
@@ -113,7 +113,7 @@ type Client struct {
 	ReportUsers interface{}
 }
 
-// This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
+// S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
 // has different structure then all other services (i.e no service but just a function) and we need
 // the ability to mock it.
 // Also we need to use s3 manager to be able to query the bucket-region https://github.com/aws/aws-sdk-go-v2/pull/1027#issuecomment-759818990
@@ -270,7 +270,7 @@ func initServices(awsCfg aws.Config) Services {
 		FSX:              fsx.NewFromConfig(awsCfg),
 		S3:               s3.NewFromConfig(awsCfg),
 		SNS:              sns.NewFromConfig(awsCfg),
-		ELBv1:            elasticloadbalancing.NewFromConfig(awsCfg),
+		ELBv1:            elbv1.NewFromConfig(awsCfg),
 		ELBv2:            elbv2.NewFromConfig(awsCfg),
 		IAM:              iam.NewFromConfig(awsCfg),
 		KMS:              kms.NewFromConfig(awsCfg),
