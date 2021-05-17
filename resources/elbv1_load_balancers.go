@@ -371,8 +371,7 @@ func resolveElbv1loadBalancerAttributesAccessLogEnabled(ctx context.Context, met
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.AccessLog.Enabled)
-	return nil
+	return resource.Set(c.Name, r.Attributes.AccessLog.Enabled)
 }
 func resolveElbv1loadBalancerAttributesAccessLogS3BucketName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -382,8 +381,7 @@ func resolveElbv1loadBalancerAttributesAccessLogS3BucketName(ctx context.Context
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.AccessLog.S3BucketName)
-	return nil
+	return resource.Set(c.Name, r.Attributes.AccessLog.S3BucketName)
 }
 func resolveElbv1loadBalancerAttributesAccessLogS3BucketPrefix(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -393,8 +391,7 @@ func resolveElbv1loadBalancerAttributesAccessLogS3BucketPrefix(ctx context.Conte
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.AccessLog.S3BucketPrefix)
-	return nil
+	return resource.Set(c.Name, r.Attributes.AccessLog.S3BucketPrefix)
 }
 func resolveElbv1loadBalancerAttributesAccessLogEmitInterval(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -404,8 +401,7 @@ func resolveElbv1loadBalancerAttributesAccessLogEmitInterval(ctx context.Context
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.AccessLog.EmitInterval)
-	return nil
+	return resource.Set(c.Name, r.Attributes.AccessLog.EmitInterval)
 }
 func resolveElbv1loadBalancerAttributesConnectionSettingsIdleTimeout(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -415,8 +411,8 @@ func resolveElbv1loadBalancerAttributesConnectionSettingsIdleTimeout(ctx context
 	if r.Attributes == nil && r.Attributes.ConnectionSettings == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.ConnectionSettings.IdleTimeout)
-	return nil
+
+	return resource.Set(c.Name, r.Attributes.ConnectionSettings.IdleTimeout)
 }
 func resolveElbv1loadBalancerAttributesCrossZoneLoadBalancingEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -426,8 +422,7 @@ func resolveElbv1loadBalancerAttributesCrossZoneLoadBalancingEnabled(ctx context
 	if r.Attributes == nil && r.Attributes.CrossZoneLoadBalancing == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.CrossZoneLoadBalancing.Enabled)
-	return nil
+	return resource.Set(c.Name, r.Attributes.CrossZoneLoadBalancing.Enabled)
 }
 func resolveElbv1loadBalancerAttributesConnectionDrainingEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -437,8 +432,7 @@ func resolveElbv1loadBalancerAttributesConnectionDrainingEnabled(ctx context.Con
 	if r.Attributes == nil && r.Attributes.ConnectionDraining == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.ConnectionDraining.Enabled)
-	return nil
+	return resource.Set(c.Name, r.Attributes.ConnectionDraining.Enabled)
 }
 func resolveElbv1loadBalancerAttributesConnectionDrainingTimeout(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -448,8 +442,7 @@ func resolveElbv1loadBalancerAttributesConnectionDrainingTimeout(ctx context.Con
 	if r.Attributes == nil && r.Attributes.ConnectionDraining == nil {
 		return nil
 	}
-	resource.Set(c.Name, r.Attributes.ConnectionDraining.Timeout)
-	return nil
+	return resource.Set(c.Name, r.Attributes.ConnectionDraining.Timeout)
 }
 func resolveElbv1loadBalancerAttributesAdditionalAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -464,8 +457,7 @@ func resolveElbv1loadBalancerAttributesAdditionalAttributes(ctx context.Context,
 	for _, a := range r.Attributes.AdditionalAttributes {
 		response[*a.Key] = a.Value
 	}
-	resource.Set(c.Name, response)
-	return nil
+	return resource.Set(c.Name, response)
 }
 func resolveElbv1loadBalancerInstances(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -476,9 +468,7 @@ func resolveElbv1loadBalancerInstances(ctx context.Context, meta schema.ClientMe
 	for _, i := range r.Instances {
 		response = append(response, *i.InstanceId)
 	}
-
-	resource.Set(c.Name, response)
-	return nil
+	return resource.Set(c.Name, response)
 }
 func fetchElbv1LoadBalancerBackendServerDescriptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(ELBv1LoadBalancerWrapper)
@@ -546,6 +536,5 @@ func resolveElbv1loadBalancerPolicyPolicyAttributeDescriptions(ctx context.Conte
 	for _, a := range r.PolicyAttributeDescriptions {
 		response[*a.AttributeName] = a.AttributeValue
 	}
-	resource.Set(c.Name, response)
-	return nil
+	return resource.Set(c.Name, response)
 }
