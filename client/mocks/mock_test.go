@@ -320,6 +320,26 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.Ec2VpcEndpoints(),
 			mockBuilder: buildEc2VpcEndpoints,
 		},
+		{
+			resource:    "route53.hosted_zones",
+			mainTable:   resources.Route53HostedZones(),
+			mockBuilder: buildRoute53HostedZonesMock,
+		},
+		{
+			resource:    "route53.traffic_policies",
+			mainTable:   resources.Route53TrafficPolicies(),
+			mockBuilder: buildRoute53TrafficPoliciesMock,
+		},
+		{
+			resource:    "route53.health_checks",
+			mainTable:   resources.Route53HealthChecks(),
+			mockBuilder: buildRoute53HealthChecksMock,
+		},
+		{
+			resource:    "route53.reusable_delegation_sets",
+			mainTable:   resources.Route53ReusableDelegationSets(),
+			mockBuilder: buildRoute53DelegationSetsMock,
+		},
 	}
 	for _, tc := range testResourcesTable {
 		t.Run(tc.resource, func(t *testing.T) {
