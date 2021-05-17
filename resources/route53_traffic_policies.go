@@ -141,6 +141,5 @@ func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema
 	if err != nil {
 		return err
 	}
-	resource.Set(c.Name, value)
-	return nil
+	return resource.Set(c.Name, value)
 }

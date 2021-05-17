@@ -111,7 +111,7 @@ type Client struct {
 	ReportUsers interface{}
 }
 
-// This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
+// S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
 // has different structure then all other services (i.e no service but just a function) and we need
 // the ability to mock it.
 // Also we need to use s3 manager to be able to query the bucket-region https://github.com/aws/aws-sdk-go-v2/pull/1027#issuecomment-759818990

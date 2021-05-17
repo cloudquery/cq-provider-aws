@@ -252,7 +252,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().Route53
 
-	processHealthChecksBundle := func(hostedZones []types.HostedZone) error {
+	processHostedZonesBundle := func(hostedZones []types.HostedZone) error {
 		tagsCfg := &route53.ListTagsForResourcesInput{ResourceType: types.TagResourceTypeHostedzone, ResourceIds: make([]string, 0, len(hostedZones))}
 		for i := range hostedZones {
 			parsedId := strings.Replace(*hostedZones[i].Id, fmt.Sprintf("/%s/", types.TagResourceTypeHostedzone), "", 1)
@@ -298,7 +298,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 				end = len(response.HostedZones)
 			}
 			zones := response.HostedZones[i:end]
-			err := processHealthChecksBundle(zones)
+			err := processHostedZonesBundle(zones)
 			if err != nil {
 				return err
 			}
@@ -356,8 +356,7 @@ func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Contex
 	for _, t := range r.ResourceRecords {
 		recordSets = append(recordSets, *t.Value)
 	}
-	resource.Set(c.Name, recordSets)
-	return nil
+	return resource.Set(c.Name, recordSets)
 }
 func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(Route53HostedZoneWrapper)
