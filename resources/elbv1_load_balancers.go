@@ -341,7 +341,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			return err
 		}
 
-		for i := 0; i < len(response.LoadBalancerDescriptions); i += 10 {
+		for i := 0; i < len(response.LoadBalancerDescriptions); i += 20 {
 			end := i + 20
 
 			if end > len(response.LoadBalancerDescriptions) {
@@ -362,6 +362,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 
 	return nil
 }
+
 func resolveElbv1loadBalancerAttributesAccessLogEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
 	if !ok {
