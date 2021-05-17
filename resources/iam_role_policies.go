@@ -106,6 +106,5 @@ func resolveIamRolePolicyPolicyDocument(ctx context.Context, meta schema.ClientM
 	if err != nil {
 		return err
 	}
-	resource.Set(c.Name, document)
-	return nil
+	return resource.Set(c.Name, document)
 }

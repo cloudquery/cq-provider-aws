@@ -3,11 +3,10 @@ package mocks_test
 import (
 	"testing"
 
-	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
-	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
-
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	autoscalingTypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	cloudfrontTypes "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	cloudtrailTypes "github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
@@ -1134,6 +1133,54 @@ func buildIamUsers(t *testing.T, ctrl *gomock.Controller) client.Services {
 		}, nil)
 	m.EXPECT().GetAccessKeyLastUsed(gomock.Any(), gomock.Any()).Return(
 		&akl, nil)
+	return client.Services{
+		IAM: m,
+	}
+}
+
+func buildIamOpenIDConnectProviders(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockIamClient(ctrl)
+	l := iamTypes.OpenIDConnectProviderListEntry{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListOpenIDConnectProviders(gomock.Any(), gomock.Any()).Return(
+		&iam.ListOpenIDConnectProvidersOutput{
+			OpenIDConnectProviderList: []iamTypes.OpenIDConnectProviderListEntry{l},
+		}, nil)
+
+	p := iam.GetOpenIDConnectProviderOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().GetOpenIDConnectProvider(gomock.Any(), gomock.Any()).Return(&p, nil)
+
+	return client.Services{
+		IAM: m,
+	}
+}
+
+func buildIamSAMLProviders(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockIamClient(ctrl)
+	l := iamTypes.SAMLProviderListEntry{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListSAMLProviders(gomock.Any(), gomock.Any()).Return(
+		&iam.ListSAMLProvidersOutput{
+			SAMLProviderList: []iamTypes.SAMLProviderListEntry{l},
+		}, nil)
+
+	p := iam.GetSAMLProviderOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().GetSAMLProvider(gomock.Any(), gomock.Any()).Return(&p, nil)
+
 	return client.Services{
 		IAM: m,
 	}

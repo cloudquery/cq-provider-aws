@@ -106,6 +106,5 @@ func resolveIamGroupPolicyPolicyDocument(ctx context.Context, meta schema.Client
 	if err != nil {
 		return err
 	}
-	resource.Set(c.Name, document)
-	return nil
+	return resource.Set(c.Name, document)
 }
