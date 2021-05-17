@@ -33,7 +33,6 @@ require (
 	github.com/aws/smithy-go v1.3.1
 	github.com/cloudquery/cq-provider-sdk v0.2.0
 	github.com/cloudquery/faker/v3 v3.7.4
-	github.com/cloudquery/go-funk v0.8.3 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/hashicorp/go-hclog v0.16.1
 	github.com/jackc/pgx/v4 v4.11.0
