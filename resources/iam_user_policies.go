@@ -6,13 +6,15 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/aws/aws-sdk-go-v2/service/iam/types"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func IamUserPolicies() *schema.Table {
+func iamUserPolicies() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iam_user_policies",
 		Resolver:     fetchIamUserPolicies,
@@ -20,6 +22,11 @@ func IamUserPolicies() *schema.Table {
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
 		Columns: []schema.Column{
+			{
+				Name:     "user_id",
+				Type:     schema.TypeUUID,
+				Resolver: schema.ParentIdResolver,
+			},
 			{
 				Name:     "account_id",
 				Type:     schema.TypeString,
@@ -47,45 +54,20 @@ func IamUserPolicies() *schema.Table {
 // ====================================================================================================================
 func fetchIamUserPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	svc := meta.(*client.Client).Services().IAM
-	_, err := GetCredentialReport(ctx, svc)
-	if err != nil {
-		return err
-	}
-	meta.(*client.Client).ReportUsers = nil
-
-	getPoliciesForUser := func(userName *string) error {
-		config := iam.ListUserPoliciesInput{UserName: userName}
-		for {
-			output, err := svc.ListUserPolicies(ctx, &config)
-			if err != nil {
-				return err
-			}
-			for _, p := range output.PolicyNames {
-				policyCfg := &iam.GetUserPolicyInput{PolicyName: &p, UserName: userName}
-				policyResult, err := svc.GetUserPolicy(ctx, policyCfg)
-				if err != nil {
-					return err
-				}
-				res <- policyResult
-			}
-			if aws.ToString(output.Marker) == "" {
-				break
-			}
-			config.Marker = output.Marker
-		}
-		return nil
-	}
-
-	var config iam.ListUsersInput
+	user := parent.Item.(types.User)
+	config := iam.ListUserPoliciesInput{UserName: user.UserName}
 	for {
-		output, err := svc.ListUsers(ctx, &config)
+		output, err := svc.ListUserPolicies(ctx, &config)
 		if err != nil {
 			return err
 		}
-		for _, u := range output.Users {
-			if err := getPoliciesForUser(u.UserName); err != nil {
+		for _, p := range output.PolicyNames {
+			policyCfg := &iam.GetUserPolicyInput{PolicyName: &p, UserName: user.UserName}
+			policyResult, err := svc.GetUserPolicy(ctx, policyCfg)
+			if err != nil {
 				return err
 			}
+			res <- policyResult
 		}
 		if aws.ToString(output.Marker) == "" {
 			break

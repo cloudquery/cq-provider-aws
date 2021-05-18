@@ -6,13 +6,15 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/aws/aws-sdk-go-v2/service/iam/types"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func IamRolePolicies() *schema.Table {
+func iamRolePolicies() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iam_role_policies",
 		Resolver:     fetchIamRolePolicies,
@@ -20,6 +22,11 @@ func IamRolePolicies() *schema.Table {
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
 		Columns: []schema.Column{
+			{
+				Name:     "role_id",
+				Type:     schema.TypeUUID,
+				Resolver: schema.ParentIdResolver,
+			},
 			{
 				Name:     "account_id",
 				Type:     schema.TypeString,
@@ -47,46 +54,26 @@ func IamRolePolicies() *schema.Table {
 // ====================================================================================================================
 func fetchIamRolePolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	svc := meta.(*client.Client).Services().IAM
-
-	getPoliciesForRole := func(roleName *string) error {
-		config := iam.ListRolePoliciesInput{
-			RoleName: roleName,
-		}
-		for {
-			output, err := svc.ListRolePolicies(ctx, &config)
-			if err != nil {
-				return err
-			}
-			for _, p := range output.PolicyNames {
-				policyResult, err := svc.GetRolePolicy(ctx, &iam.GetRolePolicyInput{PolicyName: &p, RoleName: roleName})
-				if err != nil {
-					return err
-				}
-				res <- policyResult
-			}
-			if aws.ToString(output.Marker) == "" {
-				break
-			}
-			config.Marker = output.Marker
-		}
-		return nil
+	role := parent.Item.(types.Role)
+	config := iam.ListRolePoliciesInput{
+		RoleName: role.RoleName,
 	}
-
-	var config iam.ListRolesInput
 	for {
-		response, err := svc.ListRoles(ctx, &config)
+		output, err := svc.ListRolePolicies(ctx, &config)
 		if err != nil {
 			return err
 		}
-		for _, role := range response.Roles {
-			if err := getPoliciesForRole(role.RoleName); err != nil {
+		for _, p := range output.PolicyNames {
+			policyResult, err := svc.GetRolePolicy(ctx, &iam.GetRolePolicyInput{PolicyName: &p, RoleName: role.RoleName})
+			if err != nil {
 				return err
 			}
+			res <- policyResult
 		}
-		if aws.ToString(response.Marker) == "" {
+		if aws.ToString(output.Marker) == "" {
 			break
 		}
-		config.Marker = response.Marker
+		config.Marker = output.Marker
 	}
 	return nil
 }

@@ -271,21 +271,6 @@ func TestResources(t *testing.T) {
 			mockBuilder: buildIamSAMLProviders,
 		},
 		{
-			resource:    "iam.user_policies",
-			mainTable:   resources.IamUserPolicies(),
-			mockBuilder: buildIamUserPoliciesMock,
-		},
-		{
-			resource:    "iam.group_policies",
-			mainTable:   resources.IamGroupPolicies(),
-			mockBuilder: buildIamGroupPoliciesMock,
-		},
-		{
-			resource:    "iam.role_policies",
-			mainTable:   resources.IamRolePolicies(),
-			mockBuilder: buildIamRolePoliciesMock,
-		},
-		{
 			resource:    "kms.keys",
 			mainTable:   resources.KmsKeys(),
 			mockBuilder: buildKmsKeys,
