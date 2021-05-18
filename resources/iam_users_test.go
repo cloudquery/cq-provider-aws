@@ -83,7 +83,7 @@ func buildIamUsers(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&iam.GetCredentialReportOutput{
 			Content: content,
 		}, nil)
-
+	
 	//list user inline policies
 	var l []string
 	err = faker.FakeData(&l)
