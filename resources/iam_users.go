@@ -89,6 +89,39 @@ func IamUsers() *schema.Table {
 				Name: "user_name",
 				Type: schema.TypeString,
 			},
+			{
+				Name: "access_key_1_active",
+				Type: schema.TypeBool,
+			},
+			{
+				Name: "access_key_1_last_rotated",
+				Type: schema.TypeTimestamp,
+			},
+			{
+				Name: "access_key_2_active",
+				Type: schema.TypeBool,
+			},
+			{
+				Name: "access_key_2_last_rotated",
+				Type: schema.TypeTimestamp,
+			},
+
+			{
+				Name: "cert_1_active",
+				Type: schema.TypeBool,
+			},
+			{
+				Name: "cert_1_last_rotated",
+				Type: schema.TypeTimestamp,
+			},
+			{
+				Name: "cert_2_active",
+				Type: schema.TypeBool,
+			},
+			{
+				Name: "cert_2_last_rotated",
+				Type: schema.TypeTimestamp,
+			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -225,11 +258,13 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 		return err
 	}
 
-	if enabled, err := cast.ToBoolE(r.PasswordStatus); err != nil {
+	// Only set if cast is successful
+	if enabled, err := cast.ToBoolE(r.PasswordStatus); err == nil {
 		if err := resource.Set("password_enabled", enabled); err != nil {
 			return err
 		}
 	}
+
 	if r.PasswordNextRotation == "N/A" {
 		if err := resource.Set("password_next_rotation", nil); err != nil {
 			return err
@@ -254,6 +289,62 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 			return err
 		}
 		if err := resource.Set("password_last_changed", passwordLastChanged); err != nil {
+			return err
+		}
+	}
+
+	if r.Cert1LastRotated == "N/A" {
+		if err := resource.Set("cert_1_last_rotated", nil); err != nil {
+			return err
+		}
+	} else {
+		cert1LastRotated, err := time.ParseInLocation(time.RFC3339, r.Cert1LastRotated, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("cert_1_last_rotated", cert1LastRotated); err != nil {
+			return err
+		}
+	}
+
+	if r.Cert2LastRotated == "N/A" {
+		if err := resource.Set("cert_2_last_rotated", nil); err != nil {
+			return err
+		}
+	} else {
+		cert2LastRotated, err := time.ParseInLocation(time.RFC3339, r.Cert2LastRotated, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("cert_2_last_rotated", cert2LastRotated); err != nil {
+			return err
+		}
+	}
+
+	if r.AccessKey1LastRotated == "N/A" {
+		if err := resource.Set("access_key_1_last_rotated", nil); err != nil {
+			return err
+		}
+	} else {
+		accessKey1LastRotated, err := time.ParseInLocation(time.RFC3339, r.AccessKey1LastRotated, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("access_key_1_last_rotated", accessKey1LastRotated); err != nil {
+			return err
+		}
+	}
+
+	if r.AccessKey2LastRotated == "N/A" {
+		if err := resource.Set("access_key_2_last_rotated", nil); err != nil {
+			return err
+		}
+	} else {
+		accessKey2LastRotated, err := time.ParseInLocation(time.RFC3339, r.AccessKey2LastRotated, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("access_key_2_last_rotated", accessKey2LastRotated); err != nil {
 			return err
 		}
 	}
@@ -362,6 +453,10 @@ type reportUser struct {
 	AccessKey2Active      bool      `csv:"access_key_2_active"`
 	AccessKey1LastRotated string    `csv:"access_key_1_last_rotated"`
 	AccessKey2LastRotated string    `csv:"access_key_2_last_rotated"`
+	Cert1Active           bool      `csv:"cert_1_active"`
+	Cert2Active           bool      `csv:"cert_2_active"`
+	Cert1LastRotated      string    `csv:"cert_1_last_rotated"`
+	Cert2LastRotated      string    `csv:"cert_2_last_rotated"`
 }
 
 type reportUsers []*reportUser
