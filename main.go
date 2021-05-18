@@ -7,7 +7,7 @@ import (
 
 func main() {
 	serve.Serve(&serve.Options{
-		Name:                "aws",
-		Provider:            resources.Provider(),
+		Name:     "aws",
+		Provider: resources.Provider(),
 	})
 }
