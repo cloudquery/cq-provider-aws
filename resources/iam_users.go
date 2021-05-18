@@ -3,8 +3,10 @@ package resources
 import (
 	"context"
 	"errors"
-	"github.com/gocarina/gocsv"
 	"time"
+
+	"github.com/gocarina/gocsv"
+	"github.com/spf13/cast"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
@@ -39,6 +41,10 @@ func IamUsers() *schema.Table {
 			{
 				Name: "password_enabled",
 				Type: schema.TypeBool,
+			},
+			{
+				Name: "password_status",
+				Type: schema.TypeString,
 			},
 			{
 				Name: "password_last_changed",
@@ -189,9 +195,14 @@ func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, _ *schema.Resour
 
 		wUsers := make([]wrappedUser, len(output.Users))
 		for i, u := range output.Users {
+			ru := report.GetUser(aws.ToString(u.Arn))
+			if ru == nil {
+				meta.Logger().Warn("failed to find user in credential report", "arn", u.Arn)
+				ru = &reportUser{}
+			}
 			wUsers[i] = wrappedUser{
 				User:       u,
-				reportUser: report.GetUser(aws.ToString(u.Arn)),
+				reportUser: ru,
 			}
 		}
 
@@ -213,14 +224,40 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 	if err != nil {
 		return err
 	}
-	passwordLastUsed, err := time.ParseInLocation(time.RFC3339, r.reportUser.PasswordLastUsed, location)
-	if err == nil {
-		return resource.Set("password_last_used", passwordLastUsed)
+
+	if enabled, err := cast.ToBoolE(r.PasswordStatus); err != nil {
+		if err := resource.Set("password_enabled", enabled); err != nil {
+			return err
+		}
 	}
-	passwordLastChanged, err := time.ParseInLocation(time.RFC3339, r.reportUser.PasswordLastChanged, location)
-	if err == nil {
-		return resource.Set("password_last_changed", passwordLastChanged)
+	if r.PasswordNextRotation == "N/A" {
+		if err := resource.Set("password_next_rotation", nil); err != nil {
+			return err
+		}
+	} else {
+		passwordNextRotation, err := time.ParseInLocation(time.RFC3339, r.PasswordNextRotation, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("password_next_rotation", passwordNextRotation); err != nil {
+			return err
+		}
 	}
+
+	if r.PasswordLastChanged == "N/A" {
+		if err := resource.Set("password_last_changed", nil); err != nil {
+			return err
+		}
+	} else {
+		passwordLastChanged, err := time.ParseInLocation(time.RFC3339, r.PasswordLastChanged, location)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("password_last_changed", passwordLastChanged); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -282,7 +319,7 @@ func postIamUserAccessKeyResolver(ctx context.Context, meta schema.ClientMeta, r
 
 func fetchIamUserAttachedPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config iam.ListAttachedUserPoliciesInput
-	p := parent.Item.(types.User)
+	p := parent.Item.(wrappedUser)
 	svc := meta.(*client.Client).Services().IAM
 	config.UserName = p.UserName
 	for {
@@ -317,11 +354,10 @@ type reportUser struct {
 	User                  string    `csv:"user"`
 	ARN                   string    `csv:"arn"`
 	UserCreationTime      time.Time `csv:"user_creation_time"`
-	PasswordEnabled       string    `csv:"password_enabled"`
-	PasswordLastUsed      string    `csv:"password_last_used"`
+	PasswordStatus        string    `csv:"password_enabled"`
 	PasswordLastChanged   string    `csv:"password_last_changed"`
 	PasswordNextRotation  string    `csv:"password_next_rotation"`
-	MFAActive             bool      `csv:"mfa_active"`
+	MfaActive             bool      `csv:"mfa_active"`
 	AccessKey1Active      bool      `csv:"access_key_1_active"`
 	AccessKey2Active      bool      `csv:"access_key_2_active"`
 	AccessKey1LastRotated string    `csv:"access_key_1_last_rotated"`
@@ -346,7 +382,7 @@ func getCredentialReport(ctx context.Context, meta schema.ClientMeta) (reportUse
 	svc := meta.(*client.Client).Services().IAM
 	for {
 		reportOutput, err = svc.GetCredentialReport(ctx, &iam.GetCredentialReportInput{})
-		if err == nil {
+		if err == nil && reportOutput != nil {
 			var users reportUsers
 			err = gocsv.UnmarshalBytes(reportOutput.Content, &users)
 			if err != nil {
@@ -354,7 +390,7 @@ func getCredentialReport(ctx context.Context, meta schema.ClientMeta) (reportUse
 			}
 			return users, nil
 		}
-		if errors.As(err, &apiErr) {
+		if !errors.As(err, &apiErr) {
 			return nil, err
 		}
 		switch apiErr.ErrorCode() {
