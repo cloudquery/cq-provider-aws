@@ -48,8 +48,13 @@ func buildIamUsers(t *testing.T, ctrl *gomock.Controller) client.Services {
 		t.Fatal(err)
 	}
 	ru.ARN = aws.ToString(u.Arn)
+	ru.PasswordStatus = "true"
 	ru.PasswordNextRotation = time.Now().Format(time.RFC3339)
 	ru.PasswordLastChanged = time.Now().Format(time.RFC3339)
+	ru.AccessKey1LastRotated = time.Now().Format(time.RFC3339)
+	ru.AccessKey2LastRotated = time.Now().Format(time.RFC3339)
+	ru.Cert1LastRotated = time.Now().Format(time.RFC3339)
+	ru.Cert2LastRotated = time.Now().Format(time.RFC3339)
 	content, err := gocsv.MarshalBytes([]reportUser{ru})
 	if err != nil {
 		t.Fatal(err)
@@ -78,6 +83,29 @@ func buildIamUsers(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&iam.GetCredentialReportOutput{
 			Content: content,
 		}, nil)
+
+	//list user inline policies
+	var l []string
+	err = faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListUserPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListUserPoliciesOutput{
+			PolicyNames: l,
+		}, nil)
+
+	//get policy
+	p := iam.GetUserPolicyOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := "{\"test\": {\"t1\":1}}"
+	p.PolicyDocument = &document
+	m.EXPECT().GetUserPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
 	return client.Services{
 		IAM: m,
 	}
