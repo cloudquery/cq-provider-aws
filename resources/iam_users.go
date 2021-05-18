@@ -3,7 +3,7 @@ package resources
 import (
 	"context"
 	"errors"
-	"fmt"
+	"github.com/gocarina/gocsv"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -32,23 +32,26 @@ func IamUsers() *schema.Table {
 				Name: "password_last_used",
 				Type: schema.TypeTimestamp,
 			},
-			// TODO: fix getcredentialreport
-			//{
-			//	Name:     "password_enabled",
-			//	Type:     schema.TypeBool,
-			//},
-			//{
-			//	Name:     "password_last_changed",
-			//	Type:     schema.TypeTimestamp,
-			//},
-			//{
-			//	Name:     "password_next_rotation",
-			//	Type:     schema.TypeTimestamp,
-			//},
-			//{
-			//	Name:     "mfa_active",
-			//	Type:     schema.TypeBool,
-			//},
+			{
+				Name: "arn",
+				Type: schema.TypeString,
+			},
+			{
+				Name: "password_enabled",
+				Type: schema.TypeBool,
+			},
+			{
+				Name: "password_last_changed",
+				Type: schema.TypeTimestamp,
+			},
+			{
+				Name: "password_next_rotation",
+				Type: schema.TypeTimestamp,
+			},
+			{
+				Name: "mfa_active",
+				Type: schema.TypeBool,
+			},
 			{
 				Name: "create_date",
 				Type: schema.TypeTimestamp,
@@ -70,7 +73,7 @@ func IamUsers() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveEc2UserTags,
+				Resolver: resolveUserTags,
 			},
 			{
 				Name: "user_id",
@@ -108,11 +111,6 @@ func IamUsers() *schema.Table {
 						Name: "last_used",
 						Type: schema.TypeTimestamp,
 					},
-					// TODO: fix GetCredentialReport
-					//{
-					//	Name:     "last_rotated",
-					//	Type:     schema.TypeTimestamp,
-					//},
 					{
 						Name: "last_used_service_name",
 						Type: schema.TypeString,
@@ -173,60 +171,10 @@ func IamUsers() *schema.Table {
 	}
 }
 
-type ReportUser struct {
-	User                  string    `csv:"user"`
-	ARN                   string    `csv:"arn"`
-	UserCreationTime      time.Time `csv:"user_creation_time"`
-	PasswordEnabled       string    `csv:"password_enabled"`
-	PasswordLastUsed      string    `csv:"password_last_used"`
-	PasswordLastChanged   string    `csv:"password_last_changed"`
-	PasswordNextRotation  string    `csv:"password_next_rotation"`
-	MFAActive             bool      `csv:"mfa_active"`
-	AccessKey1Active      bool      `csv:"access_key_1_active"`
-	AccessKey2Active      bool      `csv:"access_key_2_active"`
-	AccessKey1LastRotated string    `csv:"access_key_1_last_rotated"`
-	AccessKey2LastRotated string    `csv:"access_key_2_last_rotated"`
-}
-
-func GetCredentialReport(ctx context.Context, svc client.IamClient) ([]*ReportUser, error) {
-	var err error
-	var apiErr smithy.APIError
-	//var reportOutput *iam.GetCredentialReportOutput
-	for {
-		_, err = svc.GetCredentialReport(ctx, &iam.GetCredentialReportInput{})
-		if err != nil {
-			if errors.As(err, &apiErr) {
-				switch apiErr.ErrorCode() {
-				case "ReportNotPresent", "ReportExpired":
-					_, err := svc.GenerateCredentialReport(ctx, &iam.GenerateCredentialReportInput{})
-					if err != nil {
-						return nil, err
-					}
-				case "ReportInProgress":
-					fmt.Println("Waiting for credential report to be generated", "resource", "iam.users")
-					time.Sleep(2 * time.Second)
-				default:
-					return nil, err
-				}
-			} else {
-				return nil, err
-			}
-		} else {
-			break
-		}
-	}
-	var users []*ReportUser
-	//err = gocsv.UnmarshalBytes(reportOutput.Content, &users)
-	//if err != nil {
-	//	return nil, err
-	//}
-	return users, nil
-}
-
-func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
 	var config iam.ListUsersInput
 	svc := meta.(*client.Client).Services().IAM
-	_, err := GetCredentialReport(ctx, svc)
+	report, err := getCredentialReport(ctx, meta)
 	if err != nil {
 		return err
 	}
@@ -237,7 +185,16 @@ func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 		if err != nil {
 			return err
 		}
-		res <- output.Users
+
+		wUsers := make([]wrappedUser, len(output.Users))
+		for i, u := range output.Users {
+			wUsers[i] = wrappedUser{
+				User:       u,
+				reportUser: report.GetUser(aws.ToString(u.Arn)),
+			}
+		}
+
+		res <- wUsers
 		if aws.ToString(output.Marker) == "" {
 			break
 		}
@@ -246,38 +203,29 @@ func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 	return nil
 }
 
-//func getMatchingReportUser(reportUsers []*ReportUser, user types.User) *ReportUser {
-//	for _, reportUser := range reportUsers {
-//		if *user.Arn == reportUser.ARN {
-//			return reportUser
-//		}
-//	}
-//	return nil
-//}
-
-func postIamUserResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	//r := resource.Item.(types.User)
-	//reportUser := getMatchingReportUser(meta.(*provider.Client).ReportUsers.([]*ReportUser), r)
-	//if reportUser != nil {
-	//	location, err := time.LoadLocation("UTC")
-	//	if err != nil {
-	//		return err
-	//	}
-	//	passwordLastUsed, err := time.ParseInLocation(time.RFC3339, reportUser.PasswordLastUsed, location)
-	//	if err == nil {
-	//		resource.Set("password_last_used", passwordLastUsed)
-	//	}
-	//	passwordLastChanged, err := time.ParseInLocation(time.RFC3339, reportUser.PasswordLastChanged, location)
-	//	if err == nil {
-	//		resource.Set("password_last_changed", passwordLastChanged)
-	//	}
-	//}
+func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schema.Resource) error {
+	r := resource.Item.(wrappedUser)
+	if r.reportUser == nil {
+		return nil
+	}
+	location, err := time.LoadLocation("UTC")
+	if err != nil {
+		return err
+	}
+	passwordLastUsed, err := time.ParseInLocation(time.RFC3339, r.reportUser.PasswordLastUsed, location)
+	if err == nil {
+		return resource.Set("password_last_used", passwordLastUsed)
+	}
+	passwordLastChanged, err := time.ParseInLocation(time.RFC3339, r.reportUser.PasswordLastChanged, location)
+	if err == nil {
+		return resource.Set("password_last_changed", passwordLastChanged)
+	}
 	return nil
 }
 
 func fetchIamUserGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config iam.ListGroupsForUserInput
-	p := parent.Item.(types.User)
+	p := parent.Item.(wrappedUser)
 	svc := meta.(*client.Client).Services().IAM
 	config.UserName = p.UserName
 	for {
@@ -296,7 +244,7 @@ func fetchIamUserGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 
 func fetchIamUserAccessKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config iam.ListAccessKeysInput
-	p := parent.Item.(types.User)
+	p := parent.Item.(wrappedUser)
 	svc := meta.(*client.Client).Services().IAM
 	config.UserName = p.UserName
 	for {
@@ -350,11 +298,75 @@ func fetchIamUserAttachedPolicies(ctx context.Context, meta schema.ClientMeta, p
 	return nil
 }
 
-func resolveEc2UserTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.User)
+func resolveUserTags(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
+	r := resource.Item.(wrappedUser)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
 	return resource.Set("tags", tags)
+}
+
+type wrappedUser struct {
+	types.User
+	*reportUser
+}
+
+type reportUser struct {
+	User                  string    `csv:"user"`
+	ARN                   string    `csv:"arn"`
+	UserCreationTime      time.Time `csv:"user_creation_time"`
+	PasswordEnabled       string    `csv:"password_enabled"`
+	PasswordLastUsed      string    `csv:"password_last_used"`
+	PasswordLastChanged   string    `csv:"password_last_changed"`
+	PasswordNextRotation  string    `csv:"password_next_rotation"`
+	MFAActive             bool      `csv:"mfa_active"`
+	AccessKey1Active      bool      `csv:"access_key_1_active"`
+	AccessKey2Active      bool      `csv:"access_key_2_active"`
+	AccessKey1LastRotated string    `csv:"access_key_1_last_rotated"`
+	AccessKey2LastRotated string    `csv:"access_key_2_last_rotated"`
+}
+
+type reportUsers []*reportUser
+
+func (r reportUsers) GetUser(arn string) *reportUser {
+	for _, u := range r {
+		if u.ARN == arn {
+			return u
+		}
+	}
+	return nil
+}
+
+func getCredentialReport(ctx context.Context, meta schema.ClientMeta) (reportUsers, error) {
+	var err error
+	var apiErr smithy.APIError
+	var reportOutput *iam.GetCredentialReportOutput
+	svc := meta.(*client.Client).Services().IAM
+	for {
+		reportOutput, err = svc.GetCredentialReport(ctx, &iam.GetCredentialReportInput{})
+		if err == nil {
+			var users reportUsers
+			err = gocsv.UnmarshalBytes(reportOutput.Content, &users)
+			if err != nil {
+				return nil, err
+			}
+			return users, nil
+		}
+		if errors.As(err, &apiErr) {
+			return nil, err
+		}
+		switch apiErr.ErrorCode() {
+		case "ReportNotPresent", "ReportExpired":
+			_, err := svc.GenerateCredentialReport(ctx, &iam.GenerateCredentialReportInput{})
+			if err != nil {
+				return nil, err
+			}
+		case "ReportInProgress":
+			meta.Logger().Debug("Waiting for credential report to be generated", "resource", "iam.users")
+			time.Sleep(5 * time.Second)
+		default:
+			return nil, err
+		}
+	}
 }
