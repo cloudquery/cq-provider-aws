@@ -200,6 +200,9 @@ func fetchLambdaLayerVersionPolicies(ctx context.Context, meta schema.ClientMeta
 	}
 
 	layerNameParts := strings.Split(arn.Resource, ":")
+	if len(layerNameParts) != 3 {
+		return fmt.Errorf("failed to parse layer arn to get its name")
+	}
 	config := lambda.GetLayerVersionPolicyInput{
 		LayerName:     &layerNameParts[1],
 		VersionNumber: p.Version,

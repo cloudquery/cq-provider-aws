@@ -29,6 +29,8 @@ func buildLambdaLayersMock(t *testing.T, ctrl *gomock.Controller) client.Service
 	if err != nil {
 		t.Fatal(err)
 	}
+	arn := "arn:aws:s3:::my_corporate_bucket/test:exampleobject.png:1"
+	lv.LayerVersionArn = &arn
 	m.EXPECT().ListLayerVersions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&lambda.ListLayerVersionsOutput{
 			LayerVersions: []types.LayerVersionsListItem{lv},
