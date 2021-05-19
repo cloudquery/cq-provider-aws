@@ -67,7 +67,7 @@ var allRegions = []string{
 	"sa-east-1",
 }
 
-var defaultRegion = "us-east-1"
+const defaultRegion = "us-east-1"
 
 type Services struct {
 	Autoscaling      AutoscalingClient
@@ -104,7 +104,7 @@ type ServicesManager struct {
 	services ServicesAccountRegionMap
 }
 
-func (s *ServicesManager) ServiceByAccountAndRegion(accountId string, region string) *Services {
+func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region string) *Services {
 	if region == "" {
 		region = defaultRegion
 	}
@@ -169,7 +169,7 @@ func (c *Client) Logger() hclog.Logger {
 }
 
 func (c *Client) Services() *Services {
-	return c.ServicesManager.ServiceByAccountAndRegion(c.AccountID, c.Region)
+	return c.ServicesManager.ServicesByAccountAndRegion(c.AccountID, c.Region)
 }
 
 func (c *Client) withAccountID(accountID string) *Client {
