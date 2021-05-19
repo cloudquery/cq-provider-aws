@@ -2874,6 +2874,26 @@ func (mr *MockLambdaClientMockRecorder) GetFunctionCodeSigningConfig(arg0, arg1 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFunctionCodeSigningConfig", reflect.TypeOf((*MockLambdaClient)(nil).GetFunctionCodeSigningConfig), varargs...)
 }
 
+// GetLayerVersionPolicy mocks base method.
+func (m *MockLambdaClient) GetLayerVersionPolicy(arg0 context.Context, arg1 *lambda.GetLayerVersionPolicyInput, arg2 ...func(*lambda.Options)) (*lambda.GetLayerVersionPolicyOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetLayerVersionPolicy", varargs...)
+	ret0, _ := ret[0].(*lambda.GetLayerVersionPolicyOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetLayerVersionPolicy indicates an expected call of GetLayerVersionPolicy.
+func (mr *MockLambdaClientMockRecorder) GetLayerVersionPolicy(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLayerVersionPolicy", reflect.TypeOf((*MockLambdaClient)(nil).GetLayerVersionPolicy), varargs...)
+}
+
 // GetPolicy mocks base method.
 func (m *MockLambdaClient) GetPolicy(arg0 context.Context, arg1 *lambda.GetPolicyInput, arg2 ...func(*lambda.Options)) (*lambda.GetPolicyOutput, error) {
 	m.ctrl.T.Helper()

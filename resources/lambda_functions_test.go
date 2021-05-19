@@ -95,6 +95,8 @@ func buildLambdaFunctionsMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 	if err != nil {
 		t.Fatal(err)
 	}
+	isoDate := "2011-10-05T14:48:00.000Z"
+	csc.LastModified = &isoDate
 	m.EXPECT().GetCodeSigningConfig(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&lambda.GetCodeSigningConfigOutput{
 			CodeSigningConfig: &csc,

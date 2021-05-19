@@ -3,15 +3,16 @@ package resources
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"reflect"
-	"time"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
+	smithy "github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"reflect"
+	"time"
 )
 
 func LambdaFunctions() *schema.Table {
@@ -839,21 +840,27 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 	}, func(options *lambda.Options) {
 		options.Region = c.Region
 	})
+	var ae smithy.APIError
 	if err != nil {
-		return err
+		if !errors.As(err, &ae) || ae.ErrorCode() != "ResourceNotFoundException" {
+			return err
+		}
 	}
 
-	if err := resource.Set("policy_revision_id", response.RevisionId); err != nil {
-		return err
+	if response != nil {
+		if err := resource.Set("policy_revision_id", response.RevisionId); err != nil {
+			return err
+		}
+		var policyDocument map[string]interface{}
+		err = json.Unmarshal([]byte(*response.Policy), &policyDocument)
+		if err != nil {
+			return err
+		}
+		if err := resource.Set("policy_document", policyDocument); err != nil {
+			return err
+		}
 	}
-	var policyDocument map[string]interface{}
-	err = json.Unmarshal([]byte(*response.Policy), &policyDocument)
-	if err != nil {
-		return err
-	}
-	if err := resource.Set("policy_document", policyDocument); err != nil {
-		return err
-	}
+
 	functionSigning, err := svc.GetFunctionCodeSigningConfig(ctx, &lambda.GetFunctionCodeSigningConfigInput{
 		FunctionName: r.Configuration.FunctionName,
 	}, func(options *lambda.Options) {
@@ -861,6 +868,9 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 	})
 	if err != nil {
 		return err
+	}
+	if functionSigning.CodeSigningConfigArn == nil {
+		return nil
 	}
 
 	signing, err := svc.GetCodeSigningConfig(ctx, &lambda.GetCodeSigningConfigInput{
@@ -870,6 +880,9 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 	})
 	if err != nil {
 		return err
+	}
+	if signing.CodeSigningConfig == nil {
+		return nil
 	}
 
 	if err := resource.Set("code_signing_allowed_publishers_version_arns", signing.CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns); err != nil {

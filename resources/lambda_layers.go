@@ -2,14 +2,18 @@ package resources
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
-	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
+
+	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
-
+	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -106,6 +110,27 @@ func LambdaLayers() *schema.Table {
 						Type: schema.TypeBigInt,
 					},
 				},
+				Relations: []*schema.Table{
+					{
+						Name:     "aws_lambda_layer_version_policies",
+						Resolver: fetchLambdaLayerVersionPolicies,
+						Columns: []schema.Column{
+							{
+								Name:     "layer_version_id",
+								Type:     schema.TypeUUID,
+								Resolver: schema.ParentIdResolver,
+							},
+							{
+								Name: "policy",
+								Type: schema.TypeString,
+							},
+							{
+								Name: "revision_id",
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -158,5 +183,37 @@ func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, paren
 		}
 		config.Marker = output.NextMarker
 	}
+	return nil
+}
+func fetchLambdaLayerVersionPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	p, ok := parent.Item.(types.LayerVersionsListItem)
+	if !ok {
+		return fmt.Errorf("wrong type assertion: got %s instead of %s",
+			reflect.TypeOf(p).Name(),
+			reflect.TypeOf(types.LayersListItem{}).Name())
+	}
+	svc := meta.(*client.Client).Services().Lambda
+
+	arn, err := arn.Parse(*p.LayerVersionArn)
+	if err != nil {
+		return err
+	}
+
+	layerNameParts := strings.Split(arn.Resource, ":")
+	config := lambda.GetLayerVersionPolicyInput{
+		LayerName:     &layerNameParts[1],
+		VersionNumber: p.Version,
+	}
+
+	output, err := svc.GetLayerVersionPolicy(ctx, &config)
+	var ae smithy.APIError
+	if err != nil {
+		if errors.As(err, &ae) && ae.ErrorCode() == "ResourceNotFoundException" {
+			return nil
+		}
+		return err
+	}
+	res <- output
+
 	return nil
 }

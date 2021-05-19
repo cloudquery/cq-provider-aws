@@ -34,6 +34,14 @@ func buildLambdaLayersMock(t *testing.T, ctrl *gomock.Controller) client.Service
 			LayerVersions: []types.LayerVersionsListItem{lv},
 		}, nil)
 
+	lvp := lambda.GetLayerVersionPolicyOutput{}
+	err = faker.FakeData(&lvp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().GetLayerVersionPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&lvp, nil)
+
 	return client.Services{
 		Lambda: m,
 	}
