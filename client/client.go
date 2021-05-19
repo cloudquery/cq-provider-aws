@@ -93,6 +93,7 @@ type Services struct {
 	RDS              RdsClient
 	S3               S3Client
 	S3Manager        S3ManagerClient
+	Lambda           LambdaClient
 }
 
 type Client struct {
