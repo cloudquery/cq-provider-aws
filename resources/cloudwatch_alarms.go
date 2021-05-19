@@ -90,8 +90,8 @@ func CloudwatchAlarms() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "ok_actions",
-				Type: schema.TypeStringArray,
+				Name:     "ok_actions",
+				Type:     schema.TypeStringArray,
 				Resolver: schema.PathResolver("OKActions"),
 			},
 			{
