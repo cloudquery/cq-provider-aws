@@ -195,6 +195,11 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.ElasticbeanstalkEnvironments(),
 		},
 		{
+			resource:    "elbv1.load_balancers",
+			mockBuilder: buildElbv1LoadBalancers,
+			mainTable:   resources.Elbv1LoadBalancers(),
+		},
+		{
 			resource:    "elbv2.load_balancers",
 			mockBuilder: buildElbv2LoadBalancers,
 			mainTable:   resources.Elbv2LoadBalancers(),
@@ -249,11 +254,6 @@ func TestResources(t *testing.T) {
 			resource:    "iam.roles",
 			mainTable:   resources.IamRoles(),
 			mockBuilder: buildIamRoles,
-		},
-		{
-			resource:    "iam.users",
-			mainTable:   resources.IamUsers(),
-			mockBuilder: buildIamUsers,
 		},
 		{
 			resource:    "iam.virtual_mfa_devices",

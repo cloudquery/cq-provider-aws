@@ -27,6 +27,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elasticbeanstalkTypes "github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
+	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
+	elbv1Types "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing/types"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	elbv2Types "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
@@ -810,6 +812,60 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 	}
 }
 
+func buildElbv1LoadBalancers(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockElbV1Client(ctrl)
+	l := elbv1Types.LoadBalancerDescription{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeLoadBalancers(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&elasticloadbalancing.DescribeLoadBalancersOutput{
+			LoadBalancerDescriptions: []elbv1Types.LoadBalancerDescription{l},
+		}, nil)
+
+	tag := elbv1Types.Tag{}
+	err = faker.FakeData(&tag)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeTags(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&elasticloadbalancing.DescribeTagsOutput{
+			TagDescriptions: []elbv1Types.TagDescription{
+				{
+					LoadBalancerName: l.LoadBalancerName,
+					Tags:             []elbv1Types.Tag{tag},
+				},
+			},
+		}, nil)
+
+	a := elbv1Types.LoadBalancerAttributes{}
+	err = faker.FakeData(&a)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeLoadBalancerAttributes(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&elasticloadbalancing.DescribeLoadBalancerAttributesOutput{
+			LoadBalancerAttributes: &a,
+		}, nil)
+
+	p := elbv1Types.PolicyDescription{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeLoadBalancerPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&elasticloadbalancing.DescribeLoadBalancerPoliciesOutput{
+			PolicyDescriptions: []elbv1Types.PolicyDescription{p},
+		}, nil)
+
+	return client.Services{
+		ELBv1: m,
+	}
+}
+
 func buildElbv2LoadBalancers(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockElbV2Client(ctrl)
 	l := elbv2Types.LoadBalancer{}
@@ -1019,6 +1075,28 @@ func buildIamGroups(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&iam.ListAttachedGroupPoliciesOutput{
 			AttachedPolicies: []iamTypes.AttachedPolicy{p},
 		}, nil)
+
+	//list policies
+	var l []string
+	err = faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListGroupPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListGroupPoliciesOutput{
+			PolicyNames: l,
+		}, nil)
+
+	//get policy
+	gp := iam.GetGroupPolicyOutput{}
+	err = faker.FakeData(&gp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	document := "{\"test\": {\"t1\":1}}"
+	gp.PolicyDocument = &document
+	m.EXPECT().GetGroupPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&gp, nil)
 	return client.Services{
 		IAM: m,
 	}
@@ -1106,58 +1184,28 @@ func buildIamRoles(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&iam.ListAttachedRolePoliciesOutput{
 			AttachedPolicies: []iamTypes.AttachedPolicy{p},
 		}, nil)
-	return client.Services{
-		IAM: m,
-	}
-}
 
-func buildIamUsers(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockIamClient(ctrl)
-	u := iamTypes.User{}
-	err := faker.FakeData(&u)
+	// list policies by role
+	var l []string
+	err = faker.FakeData(&l)
 	if err != nil {
 		t.Fatal(err)
 	}
-	g := iamTypes.Group{}
-	err = faker.FakeData(&g)
-	if err != nil {
-		t.Fatal(err)
-	}
-	km := iamTypes.AccessKeyMetadata{}
-	err = faker.FakeData(&km)
-	if err != nil {
-		t.Fatal(err)
-	}
-	aup := iamTypes.AttachedPolicy{}
-	err = faker.FakeData(&aup)
-	if err != nil {
-		t.Fatal(err)
-	}
-	akl := iam.GetAccessKeyLastUsedOutput{}
-	err = faker.FakeData(&akl)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListUsers(gomock.Any(), gomock.Any()).Return(
-		&iam.ListUsersOutput{
-			Users: []iamTypes.User{u},
+	m.EXPECT().ListRolePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&iam.ListRolePoliciesOutput{
+			PolicyNames: l,
 		}, nil)
-	m.EXPECT().ListGroupsForUser(gomock.Any(), gomock.Any()).Return(
-		&iam.ListGroupsForUserOutput{
-			Groups: []iamTypes.Group{g},
-		}, nil)
-	m.EXPECT().GetCredentialReport(gomock.Any(), gomock.Any()).Return(
-		nil, nil)
-	m.EXPECT().ListAccessKeys(gomock.Any(), gomock.Any()).Return(
-		&iam.ListAccessKeysOutput{
-			AccessKeyMetadata: []iamTypes.AccessKeyMetadata{km},
-		}, nil)
-	m.EXPECT().ListAttachedUserPolicies(gomock.Any(), gomock.Any()).Return(
-		&iam.ListAttachedUserPoliciesOutput{
-			AttachedPolicies: []iamTypes.AttachedPolicy{aup},
-		}, nil)
-	m.EXPECT().GetAccessKeyLastUsed(gomock.Any(), gomock.Any()).Return(
-		&akl, nil)
+
+	//get policy
+	pd := iam.GetRolePolicyOutput{}
+	err = faker.FakeData(&pd)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pd.PolicyDocument = &document
+	m.EXPECT().GetRolePolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&pd, nil)
+
 	return client.Services{
 		IAM: m,
 	}
