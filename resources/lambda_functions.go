@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"reflect"
-	"time"
 )
 
 func LambdaFunctions() *schema.Table {
@@ -886,9 +887,13 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 	if err := resource.Set("code_signing_description", signing.CodeSigningConfig.Description); err != nil {
 		return err
 	}
-	//todo parse last modified
-	//resource.Set("code_signing_last_modified", signing.CodeSigningConfig.LastModified)
-	if err := resource.Set("code_signing_last_modified", time.Now()); err != nil {
+
+	location, err := time.LoadLocation("UTC")
+	codeSigningLastModified, err := time.ParseInLocation(time.RFC3339, *signing.CodeSigningConfig.LastModified, location)
+	if err != nil {
+		return err
+	}
+	if err := resource.Set("code_signing_last_modified", codeSigningLastModified); err != nil {
 		return err
 	}
 
