@@ -90,7 +90,7 @@ func CloudwatchAlarms() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "o_k_actions",
+				Name: "ok_actions",
 				Type: schema.TypeStringArray,
 			},
 			{
