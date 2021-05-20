@@ -36,6 +36,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
+	"github.com/aws/smithy-go/middleware"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/hashicorp/go-hclog"
 )
@@ -221,7 +222,21 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if awsConfig.AWSDebug {
 			awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
 		}
-		awsCfg.Retryer = newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)
+		// This is a work-around to make a retryer per request and not per service
+		// https://github.com/aws/aws-sdk-go-v2/issues/1268
+		awsCfg.APIOptions = append(awsCfg.APIOptions, func(stack *middleware.Stack) error {
+			_, err := stack.Finalize.Remove("RetryMetricsHeader")
+			if err != nil {
+				return err
+			}
+			_, err = stack.Finalize.Remove("Retry")
+			if err != nil {
+				return err
+			}
+			return retry.AddRetryMiddlewares(stack, retry.AddRetryMiddlewaresOptions{
+				Retryer: newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)(),
+			})
+		})
 		svc := sts.NewFromConfig(awsCfg)
 		output, err := svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
 			o.Region = "aws-global"
