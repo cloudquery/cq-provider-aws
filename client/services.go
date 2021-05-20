@@ -1,15 +1,12 @@
 // We define interfaces so we can easily mock AWS calls
 package client
 
-//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client, ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,Route53Client,EcsClient,S3ManagerClient
+//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,Route53Client,EcsClient,S3ManagerClient,ApigatewayClient
 
 import (
 	"context"
 
-	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
-
-	"github.com/aws/aws-sdk-go-v2/service/ecs"
-
+	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
@@ -18,9 +15,11 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
+	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
+	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
@@ -215,4 +214,25 @@ type Route53Client interface {
 
 type S3ManagerClient interface {
 	GetBucketRegion(ctx context.Context, bucket string, optFns ...func(*s3.Options)) (string, error)
+}
+
+type ApigatewayClient interface {
+	GetRestApis(ctx context.Context, params *apigateway.GetRestApisInput, optFns ...func(*apigateway.Options)) (*apigateway.GetRestApisOutput, error)
+	GetAuthorizers(ctx context.Context, params *apigateway.GetAuthorizersInput, optFns ...func(*apigateway.Options)) (*apigateway.GetAuthorizersOutput, error)
+	GetDeployments(ctx context.Context, params *apigateway.GetDeploymentsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetDeploymentsOutput, error)
+	GetDocumentationParts(ctx context.Context, params *apigateway.GetDocumentationPartsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetDocumentationPartsOutput, error)
+	GetDocumentationVersions(ctx context.Context, params *apigateway.GetDocumentationVersionsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetDocumentationVersionsOutput, error)
+	GetGatewayResponses(ctx context.Context, params *apigateway.GetGatewayResponsesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetGatewayResponsesOutput, error)
+	GetModels(ctx context.Context, params *apigateway.GetModelsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetModelsOutput, error)
+	GetModelTemplate(ctx context.Context, params *apigateway.GetModelTemplateInput, optFns ...func(*apigateway.Options)) (*apigateway.GetModelTemplateOutput, error)
+	GetRequestValidators(ctx context.Context, params *apigateway.GetRequestValidatorsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetRequestValidatorsOutput, error)
+	GetResources(ctx context.Context, params *apigateway.GetResourcesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetResourcesOutput, error)
+	GetStages(ctx context.Context, params *apigateway.GetStagesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetStagesOutput, error)
+	GetUsagePlans(ctx context.Context, params *apigateway.GetUsagePlansInput, optFns ...func(*apigateway.Options)) (*apigateway.GetUsagePlansOutput, error)
+	GetUsagePlanKeys(ctx context.Context, params *apigateway.GetUsagePlanKeysInput, optFns ...func(*apigateway.Options)) (*apigateway.GetUsagePlanKeysOutput, error)
+	GetDomainNames(ctx context.Context, params *apigateway.GetDomainNamesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetDomainNamesOutput, error)
+	GetBasePathMappings(ctx context.Context, params *apigateway.GetBasePathMappingsInput, optFns ...func(*apigateway.Options)) (*apigateway.GetBasePathMappingsOutput, error)
+	GetClientCertificates(ctx context.Context, params *apigateway.GetClientCertificatesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetClientCertificatesOutput, error)
+	GetApiKeys(ctx context.Context, params *apigateway.GetApiKeysInput, optFns ...func(*apigateway.Options)) (*apigateway.GetApiKeysOutput, error)
+	GetVpcLinks(ctx context.Context, params *apigateway.GetVpcLinksInput, optFns ...func(*apigateway.Options)) (*apigateway.GetVpcLinksOutput, error)
 }
