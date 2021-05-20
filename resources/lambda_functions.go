@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -113,7 +112,7 @@ func LambdaFunctions() *schema.Table {
 				Resolver: schema.PathResolver("Configuration.Description"),
 			},
 			{
-				Name:     "environment_error_error_code",
+				Name:     "environment_error_code",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("Configuration.Environment.Error.ErrorCode"),
 			},
@@ -829,9 +828,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	r, ok := resource.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(r).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", r)
 	}
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
@@ -919,9 +916,7 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(r).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", r)
 	}
 
 	res <- r.Configuration.FileSystemConfigs
@@ -930,9 +925,7 @@ func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.Clien
 func fetchLambdaFunctionLayers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(r).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", r)
 	}
 
 	res <- r.Configuration.Layers
@@ -941,9 +934,7 @@ func fetchLambdaFunctionLayers(ctx context.Context, meta schema.ClientMeta, pare
 func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListAliasesInput{
@@ -966,9 +957,7 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListFunctionEventInvokeConfigsInput{
@@ -991,9 +980,7 @@ func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.Clie
 func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListVersionsByFunctionInput{
@@ -1016,9 +1003,7 @@ func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, pa
 func fetchLambdaFunctionVersionFileSystemConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.FunctionConfiguration)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(r).Name(),
-			reflect.TypeOf(types.FunctionConfiguration{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of FunctionConfiguration", r)
 	}
 
 	res <- r.FileSystemConfigs
@@ -1027,9 +1012,7 @@ func fetchLambdaFunctionVersionFileSystemConfigs(ctx context.Context, meta schem
 func fetchLambdaFunctionVersionLayers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.FunctionConfiguration)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(r).Name(),
-			reflect.TypeOf(types.FunctionConfiguration{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of FunctionConfiguration", r)
 	}
 
 	res <- r.Layers
@@ -1038,9 +1021,7 @@ func fetchLambdaFunctionVersionLayers(ctx context.Context, meta schema.ClientMet
 func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListProvisionedConcurrencyConfigsInput{
@@ -1063,9 +1044,7 @@ func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.Clie
 func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(*lambda.GetFunctionOutput)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(lambda.GetFunctionOutput{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of *GetFunctionOutput", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListEventSourceMappingsInput{
@@ -1088,9 +1067,7 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 func fetchLambdaFunctionEventSourceMappingAccessConfigurations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(types.EventSourceMappingConfiguration)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(types.EventSourceMappingConfiguration{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of EventSourceMappingConfiguration", p)
 	}
 	res <- p.SourceAccessConfigurations
 	return nil

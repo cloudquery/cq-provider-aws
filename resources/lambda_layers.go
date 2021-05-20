@@ -4,10 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"reflect"
-	"strings"
-
-	"github.com/aws/aws-sdk-go-v2/aws/arn"
 
 	"github.com/aws/smithy-go"
 
@@ -163,9 +159,7 @@ func fetchLambdaLayers(ctx context.Context, meta schema.ClientMeta, parent *sche
 func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(types.LayersListItem)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(types.LayersListItem{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of LayersListItem", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListLayerVersionsInput{
@@ -188,23 +182,17 @@ func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, paren
 func fetchLambdaLayerVersionPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(types.LayerVersionsListItem)
 	if !ok {
-		return fmt.Errorf("wrong type assertion: got %s instead of %s",
-			reflect.TypeOf(p).Name(),
-			reflect.TypeOf(types.LayersListItem{}).Name())
+		return fmt.Errorf("wrong type assertion: got %T instead of LayerVersionsListItem", p)
+	}
+
+	pp, ok := parent.Parent.Item.(types.LayersListItem)
+	if !ok {
+		return fmt.Errorf("wrong type assertion: got %T instead of LayersListItem", p)
 	}
 	svc := meta.(*client.Client).Services().Lambda
 
-	arn, err := arn.Parse(*p.LayerVersionArn)
-	if err != nil {
-		return err
-	}
-
-	layerNameParts := strings.Split(arn.Resource, ":")
-	if len(layerNameParts) != 3 {
-		return fmt.Errorf("failed to parse layer arn to get its name")
-	}
 	config := lambda.GetLayerVersionPolicyInput{
-		LayerName:     &layerNameParts[1],
+		LayerName:     pp.LayerName,
 		VersionNumber: p.Version,
 	}
 
