@@ -12,9 +12,6 @@ func Provider() *provider.Provider {
 		Configure: client.Configure,
 		ResourceMap: map[string]*schema.Table{
 			"autoscaling.launch_configurations":     AutoscalingLaunchConfigurations(),
-			"apigateway.apis":                       ApigatewayApis(),
-			"apigateway.domain_names":               ApigatewayDomainNames(),
-			"apigateway.vpc_links":                  ApigatewayVpcLinks(),
 			"apigatewayv2.apis":                     Apigatewayv2Apis(),
 			"apigatewayv2.domain_names":             Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                Apigatewayv2VpcLinks(),
