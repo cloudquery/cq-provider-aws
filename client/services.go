@@ -6,6 +6,8 @@ package client
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
+
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
@@ -25,7 +27,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
-	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
@@ -217,22 +218,6 @@ type S3ManagerClient interface {
 	GetBucketRegion(ctx context.Context, bucket string, optFns ...func(*s3.Options)) (string, error)
 }
 
-type LambdaClient interface {
-	ListFunctions(ctx context.Context, params *lambda.ListFunctionsInput, optFns ...func(*lambda.Options)) (*lambda.ListFunctionsOutput, error)
-	GetFunction(ctx context.Context, params *lambda.GetFunctionInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionOutput, error)
-	ListAliases(ctx context.Context, params *lambda.ListAliasesInput, optFns ...func(*lambda.Options)) (*lambda.ListAliasesOutput, error)
-	ListFunctionEventInvokeConfigs(ctx context.Context, params *lambda.ListFunctionEventInvokeConfigsInput, optFns ...func(*lambda.Options)) (*lambda.ListFunctionEventInvokeConfigsOutput, error)
-	ListProvisionedConcurrencyConfigs(ctx context.Context, params *lambda.ListProvisionedConcurrencyConfigsInput, optFns ...func(*lambda.Options)) (*lambda.ListProvisionedConcurrencyConfigsOutput, error)
-	ListVersionsByFunction(ctx context.Context, params *lambda.ListVersionsByFunctionInput, optFns ...func(*lambda.Options)) (*lambda.ListVersionsByFunctionOutput, error)
-	ListLayers(ctx context.Context, params *lambda.ListLayersInput, optFns ...func(*lambda.Options)) (*lambda.ListLayersOutput, error)
-	ListLayerVersions(ctx context.Context, params *lambda.ListLayerVersionsInput, optFns ...func(*lambda.Options)) (*lambda.ListLayerVersionsOutput, error)
-	ListEventSourceMappings(ctx context.Context, params *lambda.ListEventSourceMappingsInput, optFns ...func(*lambda.Options)) (*lambda.ListEventSourceMappingsOutput, error)
-	GetPolicy(ctx context.Context, params *lambda.GetPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetPolicyOutput, error)
-	GetFunctionCodeSigningConfig(ctx context.Context, params *lambda.GetFunctionCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionCodeSigningConfigOutput, error)
-	GetCodeSigningConfig(ctx context.Context, params *lambda.GetCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetCodeSigningConfigOutput, error)
-	GetLayerVersionPolicy(ctx context.Context, params *lambda.GetLayerVersionPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetLayerVersionPolicyOutput, error)
-}
-
 type ApigatewayClient interface {
 	GetRestApis(ctx context.Context, params *apigateway.GetRestApisInput, optFns ...func(*apigateway.Options)) (*apigateway.GetRestApisOutput, error)
 	GetAuthorizers(ctx context.Context, params *apigateway.GetAuthorizersInput, optFns ...func(*apigateway.Options)) (*apigateway.GetAuthorizersOutput, error)
@@ -252,4 +237,20 @@ type ApigatewayClient interface {
 	GetClientCertificates(ctx context.Context, params *apigateway.GetClientCertificatesInput, optFns ...func(*apigateway.Options)) (*apigateway.GetClientCertificatesOutput, error)
 	GetApiKeys(ctx context.Context, params *apigateway.GetApiKeysInput, optFns ...func(*apigateway.Options)) (*apigateway.GetApiKeysOutput, error)
 	GetVpcLinks(ctx context.Context, params *apigateway.GetVpcLinksInput, optFns ...func(*apigateway.Options)) (*apigateway.GetVpcLinksOutput, error)
+}
+
+type LambdaClient interface {
+	ListFunctions(ctx context.Context, params *lambda.ListFunctionsInput, optFns ...func(*lambda.Options)) (*lambda.ListFunctionsOutput, error)
+	GetFunction(ctx context.Context, params *lambda.GetFunctionInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionOutput, error)
+	ListAliases(ctx context.Context, params *lambda.ListAliasesInput, optFns ...func(*lambda.Options)) (*lambda.ListAliasesOutput, error)
+	ListFunctionEventInvokeConfigs(ctx context.Context, params *lambda.ListFunctionEventInvokeConfigsInput, optFns ...func(*lambda.Options)) (*lambda.ListFunctionEventInvokeConfigsOutput, error)
+	ListProvisionedConcurrencyConfigs(ctx context.Context, params *lambda.ListProvisionedConcurrencyConfigsInput, optFns ...func(*lambda.Options)) (*lambda.ListProvisionedConcurrencyConfigsOutput, error)
+	ListVersionsByFunction(ctx context.Context, params *lambda.ListVersionsByFunctionInput, optFns ...func(*lambda.Options)) (*lambda.ListVersionsByFunctionOutput, error)
+	ListLayers(ctx context.Context, params *lambda.ListLayersInput, optFns ...func(*lambda.Options)) (*lambda.ListLayersOutput, error)
+	ListLayerVersions(ctx context.Context, params *lambda.ListLayerVersionsInput, optFns ...func(*lambda.Options)) (*lambda.ListLayerVersionsOutput, error)
+	ListEventSourceMappings(ctx context.Context, params *lambda.ListEventSourceMappingsInput, optFns ...func(*lambda.Options)) (*lambda.ListEventSourceMappingsOutput, error)
+	GetPolicy(ctx context.Context, params *lambda.GetPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetPolicyOutput, error)
+	GetFunctionCodeSigningConfig(ctx context.Context, params *lambda.GetFunctionCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionCodeSigningConfigOutput, error)
+	GetCodeSigningConfig(ctx context.Context, params *lambda.GetCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetCodeSigningConfigOutput, error)
+	GetLayerVersionPolicy(ctx context.Context, params *lambda.GetLayerVersionPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetLayerVersionPolicyOutput, error)
 }
