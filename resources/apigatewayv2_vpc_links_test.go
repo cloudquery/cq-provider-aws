@@ -13,7 +13,7 @@ import (
 )
 
 func buildApigatewayv2VpcLinks(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockApigatewayClient(ctrl)
+	m := mocks.NewMockApigatewayv2Client(ctrl)
 
 	v := types.VpcLink{}
 	err := faker.FakeData(&v)
@@ -31,5 +31,5 @@ func buildApigatewayv2VpcLinks(t *testing.T, ctrl *gomock.Controller) client.Ser
 }
 
 func TestApigatewayv2VpcLinks(t *testing.T) {
-	awsTestHelper(t, Apigatewayv2DomainNames(), buildApigatewayv2VpcLinks)
+	awsTestHelper(t, Apigatewayv2VpcLinks(), buildApigatewayv2VpcLinks)
 }

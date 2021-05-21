@@ -13,7 +13,7 @@ import (
 )
 
 func buildApigatewayv2DomainNames(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockApigatewayClient(ctrl)
+	m := mocks.NewMockApigatewayv2Client(ctrl)
 
 	dn := types.DomainName{}
 	err := faker.FakeData(&dn)

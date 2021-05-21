@@ -682,8 +682,12 @@ func fetchApigatewayv2ApiIntegrationResponses(ctx context.Context, meta schema.C
 	if !ok {
 		return fmt.Errorf("expected Integration but got %T", r)
 	}
+	p, ok := parent.Parent.Item.(types.Api)
+	if !ok {
+		return fmt.Errorf("expected Api but got %T", r)
+	}
 	config := apigatewayv2.GetIntegrationResponsesInput{
-		//ApiId: r.A, //todo get apiId
+		ApiId:         p.ApiId,
 		IntegrationId: r.IntegrationId,
 	}
 	c := meta.(*client.Client)
@@ -735,8 +739,12 @@ func resolveApigatewayv2apiModelModelTemplate(ctx context.Context, meta schema.C
 	if !ok {
 		return fmt.Errorf("expected Model but got %T", r)
 	}
+	p, ok := resource.Parent.Item.(types.Api)
+	if !ok {
+		return fmt.Errorf("expected Api but got %T", r)
+	}
 	config := apigatewayv2.GetModelTemplateInput{
-		//ApiId: r.A, //todo get apiId
+		ApiId:   p.ApiId,
 		ModelId: r.ModelId,
 	}
 	client := meta.(*client.Client)
@@ -781,8 +789,12 @@ func fetchApigatewayv2ApiRouteResponses(ctx context.Context, meta schema.ClientM
 	if !ok {
 		return fmt.Errorf("expected Route but got %T", r)
 	}
+	p, ok := parent.Parent.Item.(types.Api)
+	if !ok {
+		return fmt.Errorf("expected Api but got %T", r)
+	}
 	config := apigatewayv2.GetRouteResponsesInput{
-		//ApiId: r.A, //todo get apiId
+		ApiId:   p.ApiId,
 		RouteId: r.RouteId,
 	}
 	c := meta.(*client.Client)

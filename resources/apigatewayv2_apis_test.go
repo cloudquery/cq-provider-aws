@@ -13,7 +13,7 @@ import (
 )
 
 func buildApigatewayv2Apis(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockApigatewayClient(ctrl)
+	m := mocks.NewMockApigatewayv2Client(ctrl)
 
 	a := types.Api{}
 	err := faker.FakeData(&a)
