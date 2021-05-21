@@ -12,6 +12,12 @@ func Provider() *provider.Provider {
 		Configure: client.Configure,
 		ResourceMap: map[string]*schema.Table{
 			"autoscaling.launch_configurations":     AutoscalingLaunchConfigurations(),
+			"apigateway.rest_apis":                  ApigatewayRestApis(),
+			"apigateway.domain_names":               ApigatewayDomainNames(),
+			"apigateway.client_certificates":        ApigatewayClientCertificates(),
+			"apigateway.usage_plans":                ApigatewayUsagePlans(),
+			"apigateway.api_keys":                   ApigatewayAPIKeys(),
+			"apigateway.vpc_links":                  ApigatewayVpcLinks(),
 			"apigatewayv2.apis":                     Apigatewayv2Apis(),
 			"apigatewayv2.domain_names":             Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                Apigatewayv2VpcLinks(),
@@ -72,6 +78,8 @@ func Provider() *provider.Provider {
 			"route53.health_checks":                 Route53HealthChecks(),
 			"route53.hosted_zones":                  Route53HostedZones(),
 			"route53.traffic_policies":              Route53TrafficPolicies(),
+			"lambda.functions":                      LambdaFunctions(),
+			"lambda.layers":                         LambdaLayers(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
