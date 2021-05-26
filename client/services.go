@@ -5,6 +5,7 @@ package client
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"

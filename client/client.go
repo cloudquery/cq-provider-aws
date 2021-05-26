@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
-	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/configservice"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
