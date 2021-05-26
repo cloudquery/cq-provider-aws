@@ -3,8 +3,9 @@ package client
 import (
 	"context"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 
