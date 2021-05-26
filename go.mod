@@ -2,6 +2,8 @@ module github.com/cloudquery/cq-provider-aws
 
 go 1.15
 
+replace github.com/cloudquery/cq-provider-sdk => ../cq-provider-sdk
+
 require (
 	github.com/aws/aws-sdk-go-v2 v1.5.0
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
