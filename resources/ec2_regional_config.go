@@ -31,39 +31,14 @@ func Ec2RegionalConfig() *schema.Table {
 				Name:        "ebs_encryption_enabled_by_default",
 				Type:        schema.TypeBool,
 				Description: "Indicates whether EBS encryption by default is enabled for your account in the current Region.",
-				Resolver: func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-					cl := meta.(*client.Client)
-					resp, err := meta.(*client.Client).Services().EC2.GetEbsEncryptionByDefault(ctx, &ec2.GetEbsEncryptionByDefaultInput{}, func(options *ec2.Options) {
-						options.Region = cl.Region
-					})
-					if err != nil {
-						return err
-					}
-					return resource.Set(c.Name, resp.EbsEncryptionByDefault)
-				},
 			},
 			{
 				Name:        "ebs_default_kms_key_id",
 				Type:        schema.TypeString,
 				Description: "The Amazon Resource Name (ARN) of the default CMK for encryption by default.",
-				Resolver: func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-					cl := meta.(*client.Client)
-					resp, err := meta.(*client.Client).Services().EC2.GetEbsDefaultKmsKeyId(ctx, &ec2.GetEbsDefaultKmsKeyIdInput{}, func(options *ec2.Options) {
-						options.Region = cl.Region
-					})
-					if err != nil {
-						return err
-					}
-					return resource.Set(c.Name, resp.KmsKeyId)
-				},
 			},
 		},
 	}
-}
-
-type ec2RegionalConfig struct {
-	EbsEncryptionEnabledByDefault bool
-	EbsDefaultKmsKeyId            *string
 }
 
 func fetchEc2RegionalConfig(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
@@ -88,4 +63,9 @@ func fetchEc2RegionalConfig(ctx context.Context, meta schema.ClientMeta, _ *sche
 	regionalConfig.EbsEncryptionEnabledByDefault = ebsResp.EbsEncryptionByDefault
 	res <- regionalConfig
 	return nil
+}
+
+type ec2RegionalConfig struct {
+	EbsEncryptionEnabledByDefault bool
+	EbsDefaultKmsKeyId            *string
 }
