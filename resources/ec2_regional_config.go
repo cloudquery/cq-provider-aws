@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -15,7 +16,7 @@ func Ec2RegionalConfig() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Columns:      []schema.Column{
+		Columns: []schema.Column{
 			{
 				Name:     "account_id",
 				Type:     schema.TypeString,
@@ -27,9 +28,9 @@ func Ec2RegionalConfig() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name:            "ebs_encryption_enabled_by_default",
-				Type:            schema.TypeBool,
-				Description:     "Indicates whether EBS encryption by default is enabled for your account in the current Region.",
+				Name:        "ebs_encryption_enabled_by_default",
+				Type:        schema.TypeBool,
+				Description: "Indicates whether EBS encryption by default is enabled for your account in the current Region.",
 				Resolver: func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 					cl := meta.(*client.Client)
 					resp, err := meta.(*client.Client).Services().EC2.GetEbsEncryptionByDefault(ctx, &ec2.GetEbsEncryptionByDefaultInput{}, func(options *ec2.Options) {
@@ -42,9 +43,9 @@ func Ec2RegionalConfig() *schema.Table {
 				},
 			},
 			{
-				Name:            "ebs_default_kms_key_id",
-				Type:            schema.TypeString,
-				Description:     "The Amazon Resource Name (ARN) of the default CMK for encryption by default.",
+				Name:        "ebs_default_kms_key_id",
+				Type:        schema.TypeString,
+				Description: "The Amazon Resource Name (ARN) of the default CMK for encryption by default.",
 				Resolver: func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 					cl := meta.(*client.Client)
 					resp, err := meta.(*client.Client).Services().EC2.GetEbsDefaultKmsKeyId(ctx, &ec2.GetEbsDefaultKmsKeyIdInput{}, func(options *ec2.Options) {
@@ -56,14 +57,13 @@ func Ec2RegionalConfig() *schema.Table {
 					return resource.Set(c.Name, resp.KmsKeyId)
 				},
 			},
-			
 		},
 	}
 }
 
 type ec2RegionalConfig struct {
 	EbsEncryptionEnabledByDefault bool
-	EbsDefaultKmsKeyId *string
+	EbsDefaultKmsKeyId            *string
 }
 
 func fetchEc2RegionalConfig(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
