@@ -14,9 +14,9 @@ func TestIntegrationS3Buckets(t *testing.T) {
 	awsTestIntegrationHelper(t, S3Buckets(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_s3_buckets",
-			Values: map[string]interface{}{
+			Values: []map[string]interface{}{{
 				"name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
-			},
+			}},
 			//Children: []*providertest.ResourceIntegrationVerification{
 			//	{
 			//		Name:           "aws_apigateway_rest_api_deployments",
