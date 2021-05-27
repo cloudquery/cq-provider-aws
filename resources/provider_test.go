@@ -35,16 +35,16 @@ func awsTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *
 	})
 }
 
-func awsTestIntegrationHelper(t *testing.T, table *schema.Table, verification providertest.ResourceIntegrationVerification) {
+func awsTestIntegrationHelper(t *testing.T, table *schema.Table, verificationBuilder func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification) {
 	cfg := client.Config{
 		Regions:  []string{"us-east-1"},
 		AWSDebug: false,
 	}
 
 	providertest.IntegrationTest(t, Provider, providertest.ResourceIntegrationTestData{
-		Table:        table,
-		Config:       cfg,
-		Configure:    client.Configure,
-		Verification: verification,
+		Table:               table,
+		Config:              cfg,
+		Configure:           client.Configure,
+		VerificationBuilder: verificationBuilder,
 	})
 }

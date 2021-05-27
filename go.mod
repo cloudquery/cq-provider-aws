@@ -5,6 +5,7 @@ go 1.15
 replace github.com/cloudquery/cq-provider-sdk => ../cq-provider-sdk
 
 require (
+	github.com/Masterminds/squirrel v1.5.0 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.6.0
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.1.6
@@ -18,8 +19,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.1.2
-	github.com/aws/aws-sdk-go-v2/service/directconnect v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/configservice v1.5.1
+	github.com/aws/aws-sdk-go-v2/service/directconnect v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.2.0
