@@ -5,17 +5,24 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
+
+	"github.com/aws/aws-sdk-go-v2/service/configservice"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	_ "github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
+	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	_ "github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -72,6 +79,7 @@ var allRegions = []string{
 const defaultRegion = "us-east-1"
 
 type Services struct {
+	Analyzer         AnalyzerClient
 	Autoscaling      AutoscalingClient
 	Cloudfront       CloudfrontClient
 	Cloudtrail       CloudtrailClient
@@ -98,7 +106,9 @@ type Services struct {
 	S3               S3Client
 	S3Manager        S3ManagerClient
 	Apigateway       ApigatewayClient
+	Apigatewayv2     Apigatewayv2Client
 	Lambda           LambdaClient
+	ConfigService    ConfigServiceClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -319,6 +329,9 @@ func initServices(awsCfg aws.Config) Services {
 		S3Manager:        newS3ManagerFromConfig(awsCfg),
 		Apigateway:       apigateway.NewFromConfig(awsCfg),
 		Lambda:           lambda.NewFromConfig(awsCfg),
+		Apigatewayv2:     apigatewayv2.NewFromConfig(awsCfg),
+		Analyzer:         accessanalyzer.NewFromConfig(awsCfg),
+		ConfigService:    configservice.NewFromConfig(awsCfg),
 	}
 }
 
