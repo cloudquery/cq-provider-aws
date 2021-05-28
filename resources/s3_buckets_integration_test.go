@@ -14,9 +14,14 @@ func TestIntegrationS3Buckets(t *testing.T) {
 	awsTestIntegrationHelper(t, S3Buckets(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_s3_buckets",
-			Values: []providertest.VerificationRow{{
-				"name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
-			}},
+			ExpectedValues: []providertest.ExpectedValue{
+				{
+					Count: 2,
+					Data: map[string]interface{}{
+						"name": fmt.Sprintf("1%s%s", res.Prefix, res.Suffix),
+					},
+				},
+			},
 		}
 	})
 }

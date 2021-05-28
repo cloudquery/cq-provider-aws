@@ -14,9 +14,12 @@ import (
 func TestIntegrationIamRoles(t *testing.T) {
 	awsTestIntegrationHelper(t, IamRoles(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
-			Values: []providertest.VerificationRow{
+			ExpectedValues: []providertest.ExpectedValue{
 				{
-					"role_name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
+					Count: 1,
+					Data: map[string]interface{}{
+						"role_name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
+					},
 				},
 			},
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

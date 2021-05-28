@@ -12,42 +12,127 @@ func TestIntegrationApigatewayRestApis(t *testing.T) {
 	awsTestIntegrationHelper(t, ApigatewayRestApis(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_rest_apis",
-			Values: []providertest.VerificationRow{{
-				"endpoint_configuration_types": []interface{}{"REGIONAL"},
-				"api_key_source":               "HEADER",
+			ExpectedValues: []providertest.ExpectedValue{{
+				Count: 1,
+				Data: map[string]interface{}{
+					"endpoint_configuration_types": []interface{}{"REGIONAL"},
+					"api_key_source":               "HEADER",
+					"tags": map[string]interface{}{
+						"TestId": res.Suffix,
+						"Type":   "integration_test",
+					},
+				},
 			}},
 			Relations: []*providertest.ResourceIntegrationVerification{
 				{
 					Name:           "aws_apigateway_rest_api_deployments",
 					ForeignKeyName: "rest_api_id",
-					Values: []providertest.VerificationRow{{
-						"description": "test description",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"description": "test description",
+						},
 					}},
 				},
 				{
 					Name:           "aws_apigateway_rest_api_authorizers",
 					ForeignKeyName: "rest_api_id",
-					Values: []providertest.VerificationRow{{
-						"auth_type":                        "custom",
-						"authorizer_result_ttl_in_seconds": float64(500),
-						"type":                             "TOKEN",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"auth_type":                        "custom",
+							"authorizer_result_ttl_in_seconds": float64(500),
+							"type":                             "TOKEN",
+						},
+					}},
+				},
+				{
+					Name:           "aws_apigateway_rest_api_resources",
+					ForeignKeyName: "rest_api_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"path_part": "mydemoresource",
+							//"resource_methods": map[string]interface{}{
+							//	"GET": map[string]interface{}{
+							//		"HttpMethod": nil,
+							//	},
+							//},
+						},
+					}},
+				},
+				{
+					Name:           "aws_apigateway_rest_api_models",
+					ForeignKeyName: "rest_api_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"content_type": "application/json",
+							"description":  "a JSON schema",
+							"name":         "user",
+						},
+					}},
+				},
+				{
+					Name:           "aws_apigateway_rest_api_request_validators",
+					ForeignKeyName: "rest_api_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"validate_request_parameters": true,
+							"validate_request_body":       true,
+							"name":                        "example",
+						},
+					}},
+				},
+				{
+					Name:           "aws_apigateway_rest_api_documentation_parts",
+					ForeignKeyName: "rest_api_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"location_type":   "METHOD",
+							"location_method": "GET",
+							"location_path":   "/example",
+							//"location_name":        "example",
+							//"location_status_code": "200",
+							"properties": "{\"description\":\"Example description\"}",
+						},
+					}},
+				},
+				{
+					Name:           "aws_apigateway_rest_api_documentation_versions",
+					ForeignKeyName: "rest_api_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"description": "Example description",
+							"version":     "example_version",
+						},
 					}},
 				},
 				{
 					Name:           "aws_apigateway_rest_api_stages",
 					ForeignKeyName: "rest_api_id",
-					Values: []providertest.VerificationRow{{
-						"tracing_enabled": false,
-						"tags": map[string]interface{}{
-							"hello": "world",
-						},
-					},
-
-						{
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
 							"tracing_enabled": false,
 							"tags": map[string]interface{}{
-								"hello": "world1",
-							},
+								"hello":  "world",
+								"TestId": res.Suffix,
+								"Type":   "integration_test",
+							}},
+					},
+						{
+							Count: 1,
+							Data: map[string]interface{}{
+								"tracing_enabled": false,
+								"tags": map[string]interface{}{
+									"hello":  "world1",
+									"TestId": res.Suffix,
+									"Type":   "integration_test",
+								}},
 						}},
 				},
 			},

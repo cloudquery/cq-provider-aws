@@ -17,7 +17,4 @@ resource "aws_iam_role" "test_role" {
     ]
   })
 
-  tags = {
-    TestId = var.test_suffix
-  }
 }

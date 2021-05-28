@@ -23,11 +23,8 @@ resource "aws_api_gateway_rest_api" "example" {
 
   endpoint_configuration {
     types = [
-      "REGIONAL"]
-  }
-
-  tags = {
-    TestId = var.test_suffix
+      "REGIONAL"
+    ]
   }
 }
 
@@ -57,6 +54,7 @@ resource "aws_api_gateway_stage" "prod" {
     "hello" = "world"
   }
 }
+
 resource "aws_api_gateway_stage" "dev" {
   deployment_id = aws_api_gateway_deployment.example.id
   rest_api_id = aws_api_gateway_rest_api.example.id
@@ -195,4 +193,45 @@ module.exports.handler = async (event, context, callback) => {
 EOF
     filename = "main.js"
   }
+}
+
+resource "aws_api_gateway_model" "MyDemoModel" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  name = "user"
+  description = "a JSON schema"
+  content_type = "application/json"
+
+  schema = <<EOF
+{
+  "type": "object"
+}
+EOF
+}
+
+resource "aws_api_gateway_request_validator" "example" {
+  name = "example"
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  validate_request_body = true
+  validate_request_parameters = true
+}
+
+resource "aws_api_gateway_documentation_part" "example" {
+  location {
+//    status_code = "200"
+    type = "METHOD"
+    method = "GET"
+    path = "/example"
+//    name = "example"
+  }
+
+  properties = "{\"description\":\"Example description\"}"
+  rest_api_id = aws_api_gateway_rest_api.example.id
+}
+
+resource "aws_api_gateway_documentation_version" "example" {
+  version = "example_version"
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  description = "Example description"
+  depends_on = [
+    aws_api_gateway_documentation_part.example]
 }
