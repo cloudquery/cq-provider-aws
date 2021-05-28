@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.1.6
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.1.3
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.3.1
 	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0
@@ -16,6 +17,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/directconnect v1.1.2
+	github.com/aws/aws-sdk-go-v2/service/configservice v1.5.1
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.2.0
@@ -43,5 +45,6 @@ require (
 	github.com/golang/mock v1.5.0
 	github.com/hashicorp/go-hclog v0.16.1
 	github.com/jackc/pgx/v4 v4.11.0
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/spf13/cast v1.3.0
 )
