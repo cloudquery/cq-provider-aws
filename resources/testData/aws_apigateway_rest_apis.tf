@@ -49,12 +49,20 @@ resource "aws_api_gateway_deployment" "example" {
 }
 
 
-resource "aws_api_gateway_stage" "example" {
+resource "aws_api_gateway_stage" "prod" {
   deployment_id = aws_api_gateway_deployment.example.id
   rest_api_id = aws_api_gateway_rest_api.example.id
   stage_name = "stage${var.test_prefix}${var.test_suffix}"
   tags = {
     "hello" = "world"
+  }
+}
+resource "aws_api_gateway_stage" "dev" {
+  deployment_id = aws_api_gateway_deployment.example.id
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  stage_name = "stage1${var.test_prefix}${var.test_suffix}"
+  tags = {
+    "hello" = "world1"
   }
 }
 
