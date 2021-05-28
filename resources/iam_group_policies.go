@@ -3,7 +3,9 @@ package resources
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/aws/smithy-go"
 	"net/url"
 
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
@@ -53,6 +55,7 @@ func iamGroupPolicies() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	var ae smithy.APIError
 	svc := meta.(*client.Client).Services().IAM
 	group := parent.Item.(types.Group)
 	config := iam.ListGroupPoliciesInput{
@@ -61,6 +64,9 @@ func fetchIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, parent *
 	for {
 		output, err := svc.ListGroupPolicies(ctx, &config)
 		if err != nil {
+			if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchEntity" {
+				return nil
+			}
 			return err
 		}
 		for _, p := range output.PolicyNames {
