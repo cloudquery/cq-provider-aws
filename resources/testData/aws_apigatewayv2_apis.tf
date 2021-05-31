@@ -67,7 +67,7 @@ resource "aws_apigatewayv2_authorizer" "example" {
 
 
 resource "aws_iam_role" "invocation_role" {
-  name = "api_gateway_auth_invocation"
+  name = "apiv2${aws_apigatewayv2_integration.example.id}"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -88,7 +88,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "invocation_policy" {
-  name = "default"
+  name = "v2apipolicy${aws_apigatewayv2_integration.example.id}"
   role = aws_iam_role.invocation_role.id
 
   policy = <<EOF
@@ -106,7 +106,7 @@ EOF
 }
 
 resource "aws_iam_role" "lambda" {
-  name = "demo-lambda"
+  name = "v2api_lambda_role${aws_apigatewayv2_integration.example.id}"
 
   assume_role_policy = <<EOF
 {

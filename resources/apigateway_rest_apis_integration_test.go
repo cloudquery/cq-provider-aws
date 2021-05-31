@@ -53,11 +53,6 @@ func TestIntegrationApigatewayRestApis(t *testing.T) {
 						Count: 1,
 						Data: map[string]interface{}{
 							"path_part": "mydemoresource",
-							//"resource_methods": map[string]interface{}{
-							//	"GET": map[string]interface{}{
-							//		"HttpMethod": nil,
-							//	},
-							//},
 						},
 					}},
 				},
@@ -94,9 +89,7 @@ func TestIntegrationApigatewayRestApis(t *testing.T) {
 							"location_type":   "METHOD",
 							"location_method": "GET",
 							"location_path":   "/example",
-							//"location_name":        "example",
-							//"location_status_code": "200",
-							"properties": "{\"description\":\"Example description\"}",
+							"properties":      "{\"description\":\"Example description\"}",
 						},
 					}},
 				},

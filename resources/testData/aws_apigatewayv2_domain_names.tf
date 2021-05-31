@@ -1,55 +1,55 @@
-// domain names
-//**********************************
-resource "aws_apigatewayv2_domain_name" "dn" {
+resource "aws_apigatewayv2_domain_name" "adnv2" {
   domain_name = "${var.test_prefix}${var.test_suffix}.com"
 
   domain_name_configuration {
-    certificate_arn = aws_acm_certificate.example.arn
+    certificate_arn = aws_acm_certificate.adnv2.arn
     endpoint_type = "REGIONAL"
     security_policy = "TLS_1_2"
   }
-
-  depends_on = [
-    aws_acm_certificate.example]
 }
 
-resource "tls_self_signed_cert" "example" {
-  key_algorithm = "RSA"
-  private_key_pem = file("private_key2.pem")
-
-  subject {
-    common_name = "*.example.com"
-    organization = "ACME Examples, Inc"
-  }
-
-  validity_period_hours = 12
-
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-  ]
+resource "aws_apigatewayv2_api_mapping" "adnv2" {
+  api_id = aws_apigatewayv2_api.adnv2.id
+  domain_name = aws_apigatewayv2_domain_name.adnv2.id
+  stage = aws_apigatewayv2_stage.adnv2.id
 }
 
-resource "aws_acm_certificate" "example" {
-  private_key = tls_self_signed_cert.example.private_key_pem
-  certificate_body = tls_self_signed_cert.example.cert_pem
-}
-
-resource "aws_apigatewayv2_api_mapping" "dn" {
-  api_id = aws_apigatewayv2_api.dn.id
-  domain_name = aws_apigatewayv2_domain_name.dn.id
-  stage = aws_apigatewayv2_stage.dn.id
-}
-
-resource "aws_apigatewayv2_api" "dn" {
+resource "aws_apigatewayv2_api" "adnv2" {
   name = "v2dn${var.test_prefix}${var.test_suffix}"
   protocol_type = "HTTP"
   route_selection_expression = "$request.body.action"
 }
 
-
-resource "aws_apigatewayv2_stage" "dn" {
-  api_id = aws_apigatewayv2_api.dn.id
+resource "aws_apigatewayv2_stage" "adnv2" {
+  api_id = aws_apigatewayv2_api.adnv2.id
   name = "v2stage${var.test_prefix}${var.test_suffix}"
+}
+
+
+resource "aws_route53_zone" "adnv2" {
+  name = "${var.test_prefix}${var.test_suffix}.com"
+}
+
+resource "aws_acm_certificate" "adnv2" {
+  domain_name = "${var.test_prefix}${var.test_suffix}.com"
+  validation_method = "DNS"
+}
+
+resource "aws_acm_certificate_validation" "adnv2" {
+  certificate_arn = aws_acm_certificate.adnv2.arn
+  validation_record_fqdns = [for record in aws_route53_record.adn : record.fqdn]
+}
+
+resource "aws_route53_record" "adnv2" {
+  for_each = toset(aws_acm_certificate.adnv2.domain_validation_options)
+  allow_overwrite = true
+  name = each.value.resource_record_name
+  records = [
+    each.value.resource_record_value]
+  ttl = 60
+  type = each.value.resource_record_type
+  zone_id = aws_route53_zone.adnv2.zone_id
+
+  depends_on = [
+    aws_acm_certificate.adn]
 }
