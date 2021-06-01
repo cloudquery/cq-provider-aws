@@ -16,9 +16,9 @@ func TestIntegrationS3Buckets(t *testing.T) {
 			Name: "aws_s3_buckets",
 			ExpectedValues: []providertest.ExpectedValue{
 				{
-					Count: 2,
+					Count: 1,
 					Data: map[string]interface{}{
-						"name": fmt.Sprintf("1%s%s", res.Prefix, res.Suffix),
+						"name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
 					},
 				},
 			},

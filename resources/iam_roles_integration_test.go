@@ -14,6 +14,7 @@ import (
 func TestIntegrationIamRoles(t *testing.T) {
 	awsTestIntegrationHelper(t, IamRoles(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
+			Name: "aws_iam_roles",
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,

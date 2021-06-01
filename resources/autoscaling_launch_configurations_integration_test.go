@@ -14,6 +14,7 @@ import (
 func TestIntegrationDirectAutoscalingLaunchConfigurations(t *testing.T) {
 	awsTestIntegrationHelper(t, AutoscalingLaunchConfigurations(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
+			Name: "aws_autoscaling_launch_configurations",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
 				return sq.Where("launch_configuration_name = ?", fmt.Sprintf("%s-%s", res.Prefix, res.Suffix))
 			},

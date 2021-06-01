@@ -23,8 +23,6 @@ jobs:
         go: ['1.15']
         platform: [ubuntu-latest] # can not run in macOS and widnowsOS
     runs-on: ${{ matrix.platform }}
-    env:
-      TF_EXEC: Mon
     services:
       postgres:
         image: ${{ matrix.dbversion }}
@@ -52,14 +50,11 @@ jobs:
           whereis terraform
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
-
       - name: Get dependencies
         run: |
           go get -v -t -d ./...
-
       - name: Build
         run: go build -v .
-
       - name: Test
         run: go test -v -p 20 ./resources --tags=integration
 

@@ -13,6 +13,7 @@ import (
 func TestIntegrationDirectCloudwatchAlarms(t *testing.T) {
 	awsTestIntegrationHelper(t, CloudwatchAlarms(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
+			Name: "aws_cloudwatch_alarms",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
 				return sq.Where("alarm_name = ?", fmt.Sprintf("%s-%s", res.Prefix, res.Suffix))
 			},
