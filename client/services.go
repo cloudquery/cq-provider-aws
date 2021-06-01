@@ -1,7 +1,7 @@
 package client
 
 // define interfaces so we can easily mock AWS calls
-//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,ApigatewayClient,Apigatewayv2Client,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,Route53Client,EcsClient,S3ManagerClient,LambdaClient,ConfigServiceClient,AnalyzerClient
+//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,ApigatewayClient,Apigatewayv2Client,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,Route53Client,EcsClient,S3ManagerClient,LambdaClient,ConfigServiceClient,AnalyzerClient,WafClient
 
 import (
 	"context"
@@ -36,6 +36,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
+	"github.com/aws/aws-sdk-go-v2/service/waf"
 )
 
 type AutoscalingClient interface {
@@ -292,4 +293,9 @@ type LambdaClient interface {
 type AnalyzerClient interface {
 	accessanalyzer.ListAnalyzersAPIClient
 	accessanalyzer.ListFindingsAPIClient
+}
+
+type WafClient interface {
+	ListWebACLs(ctx context.Context, params *waf.ListWebACLsInput, optFns ...func(*waf.Options)) (*waf.ListWebACLsOutput, error)
+	GetWebACL(ctx context.Context, params *waf.GetWebACLInput, optFns ...func(*waf.Options)) (*waf.GetWebACLOutput, error)
 }
