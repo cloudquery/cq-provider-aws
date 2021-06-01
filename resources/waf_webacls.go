@@ -10,7 +10,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func WafWebacl() *schema.Table {
+func WafWebacls() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_waf_webacls",
 		Resolver:     fetchWafWebacls,
