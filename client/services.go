@@ -299,4 +299,6 @@ type WafClient interface {
 	ListWebACLs(ctx context.Context, params *waf.ListWebACLsInput, optFns ...func(*waf.Options)) (*waf.ListWebACLsOutput, error)
 	GetWebACL(ctx context.Context, params *waf.GetWebACLInput, optFns ...func(*waf.Options)) (*waf.GetWebACLOutput, error)
 	ListRuleGroups(ctx context.Context, params *waf.ListRuleGroupsInput, optFns ...func(*waf.Options)) (*waf.ListRuleGroupsOutput, error)
+	ListSubscribedRuleGroups(ctx context.Context, params *waf.ListSubscribedRuleGroupsInput, optFns ...func(*waf.Options)) (*waf.ListSubscribedRuleGroupsOutput, error)
+	ListRules(ctx context.Context, params *waf.ListRulesInput, optFns ...func(*waf.Options)) (*waf.ListRulesOutput, error)
 }

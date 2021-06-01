@@ -88,6 +88,8 @@ func Provider() *provider.Provider {
 			"lambda.layers":                         LambdaLayers(),
 			"waf.webacls":                           WafWebacls(),
 			"waf.rulegroups":                        WafRulegroups(),
+			"waf.subscribed_rulegroups":             WafSubscribedRulegroups(),
+			"waf.rules":                             WafRules(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
