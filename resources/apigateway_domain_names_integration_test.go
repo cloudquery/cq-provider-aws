@@ -1,4 +1,4 @@
-//+build integration_skip
+//+build integration_skip all
 
 package resources
 
