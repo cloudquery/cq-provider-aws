@@ -312,4 +312,6 @@ type WafClient interface {
 type WafV2Client interface {
 	ListWebACLs(ctx context.Context, params *wafv2.ListWebACLsInput, optFns ...func(*wafv2.Options)) (*wafv2.ListWebACLsOutput, error)
 	GetWebACL(ctx context.Context, params *wafv2.GetWebACLInput, optFns ...func(*wafv2.Options)) (*wafv2.GetWebACLOutput, error)
+	ListRuleGroups(ctx context.Context, params *wafv2.ListRuleGroupsInput, optFns ...func(*wafv2.Options)) (*wafv2.ListRuleGroupsOutput, error)
+	ListAvailableManagedRuleGroups(ctx context.Context, params *wafv2.ListAvailableManagedRuleGroupsInput, optFns ...func(*wafv2.Options)) (*wafv2.ListAvailableManagedRuleGroupsOutput, error)
 }

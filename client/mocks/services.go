@@ -4338,6 +4338,46 @@ func (mr *MockWafV2ClientMockRecorder) GetWebACL(arg0, arg1 interface{}, arg2 ..
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebACL", reflect.TypeOf((*MockWafV2Client)(nil).GetWebACL), varargs...)
 }
 
+// ListAvailableManagedRuleGroups mocks base method.
+func (m *MockWafV2Client) ListAvailableManagedRuleGroups(arg0 context.Context, arg1 *wafv2.ListAvailableManagedRuleGroupsInput, arg2 ...func(*wafv2.Options)) (*wafv2.ListAvailableManagedRuleGroupsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListAvailableManagedRuleGroups", varargs...)
+	ret0, _ := ret[0].(*wafv2.ListAvailableManagedRuleGroupsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAvailableManagedRuleGroups indicates an expected call of ListAvailableManagedRuleGroups.
+func (mr *MockWafV2ClientMockRecorder) ListAvailableManagedRuleGroups(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAvailableManagedRuleGroups", reflect.TypeOf((*MockWafV2Client)(nil).ListAvailableManagedRuleGroups), varargs...)
+}
+
+// ListRuleGroups mocks base method.
+func (m *MockWafV2Client) ListRuleGroups(arg0 context.Context, arg1 *wafv2.ListRuleGroupsInput, arg2 ...func(*wafv2.Options)) (*wafv2.ListRuleGroupsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListRuleGroups", varargs...)
+	ret0, _ := ret[0].(*wafv2.ListRuleGroupsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRuleGroups indicates an expected call of ListRuleGroups.
+func (mr *MockWafV2ClientMockRecorder) ListRuleGroups(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRuleGroups", reflect.TypeOf((*MockWafV2Client)(nil).ListRuleGroups), varargs...)
+}
+
 // ListWebACLs mocks base method.
 func (m *MockWafV2Client) ListWebACLs(arg0 context.Context, arg1 *wafv2.ListWebACLsInput, arg2 ...func(*wafv2.Options)) (*wafv2.ListWebACLsOutput, error) {
 	m.ctrl.T.Helper()
