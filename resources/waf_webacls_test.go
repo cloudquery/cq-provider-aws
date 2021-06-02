@@ -32,5 +32,5 @@ func buildWAFWebACLMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 }
 
 func TestWafWebACL(t *testing.T) {
-	awsTestHelper(t, WafWebacls(), buildWAFWebACLMock)
+	awsTestHelper(t, WafWebacls(), buildWAFWebACLMock, TestOptions{})
 }
