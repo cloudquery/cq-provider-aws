@@ -41,10 +41,13 @@ func buildWAFRuleGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Servic
 	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListTagsForResourceOutput{
 		TagInfoForResource: &types.TagInfoForResource{TagList: tempTags},
 	}, nil)
+	m.EXPECT().ListRuleGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListRuleGroupsOutput{
+		RuleGroups: []types.RuleGroupSummary{tempRuleGroupSum},
+	}, nil)
 
 	return client.Services{Waf: m}
 }
 
 func TestWafRuleGroups(t *testing.T) {
-	awsTestHelper(t, WafRuleGroups(), buildWAFRuleGroupsMock)
+	awsTestHelper(t, WafRuleGroups(), buildWAFRuleGroupsMock, TestOptions{})
 }
