@@ -49,10 +49,6 @@ func Ec2VpnGateways() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "vpc_attachments",
-				Type: schema.TypeStringArray,
-			},
-			{
 				Name: "vpn_gateway_id",
 				Type: schema.TypeString,
 			},
