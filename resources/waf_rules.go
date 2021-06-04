@@ -101,6 +101,7 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 	}
 	return nil
 }
+
 func fetchWafRulePredicates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	rule, ok := parent.Item.(*types.Rule)
 	if !ok {
