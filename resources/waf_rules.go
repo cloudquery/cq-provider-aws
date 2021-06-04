@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -28,6 +29,11 @@ func WafRules() *schema.Table {
 				Name:     "region",
 				Type:     schema.TypeString,
 				Resolver: client.ResolveAWSRegion,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveWafRuleTags,
 			},
 			{
 				Name: "rule_id",
@@ -100,6 +106,46 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 		config.NextMarker = output.NextMarker
 	}
 	return nil
+}
+
+func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	rule, ok := resource.Item.(*types.Rule)
+	if !ok {
+		return fmt.Errorf("not a Rule instance: %#v", resource.Item)
+	}
+
+	// Resolve tags for resource
+	client := meta.(*client.Client)
+	service := client.Services().Waf
+
+	// Generate arn
+	arnStr := arn.ARN{
+		// TODO: Make this configurable in the future
+		Partition: "aws",
+		Service:   "waf",
+		Region:    client.Region,
+		AccountID: client.AccountID,
+		Resource:  fmt.Sprintf("rule/%s", aws.ToString(rule.RuleId)),
+	}.String()
+
+	outputTags := make(map[string]*string)
+	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: aws.String(arnStr)}
+	for {
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *waf.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+		for _, t := range tags.TagInfoForResource.TagList {
+			outputTags[*t.Key] = t.Value
+		}
+		if aws.ToString(tags.NextMarker) == "" {
+			break
+		}
+		tagsConfig.NextMarker = tags.NextMarker
+	}
+	return resource.Set("tags", outputTags)
 }
 
 func fetchWafRulePredicates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {

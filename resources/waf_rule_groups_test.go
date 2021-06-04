@@ -38,6 +38,9 @@ func buildWAFRuleGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Servic
 	m.EXPECT().ListActivatedRulesInRuleGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListActivatedRulesInRuleGroupOutput{
 		ActivatedRules: []types.ActivatedRule{tempRule},
 	}, nil)
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListTagsForResourceOutput{
+		TagInfoForResource: &types.TagInfoForResource{TagList: tempTags},
+	}, nil)
 
 	return client.Services{Waf: m}
 }

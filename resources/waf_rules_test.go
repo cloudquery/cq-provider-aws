@@ -21,11 +21,18 @@ func buildWAFRulesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	if err := faker.FakeData(&tempRule); err != nil {
 		t.Fatal(err)
 	}
+	var tempTags []types.Tag
+	if err := faker.FakeData(&tempTags); err != nil {
+		t.Fatal(err)
+	}
 	m.EXPECT().ListRules(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListRulesOutput{
 		Rules: []types.RuleSummary{tempRuleSum},
 	}, nil)
 	m.EXPECT().GetRule(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.GetRuleOutput{
 		Rule: &tempRule,
+	}, nil)
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListTagsForResourceOutput{
+		TagInfoForResource: &types.TagInfoForResource{TagList: tempTags},
 	}, nil)
 
 	return client.Services{Waf: m}
