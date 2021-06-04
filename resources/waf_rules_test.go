@@ -17,8 +17,15 @@ func buildWAFRulesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	if err := faker.FakeData(&tempRuleSum); err != nil {
 		t.Fatal(err)
 	}
+	tempRule := types.Rule{}
+	if err := faker.FakeData(&tempRule); err != nil {
+		t.Fatal(err)
+	}
 	m.EXPECT().ListRules(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.ListRulesOutput{
 		Rules: []types.RuleSummary{tempRuleSum},
+	}, nil)
+	m.EXPECT().GetRule(gomock.Any(), gomock.Any(), gomock.Any()).Return(&waf.GetRuleOutput{
+		Rule: &tempRule,
 	}, nil)
 
 	return client.Services{Waf: m}

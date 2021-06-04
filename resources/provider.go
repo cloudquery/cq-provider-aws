@@ -86,9 +86,9 @@ func Provider() *provider.Provider {
 			"route53.traffic_policies":              Route53TrafficPolicies(),
 			"lambda.functions":                      LambdaFunctions(),
 			"lambda.layers":                         LambdaLayers(),
-			"waf.webacls":                           WafWebacls(),
-			"waf.rulegroups":                        WafRulegroups(),
-			"waf.subscribed_rulegroups":             WafSubscribedRulegroups(),
+			"waf.web_acls":                          WafWebAcls(),
+			"waf.rule_groups":                       WafRuleGroups(),
+			"waf.subscribed_rule_groups":            WafSubscribedRuleGroups(),
 			"waf.rules":                             WafRules(),
 		},
 		Config: func() provider.Config {

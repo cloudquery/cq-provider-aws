@@ -4094,6 +4094,46 @@ func (m *MockWafClient) EXPECT() *MockWafClientMockRecorder {
 	return m.recorder
 }
 
+// GetRule mocks base method.
+func (m *MockWafClient) GetRule(arg0 context.Context, arg1 *waf.GetRuleInput, arg2 ...func(*waf.Options)) (*waf.GetRuleOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetRule", varargs...)
+	ret0, _ := ret[0].(*waf.GetRuleOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRule indicates an expected call of GetRule.
+func (mr *MockWafClientMockRecorder) GetRule(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRule", reflect.TypeOf((*MockWafClient)(nil).GetRule), varargs...)
+}
+
+// GetRuleGroup mocks base method.
+func (m *MockWafClient) GetRuleGroup(arg0 context.Context, arg1 *waf.GetRuleGroupInput, arg2 ...func(*waf.Options)) (*waf.GetRuleGroupOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetRuleGroup", varargs...)
+	ret0, _ := ret[0].(*waf.GetRuleGroupOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRuleGroup indicates an expected call of GetRuleGroup.
+func (mr *MockWafClientMockRecorder) GetRuleGroup(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRuleGroup", reflect.TypeOf((*MockWafClient)(nil).GetRuleGroup), varargs...)
+}
+
 // GetWebACL mocks base method.
 func (m *MockWafClient) GetWebACL(arg0 context.Context, arg1 *waf.GetWebACLInput, arg2 ...func(*waf.Options)) (*waf.GetWebACLOutput, error) {
 	m.ctrl.T.Helper()
@@ -4112,6 +4152,26 @@ func (mr *MockWafClientMockRecorder) GetWebACL(arg0, arg1 interface{}, arg2 ...i
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebACL", reflect.TypeOf((*MockWafClient)(nil).GetWebACL), varargs...)
+}
+
+// ListActivatedRulesInRuleGroup mocks base method.
+func (m *MockWafClient) ListActivatedRulesInRuleGroup(arg0 context.Context, arg1 *waf.ListActivatedRulesInRuleGroupInput, arg2 ...func(*waf.Options)) (*waf.ListActivatedRulesInRuleGroupOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListActivatedRulesInRuleGroup", varargs...)
+	ret0, _ := ret[0].(*waf.ListActivatedRulesInRuleGroupOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListActivatedRulesInRuleGroup indicates an expected call of ListActivatedRulesInRuleGroup.
+func (mr *MockWafClientMockRecorder) ListActivatedRulesInRuleGroup(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActivatedRulesInRuleGroup", reflect.TypeOf((*MockWafClient)(nil).ListActivatedRulesInRuleGroup), varargs...)
 }
 
 // ListRuleGroups mocks base method.
@@ -4172,6 +4232,26 @@ func (mr *MockWafClientMockRecorder) ListSubscribedRuleGroups(arg0, arg1 interfa
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSubscribedRuleGroups", reflect.TypeOf((*MockWafClient)(nil).ListSubscribedRuleGroups), varargs...)
+}
+
+// ListTagsForResource mocks base method.
+func (m *MockWafClient) ListTagsForResource(arg0 context.Context, arg1 *waf.ListTagsForResourceInput, arg2 ...func(*waf.Options)) (*waf.ListTagsForResourceOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTagsForResource", varargs...)
+	ret0, _ := ret[0].(*waf.ListTagsForResourceOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTagsForResource indicates an expected call of ListTagsForResource.
+func (mr *MockWafClientMockRecorder) ListTagsForResource(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockWafClient)(nil).ListTagsForResource), varargs...)
 }
 
 // ListWebACLs mocks base method.

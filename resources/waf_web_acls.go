@@ -11,10 +11,10 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func WafWebacls() *schema.Table {
+func WafWebAcls() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_waf_webacls",
-		Resolver:     fetchWafWebacls,
+		Name:         "aws_waf_web_acls",
+		Resolver:     fetchWafWebAcls,
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -23,6 +23,11 @@ func WafWebacls() *schema.Table {
 				Name:     "account_id",
 				Type:     schema.TypeString,
 				Resolver: client.ResolveAWSAccount,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveWafWebACLTags,
 			},
 			{
 				Name:     "region",
@@ -55,11 +60,11 @@ func WafWebacls() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_waf_webacl_rules",
-				Resolver: fetchWafWebaclRules,
+				Name:     "aws_waf_web_acl_rules",
+				Resolver: fetchWafWebAclRules,
 				Columns: []schema.Column{
 					{
-						Name:     "webacl_id",
+						Name:     "web_acl_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -79,7 +84,7 @@ func WafWebacls() *schema.Table {
 					{
 						Name:     "excluded_rules",
 						Type:     schema.TypeStringArray,
-						Resolver: resolveWafWebaclRuleExcludedRules,
+						Resolver: resolveWafWebACLRuleExcludedRules,
 					},
 					{
 						Name:     "override_action_type",
@@ -99,7 +104,7 @@ func WafWebacls() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
-func fetchWafWebacls(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
 	service := c.Services().Waf
 	config := waf.ListWebACLsInput{}
@@ -129,7 +134,36 @@ func fetchWafWebacls(ctx context.Context, meta schema.ClientMeta, parent *schema
 	return nil
 }
 
-func fetchWafWebaclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	webACL, ok := resource.Item.(*types.WebACL)
+	if !ok {
+		return fmt.Errorf("not an WEBACL instance: %#v", resource.Item)
+	}
+
+	// Resolve tags for resource
+	client := meta.(*client.Client)
+	service := client.Services().Waf
+	outputTags := make(map[string]*string)
+	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: webACL.WebACLArn}
+	for {
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *waf.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+		for _, t := range tags.TagInfoForResource.TagList {
+			outputTags[*t.Key] = t.Value
+		}
+		if aws.ToString(tags.NextMarker) == "" {
+			break
+		}
+		tagsConfig.NextMarker = tags.NextMarker
+	}
+	return resource.Set("tags", outputTags)
+}
+
+func fetchWafWebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	webACL, ok := parent.Item.(*types.WebACL)
 	if !ok {
 		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
@@ -138,7 +172,7 @@ func fetchWafWebaclRules(ctx context.Context, meta schema.ClientMeta, parent *sc
 	return nil
 }
 
-func resolveWafWebaclRuleExcludedRules(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule, ok := resource.Item.(types.ActivatedRule)
 	if !ok {
 		return fmt.Errorf("not an ActivatedRule instance")
