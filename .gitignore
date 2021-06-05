@@ -6,6 +6,7 @@ cloudquery
 cloudquery.db
 cloudquery.zip
 /config.yml
+config.hcl
 dist/
 vendor/
 bin/

@@ -1,0 +1,4 @@
+dsn: postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
+er:
+  skip: true
+  comment: false
