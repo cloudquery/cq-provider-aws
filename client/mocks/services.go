@@ -4318,6 +4318,46 @@ func (m *MockWafV2Client) EXPECT() *MockWafV2ClientMockRecorder {
 	return m.recorder
 }
 
+// DescribeManagedRuleGroup mocks base method.
+func (m *MockWafV2Client) DescribeManagedRuleGroup(arg0 context.Context, arg1 *wafv2.DescribeManagedRuleGroupInput, arg2 ...func(*wafv2.Options)) (*wafv2.DescribeManagedRuleGroupOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeManagedRuleGroup", varargs...)
+	ret0, _ := ret[0].(*wafv2.DescribeManagedRuleGroupOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeManagedRuleGroup indicates an expected call of DescribeManagedRuleGroup.
+func (mr *MockWafV2ClientMockRecorder) DescribeManagedRuleGroup(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeManagedRuleGroup", reflect.TypeOf((*MockWafV2Client)(nil).DescribeManagedRuleGroup), varargs...)
+}
+
+// GetRuleGroup mocks base method.
+func (m *MockWafV2Client) GetRuleGroup(arg0 context.Context, arg1 *wafv2.GetRuleGroupInput, arg2 ...func(*wafv2.Options)) (*wafv2.GetRuleGroupOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetRuleGroup", varargs...)
+	ret0, _ := ret[0].(*wafv2.GetRuleGroupOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRuleGroup indicates an expected call of GetRuleGroup.
+func (mr *MockWafV2ClientMockRecorder) GetRuleGroup(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRuleGroup", reflect.TypeOf((*MockWafV2Client)(nil).GetRuleGroup), varargs...)
+}
+
 // GetWebACL mocks base method.
 func (m *MockWafV2Client) GetWebACL(arg0 context.Context, arg1 *wafv2.GetWebACLInput, arg2 ...func(*wafv2.Options)) (*wafv2.GetWebACLOutput, error) {
 	m.ctrl.T.Helper()

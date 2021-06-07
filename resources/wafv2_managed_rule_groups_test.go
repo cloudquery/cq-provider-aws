@@ -18,13 +18,18 @@ func buildWAFV2ManagedRuleGroupsMock(t *testing.T, ctrl *gomock.Controller) clie
 	if err := faker.FakeData(&tempManagedRuleGroupSum); err != nil {
 		t.Fatal(err)
 	}
+	tempDescribeManagedRuleGroup := wafv2.DescribeManagedRuleGroupOutput{}
+	if err := faker.FakeData(&tempDescribeManagedRuleGroup); err != nil {
+		t.Fatal(err)
+	}
 	m.EXPECT().ListAvailableManagedRuleGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.ListAvailableManagedRuleGroupsOutput{
 		ManagedRuleGroups: []types.ManagedRuleGroupSummary{tempManagedRuleGroupSum},
 	}, nil)
+	m.EXPECT().DescribeManagedRuleGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tempDescribeManagedRuleGroup, nil)
 
 	return client.Services{WafV2: m}
 }
 
 func TestWafV2ManagedRuleGroups(t *testing.T) {
-	awsTestHelper(t, WafV2ManagedRuleGroups(), buildWAFV2ManagedRuleGroupsMock, TestOptions{})
+	awsTestHelper(t, Wafv2ManagedRuleGroups(), buildWAFV2ManagedRuleGroupsMock, TestOptions{})
 }
