@@ -318,4 +318,5 @@ type WafV2Client interface {
 	DescribeManagedRuleGroup(ctx context.Context, params *wafv2.DescribeManagedRuleGroupInput, optFns ...func(*wafv2.Options)) (*wafv2.DescribeManagedRuleGroupOutput, error)
 	ListResourcesForWebACL(ctx context.Context, params *wafv2.ListResourcesForWebACLInput, optFns ...func(*wafv2.Options)) (*wafv2.ListResourcesForWebACLOutput, error)
 	ListTagsForResource(ctx context.Context, params *wafv2.ListTagsForResourceInput, optFns ...func(*wafv2.Options)) (*wafv2.ListTagsForResourceOutput, error)
+	GetPermissionPolicy(ctx context.Context, params *wafv2.GetPermissionPolicyInput, optFns ...func(*wafv2.Options)) (*wafv2.GetPermissionPolicyOutput, error)
 }

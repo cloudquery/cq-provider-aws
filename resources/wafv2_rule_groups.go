@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
+	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -35,6 +34,11 @@ func Wafv2RuleGroups() *schema.Table {
 				Name:     "tags",
 				Type:     schema.TypeJSON,
 				Resolver: resolveWafv2ruleGroupTags,
+			},
+			{
+				Name:     "policy",
+				Type:     schema.TypeJSON,
+				Resolver: resolveWafv2ruleGroupPolicy,
 			},
 			{
 				Name:     "arn",
@@ -156,6 +160,35 @@ func fetchWafv2RuleGroups(ctx context.Context, meta schema.ClientMeta, parent *s
 	}
 	return nil
 }
+
+func resolveWafv2ruleGroupPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	ruleGroup, ok := resource.Item.(*types.RuleGroup)
+	if !ok {
+		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
+	}
+
+	client := meta.(*client.Client)
+	service := client.Services().WafV2
+
+	// Resolve rule group policy
+	policy, err := service.GetPermissionPolicy(ctx, &wafv2.GetPermissionPolicyInput{ResourceArn: ruleGroup.ARN}, func(options *wafv2.Options) {
+		options.Region = client.Region
+	})
+	if err != nil {
+		return err
+	}
+	if policy.Policy != nil {
+		data, err := json.Marshal(policy.Policy)
+		if err != nil {
+			return nil
+		}
+		if err := resource.Set(c.Name, data); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func resolveWafv2ruleGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup, ok := resource.Item.(*types.RuleGroup)
 	if !ok {

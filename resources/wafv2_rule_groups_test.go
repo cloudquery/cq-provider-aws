@@ -65,6 +65,10 @@ func buildWAFV2RuleGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 		LabelNamespace:       aws.String(faker.Word()),
 		Rules:                []types.Rule{rule},
 	}
+	var tempPolicyOutput wafv2.GetPermissionPolicyOutput
+	if err := faker.FakeData(&tempPolicyOutput); err != nil {
+		t.Fatal(err)
+	}
 	var tempTags []types.Tag
 	if err := faker.FakeData(&tempTags); err != nil {
 		t.Fatal(err)
@@ -75,6 +79,7 @@ func buildWAFV2RuleGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 	m.EXPECT().GetRuleGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.GetRuleGroupOutput{
 		RuleGroup: &tempRuleGroup,
 	}, nil)
+	m.EXPECT().GetPermissionPolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tempPolicyOutput, nil)
 	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.ListTagsForResourceOutput{
 		TagInfoForResource: &types.TagInfoForResource{TagList: tempTags},
 	}, nil)
