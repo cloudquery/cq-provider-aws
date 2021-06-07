@@ -52,6 +52,14 @@ func buildWAFV2WebACLMock(t *testing.T, ctrl *gomock.Controller) client.Services
 	if err := faker.FakeData(&labels); err != nil {
 		t.Fatal(err)
 	}
+	var tempResourceArns []string
+	if err := faker.FakeData(&tempResourceArns); err != nil {
+		t.Fatal(err)
+	}
+	var tempTags []types.Tag
+	if err := faker.FakeData(&tempTags); err != nil {
+		t.Fatal(err)
+	}
 	rule := types.Rule{
 		Name:             aws.String(faker.Name()),
 		Priority:         rand.Int31(),
@@ -82,10 +90,16 @@ func buildWAFV2WebACLMock(t *testing.T, ctrl *gomock.Controller) client.Services
 	m.EXPECT().GetWebACL(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.GetWebACLOutput{
 		WebACL: &tempWebACL,
 	}, nil)
+	m.EXPECT().ListResourcesForWebACL(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.ListResourcesForWebACLOutput{
+		ResourceArns: tempResourceArns,
+	}, nil)
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&wafv2.ListTagsForResourceOutput{
+		TagInfoForResource: &types.TagInfoForResource{TagList: tempTags},
+	}, nil)
 
 	return client.Services{WafV2: m}
 }
 
 func TestWafV2WebACL(t *testing.T) {
-	awsTestHelper(t, WafV2Webacls(), buildWAFV2WebACLMock, TestOptions{SkipEmptyJsonB: true})
+	awsTestHelper(t, Wafv2WebAcls(), buildWAFV2WebACLMock, TestOptions{SkipEmptyJsonB: true})
 }

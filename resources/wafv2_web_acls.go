@@ -12,10 +12,10 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func WafV2Webacls() *schema.Table {
+func Wafv2WebAcls() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_waf_v2_webacls",
-		Resolver:     fetchWafV2Webacls,
+		Name:         "aws_wafv2_web_acls",
+		Resolver:     fetchWafv2WebAcls,
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -31,6 +31,16 @@ func WafV2Webacls() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
+				Name:     "resources_for_web_acl",
+				Type:     schema.TypeStringArray,
+				Resolver: resolveWafv2webACLResourcesForWebACL,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveWafv2webACLTags,
+			},
+			{
 				Name:     "arn",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("ARN"),
@@ -38,7 +48,7 @@ func WafV2Webacls() *schema.Table {
 			{
 				Name:     "default_action",
 				Type:     schema.TypeJSON,
-				Resolver: resolveWafV2webaclDefaultAction,
+				Resolver: resolveWafv2webACLDefaultAction,
 			},
 			{
 				Name:     "resource_id",
@@ -87,11 +97,11 @@ func WafV2Webacls() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_waf_v2_webacl_rules",
-				Resolver: fetchWafV2WebaclRules,
+				Name:     "aws_wafv2_web_acl_rules",
+				Resolver: fetchWafv2WebAclRules,
 				Columns: []schema.Column{
 					{
-						Name:     "webacl_id",
+						Name:     "web_acl_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -106,7 +116,7 @@ func WafV2Webacls() *schema.Table {
 					{
 						Name:     "statement",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclRuleStatement,
+						Resolver: resolveWafv2webACLRuleStatement,
 					},
 					{
 						Name:     "visibility_config_cloud_watch_metrics_enabled",
@@ -126,33 +136,33 @@ func WafV2Webacls() *schema.Table {
 					{
 						Name:     "action",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclRuleAction,
+						Resolver: resolveWafv2webACLRuleAction,
 					},
 					{
 						Name:     "override_action",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclRuleOverrideAction,
+						Resolver: resolveWafv2webACLRuleOverrideAction,
 					},
 					{
 						Name:     "labels",
 						Type:     schema.TypeStringArray,
-						Resolver: resolveWafV2webaclRuleLabels,
+						Resolver: resolveWafv2webACLRuleLabels,
 					},
 				},
 			},
 			{
-				Name:     "aws_waf_v2_webacl_post_process_firewall_manager_rule_groups",
-				Resolver: fetchWafV2WebaclPostProcessFirewallManagerRuleGroups,
+				Name:     "aws_wafv2_web_acl_post_process_firewall_manager_rule_groups",
+				Resolver: fetchWafv2WebAclPostProcessFirewallManagerRuleGroups,
 				Columns: []schema.Column{
 					{
-						Name:     "webacl_id",
+						Name:     "web_acl_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
 					{
 						Name:     "statement",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclPostProcessFirewallManagerRuleGroupStatement,
+						Resolver: resolveWafv2webACLPostProcessFirewallManagerRuleGroupStatement,
 					},
 					{
 						Name: "name",
@@ -161,7 +171,7 @@ func WafV2Webacls() *schema.Table {
 					{
 						Name:     "override_action",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclPostProcessFirewallManagerRuleGroupOverrideAction,
+						Resolver: resolveWafv2webACLPostProcessFirewallManagerRuleGroupOverrideAction,
 					},
 					{
 						Name: "priority",
@@ -185,18 +195,18 @@ func WafV2Webacls() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_waf_v2_webacl_pre_process_firewall_manager_rule_groups",
-				Resolver: fetchWafV2WebaclPreProcessFirewallManagerRuleGroups,
+				Name:     "aws_wafv2_web_acl_pre_process_firewall_manager_rule_groups",
+				Resolver: fetchWafv2WebAclPreProcessFirewallManagerRuleGroups,
 				Columns: []schema.Column{
 					{
-						Name:     "webacl_id",
+						Name:     "web_acl_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
 					{
 						Name:     "statement",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclPreProcessFirewallManagerRuleGroupStatement,
+						Resolver: resolveWafv2webACLPreProcessFirewallManagerRuleGroupStatement,
 					},
 					{
 						Name: "name",
@@ -205,7 +215,7 @@ func WafV2Webacls() *schema.Table {
 					{
 						Name:     "override_action",
 						Type:     schema.TypeJSON,
-						Resolver: resolveWafV2webaclPreProcessFirewallManagerRuleGroupOverrideAction,
+						Resolver: resolveWafv2webACLPreProcessFirewallManagerRuleGroupOverrideAction,
 					},
 					{
 						Name: "priority",
@@ -235,7 +245,7 @@ func WafV2Webacls() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
-func fetchWafV2Webacls(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
 	service := c.Services().WafV2
 	config := wafv2.ListWebACLsInput{}
@@ -265,7 +275,56 @@ func fetchWafV2Webacls(ctx context.Context, meta schema.ClientMeta, parent *sche
 	return nil
 }
 
-func resolveWafV2webaclDefaultAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLResourcesForWebACL(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	webACL, ok := resource.Item.(*types.WebACL)
+	if !ok {
+		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
+	}
+
+	client := meta.(*client.Client)
+	service := client.Services().WafV2
+
+	// Resolve resources that are associated with the given web ACL
+	resourceArns, err := service.ListResourcesForWebACL(ctx, &wafv2.ListResourcesForWebACLInput{WebACLArn: webACL.ARN}, func(options *wafv2.Options) {
+		options.Region = client.Region
+	})
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, resourceArns.ResourceArns)
+}
+
+func resolveWafv2webACLTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	webACL, ok := resource.Item.(*types.WebACL)
+	if !ok {
+		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
+	}
+
+	client := meta.(*client.Client)
+	service := client.Services().WafV2
+
+	// Resolve tags
+	outputTags := make(map[string]*string)
+	tagsConfig := wafv2.ListTagsForResourceInput{ResourceARN: webACL.ARN}
+	for {
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *wafv2.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+		for _, t := range tags.TagInfoForResource.TagList {
+			outputTags[*t.Key] = t.Value
+		}
+		if aws.ToString(tags.NextMarker) == "" {
+			break
+		}
+		tagsConfig.NextMarker = tags.NextMarker
+	}
+	return resource.Set(c.Name, outputTags)
+}
+
+func resolveWafv2webACLDefaultAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	webACL, ok := resource.Item.(*types.WebACL)
 	if !ok {
 		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
@@ -280,7 +339,7 @@ func resolveWafV2webaclDefaultAction(ctx context.Context, meta schema.ClientMeta
 	return resource.Set(c.Name, data)
 }
 
-func fetchWafV2WebaclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafv2WebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	webACL, ok := parent.Item.(*types.WebACL)
 	if !ok {
 		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
@@ -289,7 +348,7 @@ func fetchWafV2WebaclRules(ctx context.Context, meta schema.ClientMeta, parent *
 	return nil
 }
 
-func resolveWafV2webaclRuleStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLRuleStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule, ok := resource.Item.(types.Rule)
 	if !ok {
 		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
@@ -304,7 +363,7 @@ func resolveWafV2webaclRuleStatement(ctx context.Context, meta schema.ClientMeta
 	return resource.Set(c.Name, data)
 }
 
-func resolveWafV2webaclRuleAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLRuleAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule, ok := resource.Item.(types.Rule)
 	if !ok {
 		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
@@ -319,7 +378,7 @@ func resolveWafV2webaclRuleAction(ctx context.Context, meta schema.ClientMeta, r
 	return resource.Set(c.Name, data)
 }
 
-func resolveWafV2webaclRuleOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLRuleOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule, ok := resource.Item.(types.Rule)
 	if !ok {
 		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
@@ -334,7 +393,7 @@ func resolveWafV2webaclRuleOverrideAction(ctx context.Context, meta schema.Clien
 	return resource.Set(c.Name, data)
 }
 
-func resolveWafV2webaclRuleLabels(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLRuleLabels(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule, ok := resource.Item.(types.Rule)
 	if !ok {
 		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
@@ -346,7 +405,7 @@ func resolveWafV2webaclRuleLabels(ctx context.Context, meta schema.ClientMeta, r
 	return resource.Set(c.Name, labels)
 }
 
-func fetchWafV2WebaclPostProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafv2WebAclPostProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	webACL, ok := parent.Item.(*types.WebACL)
 	if !ok {
 		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
@@ -355,7 +414,7 @@ func fetchWafV2WebaclPostProcessFirewallManagerRuleGroups(ctx context.Context, m
 	return nil
 }
 
-func resolveWafV2webaclPostProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLPostProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
 	if !ok {
 		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
@@ -370,7 +429,7 @@ func resolveWafV2webaclPostProcessFirewallManagerRuleGroupStatement(ctx context.
 	return resource.Set(c.Name, data)
 }
 
-func resolveWafV2webaclPostProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLPostProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
 	if !ok {
 		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
@@ -385,7 +444,7 @@ func resolveWafV2webaclPostProcessFirewallManagerRuleGroupOverrideAction(ctx con
 	return resource.Set(c.Name, data)
 }
 
-func fetchWafV2WebaclPreProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafv2WebAclPreProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	webACL, ok := parent.Item.(*types.WebACL)
 	if !ok {
 		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
@@ -394,7 +453,7 @@ func fetchWafV2WebaclPreProcessFirewallManagerRuleGroups(ctx context.Context, me
 	return nil
 }
 
-func resolveWafV2webaclPreProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLPreProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
 	if !ok {
 		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
@@ -409,7 +468,7 @@ func resolveWafV2webaclPreProcessFirewallManagerRuleGroupStatement(ctx context.C
 	return resource.Set(c.Name, data)
 }
 
-func resolveWafV2webaclPreProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveWafv2webACLPreProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
 	if !ok {
 		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
