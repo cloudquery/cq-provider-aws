@@ -48,6 +48,14 @@ func WafRuleGroups() *schema.Table {
 				Name: "rule_group_id",
 				Type: schema.TypeString,
 			},
+			{
+				Name: "metric_name",
+				Type: schema.TypeString,
+			},
+			{
+				Name: "name",
+				Type: schema.TypeString,
+			},
 		},
 	}
 }
