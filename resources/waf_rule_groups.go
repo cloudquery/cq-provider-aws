@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -29,6 +28,11 @@ func WafRuleGroups() *schema.Table {
 				Name:     "region",
 				Type:     schema.TypeString,
 				Resolver: client.ResolveAWSRegion,
+			},
+			{
+				Name:     "arn",
+				Type:     schema.TypeString,
+				Resolver: resolveWafRuleGroupArn,
 			},
 			{
 				Name:     "rule_ids",
@@ -88,6 +92,24 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 	return nil
 }
 
+func resolveWafRuleGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	ruleGroup, ok := resource.Item.(*types.RuleGroup)
+	if !ok {
+		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
+	}
+	usedClient := meta.(*client.Client)
+
+	// Generate arn
+	arnStr := client.GenerateResourceARN(
+		"waf",
+		"rulegroup",
+		aws.ToString(ruleGroup.RuleGroupId),
+		usedClient.Region,
+		usedClient.AccountID)
+
+	return resource.Set(c.Name, arnStr)
+}
+
 func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup, ok := resource.Item.(*types.RuleGroup)
 	if !ok {
@@ -125,24 +147,22 @@ func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resour
 	}
 
 	// Resolve tags for resource
-	client := meta.(*client.Client)
-	service := client.Services().Waf
+	usedClient := meta.(*client.Client)
+	service := usedClient.Services().Waf
 
 	// Generate arn
-	arnStr := arn.ARN{
-		// TODO: Make this configurable in the future
-		Partition: "aws",
-		Service:   "waf",
-		Region:    client.Region,
-		AccountID: client.AccountID,
-		Resource:  fmt.Sprintf("rulegroup/%s", aws.ToString(ruleGroup.RuleGroupId)),
-	}.String()
+	arnStr := client.GenerateResourceARN(
+		"waf",
+		"rulegroup",
+		aws.ToString(ruleGroup.RuleGroupId),
+		usedClient.Region,
+		usedClient.AccountID)
 
 	outputTags := make(map[string]*string)
 	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: aws.String(arnStr)}
 	for {
 		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *waf.Options) {
-			options.Region = client.Region
+			options.Region = usedClient.Region
 		})
 		if err != nil {
 			return err
