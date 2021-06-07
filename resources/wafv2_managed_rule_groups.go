@@ -114,17 +114,17 @@ func resolveDescribeManagedRuleGroup(ctx context.Context, meta schema.ClientMeta
 	}
 
 	// Available labels
-	var labels []string
-	for _, label := range descrManagedRuleGroup.AvailableLabels {
-		labels = append(labels, aws.ToString(label.Name))
+	labels := make([]string, len(descrManagedRuleGroup.AvailableLabels))
+	for id, label := range descrManagedRuleGroup.AvailableLabels {
+		labels[id] = aws.ToString(label.Name)
 	}
 	if err := resource.Set("available_labels", labels); err != nil {
 		return err
 	}
 	// Consumed labels
-	labels = []string{}
-	for _, label := range descrManagedRuleGroup.ConsumedLabels {
-		labels = append(labels, aws.ToString(label.Name))
+	labels = make([]string, len(descrManagedRuleGroup.ConsumedLabels))
+	for id, label := range descrManagedRuleGroup.ConsumedLabels {
+		labels[id] = aws.ToString(label.Name)
 	}
 	if err := resource.Set("consumed_labels", labels); err != nil {
 		return err
