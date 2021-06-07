@@ -51,14 +51,6 @@ func WafRules() *schema.Table {
 				Name: "name",
 				Type: schema.TypeString,
 			},
-			{
-				Name: "metric_name",
-				Type: schema.TypeString,
-			},
-			{
-				Name: "name",
-				Type: schema.TypeString,
-			},
 		},
 		Relations: []*schema.Table{
 			{
