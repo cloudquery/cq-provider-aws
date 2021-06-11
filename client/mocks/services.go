@@ -2720,6 +2720,26 @@ func (mr *MockMQClientMockRecorder) ListBrokers(arg0, arg1 interface{}, arg2 ...
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBrokers", reflect.TypeOf((*MockMQClient)(nil).ListBrokers), varargs...)
 }
 
+// ListUsers mocks base method.
+func (m *MockMQClient) ListUsers(arg0 context.Context, arg1 *mq.ListUsersInput, arg2 ...func(*mq.Options)) (*mq.ListUsersOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListUsers", varargs...)
+	ret0, _ := ret[0].(*mq.ListUsersOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListUsers indicates an expected call of ListUsers.
+func (mr *MockMQClientMockRecorder) ListUsers(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockMQClient)(nil).ListUsers), varargs...)
+}
+
 // MockOrganizationsClient is a mock of OrganizationsClient interface.
 type MockOrganizationsClient struct {
 	ctrl     *gomock.Controller
