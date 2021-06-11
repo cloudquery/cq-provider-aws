@@ -1,15 +1,15 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 )
 
 func TestIntegrationApigatewayRestApis(t *testing.T) {
-	awsTestIntegrationHelper(t, ApigatewayRestApis(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.ApigatewayRestApis(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_rest_apis",
 			ExpectedValues: []providertest.ExpectedValue{{

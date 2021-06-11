@@ -1,5 +1,3 @@
-//+build unit all
-
 package resources
 
 import (

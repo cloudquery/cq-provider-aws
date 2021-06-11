@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/logging"
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -32,19 +31,5 @@ func awsTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *
 			c.ServicesManager.InitServicesForAccountAndRegion("testAccount", "us-east-1", builder(t, ctrl))
 			return &c, nil
 		},
-	})
-}
-
-func awsTestIntegrationHelper(t *testing.T, table *schema.Table, verificationBuilder func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification) {
-	cfg := client.Config{
-		Regions:  []string{"us-east-1"},
-		AWSDebug: false,
-	}
-
-	providertest.IntegrationTest(t, Provider, providertest.ResourceIntegrationTestData{
-		Table:               table,
-		Config:              cfg,
-		Configure:           client.Configure,
-		VerificationBuilder: verificationBuilder,
 	})
 }

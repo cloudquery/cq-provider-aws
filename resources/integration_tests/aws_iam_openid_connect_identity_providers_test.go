@@ -1,15 +1,15 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 )
 
 func TestIntegrationIamOpenidConnectIdentityProviders(t *testing.T) {
-	awsTestIntegrationHelper(t, IamOpenidConnectIdentityProviders(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.IamOpenidConnectIdentityProviders(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_iam_openid_connect_identity_providers",
 			//Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

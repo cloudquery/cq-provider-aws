@@ -1,10 +1,10 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/Masterminds/squirrel"
 
@@ -12,7 +12,7 @@ import (
 )
 
 func TestIntegrationDirectAutoscalingLaunchConfigurations(t *testing.T) {
-	awsTestIntegrationHelper(t, AutoscalingLaunchConfigurations(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.AutoscalingLaunchConfigurations(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_autoscaling_launch_configurations",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

@@ -1,18 +1,17 @@
-//+build integration_skip all
-
-package resources
+package integration_tests
 
 import (
 	"testing"
 
+	"github.com/cloudquery/cq-provider-aws/resources"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 )
 
-// todo use some domain for tests of route53 related resources
-func TestIntegrationApigatewayv2DomainNamesTest(t *testing.T) {
-	awsTestIntegrationHelper(t, Apigatewayv2DomainNames(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+func TestIntegrationApigatewayv2ApisTest(t *testing.T) {
+	awsTestIntegrationHelper(t, resources.Apigatewayv2Apis(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
-			Name: "aws_apigatewayv2_domain_names",
+			Name: "aws_apigatewayv2_apis",
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{

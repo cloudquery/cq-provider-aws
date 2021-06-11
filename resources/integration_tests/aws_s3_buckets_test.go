@@ -1,17 +1,17 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 	//"github.com/hashicorp/terraform-exec/tfinstall"
 )
 
 func TestIntegrationS3Buckets(t *testing.T) {
-	awsTestIntegrationHelper(t, S3Buckets(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.S3Buckets(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_s3_buckets",
 			ExpectedValues: []providertest.ExpectedValue{

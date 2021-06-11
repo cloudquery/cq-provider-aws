@@ -1,15 +1,15 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
 )
 
 func TestIntegrationElbv1LoadBalancers(t *testing.T) {
-	awsTestIntegrationHelper(t, Elbv1LoadBalancers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Elbv1LoadBalancers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elbv1_load_balancers",
 			ExpectedValues: []providertest.ExpectedValue{

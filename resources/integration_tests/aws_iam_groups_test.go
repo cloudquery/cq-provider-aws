@@ -1,10 +1,10 @@
-//+build integration all
-
-package resources
+package integration_tests
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
 
 	"github.com/Masterminds/squirrel"
 
@@ -12,7 +12,7 @@ import (
 )
 
 func TestIntegrationIamGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, IamGroups(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.IamGroups(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_iam_groups",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

@@ -56,5 +56,5 @@ jobs:
       - name: Build
         run: go build -v .
       - name: Test
-        run: go test -v -p 20 ./resources --tags=integration
+        run: go test -v -p 20 ./resources/integration_tests
 

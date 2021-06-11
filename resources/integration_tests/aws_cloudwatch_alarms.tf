@@ -21,7 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "test" {
       namespace = "AWS/ApplicationELB"
       period = "120"
       stat = "Sum"
-      unit all = "Count"
+      unit = "Count"
 
       dimensions = {
         LoadBalancer = "app/web"
@@ -37,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "test" {
       namespace = "AWS/ApplicationELB"
       period = "120"
       stat = "Sum"
-      unit all = "Count"
+      unit = "Count"
 
       dimensions = {
         LoadBalancer = "app/web"
