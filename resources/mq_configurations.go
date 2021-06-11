@@ -52,8 +52,9 @@ func MqConfigurations() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "id",
-				Type: schema.TypeString,
+				Name:     "resource_id",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("Id"),
 			},
 			{
 				Name:     "latest_revision_created",
