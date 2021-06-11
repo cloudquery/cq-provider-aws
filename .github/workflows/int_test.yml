@@ -1,4 +1,4 @@
-name: test
+name: integration_test
 
 on:
 #  push:
@@ -7,13 +7,6 @@ on:
 #  pull_request:
 #    branches: [ main ]
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'
 
 jobs:
   postgres:
@@ -55,6 +48,6 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: go build -v .
-      - name: Test
+      - name: Integration Test
         run: go test -v -p 20 ./resources/integration_tests
 
