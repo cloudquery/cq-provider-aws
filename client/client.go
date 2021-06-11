@@ -45,6 +45,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
+	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/hashicorp/go-hclog"
 )
@@ -109,6 +110,8 @@ type Services struct {
 	Apigatewayv2     Apigatewayv2Client
 	Lambda           LambdaClient
 	ConfigService    ConfigServiceClient
+	Waf              WafClient
+	WafV2            WafV2Client
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -245,7 +248,13 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			if err != nil {
 				return nil, err
 			}
-			awsCfg.Credentials = stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN)
+			opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
+			if account.ExternalID != "" {
+				opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
+					opts.ExternalID = &account.ExternalID
+				})
+			}
+			awsCfg.Credentials = stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
 		case account.ID != "default":
 			awsCfg, err = config.LoadDefaultConfig(
 				ctx,
@@ -332,6 +341,7 @@ func initServices(awsCfg aws.Config) Services {
 		Apigatewayv2:     apigatewayv2.NewFromConfig(awsCfg),
 		Analyzer:         accessanalyzer.NewFromConfig(awsCfg),
 		ConfigService:    configservice.NewFromConfig(awsCfg),
+		Waf:              waf.NewFromConfig(awsCfg),
 	}
 }
 

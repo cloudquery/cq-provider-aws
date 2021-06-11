@@ -160,6 +160,11 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.Ec2VpcPeeringConnections(),
 		},
 		{
+			resource:    "ec2.vpn_gateways",
+			mockBuilder: buildEc2VpnGateways,
+			mainTable:   resources.Ec2VpnGateways(),
+		},
+		{
 			resource:    "ecr.repositories",
 			mockBuilder: buildEcrRepositoriesMock,
 			mainTable:   resources.EcrRepositories(),
@@ -251,11 +256,6 @@ func TestResources(t *testing.T) {
 			mockBuilder: buildIamPasswordPolicies,
 		},
 		{
-			resource:    "iam.roles",
-			mainTable:   resources.IamRoles(),
-			mockBuilder: buildIamRoles,
-		},
-		{
 			resource:    "iam.virtual_mfa_devices",
 			mainTable:   resources.IamVirtualMfaDevices(),
 			mockBuilder: buildIamVirtualMfaDevices,
@@ -309,11 +309,6 @@ func TestResources(t *testing.T) {
 			resource:    "ec2.vpc_endpoints",
 			mainTable:   resources.Ec2VpcEndpoints(),
 			mockBuilder: buildEc2VpcEndpoints,
-		},
-		{
-			resource:    "route53.hosted_zones",
-			mainTable:   resources.Route53HostedZones(),
-			mockBuilder: buildRoute53HostedZonesMock,
 		},
 		{
 			resource:    "route53.traffic_policies",

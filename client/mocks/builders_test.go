@@ -1,7 +1,6 @@
 package mocks_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -259,76 +258,6 @@ func buildRedshiftSubnetGroupsMock(t *testing.T, ctrl *gomock.Controller) client
 		}, nil)
 	return client.Services{
 		Redshift: m,
-	}
-}
-
-func buildRoute53HostedZonesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockRoute53Client(ctrl)
-	h := route53Types.HostedZone{}
-	if err := faker.FakeData(&h); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListHostedZones(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListHostedZonesOutput{
-			HostedZones: []route53Types.HostedZone{h},
-		}, nil)
-	tag := route53Types.Tag{}
-	if err := faker.FakeData(&tag); err != nil {
-		t.Fatal(err)
-	}
-	//create id that is usually returned by aws
-	hzId := *h.Id
-	newId := fmt.Sprintf("/%s/%s", route53Types.TagResourceTypeHostedzone, *h.Id)
-	h.Id = &newId
-	m.EXPECT().ListTagsForResources(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListTagsForResourcesOutput{
-			ResourceTagSets: []route53Types.ResourceTagSet{
-				{
-					ResourceId: &hzId,
-					Tags:       []route53Types.Tag{tag},
-				},
-			},
-		}, nil)
-	qlc := route53Types.QueryLoggingConfig{}
-	if err := faker.FakeData(&qlc); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListQueryLoggingConfigs(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListQueryLoggingConfigsOutput{
-			QueryLoggingConfigs: []route53Types.QueryLoggingConfig{qlc},
-		}, nil)
-	rrs := route53Types.ResourceRecordSet{}
-	if err := faker.FakeData(&rrs); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListResourceRecordSets(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListResourceRecordSetsOutput{
-			ResourceRecordSets: []route53Types.ResourceRecordSet{rrs},
-		}, nil)
-	tpi := route53Types.TrafficPolicyInstance{}
-	if err := faker.FakeData(&tpi); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListTrafficPolicyInstancesByHostedZone(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.ListTrafficPolicyInstancesByHostedZoneOutput{
-			TrafficPolicyInstances: []route53Types.TrafficPolicyInstance{tpi},
-		}, nil)
-	vpc := route53Types.VPC{}
-	if err := faker.FakeData(&vpc); err != nil {
-		t.Fatal(err)
-	}
-	ds := route53Types.DelegationSet{}
-	if err := faker.FakeData(&ds); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().GetHostedZone(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&route53.GetHostedZoneOutput{
-			HostedZone:    &h,
-			DelegationSet: &ds,
-			VPCs:          []route53Types.VPC{vpc},
-		}, nil)
-	return client.Services{
-		Route53: m,
 	}
 }
 
@@ -729,6 +658,22 @@ func buildEc2VpcsPeeringConnections(t *testing.T, ctrl *gomock.Controller) clien
 	m.EXPECT().DescribeVpcPeeringConnections(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeVpcPeeringConnectionsOutput{
 			VpcPeeringConnections: []ec2Types.VpcPeeringConnection{l},
+		}, nil)
+	return client.Services{
+		EC2: m,
+	}
+}
+
+func buildEc2VpnGateways(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockEc2Client(ctrl)
+	l := ec2Types.VpnGateway{}
+	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeVpnGateways(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&ec2.DescribeVpnGatewaysOutput{
+			VpnGateways: []ec2Types.VpnGateway{l},
 		}, nil)
 	return client.Services{
 		EC2: m,
@@ -1151,59 +1096,6 @@ func buildIamVirtualMfaDevices(t *testing.T, ctrl *gomock.Controller) client.Ser
 		&iam.ListVirtualMFADevicesOutput{
 			VirtualMFADevices: []iamTypes.VirtualMFADevice{g},
 		}, nil)
-	return client.Services{
-		IAM: m,
-	}
-}
-
-func buildIamRoles(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockIamClient(ctrl)
-	r := iamTypes.Role{}
-	err := faker.FakeData(&r)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	p := iamTypes.AttachedPolicy{}
-	err = faker.FakeData(&p)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// generate valid json
-	document := `{"stuff": 3}`
-	r.AssumeRolePolicyDocument = &document
-
-	m.EXPECT().ListRoles(gomock.Any(), gomock.Any()).Return(
-		&iam.ListRolesOutput{
-			Roles: []iamTypes.Role{r},
-		}, nil)
-	m.EXPECT().ListAttachedRolePolicies(gomock.Any(), gomock.Any()).Return(
-		&iam.ListAttachedRolePoliciesOutput{
-			AttachedPolicies: []iamTypes.AttachedPolicy{p},
-		}, nil)
-
-	// list policies by role
-	var l []string
-	err = faker.FakeData(&l)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListRolePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&iam.ListRolePoliciesOutput{
-			PolicyNames: l,
-		}, nil)
-
-	//get policy
-	pd := iam.GetRolePolicyOutput{}
-	err = faker.FakeData(&pd)
-	if err != nil {
-		t.Fatal(err)
-	}
-	pd.PolicyDocument = &document
-	m.EXPECT().GetRolePolicy(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&pd, nil)
-
 	return client.Services{
 		IAM: m,
 	}
