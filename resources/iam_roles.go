@@ -2,7 +2,10 @@ package resources
 
 import (
 	"context"
+	"errors"
 	"net/url"
+
+	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
@@ -26,7 +29,7 @@ func IamRoles() *schema.Table {
 			},
 			{
 				Name:     "policies",
-				Type:     schema.TypeJSON,
+				Type:     schema.TypeStringArray,
 				Resolver: resolveIamRolePolicies,
 			},
 			{
@@ -116,24 +119,26 @@ func fetchIamRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Role)
 	svc := meta.(*client.Client).Services().IAM
-	input := iam.ListAttachedRolePoliciesInput{
+	input := iam.ListRolePoliciesInput{
 		RoleName: r.RoleName,
 	}
-	policies := map[string]*string{}
+	var policies []string
 	for {
-		response, err := svc.ListAttachedRolePolicies(ctx, &input)
+		response, err := svc.ListRolePolicies(ctx, &input)
 		if err != nil {
+			var ae smithy.APIError
+			if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchEntity" {
+				return nil
+			}
 			return err
 		}
-		for _, p := range response.AttachedPolicies {
-			policies[*p.PolicyArn] = p.PolicyName
-		}
+		policies = append(policies, response.PolicyNames...)
 		if response.Marker == nil {
 			break
 		}
 		input.Marker = response.Marker
 	}
-	return resource.Set("policies", policies)
+	return resource.Set(c.Name, policies)
 }
 func resolveIamRoleAssumeRolePolicyDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Role)

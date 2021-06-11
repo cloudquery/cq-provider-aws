@@ -19,7 +19,7 @@ import (
 
 func iamRolePolicies() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_role_policies",
+		Name:         "aws_iam_role_attached_policies",
 		Resolver:     fetchIamRolePolicies,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
