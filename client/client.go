@@ -38,6 +38,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
@@ -100,6 +101,7 @@ type Services struct {
 	FSX              FsxClient
 	IAM              IamClient
 	KMS              KmsClient
+	MQ               MQClient
 	Organizations    OrganizationsClient
 	Redshift         RedshiftClient
 	Route53          Route53Client
@@ -331,6 +333,7 @@ func initServices(awsCfg aws.Config) Services {
 		ELBv2:            elbv2.NewFromConfig(awsCfg),
 		IAM:              iam.NewFromConfig(awsCfg),
 		KMS:              kms.NewFromConfig(awsCfg),
+		MQ:               mq.NewFromConfig(awsCfg),
 		Organizations:    organizations.NewFromConfig(awsCfg),
 		RDS:              rds.NewFromConfig(awsCfg),
 		Redshift:         redshift.NewFromConfig(awsCfg),
