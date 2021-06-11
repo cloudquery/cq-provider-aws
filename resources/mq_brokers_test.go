@@ -30,5 +30,5 @@ func buildMqBrokers(t *testing.T, ctrl *gomock.Controller) client.Services {
 }
 
 func TestMqBrokers(t *testing.T) {
-	awsTestHelper(t, MqBrokers(), buildMqBrokers)
+	awsTestHelper(t, MqBrokers(), buildMqBrokers, TestOptions{})
 }
