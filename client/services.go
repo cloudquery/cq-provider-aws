@@ -213,6 +213,7 @@ type KmsClient interface {
 
 type MQClient interface {
 	ListBrokers(ctx context.Context, params *mq.ListBrokersInput, optFns ...func(*mq.Options)) (*mq.ListBrokersOutput, error)
+	ListConfigurations(ctx context.Context, params *mq.ListConfigurationsInput, optFns ...func(*mq.Options)) (*mq.ListConfigurationsOutput, error)
 	ListUsers(ctx context.Context, params *mq.ListUsersInput, optFns ...func(*mq.Options)) (*mq.ListUsersOutput, error)
 }
 

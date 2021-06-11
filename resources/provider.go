@@ -73,6 +73,7 @@ func Provider() *provider.Provider {
 			"iam.server_certificates":               IamServerCertificates(),
 			"kms.keys":                              KmsKeys(),
 			"mq.brokers":                            MqBrokers(),
+			"mq.configurations":                     MqConfigurations(),
 			"mq.users":                              MqUsers(),
 			"organizations.accounts":                OrganizationsAccounts(),
 			"sns.topics":                            SnsTopics(),
