@@ -47,7 +47,7 @@ func buildIamRoles(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m.EXPECT().ListRolePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&iam.ListRolePoliciesOutput{
 			PolicyNames: l,
-		}, nil)
+		}, nil).AnyTimes()
 
 	//get policy
 	pd := iam.GetRolePolicyOutput{}

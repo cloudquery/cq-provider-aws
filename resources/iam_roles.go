@@ -28,8 +28,8 @@ func IamRoles() *schema.Table {
 				Resolver: client.ResolveAWSAccount,
 			},
 			{
-				Name:     "policies",
-				Type:     schema.TypeStringArray,
+				Name:     "attached_policies",
+				Type:     schema.TypeJSON,
 				Resolver: resolveIamRolePolicies,
 			},
 			{
@@ -119,12 +119,12 @@ func fetchIamRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Role)
 	svc := meta.(*client.Client).Services().IAM
-	input := iam.ListRolePoliciesInput{
+	input := iam.ListAttachedRolePoliciesInput{
 		RoleName: r.RoleName,
 	}
-	var policies []string
+	policies := make(map[string]interface{})
 	for {
-		response, err := svc.ListRolePolicies(ctx, &input)
+		response, err := svc.ListAttachedRolePolicies(ctx, &input)
 		if err != nil {
 			var ae smithy.APIError
 			if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchEntity" {
@@ -132,7 +132,11 @@ func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resourc
 			}
 			return err
 		}
-		policies = append(policies, response.PolicyNames...)
+
+		for _, p := range response.AttachedPolicies {
+			policies[*p.PolicyName] = p.PolicyArn
+		}
+
 		if response.Marker == nil {
 			break
 		}

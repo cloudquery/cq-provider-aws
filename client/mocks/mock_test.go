@@ -241,11 +241,6 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.SnsSubscriptions(),
 		},
 		{
-			resource:    "iam.groups",
-			mainTable:   resources.IamGroups(),
-			mockBuilder: buildIamGroups,
-		},
-		{
 			resource:    "iam.policies",
 			mainTable:   resources.IamPolicies(),
 			mockBuilder: buildIamPolicies,
