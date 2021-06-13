@@ -21,6 +21,7 @@ func Accounts() *schema.Table {
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
+				Description: "The AWS Account",
 				Type:     schema.TypeString,
 				Resolver: client.ResolveAWSAccount,
 			},
