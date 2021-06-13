@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
@@ -13,45 +12,54 @@ import (
 func IamGroups() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iam_groups",
+		Description:  "Contains information about an IAM group entity.",
 		Resolver:     fetchIamGroups,
-		Multiplex:    client.AccountMultiplex,
+		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountFilter,
+		DeleteFilter: client.DeleteAccountRegionFilter,
 		Columns: []schema.Column{
 			{
-				Name:     "account_id",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveAWSAccount,
+				Name:        "account_id",
+				Description: "The AWS Account ID in which the resource resides in.",
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name:     "region",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveAWSRegion,
+				Name:        "region",
+				Description: "The AWS Region in which the resource resides in.",
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "policies",
-				Type:     schema.TypeJSON,
-				Resolver: resolveIamGroupPolicies,
+				Name:        "policies",
+				Description: "List of policies attached to group.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveIamGroupPolicies,
 			},
 			{
-				Name: "arn",
-				Type: schema.TypeString,
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) specifying the group. For more information about ARNs and how to use them in policies, see IAM identifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the IAM User Guide.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "create_date",
-				Type: schema.TypeTimestamp,
+				Name:        "create_date",
+				Description: "The date and time, in ISO 8601 date-time format (http://www.iso.org/iso/iso8601), when the group was created.",
+				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name: "group_id",
-				Type: schema.TypeString,
+				Name:        "group_id",
+				Description: "The stable and unique string identifying the group. For more information about IDs, see IAM identifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the IAM User Guide.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "group_name",
-				Type: schema.TypeString,
+				Name:        "group_name",
+				Description: "The friendly name that identifies the group.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "path",
-				Type: schema.TypeString,
+				Name:        "path",
+				Description: "The path to the group. For more information about paths, see IAM identifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the IAM User Guide.",
+				Type:        schema.TypeString,
 			},
 		},
 		Relations: []*schema.Table{

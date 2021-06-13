@@ -41,7 +41,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1 // indirect
 	github.com/aws/smithy-go v1.4.0
-	github.com/cloudquery/cq-provider-sdk v0.2.3
+	github.com/cloudquery/cq-provider-sdk v0.2.4
 	github.com/cloudquery/faker/v3 v3.7.4
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.5.0
@@ -50,3 +50,5 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/spf13/cast v1.3.0
 )
+
+replace github.com/cloudquery/cq-provider-sdk v0.2.4 => ../../cq-provider-sdk
