@@ -14,21 +14,15 @@ func IamGroups() *schema.Table {
 		Name:         "aws_iam_groups",
 		Description:  "Contains information about an IAM group entity.",
 		Resolver:     fetchIamGroups,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
-				Description: "The AWS Account ID in which the resource resides in.",
+				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
-			},
-			{
-				Name:        "region",
-				Description: "The AWS Region in which the resource resides in.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
 			},
 			{
 				Name:        "policies",
@@ -63,7 +57,7 @@ func IamGroups() *schema.Table {
 			},
 		},
 		Relations: []*schema.Table{
-			iamGroupPolicies(),
+			IamGroupPolicies(),
 		},
 	}
 }
@@ -101,5 +95,5 @@ func resolveIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, resour
 	for _, p := range response.AttachedPolicies {
 		policyMap[*p.PolicyArn] = p.PolicyName
 	}
-	return resource.Set("policies", policyMap)
+	return resource.Set(c.Name, policyMap)
 }
