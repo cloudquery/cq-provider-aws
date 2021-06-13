@@ -117,13 +117,13 @@ func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, res
 	}
 
 	// Resolves rule group rules
-	client := meta.(*client.Client)
-	service := client.Services().Waf
+	awsClient := meta.(*client.Client)
+	service := awsClient.Services().Waf
 	listActivatedRulesConfig := waf.ListActivatedRulesInRuleGroupInput{RuleGroupId: ruleGroup.RuleGroupId}
 	var ruleIDs []string
 	for {
 		rules, err := service.ListActivatedRulesInRuleGroup(ctx, &listActivatedRulesConfig, func(options *waf.Options) {
-			options.Region = client.Region
+			options.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
