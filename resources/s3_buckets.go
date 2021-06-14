@@ -107,7 +107,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "type",
-						Description: "Type of grantee  This member is required.",
+						Description: "Type of grantee  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Grantee.Type"),
 					},
@@ -160,7 +160,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "allowed_origins",
-						Description: "One or more origins you want customers to be able to access the bucket from.  This member is required.",
+						Description: "One or more origins you want customers to be able to access the bucket from.  ",
 						Type:        schema.TypeStringArray,
 					},
 					{
@@ -199,7 +199,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "sse_algorithm",
-						Description: "Server-side encryption algorithm to use for the default encryption.  This member is required.",
+						Description: "Server-side encryption algorithm to use for the default encryption.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("ApplyServerSideEncryptionByDefault.SSEAlgorithm"),
 					},
@@ -229,7 +229,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "destination_bucket",
-						Description: "The Amazon Resource Name (ARN) of the bucket where you want Amazon S3 to store the results.  This member is required.",
+						Description: "The Amazon Resource Name (ARN) of the bucket where you want Amazon S3 to store the results.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Destination.Bucket"),
 					},
@@ -253,7 +253,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "destination_metrics_status",
-						Description: "Specifies whether the replication metrics are enabled.  This member is required.",
+						Description: "Specifies whether the replication metrics are enabled.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Destination.Metrics.Status"),
 					},
@@ -265,7 +265,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "destination_replication_time_status",
-						Description: "Specifies whether the replication time is enabled.  This member is required.",
+						Description: "Specifies whether the replication time is enabled.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Destination.ReplicationTime.Status"),
 					},
@@ -283,7 +283,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "status",
-						Description: "Specifies whether the rule is enabled.  This member is required.",
+						Description: "Specifies whether the rule is enabled.  ",
 						Type:        schema.TypeString,
 					},
 					{
@@ -294,7 +294,7 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "existing_object_replication_status",
-						Description: "This member is required.",
+						Description: "",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("ExistingObjectReplication.Status"),
 					},
@@ -322,13 +322,13 @@ func S3Buckets() *schema.Table {
 					},
 					{
 						Name:        "source_replica_modifications_status",
-						Description: "Specifies whether Amazon S3 replicates modifications on replicas.  This member is required.",
+						Description: "Specifies whether Amazon S3 replicates modifications on replicas.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("SourceSelectionCriteria.ReplicaModifications.Status"),
 					},
 					{
 						Name:        "source_sse_kms_encrypted_objects_status",
-						Description: "Specifies whether Amazon S3 replicates objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service.  This member is required.",
+						Description: "Specifies whether Amazon S3 replicates objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service.  ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("SourceSelectionCriteria.SseKmsEncryptedObjects.Status"),
 					},

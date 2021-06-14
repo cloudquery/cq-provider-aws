@@ -5,7 +5,7 @@ Container for grant information.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |bucket_id|uuid|Unique ID of aws_s3_buckets table (FK)|
-|type|text|Type of grantee  This member is required.|
+|type|text|Type of grantee  |
 |display_name|text|Screen name of the grantee.|
 |email_address|text|Email address of the grantee|
 |resource_id|text|The canonical user ID of the grantee.|
