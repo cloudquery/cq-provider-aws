@@ -4,16 +4,16 @@
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|account_id|text||
-|region|text||
-|policy_document|jsonb||
-|policy_revision_id|text||
-|code_signing_allowed_publishers_version_arns|text[]||
-|code_signing_config_arn|text||
-|code_signing_config_id|text||
-|code_signing_policies_untrusted_artifact_on_deployment|text||
-|code_signing_description|text||
-|code_signing_last_modified|timestamp without time zone||
+|account_id|text|The AWS Account ID of the resource.|
+|region|text|The AWS Region of the resource.|
+|policy_document|jsonb|The resource-based policy.|
+|policy_revision_id|text|A unique identifier for the current revision of the policy.|
+|code_signing_allowed_publishers_version_arns|text[]|The Amazon Resource Name (ARN) for each of the signing profiles. A signing profile defines a trusted user who can sign a code package.|
+|code_signing_config_arn|text|The Amazon Resource Name (ARN) of the Code signing configuration.|
+|code_signing_config_id|text|Unique identifier for the Code signing configuration.|
+|code_signing_policies_untrusted_artifact_on_deployment|text|Code signing configuration policy for deployment validation failure.|
+|code_signing_description|text|Code signing configuration description.|
+|code_signing_last_modified|timestamp without time zone|The date and time that the Code signing configuration was last modified, in ISO-8601 format (YYYY-MM-DDThh:mm:ss.sTZD).|
 |code_image_uri|text||
 |code_location|text||
 |code_repository_type|text||
@@ -56,4 +56,4 @@
 |vpc_config_security_group_ids|text[]||
 |vpc_config_subnet_ids|text[]||
 |vpc_config_vpc_id|text||
-|tags|jsonb||
+|tags|jsonb|The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).|
