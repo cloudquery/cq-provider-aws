@@ -2,12 +2,13 @@ package resources
 
 import (
 	"context"
+	"net/url"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"net/url"
 )
 
 func IamPolicies() *schema.Table {
@@ -88,10 +89,10 @@ func IamPolicies() *schema.Table {
 				Resolver:    fetchIamPolicyVersions,
 				Columns: []schema.Column{
 					{
-						Name:     "policy_id",
+						Name:        "policy_id",
 						Description: "Policy ID the policy versions belongs too.",
-						Type:     schema.TypeUUID,
-						Resolver: schema.ParentIdResolver,
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
 					},
 					{
 						Name:        "create_date",

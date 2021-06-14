@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	smithy "github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"net/url"
 )
 
 func IamUserPolicies() *schema.Table {
@@ -29,10 +30,10 @@ func IamUserPolicies() *schema.Table {
 				Resolver:    schema.ParentIdResolver,
 			},
 			{
-				Name:     "account_id",
+				Name:        "account_id",
 				Description: "The AWS Account ID of the resource.",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveAWSAccount,
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveAWSAccount,
 			},
 			{
 				Name:        "policy_document",
