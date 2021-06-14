@@ -158,6 +158,7 @@ github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec/go.mod h1:jMjuTZXRI4
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudquery/cq-provider-sdk v0.2.5 h1:qS3cSEor8LwCSTHs9yPbokmgtyXiN7Wb/MsntFSvnN8=
 github.com/cloudquery/cq-provider-sdk v0.2.5/go.mod h1:+jyQ99mReIydPsuQzsMQOkDStwFJFmcoT+B6dMf1qW0=
+github.com/cloudquery/cq-provider-sdk v0.2.6/go.mod h1:l/99E0oA/q1v5Nk3W0hPm7+I+XftlHEv53GaGhZkZZ0=
 github.com/cloudquery/faker/v3 v3.7.4 h1:cCcU3r0yHpS0gqKj9rRKAGS0/hY33fBxbqCNFtDD4ec=
 github.com/cloudquery/faker/v3 v3.7.4/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
