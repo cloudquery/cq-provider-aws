@@ -212,9 +212,9 @@ type KmsClient interface {
 }
 
 type MQClient interface {
+	DescribeBroker(ctx context.Context, params *mq.DescribeBrokerInput, optFns ...func(*mq.Options)) (*mq.DescribeBrokerOutput, error)
+	DescribeUser(ctx context.Context, params *mq.DescribeUserInput, optFns ...func(*mq.Options)) (*mq.DescribeUserOutput, error)
 	ListBrokers(ctx context.Context, params *mq.ListBrokersInput, optFns ...func(*mq.Options)) (*mq.ListBrokersOutput, error)
-	ListConfigurations(ctx context.Context, params *mq.ListConfigurationsInput, optFns ...func(*mq.Options)) (*mq.ListConfigurationsOutput, error)
-	ListUsers(ctx context.Context, params *mq.ListUsersInput, optFns ...func(*mq.Options)) (*mq.ListUsersOutput, error)
 }
 
 type OrganizationsClient interface {

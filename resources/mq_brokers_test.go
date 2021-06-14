@@ -24,6 +24,24 @@ func buildMqBrokers(t *testing.T, ctrl *gomock.Controller) client.Services {
 			BrokerSummaries: []types.BrokerSummary{bs},
 		}, nil)
 
+	bo := mq.DescribeBrokerOutput{}
+	err = faker.FakeData(&bo)
+	if err != nil {
+		t.Fatal(err)
+	}
+	bo.BrokerId = bs.BrokerId
+	username := "test_username"
+	bo.Users = []types.UserSummary{{Username: &username}}
+	m.EXPECT().DescribeBroker(gomock.Any(), &mq.DescribeBrokerInput{BrokerId: bs.BrokerId}, gomock.Any()).Return(&bo, nil)
+
+	uo := mq.DescribeUserOutput{}
+	err = faker.FakeData(&bo)
+	if err != nil {
+		t.Fatal(err)
+	}
+	uo.Username = &username
+	uo.BrokerId = bo.BrokerId
+	m.EXPECT().DescribeUser(gomock.Any(), &mq.DescribeUserInput{BrokerId: bo.BrokerId, Username: &username}, gomock.Any()).Return(&uo, nil)
 	return client.Services{
 		MQ: m,
 	}
