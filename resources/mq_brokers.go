@@ -175,7 +175,7 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 }
 
 func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	broker := parent.Item.(mq.DescribeBrokerOutput)
+	broker := parent.Item.(*mq.DescribeBrokerOutput)
 	c := meta.(*client.Client)
 	svc := c.Services().MQ
 	for _, us := range broker.Users {
