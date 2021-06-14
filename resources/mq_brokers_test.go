@@ -35,7 +35,7 @@ func buildMqBrokers(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m.EXPECT().DescribeBroker(gomock.Any(), &mq.DescribeBrokerInput{BrokerId: bs.BrokerId}, gomock.Any()).Return(&bo, nil)
 
 	uo := mq.DescribeUserOutput{}
-	err = faker.FakeData(&bo)
+	err = faker.FakeData(&uo)
 	if err != nil {
 		t.Fatal(err)
 	}
