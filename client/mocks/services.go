@@ -2720,6 +2720,26 @@ func (mr *MockMQClientMockRecorder) DescribeBroker(arg0, arg1 interface{}, arg2 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeBroker", reflect.TypeOf((*MockMQClient)(nil).DescribeBroker), varargs...)
 }
 
+// DescribeConfiguration mocks base method.
+func (m *MockMQClient) DescribeConfiguration(arg0 context.Context, arg1 *mq.DescribeConfigurationInput, arg2 ...func(*mq.Options)) (*mq.DescribeConfigurationOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeConfiguration", varargs...)
+	ret0, _ := ret[0].(*mq.DescribeConfigurationOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeConfiguration indicates an expected call of DescribeConfiguration.
+func (mr *MockMQClientMockRecorder) DescribeConfiguration(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeConfiguration", reflect.TypeOf((*MockMQClient)(nil).DescribeConfiguration), varargs...)
+}
+
 // DescribeUser mocks base method.
 func (m *MockMQClient) DescribeUser(arg0 context.Context, arg1 *mq.DescribeUserInput, arg2 ...func(*mq.Options)) (*mq.DescribeUserOutput, error) {
 	m.ctrl.T.Helper()

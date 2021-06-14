@@ -28,36 +28,44 @@ func MqBrokers() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name: "authentication_strategy",
-				Type: schema.TypeString,
+				Name:        "authentication_strategy",
+				Description: "The authentication strategy used to secure the broker.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "auto_minor_version_upgrade",
-				Type: schema.TypeBool,
+				Name:        "auto_minor_version_upgrade",
+				Description: "Required",
+				Type:        schema.TypeBool,
 			},
 			{
-				Name: "broker_arn",
-				Type: schema.TypeString,
+				Name:        "broker_arn",
+				Description: "The Amazon Resource Name (ARN) of the broker.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "broker_id",
-				Type: schema.TypeString,
+				Name:        "broker_id",
+				Description: "The unique ID that Amazon MQ generates for the broker.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "broker_name",
-				Type: schema.TypeString,
+				Name:        "broker_name",
+				Description: "The name of the broker",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "broker_state",
-				Type: schema.TypeString,
+				Name:        "broker_state",
+				Description: "The status of the broker.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "created",
-				Type: schema.TypeTimestamp,
+				Name:        "created",
+				Description: "The time when the broker was created.",
+				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name: "deployment_mode",
-				Type: schema.TypeString,
+				Name:        "deployment_mode",
+				Description: "Required",
+				Type:        schema.TypeString,
 			},
 			{
 				Name:     "encryption_options_use_aws_owned_key",
@@ -70,50 +78,59 @@ func MqBrokers() *schema.Table {
 				Resolver: schema.PathResolver("EncryptionOptions.KmsKeyId"),
 			},
 			{
-				Name: "engine_type",
-				Type: schema.TypeString,
+				Name:        "engine_type",
+				Description: "Required",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "engine_version",
-				Type: schema.TypeString,
+				Name:        "engine_version",
+				Description: "The version of the broker engine",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "host_instance_type",
-				Type: schema.TypeString,
+				Name:        "host_instance_type",
+				Description: "The broker's instance type.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "publicly_accessible",
-				Type: schema.TypeBool,
+				Name:        "publicly_accessible",
+				Description: "Required",
+				Type:        schema.TypeBool,
 			},
 			{
-				Name: "security_groups",
-				Type: schema.TypeStringArray,
+				Name:        "security_groups",
+				Description: "The list of security groups (1 minimum, 5 maximum) that authorizes connections to brokers.",
+				Type:        schema.TypeStringArray,
 			},
 			{
-				Name: "storage_type",
-				Type: schema.TypeString,
+				Name:        "storage_type",
+				Description: "The broker's storage type.",
+				Type:        schema.TypeString,
 			},
 			{
-				Name: "subnet_ids",
-				Type: schema.TypeStringArray,
+				Name:        "subnet_ids",
+				Description: "The list of groups that define which subnets and IP ranges the broker can use from different Availability Zones",
+				Type:        schema.TypeStringArray,
 			},
 			{
-				Name: "tags",
-				Type: schema.TypeJSON,
+				Name:        "tags",
+				Description: "The list of all tags associated with this broker.",
+				Type:        schema.TypeJSON,
 			},
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_mq_broker_users",
-				Resolver:     fetchMqBrokerUsers,
+				Name:         "aws_mq_broker_configurations",
+				Resolver:     fetchMqBrokerConfigurations,
 				Multiplex:    client.AccountRegionMultiplex,
 				IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 				DeleteFilter: client.DeleteAccountRegionFilter,
 				Columns: []schema.Column{
 					{
-						Name:     "broker_id",
-						Type:     schema.TypeUUID,
-						Resolver: schema.ParentIdResolver,
+						Name:        "broker_id",
+						Description: "Unique ID of aws_mq_brokers table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
 					},
 					{
 						Name:     "account_id",
@@ -126,16 +143,105 @@ func MqBrokers() *schema.Table {
 						Resolver: client.ResolveAWSRegion,
 					},
 					{
-						Name: "console_access",
-						Type: schema.TypeBool,
+						Name:        "arn",
+						Description: "Required",
+						Type:        schema.TypeString,
 					},
 					{
-						Name: "groups",
-						Type: schema.TypeStringArray,
+						Name:        "authentication_strategy",
+						Description: "The authentication strategy associated with the configuration.",
+						Type:        schema.TypeString,
 					},
 					{
-						Name: "username",
-						Type: schema.TypeString,
+						Name:        "created",
+						Description: "Required",
+						Type:        schema.TypeTimestamp,
+					},
+					{
+						Name:        "description",
+						Description: "Required",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "engine_type",
+						Description: "Required",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "engine_version",
+						Description: "Required",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "resource_id",
+						Description: "Required",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("Id"),
+					},
+					{
+						Name:     "latest_revision_created",
+						Type:     schema.TypeTimestamp,
+						Resolver: schema.PathResolver("LatestRevision.Created"),
+					},
+					{
+						Name:     "latest_revision_description",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("LatestRevision.Description"),
+					},
+					{
+						Name:     "latest_revision",
+						Type:     schema.TypeInt,
+						Resolver: schema.PathResolver("LatestRevision.Revision"),
+					},
+					{
+						Name:        "name",
+						Description: "Required",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "tags",
+						Description: "The list of all tags associated with this configuration.",
+						Type:        schema.TypeJSON,
+					},
+				},
+			},
+			{
+				Name:         "aws_mq_broker_users",
+				Resolver:     fetchMqBrokerUsers,
+				Multiplex:    client.AccountRegionMultiplex,
+				IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+				DeleteFilter: client.DeleteAccountRegionFilter,
+				Columns: []schema.Column{
+					{
+						Name:        "broker_id",
+						Description: "Unique ID of aws_mq_brokers table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:     "account_id",
+						Type:     schema.TypeString,
+						Resolver: client.ResolveAWSAccount,
+					},
+					{
+						Name:     "region",
+						Type:     schema.TypeString,
+						Resolver: client.ResolveAWSRegion,
+					},
+					{
+						Name:        "console_access",
+						Description: "Enables access to the the ActiveMQ Web Console for the ActiveMQ user.",
+						Type:        schema.TypeBool,
+					},
+					{
+						Name:        "groups",
+						Description: "The list of groups (20 maximum) to which the ActiveMQ user belongs",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "username",
+						Description: "Required",
+						Type:        schema.TypeString,
 					},
 				},
 			},
@@ -170,6 +276,23 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			break
 		}
 		config.NextToken = response.NextToken
+	}
+	return nil
+}
+
+func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	broker := parent.Item.(*mq.DescribeBrokerOutput)
+	c := meta.(*client.Client)
+	svc := c.Services().MQ
+	for _, cfg := range broker.Configurations.History {
+		input := mq.DescribeConfigurationInput{ConfigurationId: cfg.Id}
+		output, err := svc.DescribeConfiguration(ctx, &input, func(options *mq.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return err
+		}
+		res <- output
 	}
 	return nil
 }
