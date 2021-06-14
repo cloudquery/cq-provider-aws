@@ -2,6 +2,9 @@ package resources
 
 import (
 	"context"
+	"errors"
+
+	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
@@ -29,7 +32,7 @@ func IamGroups() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name:     "policies",
+				Name:     "attached_policies",
 				Type:     schema.TypeJSON,
 				Resolver: resolveIamGroupPolicies,
 			},
@@ -85,13 +88,24 @@ func resolveIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, resour
 	config := iam.ListAttachedGroupPoliciesInput{
 		GroupName: r.GroupName,
 	}
-	response, err := svc.ListAttachedGroupPolicies(ctx, &config)
-	if err != nil {
-		return err
+	policies := make(map[string]interface{})
+	for {
+		response, err := svc.ListAttachedGroupPolicies(ctx, &config)
+		if err != nil {
+			var ae smithy.APIError
+			if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchEntity" {
+				return nil
+			}
+			return err
+		}
+		for _, p := range response.AttachedPolicies {
+			policies[*p.PolicyName] = p.PolicyArn
+		}
+
+		if response.Marker == nil {
+			break
+		}
+		config.Marker = response.Marker
 	}
-	policyMap := map[string]*string{}
-	for _, p := range response.AttachedPolicies {
-		policyMap[*p.PolicyArn] = p.PolicyName
-	}
-	return resource.Set("policies", policyMap)
+	return resource.Set(c.Name, policies)
 }

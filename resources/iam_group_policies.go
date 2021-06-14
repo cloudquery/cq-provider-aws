@@ -19,7 +19,7 @@ import (
 
 func IamGroupPolicies() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_group_policies",
+		Name:         "aws_iam_group_inline_policies",
 		Resolver:     fetchIamGroupPolicies,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
