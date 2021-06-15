@@ -2,6 +2,8 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
@@ -50,6 +52,12 @@ func MqBrokers() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
+				Name:        "broker_instances",
+				Description: "A list of information about allocated brokers.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveMqBrokerBrokerInstances,
+			},
+			{
 				Name:        "broker_name",
 				Description: "The name of the broker",
 				Type:        schema.TypeString,
@@ -95,6 +103,50 @@ func MqBrokers() *schema.Table {
 				Name:        "host_instance_type",
 				Description: "The broker's instance type.",
 				Type:        schema.TypeString,
+			},
+			{
+				Name:        "ldap_server_metadata",
+				Description: "The metadata of the LDAP server used to authenticate and authorize connections to the broker.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveMqBrokerLdapServerMetadata,
+			},
+			{
+				Name:        "logs",
+				Description: "The list of information about logs currently enabled and pending to be deployed for the specified broker.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveMqBrokerLogs,
+			},
+			{
+				Name:        "maintenance_window_start_time",
+				Description: "The parameters that determine the WeeklyStartTime.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveMqBrokerMaintenanceWindowStartTime,
+			},
+			{
+				Name:        "pending_authentication_strategy",
+				Description: "The authentication strategy that will be applied when the broker is rebooted.",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "pending_engine_version",
+				Description: "The version of the broker engine to upgrade to",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "pending_host_instance_type",
+				Description: "The host instance type of the broker to upgrade to",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "pending_ldap_server_metadata",
+				Description: "The metadata of the LDAP server that will be used to authenticate and authorize connections to the broker once it is rebooted.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveMqBrokerPendingLdapServerMetadata,
+			},
+			{
+				Name:        "pending_security_groups",
+				Description: "The list of pending security groups to authorize connections to brokers.",
+				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "publicly_accessible",
@@ -250,6 +302,12 @@ func MqBrokers() *schema.Table {
 						Type:        schema.TypeStringArray,
 					},
 					{
+						Name:        "pending",
+						Description: "The status of the changes pending for the ActiveMQ user.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveMqBrokerUserPending,
+					},
+					{
 						Name:        "username",
 						Description: "The username of the ActiveMQ user.",
 						Type:        schema.TypeString,
@@ -291,6 +349,66 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	return nil
 }
 
+func resolveMqBrokerBrokerInstances(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(broker.BrokerInstances)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
+
+func resolveMqBrokerLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(broker.LdapServerMetadata)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
+
+func resolveMqBrokerLogs(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(broker.Logs)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
+
+func resolveMqBrokerMaintenanceWindowStartTime(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(broker.MaintenanceWindowStartTime)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
+
+func resolveMqBrokerPendingLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(broker.PendingLdapServerMetadata)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
+
 func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	broker := parent.Item.(*mq.DescribeBrokerOutput)
 	c := meta.(*client.Client)
@@ -326,4 +444,16 @@ func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *sch
 		res <- output
 	}
 	return nil
+}
+
+func resolveMqBrokerUserPending(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	user, ok := resource.Item.(*mq.DescribeUserOutput)
+	if !ok {
+		return fmt.Errorf("not a DescribeUserOutput instance: %#v", resource.Item)
+	}
+	data, err := json.Marshal(user.Pending)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
 }
