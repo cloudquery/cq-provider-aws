@@ -16,9 +16,9 @@ func IamPasswordPolicies() *schema.Table {
 		Name:         "aws_iam_password_policies",
 		Description:  "Contains information about the account password policy.",
 		Resolver:     fetchIamPasswordPolicies,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
