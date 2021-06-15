@@ -135,7 +135,7 @@ func RedshiftClusters() *schema.Table {
 			},
 			{
 				Name:        "data_transfer_progress_data_transferred_in_mega_bytes",
-				Description: "Describes the total amount of data that has been transfered in MB's.",
+				Description: "Describes the total amount of data that has been transferred in MB's.",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DataTransferProgress.DataTransferredInMegaBytes"),
 			},
@@ -159,7 +159,7 @@ func RedshiftClusters() *schema.Table {
 			},
 			{
 				Name:        "data_transfer_progress_total_data_in_mega_bytes",
-				Description: "Describes the total amount of data to be transfered in megabytes.",
+				Description: "Describes the total amount of data to be transferred in megabytes.",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DataTransferProgress.TotalDataInMegaBytes"),
 			},

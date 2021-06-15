@@ -26,12 +26,6 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name:        "region",
-				Description: "The AWS Region of the resource.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
-			},
-			{
 				Name:        "address_family",
 				Description: "The address family for the BGP peer.",
 				Type:        schema.TypeString,

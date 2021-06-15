@@ -55,19 +55,19 @@ func SnsTopics() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "subscription_confirmed",
+				Name:        "subscriptions_confirmed",
 				Description: "The number of confirmed subscriptions for the topic.",
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "subscription_deleted",
+				Name:        "subscriptions_deleted",
 				Description: "The number of deleted subscriptions for the topic.",
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "subscription_pending",
+				Name:        "subscriptions_pending",
 				Description: "The number of subscriptions pending confirmation for the topic.",
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBigInt,
 			},
 			{
 				Name:        "effective_delivery_policy",

@@ -309,7 +309,7 @@ func Ec2SecurityGroups() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ec2_security_group_ip_permissions_egress_user_id_group_pairs",
+						Name:        "aws_ec2_security_group_ip_permissions_egress_user_group_pairs",
 						Description: "Describes a security group and AWS account ID pair.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionsEgressUserIdGroupPairs,
 						Columns: []schema.Column{

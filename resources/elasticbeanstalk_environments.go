@@ -211,7 +211,7 @@ func fetchElasticbeanstalkEnvironments(ctx context.Context, meta schema.ClientMe
 	return nil
 }
 func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Parent.Item.(types.EnvironmentDescription)
+	p := resource.Item.(types.EnvironmentDescription)
 	if p.Resources == nil || p.Resources.LoadBalancer == nil {
 		return nil
 	}

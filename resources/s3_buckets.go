@@ -125,7 +125,7 @@ func S3Buckets() *schema.Table {
 						Resolver:    schema.PathResolver("Grantee.EmailAddress"),
 					},
 					{
-						Name:        "resource_id",
+						Name:        "grantee_id",
 						Description: "The canonical user ID of the grantee.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Grantee.ID"),

@@ -31,6 +31,12 @@ func IamGroupPolicies() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
+				Name:        "group_id",
+				Description: "Unique ID of aws_iam_groups table (FK)",
+				Type:        schema.TypeUUID,
+				Resolver:    schema.ParentIdResolver,
+			},
+			{
 				Name:        "group_name",
 				Description: "The group the policy is associated with.",
 				Type:        schema.TypeString,

@@ -279,7 +279,7 @@ func RdsInstances() *schema.Table {
 			},
 			{
 				Name:        "pending_modified_values_allocated_storage",
-				Description: "The allocated storage size for the DB instance specified in gibibytes .",
+				Description: "The allocated storage size for the DB instance specified in gigabytes .",
 				Type:        schema.TypeInt,
 				Resolver:    schema.PathResolver("PendingModifiedValues.AllocatedStorage"),
 			},
@@ -753,7 +753,7 @@ func resolveRdsInstancePendingModifiedValuesProcessorFeatures(ctx context.Contex
 	for _, t := range r.PendingModifiedValues.ProcessorFeatures {
 		pendingProcessorFeatures[*t.Name] = t.Value
 	}
-	return resource.Set("aws_rds_instance_pending_modified_values_processor_features", pendingProcessorFeatures)
+	return resource.Set(c.Name, pendingProcessorFeatures)
 }
 func resolveRdsInstanceProcessorFeatures(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.DBInstance)
@@ -761,7 +761,7 @@ func resolveRdsInstanceProcessorFeatures(ctx context.Context, meta schema.Client
 	for _, t := range r.ProcessorFeatures {
 		processorFeatures[*t.Name] = t.Value
 	}
-	return resource.Set("aws_rds_instance_processor_features", processorFeatures)
+	return resource.Set(c.Name, processorFeatures)
 }
 func resolveRdsInstanceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.DBInstance)
@@ -769,7 +769,7 @@ func resolveRdsInstanceTags(ctx context.Context, meta schema.ClientMeta, resourc
 	for _, t := range r.TagList {
 		tags[*t.Key] = t.Value
 	}
-	return resource.Set("tags", tags)
+	return resource.Set(c.Name, tags)
 }
 func fetchRdsInstanceAssociatedRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	instance, ok := parent.Item.(types.DBInstance)

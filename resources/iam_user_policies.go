@@ -25,7 +25,7 @@ func IamUserPolicies() *schema.Table {
 		Columns: []schema.Column{
 			{
 				Name:        "user_id",
-				Description: "User ID the policy belongs too.",
+				Description: "Unique ID of aws_iam_users table (FK)",
 				Type:        schema.TypeUUID,
 				Resolver:    schema.ParentIdResolver,
 			},
