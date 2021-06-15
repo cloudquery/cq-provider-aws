@@ -10,9 +10,9 @@ A wrapper type for the topic's Amazon Resource Name (ARN).
 |policy|jsonb|The JSON serialization of the topic's access control policy.|
 |delivery_policy|jsonb|The JSON serialization of the topic's delivery policy.|
 |display_name|text|The human-readable name used in the From field for notifications to email and email-json endpoints.|
-|subscription_confirmed|integer|The number of confirmed subscriptions for the topic.|
-|subscription_deleted|integer|The number of deleted subscriptions for the topic.|
-|subscription_pending|integer|The number of subscriptions pending confirmation for the topic.|
+|subscriptions_confirmed|bigint|The number of confirmed subscriptions for the topic.|
+|subscriptions_deleted|bigint|The number of deleted subscriptions for the topic.|
+|subscriptions_pending|bigint|The number of subscriptions pending confirmation for the topic.|
 |effective_delivery_policy|jsonb|The JSON serialization of the effective delivery policy, taking system defaults into account.|
 |fifo_topic|boolean|When this is set to true, a FIFO topic is created.|
 |content_based_deduplication|boolean|Enables content-based deduplication for FIFO topics.|

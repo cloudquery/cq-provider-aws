@@ -25,11 +25,11 @@ Describes a cluster.
 |cluster_version|text|The version ID of the Amazon Redshift engine that is running on the cluster.|
 |db_name|text|The name of the initial database that was created when the cluster was created.|
 |data_transfer_progress_current_rate_in_mega_bytes_per_second|float|Describes the data transfer rate in MB's per second.|
-|data_transfer_progress_data_transferred_in_mega_bytes|bigint|Describes the total amount of data that has been transfered in MB's.|
+|data_transfer_progress_data_transferred_in_mega_bytes|bigint|Describes the total amount of data that has been transferred in MB's.|
 |data_transfer_progress_elapsed_time_in_seconds|bigint|Describes the number of seconds that have elapsed during the data transfer.|
 |data_transfer_progress_estimated_time_to_completion_in_seconds|bigint|Describes the estimated number of seconds remaining to complete the transfer.|
 |data_transfer_progress_status|text|Describes the status of the cluster.|
-|data_transfer_progress_total_data_in_mega_bytes|bigint|Describes the total amount of data to be transfered in megabytes.|
+|data_transfer_progress_total_data_in_mega_bytes|bigint|Describes the total amount of data to be transferred in megabytes.|
 |elastic_ip_status_elastic_ip|text|The elastic IP (EIP) address for the cluster.|
 |elastic_ip_status|text|The status of the elastic IP (EIP) address.|
 |elastic_resize_number_of_node_options|text|The number of nodes that you can resize the cluster to with the elastic resize method.|

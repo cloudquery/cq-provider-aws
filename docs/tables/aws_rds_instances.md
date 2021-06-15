@@ -51,7 +51,7 @@ Contains the details of an Amazon RDS DB instance
 |monitoring_role_arn|text|The ARN for the IAM role that permits RDS to send Enhanced Monitoring metrics to Amazon CloudWatch Logs.|
 |multi_az|boolean|Specifies if the DB instance is a Multi-AZ deployment.|
 |nchar_character_set_name|text|The name of the NCHAR character set for the Oracle DB instance|
-|pending_modified_values_allocated_storage|integer|The allocated storage size for the DB instance specified in gibibytes .|
+|pending_modified_values_allocated_storage|integer|The allocated storage size for the DB instance specified in gigabytes .|
 |pending_modified_values_backup_retention_period|integer|The number of days for which automated backups are retained.|
 |pending_modified_values_ca_certificate_identifier|text|The identifier of the CA certificate for the DB instance.|
 |pending_modified_values_db_instance_class|text|The name of the compute and memory capacity class for the DB instance.|

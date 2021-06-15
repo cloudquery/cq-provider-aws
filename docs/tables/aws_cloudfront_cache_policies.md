@@ -10,16 +10,16 @@ Contains a cache policy.
 |comment|text|A comment to describe the cache policy|
 |default_ttl|bigint|The default amount of time, in seconds, that you want objects to stay in the CloudFront cache before CloudFront sends another request to the origin to see if the object has been updated|
 |max_ttl|bigint|The maximum amount of time, in seconds, that objects stay in the CloudFront cache before CloudFront sends another request to the origin to see if the object has been updated|
-|cookies_config_cookie_behavior|text|Determines whether any cookies in viewer requests are included in the cache key and automatically included in requests that CloudFront sends to the origin|
-|cookies_config_cookies_quantity|integer|The number of cookie names in the Items list|
-|cookies_config_cookies_items|text[]|A list of cookie names|
+|cookies_behavior|text|Determines whether any cookies in viewer requests are included in the cache key and automatically included in requests that CloudFront sends to the origin|
+|cookies_quantity|integer|The number of cookie names in the Items list|
+|cookies|text[]|A list of cookie names|
 |enable_accept_encoding_gzip|boolean|A flag that can affect whether the Accept-Encoding HTTP header is included in the cache key and included in requests that CloudFront sends to the origin|
-|headers_config_header_behavior|text|Determines whether any HTTP headers are included in the cache key and automatically included in requests that CloudFront sends to the origin|
-|headers_config_headers_quantity|integer|The number of header names in the Items list|
-|headers_config_headers_items|text[]|A list of HTTP header names|
-|query_strings_config_query_string_behavior|text|Determines whether any URL query strings in viewer requests are included in the cache key and automatically included in requests that CloudFront sends to the origin|
-|query_strings_config_query_strings_quantity|integer|The number of query string names in the Items list|
-|query_strings_config_query_strings_items|text[]|A list of query string names|
+|headers_behavior|text|Determines whether any HTTP headers are included in the cache key and automatically included in requests that CloudFront sends to the origin|
+|headers_quantity|integer|The number of header names in the Items list|
+|headers|text[]|A list of HTTP header names|
+|query_strings_behavior|text|Determines whether any URL query strings in viewer requests are included in the cache key and automatically included in requests that CloudFront sends to the origin|
+|query_strings_quantity|integer|The number of query string names in the Items list|
+|query_strings|text[]|A list of query string names|
 |enable_accept_encoding_brotli|boolean|A flag that can affect whether the Accept-Encoding HTTP header is included in the cache key and included in requests that CloudFront sends to the origin|
 |resource_id|text|The unique identifier for the cache policy|
 |last_modified_time|timestamp without time zone|The date and time when the cache policy was last modified|
