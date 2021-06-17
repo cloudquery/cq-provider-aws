@@ -3,6 +3,7 @@ module github.com/cloudquery/cq-provider-aws
 go 1.15
 
 require (
+	github.com/Masterminds/squirrel v1.5.0
 	github.com/aws/aws-sdk-go-v2 v1.6.0
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.1.6
@@ -42,7 +43,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.4.0
-	github.com/cloudquery/cq-provider-sdk v0.2.3
+	github.com/cloudquery/cq-provider-sdk v0.2.7
 	github.com/cloudquery/faker/v3 v3.7.4
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.5.0
