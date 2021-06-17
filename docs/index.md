@@ -1,6 +1,6 @@
 ## AWS Provider
 
-The CloudQuery AWS provider pulls configuration out of AWS resources, normalizes them and store them in PostgreSQL database.
+The CloudQuery AWS provider pulls configuration out of AWS resources, normalizes them and stores them in PostgreSQL database.
 
 ### Install
 
