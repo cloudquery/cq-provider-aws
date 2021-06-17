@@ -1,5 +1,5 @@
 
-# Table: cache_behaviour_lambda_function_associations
+# Table: aws_cache_behaviour_lambda_function_associations
 
 ## Columns
 | Name        | Type           | Description  |
