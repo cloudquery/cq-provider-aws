@@ -63,6 +63,12 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The error message if the state of an object failed to advance.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "resource_id",
+				Description: "The ID of the Direct Connect gateway.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayId"),
+			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -80,7 +86,7 @@ func DirectconnectGateways() *schema.Table {
 						Name:        "allowed_prefixes_to_direct_connect_gateway",
 						Description: "The Amazon VPC prefixes to advertise to the Direct Connect gateway.",
 						Type:        schema.TypeStringArray,
-						Resolver:    fetchDirectconnectGatewayAssociationAllowedPrefixes,
+						Resolver:    resolveDirectconnectGatewayAssociationAllowedPrefixes,
 					},
 					{
 						Name:        "associated_gateway_id",
@@ -135,6 +141,12 @@ func DirectconnectGateways() *schema.Table {
 						Name:        "virtual_gateway_owner_account",
 						Description: "The ID of the AWS account that owns the virtual private gateway.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "resource_id",
+						Description: "The ID of the Direct Connect gateway association",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AssociationId"),
 					},
 				},
 			},
@@ -264,11 +276,11 @@ func fetchDirectconnectGatewayAttachments(ctx context.Context, meta schema.Clien
 	return nil
 }
 
-func fetchDirectconnectGatewayAssociationAllowedPrefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveDirectconnectGatewayAssociationAllowedPrefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.DirectConnectGatewayAssociation)
 	allowedPrefixes := make([]*string, len(r.AllowedPrefixesToDirectConnectGateway))
 	for i, prefix := range r.AllowedPrefixesToDirectConnectGateway {
 		allowedPrefixes[i] = prefix.Cidr
 	}
-	return resource.Set("allowed_prefixes_to_direct_connect_gateway", allowedPrefixes)
+	return resource.Set(c.Name, allowedPrefixes)
 }
