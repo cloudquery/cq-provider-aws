@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/wafv2"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -344,6 +346,7 @@ func initServices(awsCfg aws.Config) Services {
 		Analyzer:         accessanalyzer.NewFromConfig(awsCfg),
 		ConfigService:    configservice.NewFromConfig(awsCfg),
 		Waf:              waf.NewFromConfig(awsCfg),
+		WafV2:            wafv2.NewFromConfig(awsCfg),
 	}
 }
 
