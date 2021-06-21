@@ -1,8 +1,40 @@
 package client
 
 // define interfaces so we can easily mock AWS calls
-//go:generate mockgen -destination=./mocks/services.go -package=mocks . AutoscalingClient,ApigatewayClient,Apigatewayv2Client,CloudfrontClient,CloudtrailClient,CloudwatchClient,CloudwatchLogsClient,DirectconnectClient,Ec2Client,EcrClient,EfsClient,ElasticbeanstalkClient,ElbV1Client,ElbV2Client,EmrClient,FsxClient,IamClient,KmsClient,MQClient,OrganizationsClient,RdsClient,S3Client,SnsClient,EksClient,RedshiftClient,Route53Client,EcsClient,S3ManagerClient,LambdaClient,ConfigServiceClient,AnalyzerClient,WafClient,WafV2Client
-//go:generate mockgen -destination=./mocks/mock_elasticsearch.go -package=mocks . ElasticSearch
+//go:generate mockgen -package=mocks -destination=./mocks/mock_analyzer.go . AnalyzerClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_apigateway.go . ApigatewayClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_apigatewayv2.go . Apigatewayv2Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_autoscaling.go . AutoscalingClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_cloudfront.go . CloudfrontClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_cloudtrail.go . CloudtrailClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatch.go . CloudwatchClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatchlogs.go . CloudwatchLogsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_configservice.go . ConfigServiceClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_directconnect.go . DirectconnectClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_ec2.go . Ec2Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_ecr.go . EcrClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_ecs.go . EcsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_efs.go . EfsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_eks.go . EksClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_elasticbeanstalk.go . ElasticbeanstalkClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_elasticsearch.go . ElasticSearch
+//go:generate mockgen -package=mocks -destination=./mocks/mock_elbv1.go . ElbV1Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_elbv2.go . ElbV2Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_emr.go . EmrClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_fsx.go . FsxClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_iam.go . IamClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_kms.go . KmsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_lambda.go . LambdaClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_organizations.go . OrganizationsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_rds.go . RdsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_redshift.go . RedshiftClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_route53.go . Route53Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_s3.go . S3Client
+//go:generate mockgen -package=mocks -destination=./mocks/mock_s3manager.go . S3ManagerClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_sns.go . SnsClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_waf.go . WafClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_wafv2.go . WafV2Client
 
 import (
 	"context"
