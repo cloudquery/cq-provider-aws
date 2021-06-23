@@ -18,6 +18,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -85,6 +86,7 @@ type Services struct {
 	Cloudtrail       CloudtrailClient
 	Cloudwatch       CloudwatchClient
 	CloudwatchLogs   CloudwatchLogsClient
+	CognitoUserPools CognitoUserPoolsClient
 	Directconnect    DirectconnectClient
 	ECR              EcrClient
 	ECS              EcsClient
@@ -317,6 +319,7 @@ func initServices(awsCfg aws.Config) Services {
 		Cloudtrail:       cloudtrail.NewFromConfig(awsCfg),
 		Cloudwatch:       cloudwatch.NewFromConfig(awsCfg),
 		CloudwatchLogs:   cloudwatchlogs.NewFromConfig(awsCfg),
+		CognitoUserPools: cognitoidentityprovider.NewFromConfig(awsCfg),
 		Directconnect:    directconnect.NewFromConfig(awsCfg),
 		EC2:              ec2.NewFromConfig(awsCfg),
 		ECR:              ecr.NewFromConfig(awsCfg),
