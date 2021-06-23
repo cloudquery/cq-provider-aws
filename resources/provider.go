@@ -33,6 +33,7 @@ func Provider() *provider.Provider {
 			"directconnect.gateways":                DirectconnectGateways(),
 			"directconnect.virtual_gateways":        DirectconnectVirtualGateways(),
 			"directconnect.virtual_interfaces":      DirectconnectVirtualInterfaces(),
+			"cognito.identity_pools":                CognitoIdentityPools(),
 			"cognito.user_pools":                    CognitoUserPools(),
 			"ec2.regional_config":                   Ec2RegionalConfig(),
 			"ec2.byoip_cidrs":                       Ec2ByoipCidrs(),
