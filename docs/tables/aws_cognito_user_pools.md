@@ -7,23 +7,23 @@ A container for information about the user pool.
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |account_recovery_setting|jsonb|Use this setting to define which verified available method a user can use to recover their password when they call ForgotPassword|
-|admin_create_user_config_allow_admin_create_user_only|boolean|Set to True if only the administrator is allowed to create user profiles|
-|admin_create_user_config_invite_message_template_email_message|text|The message template for email messages|
-|admin_create_user_config_invite_message_template_email_subject|text|The subject line for email messages|
-|admin_create_user_config_invite_message_template_sms_message|text|The message template for SMS messages.|
+|admin_create_user_admin_only|boolean|Set to True if only the administrator is allowed to create user profiles|
+|admin_create_user_invite_email_message|text|The message template for email messages|
+|admin_create_user_invite_email_subject|text|The subject line for email messages|
+|admin_create_user_invite_sms|text|The message template for SMS messages.|
 |admin_create_user_config_unused_account_validity_days|integer|The user account expiration limit, in days, after which the account is no longer usable|
 |alias_attributes|text[]|Specifies the attributes that are aliased in a user pool.|
 |arn|text|The Amazon Resource Name (ARN) for the user pool.|
 |auto_verified_attributes|text[]|Specifies the attributes that are auto-verified in a user pool.|
 |creation_date|timestamp without time zone|The date the user pool was created.|
 |custom_domain|text|A custom domain name that you provide to Amazon Cognito|
-|device_configuration_challenge_required_on_new_device|boolean|Indicates whether a challenge is required on a new device|
-|device_configuration_device_only_remembered_on_user_prompt|boolean|If true, a device is only remembered on user prompt.|
+|challenge_required_on_new_device|boolean|Indicates whether a challenge is required on a new device|
+|device_only_remembered_on_user_prompt|boolean|If true, a device is only remembered on user prompt.|
 |domain|text|Holds the domain prefix if the user pool has a domain associated with it.|
-|email_configuration_configuration_set|text|The set of configuration rules that can be applied to emails sent using Amazon SES|
-|email_configuration_email_sending_account|text|Specifies whether Amazon Cognito emails your users by using its built-in email functionality or your Amazon SES email configuration|
+|email_configuration_set|text|The set of configuration rules that can be applied to emails sent using Amazon SES|
+|email_configuration_sending_account|text|Specifies whether Amazon Cognito emails your users by using its built-in email functionality or your Amazon SES email configuration|
 |email_configuration_from|text|Identifies either the sender’s email address or the sender’s name with their email address|
-|email_configuration_reply_to_email_address|text|The destination to which the receiver of the email should reply to.|
+|email_configuration_reply_to_address|text|The destination to which the receiver of the email should reply to.|
 |email_configuration_source_arn|text|The Amazon Resource Name (ARN) of a verified email address in Amazon SES|
 |email_configuration_failure|text|The reason why the email configuration cannot send the messages to your users.|
 |email_verification_message|text|The contents of the email verification message.|
