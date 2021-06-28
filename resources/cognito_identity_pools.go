@@ -62,13 +62,13 @@ func CognitoIdentityPools() *schema.Table {
 				Type:        schema.TypeJSON,
 			},
 			{
-				Name:        "open_id_connect_provider_arn_s",
+				Name:        "open_id_connect_provider_arns",
 				Description: "The ARNs of the OpenID Connect providers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("OpenIdConnectProviderARNs"),
 			},
 			{
-				Name:        "saml_provider_arn_s",
+				Name:        "saml_provider_arns",
 				Description: "An array of Amazon Resource Names (ARNs) of the SAML provider for your identity pool.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("SamlProviderARNs"),
