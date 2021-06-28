@@ -70,11 +70,6 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.CloudwatchlogsFilters(),
 		},
 		{
-			resource:    "directconnect.connections",
-			mockBuilder: buildDirectconnectConnectionsMock,
-			mainTable:   resources.DirectconnectConnections(),
-		},
-		{
 			resource:    "directconnect.gateways",
 			mockBuilder: buildDirectconnectGatewaysMock,
 			mainTable:   resources.DirectconnectGateways(),

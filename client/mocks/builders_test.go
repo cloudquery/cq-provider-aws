@@ -352,22 +352,6 @@ func buildCloudwatchLogsFiltersMock(t *testing.T, ctrl *gomock.Controller) clien
 	}
 }
 
-func buildDirectconnectConnectionsMock(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockDirectconnectClient(ctrl)
-	conn := directconnectTypes.Connection{}
-	err := faker.FakeData(&conn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().DescribeConnections(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&directconnect.DescribeConnectionsOutput{
-			Connections: []directconnectTypes.Connection{conn},
-		}, nil)
-	return client.Services{
-		Directconnect: m,
-	}
-}
-
 func buildDirectconnectGatewaysMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockDirectconnectClient(ctrl)
 	l := directconnectTypes.DirectConnectGateway{}
