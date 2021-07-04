@@ -18,6 +18,7 @@ func Ec2Instances() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "instance_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -324,7 +325,7 @@ func Ec2Instances() *schema.Table {
 			},
 			{
 				Name:        "subnet_id",
-				Description: "[EC2-VPC] The ID of the subnet in which the instance is running.",
+				Description: "The ID of the subnet in which the instance is running.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -340,7 +341,7 @@ func Ec2Instances() *schema.Table {
 			},
 			{
 				Name:        "vpc_id",
-				Description: "[EC2-VPC] The ID of the VPC in which the instance is running.",
+				Description: "The ID of the VPC in which the instance is running.",
 				Type:        schema.TypeString,
 			},
 		},
@@ -351,7 +352,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceBlockDeviceMappings,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -393,7 +394,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceElasticGpuAssociations,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -426,7 +427,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceElasticInferenceAcceleratorAssociations,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -459,7 +460,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceLicenses,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -477,7 +478,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceNetworkInterfaces,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -701,7 +702,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceProductCodes,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
@@ -724,7 +725,7 @@ func Ec2Instances() *schema.Table {
 				Resolver:    fetchEc2InstanceSecurityGroups,
 				Columns: []schema.Column{
 					{
-						Name:        "instance_id",
+						Name:        "instance_cq_id",
 						Description: "Unique ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,

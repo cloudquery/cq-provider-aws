@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -16,6 +17,7 @@ func ConfigConfigurationRecorders() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -28,6 +30,12 @@ func ConfigConfigurationRecorders() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name: "arn",
+				Description: "Amazon Resource Name (ARN) of the config recorder.",
+				Type: schema.TypeString,
+				Resolver: generateConfigRecorderArn,
 			},
 			{
 				Name:        "name",
@@ -75,4 +83,11 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	}
 	res <- resp.ConfigurationRecorders
 	return nil
+}
+
+
+func generateConfigRecorderArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	cfg := resource.Item.(*types.ConfigurationRecorder)
+	return resource.Set(c.Name, client.GenerateResourceARN("config", "config-recorder", *cfg.Name, cl.Region, cl.AccountID))
 }
