@@ -22,9 +22,10 @@ func IamUserPolicies() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "policy_name"}},
 		Columns: []schema.Column{
 			{
-				Name:        "user_id",
+				Name:        "user_cq_id",
 				Description: "Unique ID of aws_iam_users table (FK)",
 				Type:        schema.TypeUUID,
 				Resolver:    schema.ParentIdResolver,
@@ -34,6 +35,12 @@ func IamUserPolicies() *schema.Table {
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
+			},
+			{
+				Name:        "user_id",
+				Description: "user ID the policy belongs too.",
+				Type:        schema.TypeString,
+				Resolver:    schema.ParentFieldResolver("id"),
 			},
 			{
 				Name:        "policy_document",
