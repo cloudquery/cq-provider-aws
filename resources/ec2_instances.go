@@ -18,7 +18,7 @@ func Ec2Instances() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "instance_id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -31,6 +31,12 @@ func Ec2Instances() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "id",
+				Description: "The ID of the instance.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("InstanceId"),
 			},
 			{
 				Name:        "ami_launch_index",
@@ -124,11 +130,6 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:        "image_id",
 				Description: "The ID of the AMI used to launch the instance.",
-				Type:        schema.TypeString,
-			},
-			{
-				Name:        "instance_id",
-				Description: "The ID of the instance.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -344,12 +345,19 @@ func Ec2Instances() *schema.Table {
 				Description: "The ID of the VPC in which the instance is running.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "licenses",
+				Description: "The license configurations.",
+				Type:        schema.TypeStringArray,
+				Resolver:    resolveEc2InstanceLicenses,
+			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_ec2_instance_block_device_mappings",
 				Description: "Describes a block device mapping.",
 				Resolver:    fetchEc2InstanceBlockDeviceMappings,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "ebs_volume_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -392,6 +400,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_elastic_gpu_associations",
 				Description: "Describes the association between an instance and an Elastic Graphics accelerator.",
 				Resolver:    fetchEc2InstanceElasticGpuAssociations,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "elastic_gpu_association_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -425,6 +434,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_elastic_inference_accelerator_associations",
 				Description: "Describes the association between an instance and an elastic inference accelerator.",
 				Resolver:    fetchEc2InstanceElasticInferenceAcceleratorAssociations,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "elastic_inference_accelerator_association_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -455,27 +465,10 @@ func Ec2Instances() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_ec2_instance_licenses",
-				Description: "Describes a license configuration.",
-				Resolver:    fetchEc2InstanceLicenses,
-				Columns: []schema.Column{
-					{
-						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "license_configuration_arn",
-						Description: "The Amazon Resource Name (ARN) of the license configuration.",
-						Type:        schema.TypeString,
-					},
-				},
-			},
-			{
 				Name:        "aws_ec2_instance_network_interfaces",
 				Description: "Describes a network interface.",
 				Resolver:    fetchEc2InstanceNetworkInterfaces,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "network_interface_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -604,6 +597,7 @@ func Ec2Instances() *schema.Table {
 						Name:        "aws_ec2_instance_network_interface_groups",
 						Description: "Describes a security group.",
 						Resolver:    fetchEc2InstanceNetworkInterfaceGroups,
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "group_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_id",
@@ -700,6 +694,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_product_codes",
 				Description: "Describes a product code.",
 				Resolver:    fetchEc2InstanceProductCodes,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "product_code_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -723,6 +718,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_security_groups",
 				Description: "Describes a security group.",
 				Resolver:    fetchEc2InstanceSecurityGroups,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "group_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -798,13 +794,16 @@ func fetchEc2InstanceElasticInferenceAcceleratorAssociations(ctx context.Context
 	res <- instance.ElasticInferenceAcceleratorAssociations
 	return nil
 }
-func fetchEc2InstanceLicenses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	instance, ok := parent.Item.(types.Instance)
+func resolveEc2InstanceLicenses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	instance, ok := resource.Item.(types.Instance)
 	if !ok {
 		return fmt.Errorf("not ec2 instance")
 	}
-	res <- instance.Licenses
-	return nil
+	licenses := make([]string, len(instance.Licenses))
+	for i, l := range instance.Licenses {
+		licenses[i] = *l.LicenseConfigurationArn
+	}
+	return resource.Set(c.Name, licenses)
 }
 func fetchEc2InstanceNetworkInterfaces(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	instance, ok := parent.Item.(types.Instance)

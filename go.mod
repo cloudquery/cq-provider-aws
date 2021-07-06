@@ -55,3 +55,5 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/spf13/cast v1.3.0
 )
+
+replace github.com/cloudquery/cq-provider-sdk v0.3.0-rc1 => ../cq-provider-sdk

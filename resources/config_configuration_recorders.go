@@ -17,7 +17,7 @@ func ConfigConfigurationRecorders() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -32,10 +32,10 @@ func ConfigConfigurationRecorders() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name: "arn",
+				Name:        "arn",
 				Description: "Amazon Resource Name (ARN) of the config recorder.",
-				Type: schema.TypeString,
-				Resolver: generateConfigRecorderArn,
+				Type:        schema.TypeString,
+				Resolver:    generateConfigRecorderArn,
 			},
 			{
 				Name:        "name",
@@ -85,9 +85,8 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	return nil
 }
 
-
 func generateConfigRecorderArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	cfg := resource.Item.(*types.ConfigurationRecorder)
+	cfg := resource.Item.(types.ConfigurationRecorder)
 	return resource.Set(c.Name, client.GenerateResourceARN("config", "config-recorder", *cfg.Name, cl.Region, cl.AccountID))
 }

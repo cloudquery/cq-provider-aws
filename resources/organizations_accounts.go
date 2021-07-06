@@ -17,18 +17,8 @@ func OrganizationsAccounts() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		Columns: []schema.Column{
-			{
-				Name:     "account_id",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveAWSAccount,
-			},
-			{
-				Name:        "region",
-				Description: "The AWS Region of the resource.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
-			},
 			{
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the account.",
@@ -40,7 +30,7 @@ func OrganizationsAccounts() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "resource_id",
+				Name:        "id",
 				Description: "The unique identifier (ID) of the account.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Id"),

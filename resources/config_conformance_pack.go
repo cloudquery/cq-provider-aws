@@ -17,7 +17,9 @@ func ConfigConformancePack() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Options: schema.TableCreationOptions{
+			PrimaryKeys: []string{"arn"},
+		},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

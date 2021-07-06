@@ -18,6 +18,7 @@ func Ec2Images() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -30,6 +31,12 @@ func Ec2Images() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "id",
+				Description: "The ID of the AMI.",
+				Type:        schema.TypeString,
+				Resolver: schema.PathResolver("ImageId"),
 			},
 			{
 				Name:        "architecture",
@@ -54,11 +61,6 @@ func Ec2Images() *schema.Table {
 			{
 				Name:        "hypervisor",
 				Description: "The hypervisor type of the image.",
-				Type:        schema.TypeString,
-			},
-			{
-				Name:        "image_id",
-				Description: "The ID of the AMI.",
 				Type:        schema.TypeString,
 			},
 			{

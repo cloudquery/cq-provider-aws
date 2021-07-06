@@ -60,6 +60,7 @@ func Route53TrafficPolicies() *schema.Table {
 				Name:        "aws_route53_traffic_policy_versions",
 				Description: "A complex type that contains settings for a traffic policy.",
 				Resolver:    fetchRoute53TrafficPolicyVersions,
+				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"traffic_policy_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "traffic_policy_cq_id",

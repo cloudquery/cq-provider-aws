@@ -18,6 +18,7 @@ func CloudfrontDistributions() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -167,7 +168,7 @@ func CloudfrontDistributions() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name:     "resource_id",
+				Name:     "id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("Id"),
 			},
@@ -247,9 +248,10 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:     "aws_cloudfront_distribution_cache_behaviours",
 				Resolver: fetchCloudfrontDistributionCacheBehaviours,
+				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id"}},
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -332,9 +334,10 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:     "aws_cloudfront_distribution_origins",
 				Resolver: fetchCloudfrontDistributionOrigins,
+				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -343,7 +346,7 @@ func CloudfrontDistributions() *schema.Table {
 						Type: schema.TypeString,
 					},
 					{
-						Name:     "origin_id",
+						Name:     "id",
 						Type:     schema.TypeString,
 						Resolver: schema.PathResolver("Id"),
 					},
