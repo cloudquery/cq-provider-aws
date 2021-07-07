@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/configservice"

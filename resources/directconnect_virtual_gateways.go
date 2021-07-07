@@ -16,7 +16,7 @@ func DirectconnectVirtualGateways() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -34,13 +34,13 @@ func DirectconnectVirtualGateways() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the virtual private gateway.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("VirtualGatewayId"),
+				Resolver:    schema.PathResolver("VirtualGatewayId"),
 			},
 			{
 				Name:        "state",
 				Description: "The state of the virtual private gateway.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("VirtualGatewayState"),
+				Resolver:    schema.PathResolver("VirtualGatewayState"),
 			},
 		},
 	}

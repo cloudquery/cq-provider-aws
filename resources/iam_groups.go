@@ -18,7 +18,7 @@ func IamGroups() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -46,13 +46,13 @@ func IamGroups() *schema.Table {
 				Name:        "id",
 				Description: "The stable and unique string identifying the group. For more information about IDs, see IAM identifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the IAM User Guide.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("GroupId"),
+				Resolver:    schema.PathResolver("GroupId"),
 			},
 			{
 				Name:        "name",
 				Description: "The friendly name that identifies the group.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("GroupName"),
+				Resolver:    schema.PathResolver("GroupName"),
 			},
 			{
 				Name:        "path",

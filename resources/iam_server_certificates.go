@@ -17,7 +17,7 @@ func IamServerCertificates() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -29,7 +29,7 @@ func IamServerCertificates() *schema.Table {
 				Name:        "id",
 				Description: "The stable and unique string identifying the server certificate.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ServerCertificateId"),
+				Resolver:    schema.PathResolver("ServerCertificateId"),
 			},
 			{
 				Name:        "arn",
@@ -45,7 +45,7 @@ func IamServerCertificates() *schema.Table {
 				Name:        "name",
 				Description: "The name that identifies the server certificate.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ServerCertificateName"),
+				Resolver:    schema.PathResolver("ServerCertificateName"),
 			},
 			{
 				Name:        "expiration",

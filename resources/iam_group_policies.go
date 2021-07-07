@@ -23,7 +23,7 @@ func IamGroupPolicies() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"group_cq_id", "policy_name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"group_cq_id", "policy_name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

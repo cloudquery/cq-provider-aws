@@ -50,8 +50,8 @@ func Ec2VpnGateways() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "vpn_gateway_id",
-				Type: schema.TypeString,
+				Name:     "vpn_gateway_id",
+				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("VpnGatewayId"),
 			},
 		},
@@ -59,7 +59,7 @@ func Ec2VpnGateways() *schema.Table {
 			{
 				Name:     "aws_ec2_vpc_attachment",
 				Resolver: fetchEc2VpcAttachments,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"vpn_gateway_cq_id", "vpc_id"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"vpn_gateway_cq_id", "vpc_id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "vpn_gateway_cq_id",

@@ -18,7 +18,7 @@ func DirectconnectConnections() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -46,13 +46,13 @@ func DirectconnectConnections() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the connection.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ConnectionId"),
+				Resolver:    schema.PathResolver("ConnectionId"),
 			},
 			{
 				Name:        "name",
 				Description: "The name of the connection.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ConnectionName"),
+				Resolver:    schema.PathResolver("ConnectionName"),
 			},
 			{
 				Name:        "connection_state",
@@ -131,7 +131,7 @@ func DirectconnectConnections() *schema.Table {
 				Name:        "aws_directconnect_connection_mac_sec_keys",
 				Description: "The MAC Security (MACsec) security keys associated with the connection.",
 				Resolver:    fetchDirectconnectConnectionMacSecKeys,
-				Options: schema.TableCreationOptions{PrimaryKeys: []string{"connection_cq_id", "secret_arn"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"connection_cq_id", "secret_arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "connection_cq_id",
@@ -143,7 +143,7 @@ func DirectconnectConnections() *schema.Table {
 						Name:        "connection_id",
 						Description: "The ID of the connection.",
 						Type:        schema.TypeString,
-						Resolver: schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "ckn",

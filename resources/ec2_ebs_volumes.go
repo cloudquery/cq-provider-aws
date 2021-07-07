@@ -30,15 +30,15 @@ func Ec2EbsVolumes() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name: "volume_id",
-				Type: schema.TypeString,
-				Resolver:    schema.PathResolver("VolumeId"),
+				Name:     "volume_id",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("VolumeId"),
 			},
 			{
-				Name: "arn",
+				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the ebs volume",
-				Type: schema.TypeString,
-				Resolver: resolveEbsVolumeArn,
+				Type:        schema.TypeString,
+				Resolver:    resolveEbsVolumeArn,
 			},
 			{
 				Name: "availability_zone",
@@ -102,7 +102,7 @@ func Ec2EbsVolumes() *schema.Table {
 			{
 				Name:     "aws_ec2_ebs_volume_attachments",
 				Resolver: fetchEc2EbsVolumeAttachments,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"ebs_volume_cq_id", "device"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"ebs_volume_cq_id", "device"}},
 				Columns: []schema.Column{
 					{
 						Name:     "ebs_volume_cq_id",

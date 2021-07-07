@@ -36,7 +36,7 @@ func Ec2Images() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the AMI.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ImageId"),
+				Resolver:    schema.PathResolver("ImageId"),
 			},
 			{
 				Name:        "architecture",

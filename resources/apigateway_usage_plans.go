@@ -95,7 +95,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:        "aws_apigateway_usage_plan_api_stages",
 				Description: "API stage name of the associated API stage in a usage plan.",
 				Resolver:    fetchApigatewayUsagePlanApiStages,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"usage_plan_cq_id", "api_id", "stage"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"usage_plan_cq_id", "api_id", "stage"}},
 				Columns: []schema.Column{
 					{
 						Name:        "usage_plan_cq_id",
@@ -130,7 +130,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:        "aws_apigateway_usage_plan_keys",
 				Description: "Represents a usage plan key to identify a plan customer.",
 				Resolver:    fetchApigatewayUsagePlanKeys,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"usage_plan_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"usage_plan_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "usage_plan_cq_id",

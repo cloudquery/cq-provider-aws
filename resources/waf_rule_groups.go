@@ -19,7 +19,7 @@ func WafRuleGroups() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -46,7 +46,7 @@ func WafRuleGroups() *schema.Table {
 				Name:        "id",
 				Description: "A unique identifier for a RuleGroup",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("RuleGroupId"),
+				Resolver:    schema.PathResolver("RuleGroupId"),
 			},
 			{
 				Name:        "metric_name",

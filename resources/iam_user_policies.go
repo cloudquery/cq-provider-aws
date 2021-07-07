@@ -22,7 +22,7 @@ func IamUserPolicies() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "policy_name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "policy_name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "user_cq_id",

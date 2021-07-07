@@ -37,7 +37,7 @@ func ConfigConformancePack() *schema.Table {
 				Name:        "arn",
 				Description: "Amazon Resource Name (ARN) of the conformance pack.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("ConformancePackArn"),
+				Resolver:    schema.PathResolver("ConformancePackArn"),
 			},
 			{
 				Name:        "conformance_pack_id",

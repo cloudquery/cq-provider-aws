@@ -34,7 +34,7 @@ func RdsCertificates() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the certificate.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("CertificateArn"),
+				Resolver:    schema.PathResolver("CertificateArn"),
 			},
 			{
 				Name:        "certificate_identifier",

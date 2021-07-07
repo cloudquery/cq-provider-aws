@@ -248,7 +248,7 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:     "aws_cloudfront_distribution_cache_behaviours",
 				Resolver: fetchCloudfrontDistributionCacheBehaviours,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -334,7 +334,7 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:     "aws_cloudfront_distribution_origins",
 				Resolver: fetchCloudfrontDistributionOrigins,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id", "id"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",

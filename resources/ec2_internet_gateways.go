@@ -18,7 +18,7 @@ func Ec2InternetGateways() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:     schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -36,7 +36,7 @@ func Ec2InternetGateways() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the internet gateway.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("InternetGatewayId"),
+				Resolver:    schema.PathResolver("InternetGatewayId"),
 			},
 			{
 				Name:        "owner_id",

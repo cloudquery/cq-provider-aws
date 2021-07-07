@@ -107,16 +107,16 @@ func Wafv2RuleGroups() *schema.Table {
 				Resolver:    resolveWafv2ruleGroupRules,
 			},
 			{
-				Name: "available_labels",
+				Name:        "available_labels",
 				Description: "The labels that one or more rules in this rule group add to matching web ACLs.",
-				Type: schema.TypeStringArray,
-				Resolver: resolveWafv2AvailableLabels,
+				Type:        schema.TypeStringArray,
+				Resolver:    resolveWafv2AvailableLabels,
 			},
 			{
-				Name: "consumed_labels",
+				Name:        "consumed_labels",
 				Description: "The labels that one or more rules in this rule group add to matching web ACLs.",
-				Type: schema.TypeStringArray,
-				Resolver: resolveWafv2ConsumedLabels,
+				Type:        schema.TypeStringArray,
+				Resolver:    resolveWafv2ConsumedLabels,
 			},
 		},
 	}

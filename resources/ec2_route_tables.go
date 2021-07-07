@@ -60,7 +60,7 @@ func Ec2RouteTables() *schema.Table {
 				Name:        "aws_ec2_route_table_associations",
 				Description: "Describes an association between a route table and a subnet or gateway.",
 				Resolver:    fetchEc2RouteTableAssociations,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "route_table_cq_id",
@@ -72,7 +72,7 @@ func Ec2RouteTables() *schema.Table {
 						Name:        "id",
 						Description: "The ID of the association.",
 						Type:        schema.TypeString,
-						Resolver: schema.PathResolver("RouteTableAssociationId"),
+						Resolver:    schema.PathResolver("RouteTableAssociationId"),
 					},
 					{
 						Name:        "association_state",
@@ -107,7 +107,7 @@ func Ec2RouteTables() *schema.Table {
 				Name:        "aws_ec2_route_table_propagating_vgws",
 				Description: "Describes a virtual private gateway propagating route.",
 				Resolver:    fetchEc2RouteTablePropagatingVgws,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "gateway_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "gateway_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "route_table_cq_id",
@@ -127,7 +127,7 @@ func Ec2RouteTables() *schema.Table {
 				Description: "Describes a route in a route table.",
 				Resolver:    fetchEc2RouteTableRoutes,
 				// Note: not sure about this
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "destination_cidr_block"}},
+				Options: schema.TableCreationOptions{PrimaryKeys: []string{"route_table_cq_id", "destination_cidr_block"}},
 				Columns: []schema.Column{
 					{
 						Name:        "route_table_cq_id",

@@ -27,7 +27,7 @@ func IamUsers() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountFilter,
 		PostResourceResolver: postIamUserResolver,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -35,8 +35,8 @@ func IamUsers() *schema.Table {
 				Resolver: client.ResolveAWSAccount,
 			},
 			{
-				Name: "id",
-				Type: schema.TypeString,
+				Name:     "id",
+				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("UserId"),
 			},
 			{
@@ -137,7 +137,7 @@ func IamUsers() *schema.Table {
 				Name:                 "aws_iam_user_access_keys",
 				Resolver:             fetchIamUserAccessKeys,
 				PostResourceResolver: postIamUserAccessKeyResolver,
-				Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "access_key_id"}},
+				Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "access_key_id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "user_cq_id",
@@ -178,7 +178,7 @@ func IamUsers() *schema.Table {
 			{
 				Name:     "aws_iam_user_groups",
 				Resolver: fetchIamUserGroups,
-				Options: schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "group_id"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "group_id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "user_cq_id",
@@ -215,7 +215,7 @@ func IamUsers() *schema.Table {
 			{
 				Name:     "aws_iam_user_attached_policies",
 				Resolver: fetchIamUserAttachedPolicies,
-				Options: schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "policy_name"}},
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "policy_name"}},
 				Columns: []schema.Column{
 					{
 						Name:     "user_cq_id",

@@ -19,7 +19,7 @@ func IamPolicies() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -71,13 +71,13 @@ func IamPolicies() *schema.Table {
 				Name:        "id",
 				Description: "The stable and unique string identifying the policy. For more information about IDs, see IAM identifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html) in the IAM User Guide. ",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("PolicyId"),
+				Resolver:    schema.PathResolver("PolicyId"),
 			},
 			{
 				Name:        "name",
 				Description: "The friendly name (not ARN) identifying the policy. ",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("PolicyName"),
+				Resolver:    schema.PathResolver("PolicyName"),
 			},
 			{
 				Name:        "update_date",

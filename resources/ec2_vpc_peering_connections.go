@@ -167,7 +167,7 @@ func Ec2VpcPeeringConnections() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the VPC peering connection.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("VpcPeeringConnectionId"),
+				Resolver:    schema.PathResolver("VpcPeeringConnectionId"),
 			},
 		},
 	}

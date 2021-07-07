@@ -105,7 +105,7 @@ func Ec2VpcEndpoints() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the VPC endpoint.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("VpcEndpointId"),
+				Resolver:    schema.PathResolver("VpcEndpointId"),
 			},
 			{
 				Name:        "vpc_endpoint_type",
@@ -123,7 +123,7 @@ func Ec2VpcEndpoints() *schema.Table {
 				Name:        "aws_ec2_vpc_endpoint_dns_entries",
 				Description: "Describes a DNS entry.",
 				Resolver:    fetchEc2VpcEndpointDnsEntries,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"vpc_endpoint_cq_id", "dns_name"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"vpc_endpoint_cq_id", "dns_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_endpoint_cq_id",
@@ -147,7 +147,7 @@ func Ec2VpcEndpoints() *schema.Table {
 				Name:        "aws_ec2_vpc_endpoint_groups",
 				Description: "Describes a security group.",
 				Resolver:    fetchEc2VpcEndpointGroups,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"vpc_endpoint_cq_id", "group_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"vpc_endpoint_cq_id", "group_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_endpoint_cq_id",

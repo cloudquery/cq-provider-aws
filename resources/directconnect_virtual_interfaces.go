@@ -18,7 +18,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -122,7 +122,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the virtual interface.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("VirtualInterfaceId"),
+				Resolver:    schema.PathResolver("VirtualInterfaceId"),
 			},
 			{
 				Name:        "virtual_interface_name",
@@ -150,7 +150,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Name:        "aws_directconnect_virtual_interface_bgp_peers",
 				Description: "Information about a BGP peer. ",
 				Resolver:    fetchDirectconnectVirtualInterfaceBgpPeers,
-				Options: schema.TableCreationOptions{PrimaryKeys: []string{"virtual_interface_cq_id", "bgp_peer_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"virtual_interface_cq_id", "bgp_peer_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "virtual_interface_cq_id",
@@ -162,7 +162,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 						Name:        "virtual_interface_id",
 						Description: "The ID of the virtual interface.",
 						Type:        schema.TypeString,
-						Resolver: schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "address_family",

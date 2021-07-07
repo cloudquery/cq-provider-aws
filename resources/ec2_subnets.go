@@ -101,7 +101,7 @@ func Ec2Subnets() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the subnet.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("SubnetId"),
+				Resolver:    schema.PathResolver("SubnetId"),
 			},
 			{
 				Name:        "tags",
@@ -119,7 +119,7 @@ func Ec2Subnets() *schema.Table {
 			{
 				Name:        "aws_ec2_subnet_ipv6_cidr_block_association_sets",
 				Description: "Describes an IPv6 CIDR block associated with a subnet.",
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"subnet_cq_id", "ipv6_cidr_block"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"subnet_cq_id", "ipv6_cidr_block"}},
 				Resolver:    fetchEc2SubnetIpv6CidrBlockAssociationSets,
 				Columns: []schema.Column{
 					{

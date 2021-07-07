@@ -21,7 +21,7 @@ func S3Buckets() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountFilter,
 		PostResourceResolver: resolveS3BucketsAttributes,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -100,7 +100,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_grants",
 				Description: "Container for grant information.",
 				Resolver:    fetchS3BucketGrants,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "grantee_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "grantee_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -149,7 +149,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_cors_rules",
 				Description: "Specifies a cross-origin access rule for an Amazon S3 bucket.",
 				Resolver:    fetchS3BucketCorsRules,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -194,7 +194,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_encryption_rules",
 				Description: "Specifies the default server-side encryption configuration.",
 				Resolver:    fetchS3BucketEncryptionRules,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -225,7 +225,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_replication_rules",
 				Description: "Specifies which Amazon S3 objects to replicate and where to store the replicas.",
 				Resolver:    fetchS3BucketReplicationRules,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_id",
@@ -299,9 +299,9 @@ func S3Buckets() *schema.Table {
 						Resolver:    schema.PathResolver("DeleteMarkerReplication.Status"),
 					},
 					{
-						Name:        "existing_object_replication_status",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("ExistingObjectReplication.Status"),
+						Name:     "existing_object_replication_status",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("ExistingObjectReplication.Status"),
 					},
 					{
 						Name:        "filter",
@@ -343,7 +343,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_lifecycles",
 				Description: "A lifecycle rule for individual objects in an Amazon S3 bucket.",
 				Resolver:    fetchS3BucketLifecycles,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_id",

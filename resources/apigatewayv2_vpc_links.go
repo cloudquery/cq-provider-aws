@@ -31,6 +31,12 @@ func Apigatewayv2VpcLinks() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "id",
+				Description: "The ID of the VPC link.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("VpcLinkId"),
+			},
+			{
 				Name:        "name",
 				Description: "The name of the VPC link.",
 				Type:        schema.TypeString,
@@ -47,7 +53,7 @@ func Apigatewayv2VpcLinks() *schema.Table {
 			},
 			{
 				Name:        "vpc_link_id",
-				Description: "The ID of the VPC link.",
+				Description: "The ID of the VPC link. (original field name)",
 				Type:        schema.TypeString,
 			},
 			{

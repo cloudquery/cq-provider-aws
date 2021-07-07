@@ -41,7 +41,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the security group.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("GroupId"),
+				Resolver:    schema.PathResolver("GroupId"),
 			},
 			{
 				Name:        "group_name",
@@ -70,7 +70,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Name:        "aws_ec2_security_group_ip_permissions",
 				Description: "Describes a set of permissions for a security group rule.",
 				Resolver:    fetchEc2SecurityGroupIpPermissions,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_cq_id", "from_port", "to_port"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_cq_id", "from_port", "to_port"}},
 				Columns: []schema.Column{
 					{
 						Name:        "security_group_cq_id",
@@ -99,7 +99,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_ip_ranges",
 						Description: "Describes an IPv4 range.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionIpRanges,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr_ip"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr_ip"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -123,7 +123,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_ipv6_ranges",
 						Description: "[EC2-VPC only] Describes an IPv6 range.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionIpv6Ranges,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr_ipv6"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr_ipv6"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -147,7 +147,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_prefix_list_ids",
 						Description: "Describes a prefix list ID.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionPrefixListIds,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "prefix_list_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "prefix_list_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -171,7 +171,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_user_id_group_pairs",
 						Description: "Describes a security group and AWS account ID pair.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionUserIdGroupPairs,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "group_id", "user_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "group_id", "user_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -222,7 +222,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Name:        "aws_ec2_security_group_ip_permissions_egresses",
 				Description: "Describes a set of permissions for a security group rule.",
 				Resolver:    fetchEc2SecurityGroupIpPermissionsEgresses,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_cq_id", "from_port", "to_port"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_cq_id", "from_port", "to_port"}},
 				Columns: []schema.Column{
 					{
 						Name:        "security_group_cq_id",
@@ -251,7 +251,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permissions_egress_ip_ranges",
 						Description: "Describes an IPv4 range.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionsEgressIpRanges,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "cidr_ip"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "cidr_ip"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permissions_egress_cq_id",
@@ -275,7 +275,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permissions_egress_ipv6_ranges",
 						Description: "[EC2-VPC only] Describes an IPv6 range.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionsEgressIpv6Ranges,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "cidr_ipv6"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "cidr_ipv6"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permissions_egress_cq_id",
@@ -299,7 +299,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permissions_egress_prefix_list_ids",
 						Description: "Describes a prefix list ID.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionsEgressPrefixListIds,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "prefix_list_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "prefix_list_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permissions_egress_cq_id",
@@ -323,7 +323,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permissions_egress_user_group_pairs",
 						Description: "Describes a security group and AWS account ID pair.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionsEgressUserIdGroupPairs,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "group_id", "user_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permissions_egress_cq_id", "group_id", "user_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permissions_egress_cq_id",

@@ -23,7 +23,7 @@ func IamRolePolicies() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"role_cq_id", "policy_name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"role_cq_id", "policy_name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "role_cq_id",

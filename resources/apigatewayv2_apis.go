@@ -19,6 +19,7 @@ func Apigatewayv2Apis() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -58,9 +59,10 @@ func Apigatewayv2Apis() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "api_id",
+				Name:        "id",
 				Description: "The API ID.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ApiId"),
 			},
 			{
 				Name:        "api_key_selection_expression",
@@ -149,12 +151,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_authorizers",
 				Description: "Represents an authorizer.",
 				Resolver:    fetchApigatewayv2ApiAuthorizers,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "authorizer_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "name",
@@ -224,12 +233,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_deployments",
 				Description: "An immutable representation of an API that can be called by users.",
 				Resolver:    fetchApigatewayv2ApiDeployments,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "deployment_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "auto_deployed",
@@ -267,12 +283,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_integrations",
 				Description: "Represents an integration.",
 				Resolver:    fetchApigatewayv2ApiIntegrations,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "integration_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "api_gateway_managed",
@@ -381,12 +404,19 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "aws_apigatewayv2_api_integration_responses",
 						Description: "Represents an integration response.",
 						Resolver:    fetchApigatewayv2ApiIntegrationResponses,
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"integration_cq_id", "integration_response_id"}},
 						Columns: []schema.Column{
 							{
-								Name:        "api_integration_id",
-								Description: "Unique ID of aws_apigatewayv2_api_integrations table (FK)",
+								Name:        "api_integration_cq_id",
+								Description: "Unique CloudQuery ID of aws_apigatewayv2_api_integrations table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "integration_id",
+								Description: "Represents the identifier of an integration.",
+								Type:        schema.TypeString,
+								Resolver:    schema.ParentFieldResolver("integration_id"),
 							},
 							{
 								Name:        "integration_response_key",
@@ -426,12 +456,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_models",
 				Description: "Represents a data model for an API.",
 				Resolver:    fetchApigatewayv2ApiModels,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "model_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:     "model_template",
@@ -469,12 +506,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_routes",
 				Description: "Represents a route.",
 				Resolver:    fetchApigatewayv2ApiRoutes,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_route_id", "route_response_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "route_key",
@@ -549,10 +593,16 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    fetchApigatewayv2ApiRouteResponses,
 						Columns: []schema.Column{
 							{
-								Name:        "api_route_id",
-								Description: "Unique ID of aws_apigatewayv2_api_routes table (FK)",
+								Name:        "api_route_cq_id",
+								Description: "Unique CloudQuery ID of aws_apigatewayv2_api_routes table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "route_id",
+								Description: "Represents the identifier of an route.",
+								Type:        schema.TypeString,
+								Resolver:    schema.ParentFieldResolver("route_id"),
 							},
 							{
 								Name:        "route_response_key",
@@ -587,12 +637,19 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_stages",
 				Description: "Represents an API stage.",
 				Resolver:    fetchApigatewayv2ApiStages,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "stage_name"}},
 				Columns: []schema.Column{
 					{
-						Name:        "api_id",
-						Description: "Unique ID of aws_apigatewayv2_apis table (FK)",
+						Name:        "api_cq_id",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_apis table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "api_id",
+						Description: "The API ID.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentFieldResolver("id"),
 					},
 					{
 						Name:        "stage_name",

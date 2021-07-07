@@ -18,7 +18,7 @@ func Accounts() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountFilter,
-		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
