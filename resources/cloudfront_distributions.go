@@ -452,7 +452,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver: resolveFailoverCriteriaStatusCodeItems,
 					},
 					{
-						Name:     "origin_group_id",
+						Name:     "id",
 						Type:     schema.TypeString,
 						Resolver: schema.PathResolver("Id"),
 					},
