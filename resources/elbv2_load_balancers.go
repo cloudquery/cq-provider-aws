@@ -143,7 +143,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description: "Information about a static IP address for a load balancer.",
 						Resolver:    fetchElbv2LoadBalancerAvailabilityZoneAddresses,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "ip_address"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_availability_zone_cq_id", "ip_address"}},
 						Columns: []schema.Column{
 							{
 								Name:        "load_balancer_availability_zone_cq_id",
@@ -155,7 +155,7 @@ func Elbv2LoadBalancers() *schema.Table {
 								Name:        "zone_name",
 								Description: "The name of the Availability Zone..",
 								Type:        schema.TypeString,
-								Resolver:    schema.ParentResourceFieldResolver("name"),
+								Resolver:    schema.ParentResourceFieldResolver("zone_name"),
 							},
 							{
 								Name:        "allocation_id",

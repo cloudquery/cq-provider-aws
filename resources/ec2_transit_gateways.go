@@ -326,7 +326,7 @@ func Ec2TransitGateways() *schema.Table {
 				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"transit_gateway_cq_id", "transit_gateway_multicast_domain_id"}},
 				Columns: []schema.Column{
 					{
-						Name:     "transit_gateway_id",
+						Name:     "transit_gateway_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},

@@ -597,13 +597,19 @@ func Ec2Instances() *schema.Table {
 						Name:        "aws_ec2_instance_network_interface_groups",
 						Description: "Describes a security group.",
 						Resolver:    fetchEc2InstanceNetworkInterfaceGroups,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "group_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_network_interface_cq_id", "group_id"}},
 						Columns: []schema.Column{
 							{
-								Name:        "instance_network_interface_id",
+								Name:        "instance_network_interface_cq_id",
 								Description: "Unique ID of aws_ec2_instance_network_interfaces table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "network_interface_id",
+								Description: "The ID of the network interface.",
+								Type:        schema.TypeString,
+								Resolver:    schema.ParentPathResolver("NetworkInterfaceId"),
 							},
 							{
 								Name:        "group_id",

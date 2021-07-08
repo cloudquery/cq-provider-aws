@@ -99,7 +99,7 @@ func RdsInstances() *schema.Table {
 				Resolver:    schema.PathResolver("DBInstanceClass"),
 			},
 			{
-				Name:        "id",
+				Name:        "user_instance_id",
 				Description: "Contains a user-supplied database identifier",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DBInstanceIdentifier"),
@@ -150,11 +150,13 @@ func RdsInstances() *schema.Table {
 				Name:        "instance_port",
 				Description: "Specifies the port that the DB instance listens on",
 				Type:        schema.TypeInt,
+				Resolver:    schema.PathResolver("DbInstancePort"),
 			},
 			{
-				Name:        "dbi_resource_id",
+				Name:        "id",
 				Description: "The AWS Region-unique, immutable identifier for the DB instance",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DbiResourceId"),
 			},
 			{
 				Name:        "deletion_protection",
@@ -499,7 +501,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -534,7 +536,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -549,6 +551,7 @@ func RdsInstances() *schema.Table {
 			{
 				Name:        "aws_rds_instance_db_parameter_groups",
 				Description: "The status of the DB parameter group",
+				Resolver:    fetchRdsInstanceDbParameterGroups,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "db_parameter_group_name"}},
 				Columns: []schema.Column{
 					{
@@ -559,7 +562,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -590,7 +593,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -621,7 +624,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -663,7 +666,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
@@ -729,7 +732,7 @@ func RdsInstances() *schema.Table {
 					},
 					{
 						Name:        "instance_id",
-						Description: "Contains a user-supplied database identifier",
+						Description: "The AWS Region-unique, immutable identifier for the DB instance",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},

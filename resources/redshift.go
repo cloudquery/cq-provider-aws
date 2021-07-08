@@ -489,7 +489,7 @@ func RedshiftClusters() *schema.Table {
 						Name:        "aws_redshift_cluster_parameter_group_status_lists",
 						Description: "Describes the status of a parameter group.",
 						Resolver:    fetchRedshiftClusterParameterGroupStatusLists,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"cluster_cq_id", "parameter_name"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"cluster_parameter_group_cq_id", "parameter_name"}},
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_parameter_group_cq_id",

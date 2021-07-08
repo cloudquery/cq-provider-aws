@@ -181,7 +181,7 @@ func CloudtrailTrails() *schema.Table {
 				Description:  "Use event selectors to further specify the management and data event settings for your trail.",
 				Resolver:     fetchCloudtrailTrailEventSelectors,
 				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"trail_cq_id"}},
-				DeleteFilter: schema.DeleteParentFieldsFilter("trail_cq_id"),
+				DeleteFilter: schema.DeleteParentIdFilter("trail_cq_id"),
 				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
@@ -191,10 +191,10 @@ func CloudtrailTrails() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:        "arn",
+						Name:        "trail_arn",
 						Description: "Specifies the ARN of the trail.",
 						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("TrailARN"),
+						Resolver:    schema.ParentPathResolver("TrailARN"),
 					},
 					{
 						Name:        "exclude_management_event_sources",

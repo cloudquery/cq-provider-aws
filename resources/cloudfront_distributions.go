@@ -246,9 +246,10 @@ func CloudfrontDistributions() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_cloudfront_distribution_cache_behaviours",
-				Resolver: fetchCloudfrontDistributionCacheBehaviours,
-				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id"}},
+				Name:         "aws_cloudfront_distribution_cache_behaviours",
+				Resolver:     fetchCloudfrontDistributionCacheBehaviours,
+				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -280,11 +281,13 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cache_behaviour_lambda_function_associations",
-				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
+				Name:         "aws_cache_behaviour_lambda_function_associations",
+				Resolver:     fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
+				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -304,11 +307,13 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_custom_error_responses",
-				Resolver: fetchCloudfrontDistributionCustomErrorResponses,
+				Name:         "aws_cloudfront_distribution_custom_error_responses",
+				Resolver:     fetchCloudfrontDistributionCustomErrorResponses,
+				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -417,11 +422,13 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_cloudfront_distribution_alias_icp_recordals",
-				Resolver: fetchCloudfrontDistributionAliasICPRecordals,
+				Name:         "aws_cloudfront_distribution_alias_icp_recordals",
+				Resolver:     fetchCloudfrontDistributionAliasICPRecordals,
+				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},
@@ -440,9 +447,10 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:     "aws_cloudfront_distribution_origin_groups",
 				Resolver: fetchCloudfrontDistributionOriginGroups,
+				Options:  schema.TableCreationOptions{PrimaryKeys: []string{"distribution_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
-						Name:     "distribution_id",
+						Name:     "distribution_cq_id",
 						Type:     schema.TypeUUID,
 						Resolver: schema.ParentIdResolver,
 					},

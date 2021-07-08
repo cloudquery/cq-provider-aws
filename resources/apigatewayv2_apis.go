@@ -404,7 +404,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "aws_apigatewayv2_api_integration_responses",
 						Description: "Represents an integration response.",
 						Resolver:    fetchApigatewayv2ApiIntegrationResponses,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"integration_cq_id", "integration_response_id"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_integration_cq_id", "integration_response_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "api_integration_cq_id",
@@ -506,7 +506,7 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_routes",
 				Description: "Represents a route.",
 				Resolver:    fetchApigatewayv2ApiRoutes,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_route_id", "route_response_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "route_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -591,6 +591,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "aws_apigatewayv2_api_route_responses",
 						Description: "Represents a route response.",
 						Resolver:    fetchApigatewayv2ApiRouteResponses,
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_route_cq_id", "route_response_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "api_route_cq_id",

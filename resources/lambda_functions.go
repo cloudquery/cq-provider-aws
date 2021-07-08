@@ -740,7 +740,7 @@ func LambdaFunctions() *schema.Table {
 				Name:         "aws_lambda_function_concurrency_configs",
 				Description:  "Details about the provisioned concurrency configuration for a function alias or version. ",
 				Resolver:     fetchLambdaFunctionConcurrencyConfigs,
-				DeleteFilter: schema.DeleteParentFieldsFilter("function_cq_id"),
+				DeleteFilter: schema.DeleteParentIdFilter("function_cq_id"),
 				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
@@ -793,7 +793,7 @@ func LambdaFunctions() *schema.Table {
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"function_cq_id", "uuid"}},
 				Columns: []schema.Column{
 					{
-						Name:        "function_id",
+						Name:        "function_cq_id",
 						Description: "Unique CloudQuery ID of aws_lambda_functions table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,

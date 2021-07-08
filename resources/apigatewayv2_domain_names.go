@@ -69,10 +69,12 @@ func Apigatewayv2DomainNames() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_apigatewayv2_domain_name_configurations",
-				Description: "The domain name configuration.",
-				Resolver:    fetchApigatewayv2DomainNameConfigurations,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id"}},
+				Name:         "aws_apigatewayv2_domain_name_configurations",
+				Description:  "The domain name configuration.",
+				Resolver:     fetchApigatewayv2DomainNameConfigurations,
+				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id"}},
+				DeleteFilter: schema.DeleteParentIdFilter("domain_name_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",
@@ -134,7 +136,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id", "api_mapping_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "domain_name_id",
+						Name:        "domain_name_cq_id",
 						Description: "Unique ID of aws_apigatewayv2_domain_names table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,

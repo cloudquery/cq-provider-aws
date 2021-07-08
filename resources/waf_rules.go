@@ -40,7 +40,7 @@ func WafRules() *schema.Table {
 				Name:        "id",
 				Description: "A unique identifier for a Rule",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Id"),
+				Resolver:    schema.PathResolver("RuleId"),
 			},
 			{
 				Name:        "metric_name",

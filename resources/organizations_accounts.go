@@ -16,9 +16,15 @@ func OrganizationsAccounts() *schema.Table {
 		Resolver:     fetchOrganizationsAccounts,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		Columns: []schema.Column{
+			{
+				Name:        "account_id",
+				Description: "The AWS Account ID of the resource.",
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveAWSAccount,
+			},
 			{
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the account.",

@@ -81,9 +81,9 @@ func fetchIamOpenidConnectIdentityProviders(ctx context.Context, meta schema.Cli
 	return nil
 }
 func resolveIamOpenidConnectIdentityProviderTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*iam.GetOpenIDConnectProviderOutput)
+	r, ok := resource.Item.(IamOpenIdIdentityProviderWrapper)
 	if !ok {
-		return fmt.Errorf("not iam identity provider")
+		return fmt.Errorf("not iam IamOpenIdIdentityProviderWrapper")
 	}
 	response := make(map[string]interface{}, len(r.Tags))
 	for _, t := range r.Tags {

@@ -467,6 +467,6 @@ func getRoute53tagsByResourceID(id string, set []types.ResourceTagSet) []types.T
 
 func generateRoute53HostedZoneArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	hz := resource.Item.(*types.HostedZone)
+	hz := resource.Item.(Route53HostedZoneWrapper)
 	return resource.Set(c.Name, client.GenerateResourceARN("route53", "hostedzone", *hz.Id, cl.Region, cl.AccountID))
 }

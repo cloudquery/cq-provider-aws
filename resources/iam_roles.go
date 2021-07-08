@@ -58,7 +58,7 @@ func IamRoles() *schema.Table {
 				Name:        "name",
 				Description: "The friendly name that identifies the role.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("role_name"),
+				Resolver:    schema.PathResolver("RoleName"),
 			},
 			{
 				Name:        "assume_role_policy_document",

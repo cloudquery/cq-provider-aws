@@ -137,7 +137,7 @@ func IamUsers() *schema.Table {
 				Name:                 "aws_iam_user_access_keys",
 				Resolver:             fetchIamUserAccessKeys,
 				PostResourceResolver: postIamUserAccessKeyResolver,
-				Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "access_key_id"}},
+				Options:              schema.TableCreationOptions{PrimaryKeys: []string{"user_cq_id", "access_key_id"}},
 				Columns: []schema.Column{
 					{
 						Name:     "user_cq_id",

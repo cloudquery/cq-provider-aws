@@ -50,7 +50,7 @@ func Ec2VpnGateways() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name:     "vpn_gateway_id",
+				Name:     "id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("VpnGatewayId"),
 			},

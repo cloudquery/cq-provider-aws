@@ -278,7 +278,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_policies_app_cookie_stickiness_policies",
+				Name:        "aws_elbv1_load_balancer_policies_app_cookie_stickiness",
 				Description: "Information about a policy for application-controlled session stickiness.",
 				Resolver:    fetchElbv1LoadBalancerPoliciesAppCookieStickinessPolicies,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "cookie_name", "policy_name"}},
@@ -308,7 +308,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_policies_lb_cookie_stickiness_policies",
+				Name:        "aws_elbv1_load_balancer_policies_lb_cookie_stickiness",
 				Description: "Information about a policy for duration-based session stickiness.",
 				Resolver:    fetchElbv1LoadBalancerPoliciesLbCookieStickinessPolicies,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
@@ -341,6 +341,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:        "aws_elbv1_load_balancer_policies",
 				Description: "Information about a policy.",
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
+				Resolver:    fetchElbv1LoadBalancerPolicies,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",

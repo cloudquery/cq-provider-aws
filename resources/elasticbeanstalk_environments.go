@@ -172,7 +172,7 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "link_name"}},
 				Columns: []schema.Column{
 					{
-						Name:        "environment_id",
+						Name:        "environment_cq_id",
 						Description: "Unique ID of aws_elasticbeanstalk_environments table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
