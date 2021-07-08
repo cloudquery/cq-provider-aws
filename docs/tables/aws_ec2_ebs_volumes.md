@@ -7,6 +7,7 @@
 |account_id|text||
 |region|text||
 |volume_id|text||
+|arn|text|The Amazon Resource Name (ARN) for the ebs volume|
 |availability_zone|text||
 |create_time|timestamp without time zone||
 |encrypted|boolean||
