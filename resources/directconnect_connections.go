@@ -143,7 +143,7 @@ func DirectconnectConnections() *schema.Table {
 						Name:        "connection_id",
 						Description: "The ID of the connection.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "ckn",

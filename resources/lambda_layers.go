@@ -75,13 +75,13 @@ func LambdaLayers() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the function layer.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("LayerArn"),
+				Resolver:    schema.PathResolver("LayerArn"),
 			},
 			{
 				Name:        "name",
 				Description: "The name of the layer.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("LayerName"),
+				Resolver:    schema.PathResolver("LayerName"),
 			},
 		},
 		Relations: []*schema.Table{
@@ -89,7 +89,7 @@ func LambdaLayers() *schema.Table {
 				Name:        "aws_lambda_layer_versions",
 				Description: "Details about a version of an AWS Lambda layer (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html). ",
 				Resolver:    fetchLambdaLayerVersions,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"layer_cq_id", "version"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"layer_cq_id", "version"}},
 				Columns: []schema.Column{
 					{
 						Name:        "layer_cq_id",
@@ -132,7 +132,7 @@ func LambdaLayers() *schema.Table {
 					{
 						Name:     "aws_lambda_layer_version_policies",
 						Resolver: fetchLambdaLayerVersionPolicies,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"layer_version_cq_id", "revision_id"}},
+						Options:  schema.TableCreationOptions{PrimaryKeys: []string{"layer_version_cq_id", "revision_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "layer_version_cq_id",
@@ -144,7 +144,7 @@ func LambdaLayers() *schema.Table {
 								Name:        "layer_version",
 								Description: "The version number.",
 								Type:        schema.TypeBigInt,
-								Resolver: schema.ParentFieldResolver("version"),
+								Resolver:    schema.ParentResourceFieldResolver("version"),
 							},
 							{
 								Name:        "policy",

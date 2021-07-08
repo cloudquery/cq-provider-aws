@@ -88,7 +88,7 @@ func DirectconnectGateways() *schema.Table {
 						Name:        "directconnect_gateway_id",
 						Description: "The ID of the Direct Connect gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "allowed_prefixes_to_direct_connect_gateway",

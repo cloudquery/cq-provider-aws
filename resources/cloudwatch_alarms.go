@@ -175,7 +175,7 @@ func CloudwatchAlarms() *schema.Table {
 				Name:        "aws_cloudwatch_alarm_metrics",
 				Description: "This structure is used in both GetMetricData and PutMetricAlarm.",
 				Resolver:    fetchCloudwatchAlarmMetrics,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"alarm_cq_id", "id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"alarm_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "alarm_cq_id",
@@ -187,13 +187,13 @@ func CloudwatchAlarms() *schema.Table {
 						Name:        "alarm_arn",
 						Description: "The Amazon Resource Name (ARN) of the alarm.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("arn"),
+						Resolver:    schema.ParentResourceFieldResolver("arn"),
 					},
 					{
 						Name:        "alarm_name",
 						Description: "The name of the alarm.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "id",

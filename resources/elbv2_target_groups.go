@@ -102,19 +102,19 @@ func Elbv2TargetGroups() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the target group.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("TargetGroupArn"),
+				Resolver:    schema.PathResolver("TargetGroupArn"),
 			},
 			{
 				Name:        "name",
 				Description: "The name of the target group.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("TargetGroupName"),
+				Resolver:    schema.PathResolver("TargetGroupName"),
 			},
 			{
 				Name:        "target_type",
 				Description: "The type of target that you must specify when registering targets with this target group.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("TargetType"),
+				Resolver:    schema.PathResolver("TargetType"),
 			},
 			{
 				Name:        "unhealthy_threshold_count",

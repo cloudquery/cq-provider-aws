@@ -73,19 +73,19 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:        "arn",
 				Description: "The environment's Amazon Resource Name (ARN), which can be used in other API requests that require an ARN.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("EnvironmentArn"),
+				Resolver:    schema.PathResolver("EnvironmentArn"),
 			},
 			{
 				Name:        "id",
 				Description: "The ID of this environment.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("EnvironmentId"),
+				Resolver:    schema.PathResolver("EnvironmentId"),
 			},
 			{
 				Name:        "environment_name",
 				Description: "The name of this environment.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("EnvironmentName"),
+				Resolver:    schema.PathResolver("EnvironmentName"),
 			},
 			{
 				Name:        "health",
@@ -169,7 +169,7 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:        "aws_elasticbeanstalk_environment_links",
 				Description: "A link to another environment, defined in the environment's manifest.",
 				Resolver:    fetchElasticbeanstalkEnvironmentLinks,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "link_name"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "link_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "environment_id",

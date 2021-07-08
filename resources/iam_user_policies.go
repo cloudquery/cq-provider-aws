@@ -40,7 +40,7 @@ func IamUserPolicies() *schema.Table {
 				Name:        "user_id",
 				Description: "user ID the policy belongs too.",
 				Type:        schema.TypeString,
-				Resolver:    schema.ParentFieldResolver("id"),
+				Resolver:    schema.ParentResourceFieldResolver("id"),
 			},
 			{
 				Name:        "policy_document",

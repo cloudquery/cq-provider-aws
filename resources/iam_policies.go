@@ -101,7 +101,7 @@ func IamPolicies() *schema.Table {
 						Name:        "policy_id",
 						Description: "Policy ID the policy versions belongs too.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "create_date",

@@ -62,13 +62,13 @@ func Elbv2LoadBalancers() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the load balancer.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("LoadBalancerArn"),
+				Resolver:    schema.PathResolver("LoadBalancerArn"),
 			},
 			{
 				Name:        "name",
 				Description: "The name of the load balancer.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("LoadBalancerName"),
+				Resolver:    schema.PathResolver("LoadBalancerName"),
 			},
 			{
 				Name:        "scheme",
@@ -108,7 +108,7 @@ func Elbv2LoadBalancers() *schema.Table {
 				Name:        "aws_elbv2_load_balancer_availability_zones",
 				Description: "Information about an Availability Zone.",
 				Resolver:    fetchElbv2LoadBalancerAvailabilityZones,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "zone_name"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "zone_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -120,7 +120,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "outpost_id",
@@ -143,7 +143,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description: "Information about a static IP address for a load balancer.",
 						Resolver:    fetchElbv2LoadBalancerAvailabilityZoneAddresses,
-						Options:      schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "ip_address"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "ip_address"}},
 						Columns: []schema.Column{
 							{
 								Name:        "load_balancer_availability_zone_cq_id",
@@ -155,7 +155,7 @@ func Elbv2LoadBalancers() *schema.Table {
 								Name:        "zone_name",
 								Description: "The name of the Availability Zone..",
 								Type:        schema.TypeString,
-								Resolver:    schema.ParentFieldResolver("name"),
+								Resolver:    schema.ParentResourceFieldResolver("name"),
 							},
 							{
 								Name:        "allocation_id",

@@ -41,7 +41,7 @@ func IamGroupPolicies() *schema.Table {
 				Name:        "group_id",
 				Description: "Group ID the policy belongs too.",
 				Type:        schema.TypeString,
-				Resolver:    schema.ParentFieldResolver("id"),
+				Resolver:    schema.ParentResourceFieldResolver("id"),
 			},
 			{
 				Name:        "group_name",

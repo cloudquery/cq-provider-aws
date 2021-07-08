@@ -208,7 +208,7 @@ func Elbv1LoadBalancers() *schema.Table {
 						Name:        "name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "instance_port",
@@ -238,7 +238,7 @@ func Elbv1LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "listener_instance_port",
@@ -293,7 +293,7 @@ func Elbv1LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "cookie_name",
@@ -323,7 +323,7 @@ func Elbv1LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "cookie_expiration_period",
@@ -352,7 +352,7 @@ func Elbv1LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "policy_attribute_descriptions",

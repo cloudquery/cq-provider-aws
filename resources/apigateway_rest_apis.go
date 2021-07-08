@@ -124,7 +124,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "auth_type",
@@ -196,7 +196,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "api_summary",
@@ -237,7 +237,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "id",
@@ -298,7 +298,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "created_date",
@@ -333,7 +333,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "default_response",
@@ -378,7 +378,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:     "model_template",
@@ -429,7 +429,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "id",
@@ -470,7 +470,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "id",
@@ -516,7 +516,7 @@ func ApigatewayRestApis() *schema.Table {
 						Name:        "rest_api_id",
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "access_log_settings_destination_arn",

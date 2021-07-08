@@ -147,7 +147,7 @@ func IamUsers() *schema.Table {
 					{
 						Name:     "user_id",
 						Type:     schema.TypeString,
-						Resolver: schema.ParentFieldResolver("user_id"),
+						Resolver: schema.ParentResourceFieldResolver("user_id"),
 					},
 					{
 						Name: "access_key_id",
@@ -188,7 +188,7 @@ func IamUsers() *schema.Table {
 					{
 						Name:     "user_id",
 						Type:     schema.TypeString,
-						Resolver: schema.ParentFieldResolver("user_id"),
+						Resolver: schema.ParentResourceFieldResolver("user_id"),
 					},
 					{
 						Name: "arn",
@@ -225,7 +225,7 @@ func IamUsers() *schema.Table {
 					{
 						Name:     "user_id",
 						Type:     schema.TypeString,
-						Resolver: schema.ParentFieldResolver("user_id"),
+						Resolver: schema.ParentResourceFieldResolver("user_id"),
 					},
 					{
 						Name: "policy_arn",

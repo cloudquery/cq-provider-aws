@@ -98,7 +98,7 @@ func CognitoIdentityPools() *schema.Table {
 						Name:        "identity_pool_id",
 						Description: "An identity pool ID in the format REGION:GUID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "client_id",

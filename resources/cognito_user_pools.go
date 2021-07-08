@@ -417,7 +417,7 @@ func CognitoUserPools() *schema.Table {
 						Name:        "user_pool_id",
 						Description: "The ID of the user pool.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "attribute_data_type",
@@ -489,7 +489,7 @@ func CognitoUserPools() *schema.Table {
 						Name:        "user_pool_id",
 						Description: "The ID of the user pool.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "account_id",

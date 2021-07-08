@@ -151,7 +151,7 @@ func ApigatewayDomainNames() *schema.Table {
 						Name:        "domain_name",
 						Description: "The custom domain name as an API host name, for example, my-api.example.com.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("domain_name"),
+						Resolver:    schema.ParentResourceFieldResolver("domain_name"),
 					},
 					{
 						Name:        "base_path",

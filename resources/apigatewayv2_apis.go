@@ -163,7 +163,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "name",
@@ -245,7 +245,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "auto_deployed",
@@ -295,7 +295,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "api_gateway_managed",
@@ -416,7 +416,7 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "integration_id",
 								Description: "Represents the identifier of an integration.",
 								Type:        schema.TypeString,
-								Resolver:    schema.ParentFieldResolver("integration_id"),
+								Resolver:    schema.ParentResourceFieldResolver("integration_id"),
 							},
 							{
 								Name:        "integration_response_key",
@@ -468,7 +468,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:     "model_template",
@@ -518,7 +518,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "route_key",
@@ -602,7 +602,7 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "route_id",
 								Description: "Represents the identifier of an route.",
 								Type:        schema.TypeString,
-								Resolver:    schema.ParentFieldResolver("route_id"),
+								Resolver:    schema.ParentResourceFieldResolver("route_id"),
 							},
 							{
 								Name:        "route_response_key",
@@ -649,7 +649,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "api_id",
 						Description: "The API ID.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "stage_name",

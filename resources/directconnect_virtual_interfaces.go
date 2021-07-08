@@ -162,7 +162,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 						Name:        "virtual_interface_id",
 						Description: "The ID of the virtual interface.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "address_family",

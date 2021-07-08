@@ -18,7 +18,7 @@ func CloudtrailTrails() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: postCloudtrailTrailResolver,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -177,12 +177,12 @@ func CloudtrailTrails() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_cloudtrail_trail_event_selectors",
-				Description: "Use event selectors to further specify the management and data event settings for your trail.",
-				Resolver:    fetchCloudtrailTrailEventSelectors,
+				Name:         "aws_cloudtrail_trail_event_selectors",
+				Description:  "Use event selectors to further specify the management and data event settings for your trail.",
+				Resolver:     fetchCloudtrailTrailEventSelectors,
 				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"trail_cq_id"}},
-				DeleteFilter: schema.DeleteParentId("trail_cq_id"),
-				ForceDelete: true,
+				DeleteFilter: schema.DeleteParentFieldsFilter("trail_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "trail_cq_id",

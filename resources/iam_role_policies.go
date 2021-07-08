@@ -35,7 +35,7 @@ func IamRolePolicies() *schema.Table {
 				Name:        "role_id",
 				Description: "Role ID the policy belongs too.",
 				Type:        schema.TypeString,
-				Resolver:    schema.ParentFieldResolver("id"),
+				Resolver:    schema.ParentResourceFieldResolver("id"),
 			},
 			{
 				Name:        "account_id",

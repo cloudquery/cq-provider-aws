@@ -36,7 +36,7 @@ func FsxBackups() *schema.Table {
 				Name:        "id",
 				Description: "The ID of the backup.",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("BackupId"),
+				Resolver:    schema.PathResolver("BackupId"),
 			},
 			{
 				Name:        "creation_time",

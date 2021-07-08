@@ -311,7 +311,7 @@ func LambdaFunctions() *schema.Table {
 						Name:        "function_arn",
 						Description: "The Amazon Resource Name (ARN) of the lambda function",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("arn"),
+						Resolver:    schema.ParentResourceFieldResolver("arn"),
 					},
 					{
 						Name:        "arn",
@@ -341,7 +341,7 @@ func LambdaFunctions() *schema.Table {
 						Name:        "function_arn",
 						Description: "The Amazon Resource Name (ARN) of the lambda function",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("arn"),
+						Resolver:    schema.ParentResourceFieldResolver("arn"),
 					},
 					{
 						Name:        "arn",
@@ -381,13 +381,13 @@ func LambdaFunctions() *schema.Table {
 						Name:        "function_arn",
 						Description: "The Amazon Resource Name (ARN) of the lambda function",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("arn"),
+						Resolver:    schema.ParentResourceFieldResolver("arn"),
 					},
 					{
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) of the alias.",
 						Type:        schema.TypeString,
-						Resolver: schema.PathResolver("AliasArn"),
+						Resolver:    schema.PathResolver("AliasArn"),
 					},
 					{
 						Name:        "description",
@@ -737,11 +737,11 @@ func LambdaFunctions() *schema.Table {
 			},
 			{
 				// TODO: find correct PK
-				Name:        "aws_lambda_function_concurrency_configs",
-				Description: "Details about the provisioned concurrency configuration for a function alias or version. ",
-				Resolver:    fetchLambdaFunctionConcurrencyConfigs,
-				DeleteFilter: schema.DeleteParentId("function_cq_id"),
-				ForceDelete: true,
+				Name:         "aws_lambda_function_concurrency_configs",
+				Description:  "Details about the provisioned concurrency configuration for a function alias or version. ",
+				Resolver:     fetchLambdaFunctionConcurrencyConfigs,
+				DeleteFilter: schema.DeleteParentFieldsFilter("function_cq_id"),
+				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "function_cq_id",
@@ -913,10 +913,10 @@ func LambdaFunctions() *schema.Table {
 						Resolver:    schema.PathResolver("UUID"),
 					},
 					{
-						Name: "source_access_configurations",
+						Name:        "source_access_configurations",
 						Description: "An array of the authentication protocol, or the VPC components to secure your event source.",
-						Type: schema.TypeJSON,
-						Resolver: resolveLambdaFunctionEventSourceMappingAccessConfigurations,
+						Type:        schema.TypeJSON,
+						Resolver:    resolveLambdaFunctionEventSourceMappingAccessConfigurations,
 					},
 				},
 			},

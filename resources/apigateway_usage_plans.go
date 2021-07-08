@@ -107,7 +107,7 @@ func ApigatewayUsagePlans() *schema.Table {
 						Name:        "usage_plan_id",
 						Description: "The identifier of a UsagePlan resource.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "api_id",
@@ -142,7 +142,7 @@ func ApigatewayUsagePlans() *schema.Table {
 						Name:        "usage_plan_id",
 						Description: "The identifier of a UsagePlan resource.",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentFieldResolver("id"),
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "id",
