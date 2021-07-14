@@ -682,8 +682,8 @@ func LambdaFunctions() *schema.Table {
 						Resolver:    fetchLambdaFunctionVersionFileSystemConfigs,
 						Columns: []schema.Column{
 							{
-								Name:        "function_version_id",
-								Description: "Unique ID of aws_lambda_function_versions table (FK)",
+								Name:        "function_version_cq_id",
+								Description: "Unique CloudQuery ID of aws_lambda_function_versions table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -703,11 +703,11 @@ func LambdaFunctions() *schema.Table {
 						Name:        "aws_lambda_function_version_layers",
 						Description: "An AWS Lambda layer (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html). ",
 						Resolver:    fetchLambdaFunctionVersionLayers,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"function_version_id", "arn"}},
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"function_version_cq_id", "arn"}},
 						Columns: []schema.Column{
 							{
-								Name:        "function_version_id",
-								Description: "Unique ID of aws_lambda_function_versions table (FK)",
+								Name:        "function_version_cq_id",
+								Description: "Unique CloudQuery ID of aws_lambda_function_versions table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -736,12 +736,9 @@ func LambdaFunctions() *schema.Table {
 				},
 			},
 			{
-				// TODO: find correct PK
-				Name:         "aws_lambda_function_concurrency_configs",
-				Description:  "Details about the provisioned concurrency configuration for a function alias or version. ",
-				Resolver:     fetchLambdaFunctionConcurrencyConfigs,
-				DeleteFilter: schema.DeleteParentIdFilter("function_cq_id"),
-				AlwaysDelete: true,
+				Name:        "aws_lambda_function_concurrency_configs",
+				Description: "Details about the provisioned concurrency configuration for a function alias or version. ",
+				Resolver:    fetchLambdaFunctionConcurrencyConfigs,
 				Columns: []schema.Column{
 					{
 						Name:        "function_cq_id",

@@ -17,7 +17,7 @@ func Ec2EbsVolumes() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "volume_id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -30,7 +30,7 @@ func Ec2EbsVolumes() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
-				Name:     "volume_id",
+				Name:     "id",
 				Type:     schema.TypeString,
 				Resolver: schema.PathResolver("VolumeId"),
 			},

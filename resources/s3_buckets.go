@@ -21,7 +21,7 @@ func S3Buckets() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountFilter,
 		PostResourceResolver: resolveS3BucketsAttributes,
-		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
