@@ -99,7 +99,7 @@ func Route53HostedZones() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "hosted_zone_cq_id",
-						Description: "Unique ID of aws_route53_hosted_zones table (FK)",
+						Description: "Unique CloudQuery ID of aws_route53_hosted_zones table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -124,7 +124,7 @@ func Route53HostedZones() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "hosted_zone_cq_id",
-						Description: "Unique ID of aws_route53_hosted_zones table (FK)",
+						Description: "Unique CloudQuery ID of aws_route53_hosted_zones table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -224,7 +224,7 @@ func Route53HostedZones() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "hosted_zone_cq_id",
-						Description: "Unique ID of aws_route53_hosted_zones table (FK)",
+						Description: "Unique CloudQuery ID of aws_route53_hosted_zones table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -280,7 +280,7 @@ func Route53HostedZones() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "hosted_zone_cq_id",
-						Description: "Unique ID of aws_route53_hosted_zones table (FK)",
+						Description: "Unique CloudQuery ID of aws_route53_hosted_zones table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

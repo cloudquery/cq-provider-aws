@@ -93,7 +93,7 @@ func LambdaLayers() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "layer_cq_id",
-						Description: "Unique ID of aws_lambda_layers table (FK)",
+						Description: "Unique CloudQuery ID of aws_lambda_layers table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

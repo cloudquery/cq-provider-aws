@@ -154,7 +154,7 @@ func AutoscalingLaunchConfigurations() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "launch_configuration_cq_id",
-						Description: "Unique ID of aws_autoscaling_launch_configurations table (FK)",
+						Description: "Unique CloudQuery ID of aws_autoscaling_launch_configurations table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

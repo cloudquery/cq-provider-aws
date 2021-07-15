@@ -26,7 +26,7 @@ func IamUserPolicies() *schema.Table {
 		Columns: []schema.Column{
 			{
 				Name:        "user_cq_id",
-				Description: "Unique ID of aws_iam_users table (FK)",
+				Description: "Unique CloudQuery ID of aws_iam_users table (FK)",
 				Type:        schema.TypeUUID,
 				Resolver:    schema.ParentIdResolver,
 			},

@@ -361,7 +361,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -404,7 +404,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -438,7 +438,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -472,7 +472,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -601,7 +601,7 @@ func Ec2Instances() *schema.Table {
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
-								Description: "Unique ID of aws_ec2_instance_network_interfaces table (FK)",
+								Description: "Unique CloudQuery ID of aws_ec2_instance_network_interfaces table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -630,7 +630,7 @@ func Ec2Instances() *schema.Table {
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_id",
-								Description: "Unique ID of aws_ec2_instance_network_interfaces table (FK)",
+								Description: "Unique CloudQuery ID of aws_ec2_instance_network_interfaces table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -648,7 +648,7 @@ func Ec2Instances() *schema.Table {
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_id",
-								Description: "Unique ID of aws_ec2_instance_network_interfaces table (FK)",
+								Description: "Unique CloudQuery ID of aws_ec2_instance_network_interfaces table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -704,7 +704,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -728,7 +728,7 @@ func Ec2Instances() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
-						Description: "Unique ID of aws_ec2_instances table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

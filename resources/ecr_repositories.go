@@ -93,7 +93,7 @@ func EcrRepositories() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "repository_cq_id",
-						Description: "Unique ID of aws_ecr_repositories table (FK)",
+						Description: "Unique CloudQuery ID of aws_ecr_repositories table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

@@ -99,7 +99,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "usage_plan_cq_id",
-						Description: "Unique ID of aws_apigateway_usage_plans table (FK)",
+						Description: "Unique CloudQuery ID of aws_apigateway_usage_plans table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -134,7 +134,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "usage_plan_cq_id",
-						Description: "Unique ID of aws_apigateway_usage_plans table (FK)",
+						Description: "Unique CloudQuery ID of aws_apigateway_usage_plans table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

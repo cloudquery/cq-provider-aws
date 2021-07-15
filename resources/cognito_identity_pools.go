@@ -90,7 +90,7 @@ func CognitoIdentityPools() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "identity_pool_cq_id",
-						Description: "Unique ID of aws_cognito_identity_pools table (FK)",
+						Description: "Unique CloudQuery ID of aws_cognito_identity_pools table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

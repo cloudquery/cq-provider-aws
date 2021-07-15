@@ -184,7 +184,7 @@ func CloudtrailTrails() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "trail_cq_id",
-						Description: "Unique ID of aws_cloudtrail_trails table (FK)",
+						Description: "Unique CloudQuery ID of aws_cloudtrail_trails table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

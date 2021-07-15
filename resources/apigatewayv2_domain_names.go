@@ -76,7 +76,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",
-						Description: "Unique ID of aws_apigatewayv2_domain_names table (FK)",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_domain_names table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -135,7 +135,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",
-						Description: "Unique ID of aws_apigatewayv2_domain_names table (FK)",
+						Description: "Unique CloudQuery ID of aws_apigatewayv2_domain_names table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

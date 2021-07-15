@@ -84,7 +84,7 @@ func Ec2Vpcs() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_cq_id",
-						Description: "Unique ID of aws_ec2_vpcs table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_vpcs table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -120,7 +120,7 @@ func Ec2Vpcs() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_cq_id",
-						Description: "Unique ID of aws_ec2_vpcs table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_vpcs table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

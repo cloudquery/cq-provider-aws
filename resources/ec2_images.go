@@ -176,7 +176,7 @@ func Ec2Images() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "image_id",
-						Description: "Unique ID of aws_ec2_images table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_images table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

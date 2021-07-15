@@ -69,7 +69,7 @@ func Ec2NetworkAcls() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "network_acl_cq_id",
-						Description: "Unique ID of aws_ec2_network_acls table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_network_acls table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -93,7 +93,7 @@ func Ec2NetworkAcls() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "network_acl_cq_id",
-						Description: "Unique ID of aws_ec2_network_acls table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_network_acls table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

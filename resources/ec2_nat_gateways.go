@@ -119,7 +119,7 @@ func Ec2NatGateways() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "nat_gateway_cq_id",
-						Description: "Unique ID of aws_ec2_nat_gateways table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_nat_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

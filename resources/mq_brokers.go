@@ -187,7 +187,7 @@ func MqBrokers() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "broker_cq_id",
-						Description: "Unique ID of aws_mq_brokers table (FK)",
+						Description: "Unique CloudQuery ID of aws_mq_brokers table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -279,7 +279,7 @@ func MqBrokers() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "broker_cq_id",
-						Description: "Unique ID of aws_mq_brokers table (FK)",
+						Description: "Unique CloudQuery ID of aws_mq_brokers table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

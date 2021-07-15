@@ -64,7 +64,7 @@ func Route53TrafficPolicies() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "traffic_policy_cq_id",
-						Description: "Unique ID of aws_route53_traffic_policies table (FK)",
+						Description: "Unique CloudQuery ID of aws_route53_traffic_policies table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

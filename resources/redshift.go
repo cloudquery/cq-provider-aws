@@ -438,7 +438,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -469,7 +469,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -493,7 +493,7 @@ func RedshiftClusters() *schema.Table {
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_parameter_group_cq_id",
-								Description: "Unique ID of aws_redshift_cluster_parameter_groups table (FK)",
+								Description: "Unique CloudQuery ID of aws_redshift_cluster_parameter_groups table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -524,7 +524,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -548,7 +548,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -577,7 +577,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -601,7 +601,7 @@ func RedshiftClusters() *schema.Table {
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_endpoint_vpc_endpoint_cq_id",
-								Description: "Unique ID of aws_redshift_cluster_endpoint_vpc_endpoints table (FK)",
+								Description: "Unique CloudQuery ID of aws_redshift_cluster_endpoint_vpc_endpoints table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -637,7 +637,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -661,7 +661,7 @@ func RedshiftClusters() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
-						Description: "Unique ID of aws_redshift_clusters table (FK)",
+						Description: "Unique CloudQuery ID of aws_redshift_clusters table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

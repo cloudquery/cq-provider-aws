@@ -59,7 +59,7 @@ func Ec2InternetGateways() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "internet_gateway_cq_id",
-						Description: "Unique ID of aws_ec2_internet_gateways table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_internet_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

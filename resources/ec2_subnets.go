@@ -124,7 +124,7 @@ func Ec2Subnets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "subnet_cq_id",
-						Description: "Unique ID of aws_ec2_subnets table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_subnets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

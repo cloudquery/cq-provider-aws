@@ -119,7 +119,7 @@ func Wafv2WebAcls() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
-						Description: "Unique ID of aws_wafv2_web_acls table (FK)",
+						Description: "Unique CloudQuery ID of aws_wafv2_web_acls table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -185,7 +185,7 @@ func Wafv2WebAcls() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
-						Description: "Unique ID of aws_wafv2_web_acls table (FK)",
+						Description: "Unique CloudQuery ID of aws_wafv2_web_acls table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -239,7 +239,7 @@ func Wafv2WebAcls() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
-						Description: "Unique ID of aws_wafv2_web_acls table (FK)",
+						Description: "Unique CloudQuery ID of aws_wafv2_web_acls table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

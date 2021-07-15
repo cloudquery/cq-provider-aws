@@ -165,7 +165,7 @@ func DirectconnectGateways() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "directconnect_gateway_id",
-						Description: "Unique ID of aws_directconnect_gateways table (FK)",
+						Description: "Unique CloudQuery ID of aws_directconnect_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

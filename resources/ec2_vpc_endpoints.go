@@ -127,7 +127,7 @@ func Ec2VpcEndpoints() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_endpoint_cq_id",
-						Description: "Unique ID of aws_ec2_vpc_endpoints table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_vpc_endpoints table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -151,7 +151,7 @@ func Ec2VpcEndpoints() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_endpoint_cq_id",
-						Description: "Unique ID of aws_ec2_vpc_endpoints table (FK)",
+						Description: "Unique CloudQuery ID of aws_ec2_vpc_endpoints table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

@@ -104,7 +104,7 @@ func S3Buckets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
-						Description: "Unique ID of aws_s3_buckets table (FK)",
+						Description: "Unique CloudQuery ID of aws_s3_buckets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -153,7 +153,7 @@ func S3Buckets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
-						Description: "Unique ID of aws_s3_buckets table (FK)",
+						Description: "Unique CloudQuery ID of aws_s3_buckets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -198,7 +198,7 @@ func S3Buckets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
-						Description: "Unique ID of aws_s3_buckets table (FK)",
+						Description: "Unique CloudQuery ID of aws_s3_buckets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -229,7 +229,7 @@ func S3Buckets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
-						Description: "Unique ID of aws_s3_buckets table (FK)",
+						Description: "Unique CloudQuery ID of aws_s3_buckets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -347,7 +347,7 @@ func S3Buckets() *schema.Table {
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
-						Description: "Unique ID of aws_s3_buckets table (FK)",
+						Description: "Unique CloudQuery ID of aws_s3_buckets table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
