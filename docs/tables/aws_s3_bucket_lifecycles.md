@@ -4,7 +4,7 @@ A lifecycle rule for individual objects in an Amazon S3 bucket.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|bucket_cq_id|uuid|Unique ID of aws_s3_buckets table (FK)|
+|bucket_cq_id|uuid|Unique CloudQuery ID of aws_s3_buckets table (FK)|
 |status|text|If 'Enabled', the rule is currently being applied|
 |abort_incomplete_multipart_upload_days_after_initiation|integer|Specifies the number of days after which Amazon S3 aborts an incomplete multipart upload.|
 |expiration_date|timestamp without time zone|Indicates at what date the object is to be moved or deleted|

@@ -4,7 +4,7 @@ Specifies a cross-origin access rule for an Amazon S3 bucket.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|bucket_cq_id|uuid|Unique ID of aws_s3_buckets table (FK)|
+|bucket_cq_id|uuid|Unique CloudQuery ID of aws_s3_buckets table (FK)|
 |allowed_methods|text[]|An HTTP method that you allow the origin to execute|
 |allowed_origins|text[]|One or more origins you want customers to be able to access the bucket from.|
 |allowed_headers|text[]|Headers that are specified in the Access-Control-Request-Headers header|

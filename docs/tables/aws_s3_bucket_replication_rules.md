@@ -4,7 +4,7 @@ Specifies which Amazon S3 objects to replicate and where to store the replicas.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|bucket_cq_id|uuid|Unique ID of aws_s3_buckets table (FK)|
+|bucket_cq_id|uuid|Unique CloudQuery ID of aws_s3_buckets table (FK)|
 |destination_bucket|text|The Amazon Resource Name (ARN) of the bucket where you want Amazon S3 to store the results.|
 |destination_access_control_translation_owner|text|Specifies the replica ownership|
 |destination_account|text|Destination bucket owner account ID|

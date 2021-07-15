@@ -4,7 +4,7 @@ A complex type that contains settings for a traffic policy.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|traffic_policy_cq_id|uuid|Unique ID of aws_route53_traffic_policies table (FK)|
+|traffic_policy_cq_id|uuid|Unique CloudQuery ID of aws_route53_traffic_policies table (FK)|
 |document|jsonb|The definition of a traffic policy in JSON format.|
 |id|text|The ID that Amazon Route 53 assigned to a traffic policy when you created it.|
 |name|text|The name that you specified when you created the traffic policy.|
