@@ -248,8 +248,6 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:         "aws_cloudfront_distribution_cache_behaviours",
 				Resolver:     fetchCloudfrontDistributionCacheBehaviours,
-				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -283,8 +281,6 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:         "aws_cache_behaviour_lambda_function_associations",
 				Resolver:     fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
-				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -309,8 +305,6 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:         "aws_cloudfront_distribution_custom_error_responses",
 				Resolver:     fetchCloudfrontDistributionCustomErrorResponses,
-				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -424,8 +418,6 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:         "aws_cloudfront_distribution_alias_icp_recordals",
 				Resolver:     fetchCloudfrontDistributionAliasICPRecordals,
-				DeleteFilter: schema.DeleteParentIdFilter("distribution_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",

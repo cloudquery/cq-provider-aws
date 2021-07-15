@@ -181,8 +181,6 @@ func CloudtrailTrails() *schema.Table {
 				Description:  "Use event selectors to further specify the management and data event settings for your trail.",
 				Resolver:     fetchCloudtrailTrailEventSelectors,
 				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"trail_cq_id"}},
-				DeleteFilter: schema.DeleteParentIdFilter("trail_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "trail_cq_id",

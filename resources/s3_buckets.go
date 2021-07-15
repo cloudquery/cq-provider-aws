@@ -195,8 +195,6 @@ func S3Buckets() *schema.Table {
 				Description:  "Specifies the default server-side encryption configuration.",
 				Resolver:     fetchS3BucketEncryptionRules,
 				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
-				DeleteFilter: schema.DeleteParentIdFilter("bucket_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",

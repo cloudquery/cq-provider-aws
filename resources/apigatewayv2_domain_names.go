@@ -73,8 +73,6 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Description:  "The domain name configuration.",
 				Resolver:     fetchApigatewayv2DomainNameConfigurations,
 				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id"}},
-				DeleteFilter: schema.DeleteParentIdFilter("domain_name_cq_id"),
-				AlwaysDelete: true,
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",
