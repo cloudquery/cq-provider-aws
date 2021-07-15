@@ -200,26 +200,18 @@ func resolveWafv2ruleGroupPolicy(ctx context.Context, meta schema.ClientMeta, re
 		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
 	}
 
-	client := meta.(*client.Client)
-	service := client.Services().WafV2
+	cl := meta.(*client.Client)
+	service := cl.Services().WafV2
 
 	// Resolve rule group policy
 	policy, err := service.GetPermissionPolicy(ctx, &wafv2.GetPermissionPolicyInput{ResourceArn: ruleGroup.ARN}, func(options *wafv2.Options) {
-		options.Region = client.Region
+		options.Region = cl.Region
 	})
 	if err != nil {
 		return err
 	}
-	if policy.Policy != nil {
-		data, err := json.Marshal(policy.Policy)
-		if err != nil {
-			return nil
-		}
-		if err := resource.Set(c.Name, data); err != nil {
-			return err
-		}
-	}
-	return nil
+
+	return resource.Set(c.Name, policy.Policy)
 }
 func resolveWafv2ruleGroupRules(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup, ok := resource.Item.(*types.RuleGroup)
