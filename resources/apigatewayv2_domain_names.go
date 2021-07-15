@@ -69,10 +69,10 @@ func Apigatewayv2DomainNames() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_apigatewayv2_domain_name_configurations",
-				Description:  "The domain name configuration.",
-				Resolver:     fetchApigatewayv2DomainNameConfigurations,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id"}},
+				Name:        "aws_apigatewayv2_domain_name_configurations",
+				Description: "The domain name configuration.",
+				Resolver:    fetchApigatewayv2DomainNameConfigurations,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"domain_name_cq_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",

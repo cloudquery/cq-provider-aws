@@ -177,10 +177,10 @@ func CloudtrailTrails() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_cloudtrail_trail_event_selectors",
-				Description:  "Use event selectors to further specify the management and data event settings for your trail.",
-				Resolver:     fetchCloudtrailTrailEventSelectors,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"trail_cq_id"}},
+				Name:        "aws_cloudtrail_trail_event_selectors",
+				Description: "Use event selectors to further specify the management and data event settings for your trail.",
+				Resolver:    fetchCloudtrailTrailEventSelectors,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"trail_cq_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "trail_cq_id",

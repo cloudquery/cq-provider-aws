@@ -191,10 +191,10 @@ func S3Buckets() *schema.Table {
 				},
 			},
 			{
-				Name:         "aws_s3_bucket_encryption_rules",
-				Description:  "Specifies the default server-side encryption configuration.",
-				Resolver:     fetchS3BucketEncryptionRules,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
+				Name:        "aws_s3_bucket_encryption_rules",
+				Description: "Specifies the default server-side encryption configuration.",
+				Resolver:    fetchS3BucketEncryptionRules,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",

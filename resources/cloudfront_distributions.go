@@ -246,8 +246,8 @@ func CloudfrontDistributions() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_cloudfront_distribution_cache_behaviours",
-				Resolver:     fetchCloudfrontDistributionCacheBehaviours,
+				Name:     "aws_cloudfront_distribution_cache_behaviours",
+				Resolver: fetchCloudfrontDistributionCacheBehaviours,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -279,8 +279,8 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:         "aws_cache_behaviour_lambda_function_associations",
-				Resolver:     fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
+				Name:     "aws_cache_behaviour_lambda_function_associations",
+				Resolver: fetchCloudfrontDistributionDefaultCacheBehaviourLambdaFunctionAssociations,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -303,8 +303,8 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:         "aws_cloudfront_distribution_custom_error_responses",
-				Resolver:     fetchCloudfrontDistributionCustomErrorResponses,
+				Name:     "aws_cloudfront_distribution_custom_error_responses",
+				Resolver: fetchCloudfrontDistributionCustomErrorResponses,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
@@ -416,8 +416,8 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:         "aws_cloudfront_distribution_alias_icp_recordals",
-				Resolver:     fetchCloudfrontDistributionAliasICPRecordals,
+				Name:     "aws_cloudfront_distribution_alias_icp_recordals",
+				Resolver: fetchCloudfrontDistributionAliasICPRecordals,
 				Columns: []schema.Column{
 					{
 						Name:     "distribution_cq_id",
