@@ -134,7 +134,7 @@ func RdsClusters() *schema.Table {
 			{
 				Name:        "db_cluster_group_memberships",
 				Description: "Provides the map of option group memberships for this DB cluster.",
-				Type:        schema.TypeString,
+				Type:        schema.TypeJSON,
 				Resolver:    resolveRdsClusterDbClusterOptionGroupMemberships,
 			},
 			{
