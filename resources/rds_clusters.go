@@ -132,7 +132,7 @@ func RdsClusters() *schema.Table {
 				Resolver:    schema.PathResolver("DBClusterParameterGroup"),
 			},
 			{
-				Name:        "db_cluster_group_memberships",
+				Name:        "db_cluster_option_group_memberships",
 				Description: "Provides the map of option group memberships for this DB cluster.",
 				Type:        schema.TypeJSON,
 				Resolver:    resolveRdsClusterDbClusterOptionGroupMemberships,
