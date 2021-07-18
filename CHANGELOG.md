@@ -5,7 +5,7 @@ All notable changes to this provider will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.5.0-beta] - 2020-07-15
+## [v0.5.0-beta2] - 2020-07-15
 ###### SDK Version: 0.3.0
 ### Added
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `aws_rds_instance_status_infos  ` table changed to `json` field `status_infos`
 * `aws_wafv2_rule_group_available_labels  ` table changed to `json` field `available_labels`
 * `aws_wafv2_rule_group_consumed_labels  ` table changed to `json` field `consumed_labels`
+* `aws_rds_cluster_db_cluster_option_group_memberships` table change to `json` field `db_cluster_option_group_memberships` [#118](https://github.com/cloudquery/cq-provider-aws/pull/118)
 
 ## [0.4.11] - 2020-07-15
 
