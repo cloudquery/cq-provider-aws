@@ -19,7 +19,7 @@ func CloudtrailTrails() *schema.Table {
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: postCloudtrailTrailResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
-		Columns: []schema.Column	{
+		Columns: []schema.Column{
 			{
 				Name:        "account_id",
 				Description: "The AWS Account ID of the resource.",
