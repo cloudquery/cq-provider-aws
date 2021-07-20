@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"errors"
+
 	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
