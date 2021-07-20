@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.5.0-beta2] - 2020-07-15
 ###### SDK Version: 0.3.0
-### Added
+### Added 
 
 * Added a changelog :)
 
-### Changed
+### <i class="fa fa-gear fa-spin fa-2x" style="color: firebrick"></i> Changed
 * Upgraded to SDK Version [0.3.0](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md)
 * **Breaking Change**: default CloudQuery "id" from `id` to `cq_id` [#41](https://github.com/cloudquery/cq-provider-sdk/pull/41)
 * `aws_ec2_instance_licenses` table changed to `json` field `licenses`
