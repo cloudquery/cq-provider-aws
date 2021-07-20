@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"errors"
+	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
@@ -398,7 +399,12 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 
 			loadBalancerAttributes, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv1.DescribeLoadBalancerAttributesInput{LoadBalancerName: lb.LoadBalancerName})
 			if err != nil {
-				return err
+				var ae smithy.APIError
+				// If we received any error other than LoadBalancerNotFound, we return and error
+				if errors.As(err, &ae) && ae.ErrorCode() == "LoadBalancerNotFound" {
+					c.Logger().Warn("elbv1 load balancer not found", "account_id", c.AccountID, "region", c.Region, "name", lb.LoadBalancerName)
+					continue
+				}
 			}
 
 			wrapper := ELBv1LoadBalancerWrapper{
@@ -431,8 +437,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 				end = len(response.LoadBalancerDescriptions)
 			}
 			loadBalancers := response.LoadBalancerDescriptions[i:end]
-			err := processLoadBalancers(loadBalancers)
-			if err != nil {
+			if err := processLoadBalancers(loadBalancers); err != nil {
 				return err
 			}
 		}
