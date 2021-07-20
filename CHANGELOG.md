@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.5.0-beta2] - 2020-07-15
 ###### SDK Version: 0.3.0
-### Added 
+
+### :rocket: Added
 
 * Added a changelog :)
 
-### <i class="fa fa-gear fa-spin fa-2x" style="color: firebrick"></i> Changed
+### :gear: Changed
 * Upgraded to SDK Version [0.3.0](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md)
 * **Breaking Change**: default CloudQuery "id" from `id` to `cq_id` [#41](https://github.com/cloudquery/cq-provider-sdk/pull/41)
 * `aws_ec2_instance_licenses` table changed to `json` field `licenses`
@@ -21,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `aws_wafv2_rule_group_available_labels  ` table changed to `json` field `available_labels`
 * `aws_wafv2_rule_group_consumed_labels  ` table changed to `json` field `consumed_labels`
 * `aws_rds_cluster_db_cluster_option_group_memberships` table change to `json` field `db_cluster_option_group_memberships` [#118](https://github.com/cloudquery/cq-provider-aws/pull/118)
+
+### :spider: Fixed
+* Fixed AWS Debug flag will now write into log instead of stdout. [#119](https://github.com/cloudquery/cq-provider-aws/pull/119)
 
 ## [0.4.11] - 2020-07-15
 
