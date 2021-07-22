@@ -15,7 +15,7 @@ Information about Direct Connect Link Aggregation Group (LAG)
 |jumbo_frame_capable|boolean|Indicates whether jumbo frames (9001 MTU) are supported.|
 |id|text|The ID of the LAG.|
 |name|text|The name of the LAG.|
-|lag_state|text|The state of the LAG. Possible values are: requested, pending, available, down, deleting, deleted, unknown|
+|state|text|The state of the LAG. Possible values are: requested, pending, available, down, deleting, deleted, unknown|
 |location|text|The location of the LAG.|
 |mac_sec_capable|boolean|Indicates whether the LAG supports MAC Security (MACsec).|
 |minimum_links|integer|The minimum number of physical dedicated connections that must be operational for the LAG itself to be operational.|

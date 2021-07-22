@@ -81,9 +81,10 @@ func DirectconnectLags() *schema.Table {
 				Resolver:    schema.PathResolver("LagName"),
 			},
 			{
-				Name:        "lag_state",
+				Name:        "state",
 				Description: "The state of the LAG. Possible values are: requested, pending, available, down, deleting, deleted, unknown",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("LagState"),
 			},
 			{
 				Name:        "location",
