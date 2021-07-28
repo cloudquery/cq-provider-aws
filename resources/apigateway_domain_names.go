@@ -34,6 +34,12 @@ func ApigatewayDomainNames() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway key domain name",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayDomainNamesArn,
+			},
+			{
 				Name:        "certificate_arn",
 				Description: "The reference to an AWS-managed certificate that will be used by edge-optimized endpoint for this domain name. AWS Certificate Manager is the only supported source.",
 				Type:        schema.TypeString,
@@ -154,6 +160,12 @@ func ApigatewayDomainNames() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("domain_name"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway key domain base mapping",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayDomainNameBasePathMappings,
+					},
+					{
 						Name:        "base_path",
 						Description: "The base path name that callers of the API must provide as part of the URL after the domain name.",
 						Type:        schema.TypeString,
@@ -218,4 +230,15 @@ func fetchApigatewayDomainNameBasePathMappings(ctx context.Context, meta schema.
 		config.Position = response.Position
 	}
 	return nil
+}
+func resolveApigatewayDomainNamesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	d := resource.Item.(types.DomainName)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/domainnames", *d.DomainName, cl.Region, ""))
+}
+func resolveApigatewayDomainNameBasePathMappings(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	d := resource.Parent.Item.(types.DomainName)
+	bp := resource.Item.(types.BasePathMapping)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/domainnames", fmt.Sprintf("%s/basepathmappings/%s", *d.DomainName, *bp.BasePath), cl.Region, ""))
 }

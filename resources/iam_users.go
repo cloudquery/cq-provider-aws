@@ -114,7 +114,6 @@ func IamUsers() *schema.Table {
 				Name: "access_key_2_last_rotated",
 				Type: schema.TypeTimestamp,
 			},
-
 			{
 				Name: "cert_1_active",
 				Type: schema.TypeBool,

@@ -49,6 +49,12 @@ func DirectconnectConnections() *schema.Table {
 				Resolver:    schema.PathResolver("ConnectionId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the direct connect connection",
+				Type:        schema.TypeString,
+				Resolver:    resolveDirectconnectConnectionsArn,
+			},
+			{
 				Name:        "name",
 				Description: "The name of the connection.",
 				Type:        schema.TypeString,
@@ -204,4 +210,9 @@ func fetchDirectconnectConnectionMacSecKeys(ctx context.Context, meta schema.Cli
 	}
 	res <- connection.MacSecKeys
 	return nil
+}
+func resolveDirectconnectConnectionsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	conn := resource.Item.(types.Connection)
+	return resource.Set(c.Name, client.GenerateResourceARN("directconnect", "dxcon", *conn.ConnectionId, cl.Region, cl.AccountID))
 }

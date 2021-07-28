@@ -36,6 +36,12 @@ func Elbv1LoadBalancers() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the elastic load balancer",
+				Type:        schema.TypeString,
+				Resolver:    resolveElbv1LoadBalancersArn,
+			},
+			{
 				Name:     "attributes_access_log_enabled",
 				Type:     schema.TypeBool,
 				Resolver: resolveElbv1loadBalancerAttributesAccessLogEnabled,
@@ -644,4 +650,10 @@ func getTagsByLoadBalancerName(id string, tagsResponse []types.TagDescription) [
 		}
 	}
 	return nil
+}
+
+func resolveElbv1LoadBalancersArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	lb := resource.Item.(types.LoadBalancerDescription)
+	return resource.Set(c.Name, client.GenerateResourceARN("elasticloadbalancing", "loadbalancer", *lb.LoadBalancerName, cl.Region, cl.AccountID))
 }

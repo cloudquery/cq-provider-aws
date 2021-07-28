@@ -33,6 +33,12 @@ func Ec2NatGateways() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 nat gateway",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2NatGatewaysArn,
+			},
+			{
 				Name:        "id",
 				Description: "The ID of the NAT gateway.",
 				Type:        schema.TypeString,
@@ -183,4 +189,9 @@ func fetchEc2NatGatewayAddresses(ctx context.Context, meta schema.ClientMeta, pa
 	r := parent.Item.(types.NatGateway)
 	res <- r.NatGatewayAddresses
 	return nil
+}
+func resolveEc2NatGatewaysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	nat := resource.Item.(types.NatGateway)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "natgateway", *nat.NatGatewayId, cl.Region, cl.AccountID))
 }

@@ -49,6 +49,12 @@ func EfsFilesystems() *schema.Table {
 				Resolver:    schema.PathResolver("FileSystemId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the elastic file system",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemArn"),
+			},
+			{
 				Name:        "life_cycle_state",
 				Description: "The lifecycle phase of the file system.",
 				Type:        schema.TypeString,

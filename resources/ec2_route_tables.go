@@ -33,6 +33,12 @@ func Ec2RouteTables() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 route table",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2RouteTablesArn,
+			},
+			{
 				Name:        "owner_id",
 				Description: "The ID of the AWS account that owns the route table.",
 				Type:        schema.TypeString,
@@ -258,4 +264,9 @@ func fetchEc2RouteTableRoutes(ctx context.Context, meta schema.ClientMeta, paren
 	r := parent.Item.(types.RouteTable)
 	res <- r.Routes
 	return nil
+}
+func resolveEc2RouteTablesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	rt := resource.Item.(types.RouteTable)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "route-table", *rt.RouteTableId, cl.Region, cl.AccountID))
 }

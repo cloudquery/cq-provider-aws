@@ -44,6 +44,12 @@ func CognitoIdentityPools() *schema.Table {
 				Resolver:    schema.PathResolver("IdentityPoolId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the cognito identity pool",
+				Type:        schema.TypeString,
+				Resolver:    resolveCognitoIdentityPoolsArn,
+			},
+			{
 				Name:        "identity_pool_name",
 				Description: "A string that you provide.",
 				Type:        schema.TypeString,
@@ -149,7 +155,6 @@ func fetchCognitoIdentityPools(ctx context.Context, meta schema.ClientMeta, pare
 	}
 	return nil
 }
-
 func fetchCognitoIdentityPoolCognitoIdentityProviders(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	pool, ok := parent.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
 	if !ok {
@@ -157,4 +162,9 @@ func fetchCognitoIdentityPoolCognitoIdentityProviders(ctx context.Context, meta 
 	}
 	res <- pool.CognitoIdentityProviders
 	return nil
+}
+func resolveCognitoIdentityPoolsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	iden := resource.Item.(cognitoidentity.DescribeIdentityPoolOutput)
+	return resource.Set(c.Name, client.GenerateResourceARN("cognito-identity", "identitypool", *iden.IdentityPoolId, cl.Region, cl.AccountID))
 }

@@ -32,6 +32,12 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the direct connect virtual interface",
+				Type:        schema.TypeString,
+				Resolver:    resolveDirectconnectVirtualInterfacesArn,
+			},
+			{
 				Name:        "amazon_address",
 				Description: "The IP address assigned to the Amazon interface.",
 				Type:        schema.TypeString,
@@ -254,4 +260,9 @@ func fetchDirectconnectVirtualInterfaceBgpPeers(ctx context.Context, meta schema
 	}
 	res <- virtualInterface.BgpPeers
 	return nil
+}
+func resolveDirectconnectVirtualInterfacesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vif := resource.Item.(types.VirtualInterface)
+	return resource.Set(c.Name, client.GenerateResourceARN("directconnect", "dxvif", *vif.VirtualInterfaceId, cl.Region, cl.AccountID))
 }

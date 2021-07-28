@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
@@ -35,6 +36,12 @@ func ApigatewayAPIKeys() *schema.Table {
 				Name:        "created_date",
 				Description: "The timestamp when the API Key was created.",
 				Type:        schema.TypeTimestamp,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway key",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayApiKeysArn,
 			},
 			{
 				Name:        "customer_id",
@@ -107,4 +114,9 @@ func fetchApigatewayApiKeys(ctx context.Context, meta schema.ClientMeta, parent 
 		config.Position = response.Position
 	}
 	return nil
+}
+func resolveApigatewayApiKeysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	k := resource.Item.(types.ApiKey)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apikeys", *k.Id, cl.Region, ""))
 }

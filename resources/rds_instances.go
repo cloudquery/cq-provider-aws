@@ -577,6 +577,12 @@ func RdsInstances() *schema.Table {
 						Description: "The status of parameter updates.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the rds db parameter group",
+						Type:        schema.TypeString,
+						Resolver:    resolveRdsInstanceDbParameterGroupsArn,
+					},
 				},
 			},
 			{
@@ -607,6 +613,12 @@ func RdsInstances() *schema.Table {
 						Name:        "status",
 						Description: "The status of the DB security group.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the rds db security group",
+						Type:        schema.TypeString,
+						Resolver:    resolveRdsInstanceDbSecurityGroupsArn,
 					},
 				},
 			},
@@ -649,6 +661,12 @@ func RdsInstances() *schema.Table {
 						Name:        "subnet_status",
 						Description: "The status of the subnet.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "subnet_group_arn",
+						Description: "The Amazon Resource Name (ARN) for the rds subnet group",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2VpcPeeringConnectionsArn,
 					},
 				},
 			},
@@ -872,4 +890,19 @@ func fetchRdsInstanceVpcSecurityGroups(ctx context.Context, meta schema.ClientMe
 	}
 	res <- instance.VpcSecurityGroups
 	return nil
+}
+func resolveRdsInstanceDbParameterGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	pg := resource.Item.(types.DBParameterGroupStatus)
+	return resource.Set(c.Name, client.GenerateResourceARN("rds", "pg", *pg.DBParameterGroupName, cl.Region, cl.AccountID))
+}
+func resolveRdsInstanceDbSecurityGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	secgrp := resource.Item.(types.DBSecurityGroupMembership)
+	return resource.Set(c.Name, client.GenerateResourceARN("rds", "subgrp", *secgrp.DBSecurityGroupName, cl.Region, cl.AccountID))
+}
+func resolveRdsInstanceDbSubnetGroupArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	secgrp := resource.Item.(types.DBSubnetGroup)
+	return resource.Set(c.Name, client.GenerateResourceARN("rds", "subgrp", *secgrp, cl.Region, cl.AccountID))
 }

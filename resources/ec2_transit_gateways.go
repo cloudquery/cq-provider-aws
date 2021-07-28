@@ -91,7 +91,8 @@ func Ec2TransitGateways() *schema.Table {
 				Resolver: resolveEc2TransitGatewayTags,
 			},
 			{
-				Name: "transit_gateway_arn",
+				Name: "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway",
 				Type: schema.TypeString,
 			},
 			{
@@ -125,6 +126,12 @@ func Ec2TransitGateways() *schema.Table {
 						Name:     "association_state",
 						Type:     schema.TypeString,
 						Resolver: schema.PathResolver("Association.State"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway attachment",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2TransitGatewayAttachmentsArn,
 					},
 					{
 						Name:     "association_route_table_id",
@@ -175,6 +182,12 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name: "creation_time",
 						Type: schema.TypeTimestamp,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway route table",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2TransitGatewayRouteTablesArn,
 					},
 					{
 						Name: "default_association_route_table",
@@ -363,7 +376,8 @@ func Ec2TransitGateways() *schema.Table {
 						Resolver: resolveEc2TransitGatewayMulticastDomainTags,
 					},
 					{
-						Name: "transit_gateway_multicast_domain_arn",
+						Name: "arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway multicast domain",
 						Type: schema.TypeString,
 					},
 					{
@@ -551,4 +565,14 @@ func resolveEc2TransitGatewayMulticastDomainTags(ctx context.Context, meta schem
 		tags[*t.Key] = t.Value
 	}
 	return resource.Set("tags", tags)
+}
+func resolveEc2TransitGatewayAttachmentsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	tga := resource.Item.(types.TransitGatewayAttachment)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "transit-gateway-attachment", *tga.TransitGatewayAttachmentId, cl.Region, cl.AccountID))
+}
+func resolveEc2TransitGatewayRouteTablesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	tgr := resource.Item.(types.TransitGatewayRouteTable)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "transit-gateway-route-table", *tgr.TransitGatewayRouteTableId, cl.Region, cl.AccountID))
 }

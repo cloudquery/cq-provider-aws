@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -30,6 +31,12 @@ func CloudfrontCachePolicies() *schema.Table {
 				Description: "The minimum amount of time, in seconds, that you want objects to stay in the CloudFront cache before CloudFront sends another request to the origin to see if the object has been updated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("CachePolicy.CachePolicyConfig.MinTTL"),
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the cloudfront cache policy",
+				Type:        schema.TypeString,
+				Resolver:    resolveCloudfrontCachePoliciesArn,
 			},
 			{
 				Name:        "name",
@@ -168,4 +175,10 @@ func fetchCloudfrontCachePolicies(ctx context.Context, meta schema.ClientMeta, p
 		config.Marker = response.CachePolicyList.NextMarker
 	}
 	return nil
+}
+
+func resolveCloudfrontCachePoliciesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	cp := resource.Item.(types.CachePolicy)
+	return resource.Set(c.Name, client.GenerateResourceARN("cloudfront", "cache-policy", *cp.Id, cl.Region, cl.AccountID))
 }

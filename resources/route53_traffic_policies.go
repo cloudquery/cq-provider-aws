@@ -35,6 +35,12 @@ func Route53TrafficPolicies() *schema.Table {
 				Resolver:    schema.PathResolver("Id"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the route 53 traffic policy",
+				Type:        schema.TypeString,
+				Resolver:    resolveRoute53TrafficPoliciesArn,
+			},
+			{
 				Name:        "latest_version",
 				Description: "The version number of the latest version of the traffic policy.",
 				Type:        schema.TypeInt,
@@ -159,4 +165,9 @@ func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema
 		return err
 	}
 	return resource.Set(c.Name, value)
+}
+
+func resolveRoute53TrafficPoliciesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	tr := resource.Item.(types.TrafficPolicy)
+	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicy", *tr.Id, "", ""))
 }

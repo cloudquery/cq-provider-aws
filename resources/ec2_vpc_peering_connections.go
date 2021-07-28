@@ -33,6 +33,12 @@ func Ec2VpcPeeringConnections() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 vpc peering connection",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2VpcPeeringConnectionsArn,
+			},
+			{
 				Name:        "accepter_cidr_block",
 				Description: "The IPv4 CIDR block for the VPC.",
 				Type:        schema.TypeString,
@@ -235,4 +241,9 @@ func resolveEc2vpcPeeringConnectionTags(ctx context.Context, meta schema.ClientM
 		tags[*t.Key] = t.Value
 	}
 	return resource.Set("tags", tags)
+}
+func resolveEc2VpcPeeringConnectionsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vpc := resource.Item.(types.VpcPeeringConnection)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc-peering-connection", *vpc.VpcPeeringConnectionId, cl.Region, cl.AccountID))
 }

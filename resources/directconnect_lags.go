@@ -33,6 +33,12 @@ func DirectconnectLags() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the direct connect lag",
+				Type:        schema.TypeString,
+				Resolver:    resolveDirectconnectLagsArn,
+			},
+			{
 				Name:        "allows_hosted_connections",
 				Description: "Indicates whether the LAG can host other connections.",
 				Type:        schema.TypeBool,
@@ -211,4 +217,10 @@ func resolveDirectconnectLagConnectionIds(ctx context.Context, meta schema.Clien
 		connectionIds[i] = connection.ConnectionId
 	}
 	return resource.Set("connection_ids", connectionIds)
+}
+
+func resolveDirectconnectLagsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	lag := resource.Item.(types.Lag)
+	return resource.Set(c.Name, client.GenerateResourceARN("directconnect", "dxlag", *lag.LagId, cl.Region, cl.AccountID))
 }

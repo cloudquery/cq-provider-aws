@@ -33,6 +33,12 @@ func Ec2Vpcs() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 vpc",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2VpcsArn,
+			},
+			{
 				Name:        "cidr_block",
 				Description: "The primary IPv4 CIDR block for the VPC.",
 				Type:        schema.TypeString,
@@ -202,3 +208,9 @@ func fetchEc2VpcIpv6CidrBlockAssociationSets(ctx context.Context, meta schema.Cl
 	res <- r.Ipv6CidrBlockAssociationSet
 	return nil
 }
+func resolveEc2VpcsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vpc := resource.Item.(types.Vpc)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VpcId, cl.Region, cl.AccountID))
+}
+

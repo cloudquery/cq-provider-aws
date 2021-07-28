@@ -39,6 +39,12 @@ func Ec2InternetGateways() *schema.Table {
 				Resolver:    schema.PathResolver("InternetGatewayId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 internet gateway",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2InternetGatewaysArn,
+			},
+			{
 				Name:        "owner_id",
 				Description: "The ID of the AWS account that owns the internet gateway.",
 				Type:        schema.TypeString,
@@ -113,4 +119,9 @@ func fetchEc2InternetGatewayAttachments(ctx context.Context, meta schema.ClientM
 	r := parent.Item.(types.InternetGateway)
 	res <- r.Attachments
 	return nil
+}
+func resolveEc2InternetGatewaysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	igw := resource.Item.(types.InternetGateway)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "internet-gateway", *igw.InternetGatewayId, cl.Region, cl.AccountID))
 }

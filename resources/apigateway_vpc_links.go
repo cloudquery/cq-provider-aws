@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
@@ -41,6 +42,12 @@ func ApigatewayVpcLinks() *schema.Table {
 				Description: "The identifier of the VpcLink. It is used in an Integration to reference this VpcLink.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Id"),
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway rest vpc link",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayVpcLinksArn,
 			},
 			{
 				Name:        "name",
@@ -92,4 +99,10 @@ func fetchApigatewayVpcLinks(ctx context.Context, meta schema.ClientMeta, parent
 		config.Position = response.Position
 	}
 	return nil
+}
+
+func resolveApigatewayVpcLinksArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vp := resource.Item.(types.VpcLink)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/vpclinks", *vp.Id, cl.Region, ""))
 }

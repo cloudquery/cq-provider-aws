@@ -35,6 +35,12 @@ func DirectconnectGateways() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the direct connect gateway",
+				Type:        schema.TypeString,
+				Resolver:    resolveDirectconnectGatewaysArn,
+			},
+			{
 				Name:        "amazon_side_asn",
 				Description: "The autonomous system number (ASN) for the Amazon side of the connection.",
 				Type:        schema.TypeBigInt,
@@ -291,4 +297,10 @@ func resolveDirectconnectGatewayAssociationAllowedPrefixes(ctx context.Context, 
 		allowedPrefixes[i] = prefix.Cidr
 	}
 	return resource.Set(c.Name, allowedPrefixes)
+}
+
+func resolveDirectconnectGatewaysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	dcgw := resource.Item.(types.DirectConnectGateway)
+	return resource.Set(c.Name, client.GenerateResourceARN("directconnect", "dx-gateway", *dcgw.DirectConnectGatewayId, "", cl.AccountID))
 }

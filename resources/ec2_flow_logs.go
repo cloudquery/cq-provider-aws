@@ -39,6 +39,12 @@ func Ec2FlowLogs() *schema.Table {
 				Resolver:    schema.PathResolver("FlowLogId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 vpc flow log",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2FlowLogsArn,
+			},
+			{
 				Name:        "creation_time",
 				Description: "The date and time the flow log was created.",
 				Type:        schema.TypeTimestamp,
@@ -142,4 +148,9 @@ func resolveEc2flowLogTags(ctx context.Context, meta schema.ClientMeta, resource
 		tags[*t.Key] = t.Value
 	}
 	return resource.Set("tags", tags)
+}
+func resolveEc2FlowLogsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	fl := resource.Item.(types.FlowLog)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc-flow-log", *fl.FlowLogId, cl.Region, cl.AccountID))
 }

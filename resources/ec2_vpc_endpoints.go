@@ -34,6 +34,12 @@ func Ec2VpcEndpoints() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 vpc endpoint",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2VpcEndpointsArn,
+			},
+			{
 				Name:        "creation_timestamp",
 				Description: "The date and time that the VPC endpoint was created.",
 				Type:        schema.TypeTimestamp,
@@ -218,4 +224,9 @@ func fetchEc2VpcEndpointGroups(ctx context.Context, meta schema.ClientMeta, pare
 	res <- endpoint.Groups
 
 	return nil
+}
+func resolveEc2VpcEndpointsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vpce := resource.Item.(types.VpcEndpoint)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc-endpoint", *vpce.VpcEndpointId, cl.Region, cl.AccountID))
 }

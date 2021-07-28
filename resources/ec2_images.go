@@ -39,6 +39,12 @@ func Ec2Images() *schema.Table {
 				Resolver:    schema.PathResolver("ImageId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the route 53 delegation set",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2ImagesArn,
+			},
+			{
 				Name:        "architecture",
 				Description: "The architecture of the image.",
 				Type:        schema.TypeString,
@@ -292,4 +298,9 @@ func fetchEc2ImageBlockDeviceMappings(ctx context.Context, meta schema.ClientMet
 	r := parent.Item.(types.Image)
 	res <- r.BlockDeviceMappings
 	return nil
+}
+func resolveEc2ImagesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	im := resource.Item.(types.Image)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "image", *im.ImageId, cl.Region, ""))
 }

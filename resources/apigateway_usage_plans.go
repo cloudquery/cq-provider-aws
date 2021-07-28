@@ -39,6 +39,12 @@ func ApigatewayUsagePlans() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway rest usage plan",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayUsagePlansArn,
+			},
+			{
 				Name:        "id",
 				Description: "The identifier of a UsagePlan resource.",
 				Type:        schema.TypeString,
@@ -151,6 +157,12 @@ func ApigatewayUsagePlans() *schema.Table {
 						Resolver:    schema.PathResolver("Id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway rest usage plan key",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayUsagePlanKeysArn,
+					},
+					{
 						Name:        "name",
 						Description: "The name of a usage plan key.",
 						Type:        schema.TypeString,
@@ -223,4 +235,16 @@ func fetchApigatewayUsagePlanKeys(ctx context.Context, meta schema.ClientMeta, p
 		config.Position = response.Position
 	}
 	return nil
+}
+
+func resolveApigatewayUsagePlansArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ug := resource.Item.(types.UsagePlan)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/usageplans", *ug.Id, cl.Region, ""))
+}
+func resolveApigatewayUsagePlanKeysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ug := resource.Parent.Item.(types.UsagePlan)
+	k := resource.Item.(types.UsagePlanKey)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/usageplans", fmt.Sprintf("%s/keys/%s", *ug.Id, *k.Id), cl.Region, ""))
 }

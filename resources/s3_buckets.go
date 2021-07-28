@@ -35,6 +35,12 @@ func S3Buckets() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the s3 bucket",
+				Type:        schema.TypeString,
+				Resolver:    resolveS3BucketsArn,
+			},
+			{
 				Name: "logging_target_prefix",
 				Type: schema.TypeString,
 			},
@@ -674,6 +680,11 @@ func resolveS3BucketLifecycleTransitions(ctx context.Context, meta schema.Client
 		return err
 	}
 	return resource.Set("transitions", data)
+}
+
+func resolveS3BucketsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	buc := resource.Item.(types.Bucket)
+	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
 }
 
 // ====================================================================================================================

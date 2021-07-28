@@ -29,6 +29,12 @@ func Ec2VpnGateways() *schema.Table {
 				Resolver: client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 vpn gateway",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2VpnGatewaysArn,
+			},
+			{
 				Name: "amazon_side_asn",
 				Type: schema.TypeBigInt,
 			},
@@ -108,4 +114,9 @@ func resolveEc2VpnGatewayTags(ctx context.Context, meta schema.ClientMeta, resou
 		tags[*t.Key] = t.Value
 	}
 	return resource.Set("tags", tags)
+}
+func resolveEc2VpnGatewaysArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vpn := resource.Item.(types.VpnGateway)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpn-gateway", *vpn.VpnGatewayId, cl.Region, cl.AccountID))
 }

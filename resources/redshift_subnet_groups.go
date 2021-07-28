@@ -34,6 +34,12 @@ func RedshiftSubnetGroups() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the redshift cluster subnet group",
+				Type:        schema.TypeString,
+				Resolver:    resolveRedshiftSubnetGroupsArn,
+			},
+			{
 				Name:        "cluster_subnet_group_name",
 				Description: "The name of the cluster subnet group.",
 				Type:        schema.TypeString,
@@ -146,4 +152,9 @@ func resolveRedshiftSubnetGroupSubnetSubnetAvailabilityZoneSupportedPlatforms(ct
 		platforms[i] = p.Name
 	}
 	return resource.Set("subnet_availability_zone_supported_platforms", platforms)
+}
+func resolveRedshiftSubnetGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	csg := resource.Item.(types.ClusterSubnetGroup)
+	return resource.Set(c.Name, client.GenerateResourceARN("redshift", "subnetgroup", *csg.ClusterSubnetGroupName, cl.Region, cl.AccountID))
 }

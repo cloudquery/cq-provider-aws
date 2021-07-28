@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
@@ -36,6 +37,12 @@ func ApigatewayClientCertificates() *schema.Table {
 				Description: "The identifier of the client certificate.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("ClientCertificateId"),
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway key client certificate",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayClientCertificatesArn,
 			},
 			{
 				Name:        "created_date",
@@ -87,4 +94,9 @@ func fetchApigatewayClientCertificates(ctx context.Context, meta schema.ClientMe
 		config.Position = response.Position
 	}
 	return nil
+}
+func resolveApigatewayClientCertificatesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	cr := resource.Item.(types.ClientCertificate)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/clientcertificates", *cr.ClientCertificateId, cl.Region, ""))
 }

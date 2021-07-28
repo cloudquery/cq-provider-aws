@@ -28,6 +28,12 @@ func Route53HealthChecks() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the route 53 health check",
+				Type:        schema.TypeString,
+				Resolver:    resolveRoute53HealthChecksArn,
+			},
+			{
 				Name:        "cloud_watch_alarm_configuration_dimensions",
 				Description: "the metric that the CloudWatch alarm is associated with, a complex type that contains information about the dimensions for the metric.",
 				Type:        schema.TypeJSON,
@@ -295,6 +301,11 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 		tags[*t.Name] = t.Value
 	}
 	return resource.Set(c.Name, tags)
+}
+
+func resolveRoute53HealthChecksArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	hc := resource.Item.(types.HealthCheck)
+	return resource.Set(c.Name, client.GenerateResourceARN("route53", "healthcheck", *hc.Id, "", ""))
 }
 
 type Route53HealthCheckWrapper struct {

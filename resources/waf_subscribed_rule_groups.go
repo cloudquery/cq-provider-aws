@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
+	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -40,6 +41,12 @@ func WafSubscribedRuleGroups() *schema.Table {
 				Description: "A unique identifier for a RuleGroup.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the waf rule group",
+				Type:        schema.TypeString,
+				Resolver:    resolveWafSubscribedRuleGroupsArn,
+			},
 		},
 	}
 }
@@ -67,4 +74,10 @@ func fetchWafSubscribedRuleGroups(ctx context.Context, meta schema.ClientMeta, p
 		config.NextMarker = output.NextMarker
 	}
 	return nil
+}
+
+func resolveWafSubscribedRuleGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	rg := resource.Item.(types.RuleGroup)
+	return resource.Set(c.Name, client.GenerateResourceARN("waf-regional", "rulegroup", *rg.RuleGroupId, cl.Region, cl.AccountID))
 }

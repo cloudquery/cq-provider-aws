@@ -104,6 +104,12 @@ func Ec2Subnets() *schema.Table {
 				Resolver:    schema.PathResolver("SubnetId"),
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 subnet",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("SubnetArn"),
+			},
+			{
 				Name:        "tags",
 				Description: "Any tags assigned to the subnet.",
 				Type:        schema.TypeJSON,
