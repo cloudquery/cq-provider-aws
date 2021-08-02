@@ -26,3 +26,4 @@ Describes a network interface.
 |status|text|The status of the network interface.|
 |subnet_id|text|The ID of the subnet.|
 |vpc_id|text|The ID of the VPC.|
+|arn|text|The Amazon Resource Name (ARN) for the ec2 network interface|

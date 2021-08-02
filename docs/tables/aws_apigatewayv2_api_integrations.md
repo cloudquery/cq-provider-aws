@@ -26,3 +26,4 @@ Represents an integration.
 |template_selection_expression|text|The template selection expression for the integration. Supported only for WebSocket APIs.|
 |timeout_in_millis|integer|Custom timeout between 50 and 29,000 milliseconds for WebSocket APIs and between 50 and 30,000 milliseconds for HTTP APIs. The default timeout is 29 seconds for WebSocket APIs and 30 seconds for HTTP APIs.|
 |tls_config_server_name_to_verify|text|If you specify a server name, API Gateway uses it to verify the hostname on the integration's certificate. The server name is also included in the TLS handshake to support Server Name Indication (SNI) or virtual hosting.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway integration|

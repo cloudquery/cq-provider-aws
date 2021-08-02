@@ -19,3 +19,4 @@ Represents a route.
 |route_id|text|The route ID.|
 |route_response_selection_expression|text|The route response selection expression for the route. Supported only for WebSocket APIs.|
 |target|text|The target for the route.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway route|

@@ -7,3 +7,4 @@ Describes the status of a parameter group.
 |cluster_cq_id|uuid|Unique CloudQuery ID of aws_redshift_clusters table (FK)|
 |parameter_apply_status|text|The status of parameter updates.|
 |parameter_group_name|text|The name of the cluster parameter group.|
+|arn|text|The Amazon Resource Name (ARN) for the redshift parameter group|

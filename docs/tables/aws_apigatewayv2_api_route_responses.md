@@ -11,3 +11,4 @@ Represents a route response.
 |response_models|jsonb|Represents the response models of a route response.|
 |response_parameters|jsonb|Represents the response parameters of a route response.|
 |route_response_id|text|Represents the identifier of a route response.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway route response|

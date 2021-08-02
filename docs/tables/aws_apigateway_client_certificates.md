@@ -7,6 +7,7 @@ Represents a client certificate used to configure client-side SSL authentication
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |id|text|The identifier of the client certificate.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway key client certificate|
 |created_date|timestamp without time zone|The timestamp when the client certificate was created.|
 |description|text|The description of the client certificate.|
 |expiration_date|timestamp without time zone|The timestamp when the client certificate will expire.|

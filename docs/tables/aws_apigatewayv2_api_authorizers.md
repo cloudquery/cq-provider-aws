@@ -18,3 +18,4 @@ Represents an authorizer.
 |identity_validation_expression|text|The validation expression does not apply to the REQUEST authorizer.|
 |jwt_configuration_audience|text[]|A list of the intended recipients of the JWT. A valid JWT must provide an aud that matches at least one entry in this list. See RFC 7519 (https://tools.ietf.org/html/rfc7519#section-4.1.3). Supported only for HTTP APIs.|
 |jwt_configuration_issuer|text|The base domain of the identity provider that issues JSON Web Tokens. For example, an Amazon Cognito user pool has the following format: https://cognito-idp.{region}.amazonaws.com/{userPoolId} . Required for the JWT authorizer type. Supported only for HTTP APIs.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway authorizer|

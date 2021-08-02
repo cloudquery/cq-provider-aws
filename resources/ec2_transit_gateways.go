@@ -94,7 +94,7 @@ func Ec2TransitGateways() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway",
 				Type:        schema.TypeString,
-				Resolver: schema.PathResolver("TransitGatewayId"),
+				Resolver:    schema.PathResolver("TransitGatewayId"),
 			},
 			{
 				Name:     "transit_gateway_cidr_blocks",
@@ -386,7 +386,7 @@ func Ec2TransitGateways() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway multicast domain",
 						Type:        schema.TypeString,
-						Resolver: schema.PathResolver("TransitGatewayMulticastDomainArn"),
+						Resolver:    schema.PathResolver("TransitGatewayMulticastDomainArn"),
 					},
 					{
 						Name: "transit_gateway_multicast_domain_id",

@@ -7,3 +7,4 @@ Provides information on the option groups the DB instance is a member of.
 |instance_cq_id|uuid|Unique CloudQuery ID of aws_rds_instances table (FK)|
 |option_group_name|text|The name of the option group that the instance belongs to.|
 |status|text|The status of the DB instance's option group membership|
+|option_group_arn|text|The Amazon Resource Name (ARN) for the rds option group|

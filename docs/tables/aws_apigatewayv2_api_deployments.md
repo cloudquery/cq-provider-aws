@@ -12,3 +12,4 @@ An immutable representation of an API that can be called by users.
 |deployment_status|text|The status of the deployment: PENDING, FAILED, or SUCCEEDED.|
 |deployment_status_message|text|May contain additional feedback on the status of an API deployment.|
 |description|text|The description for the deployment.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway deployment|

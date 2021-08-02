@@ -12,3 +12,4 @@ Represents a data model for an API.
 |description|text|The description of the model.|
 |model_id|text|The model identifier.|
 |schema|text|The schema for the model. For application/json models, this should be JSON schema draft 4 model.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway model|

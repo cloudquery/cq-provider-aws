@@ -6,6 +6,7 @@
 | ------------- | ------------- | -----  |
 |account_id|text||
 |region|text||
+|arn|text|The Amazon Resource Name (ARN) for the ec2 vpn gateway|
 |amazon_side_asn|bigint||
 |availability_zone|text||
 |state|text||

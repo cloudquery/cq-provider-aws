@@ -7,6 +7,7 @@ Represents a usage plan than can specify who can assess associated API stages wi
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |description|text|The description of a usage plan.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway rest usage plan|
 |id|text|The identifier of a UsagePlan resource.|
 |name|text|The name of a usage plan.|
 |product_code|text|The AWS Markeplace product identifier to associate with the usage plan as a SaaS product on AWS Marketplace.|

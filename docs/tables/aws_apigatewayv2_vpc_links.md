@@ -16,3 +16,4 @@ Represents a VPC link.
 |vpc_link_status|text|The status of the VPC link.|
 |vpc_link_status_message|text|A message summarizing the cause of the status of the VPC link.|
 |vpc_link_version|text|The version of the VPC link.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway rest vpc link|

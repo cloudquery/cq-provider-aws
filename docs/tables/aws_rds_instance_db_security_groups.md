@@ -8,3 +8,4 @@ This data type is used as a response element in the following actions:  * Modify
 |instance_id|text|The AWS Region-unique, immutable identifier for the DB instance|
 |db_security_group_name|text|The name of the DB security group.|
 |status|text|The status of the DB security group.|
+|arn|text|The Amazon Resource Name (ARN) for the rds db security group|

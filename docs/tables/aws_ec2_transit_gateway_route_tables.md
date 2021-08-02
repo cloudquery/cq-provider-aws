@@ -6,6 +6,7 @@
 | ------------- | ------------- | -----  |
 |transit_gateway_cq_id|uuid||
 |creation_time|timestamp without time zone||
+|arn|text|The Amazon Resource Name (ARN) for the ec2 transit gateway route table|
 |default_association_route_table|boolean||
 |default_propagation_route_table|boolean||
 |state|text||

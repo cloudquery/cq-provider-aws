@@ -20,5 +20,6 @@ Describes a subnet.
 |state|text|The current state of the subnet.|
 |subnet_arn|text|The Amazon Resource Name (ARN) of the subnet.|
 |id|text|The ID of the subnet.|
+|arn|text|The Amazon Resource Name (ARN) for the ec2 subnet|
 |tags|jsonb|Any tags assigned to the subnet.|
 |vpc_id|text|The ID of the VPC the subnet is in.|

@@ -9,6 +9,7 @@ Represents a REST API.
 |api_key_source|text|The source of the API key for metering requests according to a usage plan. Valid values are:|
 |binary_media_types|text[]|The list of binary media types supported by the RestApi. By default, the RestApi supports only UTF-8-encoded text payloads.|
 |created_date|timestamp without time zone|The timestamp when the API was created.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway rest api|
 |description|text|The API's description.|
 |disable_execute_api_endpoint|boolean|Specifies whether clients can invoke your API by using the default execute-api endpoint. By default, clients can invoke your API with the default https://{api_id}.execute-api.{region}.amazonaws.com endpoint. To require that clients use a custom domain name to invoke your API, disable the default endpoint.|
 |endpoint_configuration_types|text[]|A list of endpoint types of an API (RestApi) or its custom domain name (DomainName). For an edge-optimized API and its custom domain name, the endpoint type is "EDGE". For a regional API and its custom domain name, the endpoint type is REGIONAL. For a private API, the endpoint type is PRIVATE.|

@@ -6,6 +6,7 @@ An Amazon S3 bucket is a public cloud storage resource available in Amazon Web S
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|arn|text|The Amazon Resource Name (ARN) for the s3 bucket|
 |logging_target_prefix|text||
 |logging_target_bucket|text||
 |versioning_status|text||

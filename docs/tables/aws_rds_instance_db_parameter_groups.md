@@ -8,3 +8,4 @@ The status of the DB parameter group
 |instance_id|text|The AWS Region-unique, immutable identifier for the DB instance|
 |db_parameter_group_name|text|The name of the DB parameter group.|
 |parameter_apply_status|text|The status of parameter updates.|
+|arn|text|The Amazon Resource Name (ARN) for the rds db parameter group|

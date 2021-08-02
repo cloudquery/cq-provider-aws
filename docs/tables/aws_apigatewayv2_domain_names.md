@@ -12,3 +12,4 @@ Represents a domain name.
 |mutual_tls_authentication_truststore_version|text|The version of the S3 object that contains your truststore. To specify a version, you must have versioning enabled for the S3 bucket.|
 |mutual_tls_authentication_truststore_warnings|text[]|A list of warnings that API Gateway returns while processing your truststore. Invalid certificates produce warnings. Mutual TLS is still enabled, but some clients might not be able to access your API. To resolve warnings, upload a new truststore to S3, and then update you domain name to use the new version.|
 |tags|jsonb|The collection of tags associated with a domain name.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway key domain name|

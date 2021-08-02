@@ -14,3 +14,4 @@
 |transit_gateway_attachment_id|text||
 |vpc_id|text||
 |vpc_owner_id|text||
+|vpc_arn|text|The Amazon Resource Name (ARN) for the ec2 vpc|

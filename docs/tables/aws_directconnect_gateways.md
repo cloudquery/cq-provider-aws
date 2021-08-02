@@ -6,6 +6,7 @@ Information about a Direct Connect gateway, which enables you to connect virtual
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|arn|text|The Amazon Resource Name (ARN) for the direct connect gateway|
 |amazon_side_asn|bigint|The autonomous system number (ASN) for the Amazon side of the connection.|
 |direct_connect_gateway_id|text|The ID of the Direct Connect gateway.|
 |direct_connect_gateway_name|text|The name of the Direct Connect gateway.|

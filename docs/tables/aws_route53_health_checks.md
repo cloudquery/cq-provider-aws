@@ -5,6 +5,7 @@ A complex type that contains information about one health check that is associat
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
+|arn|text|The Amazon Resource Name (ARN) for the route 53 health check|
 |cloud_watch_alarm_configuration_dimensions|jsonb|the metric that the CloudWatch alarm is associated with, a complex type that contains information about the dimensions for the metric.|
 |tags|jsonb|The tags associated with the health check.|
 |caller_reference|text|A unique string that you specified when you created the health check.|

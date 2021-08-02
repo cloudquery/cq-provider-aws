@@ -9,6 +9,7 @@ Information about a Direct Connect Connection
 |aws_device_v2|text|The Direct Connect endpoint on which the physical connection terminates.|
 |bandwidth|text|The bandwidth of the connection.|
 |id|text|The ID of the connection.|
+|arn|text|The Amazon Resource Name (ARN) for the direct connect connection|
 |name|text|The name of the connection.|
 |connection_state|text|The state of the connection. Possible values are: ordering, requested, pending, available, down, deleting, deleted, rejected, unknown|
 |encryption_mode|text|The MAC Security (MACsec) connection encryption mode. The valid values are: no_encrypt, should_encrypt, and must_encrypt.|

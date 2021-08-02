@@ -7,6 +7,7 @@ Describes an image.
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |id|text|The ID of the AMI.|
+|arn|text|The Amazon Resource Name (ARN) for the route 53 delegation set|
 |architecture|text|The architecture of the image.|
 |creation_date|text|The date and time the image was created.|
 |description|text|The description of the AMI that was provided during image creation.|

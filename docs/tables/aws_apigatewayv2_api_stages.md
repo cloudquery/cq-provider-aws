@@ -25,3 +25,4 @@ Represents an API stage.
 |route_settings|jsonb|Route settings for the stage, by routeKey.|
 |stage_variables|jsonb|A map that defines the stage variables for a stage resource. Variable names can have alphanumeric and underscore characters, and the values must match [A-Za-z0-9-._~:/?#&=,]+.|
 |tags|jsonb|The collection of tags. Each tag element is associated with a given resource.|
+|arn|text|The Amazon Resource Name (ARN) for the api gateway stage|

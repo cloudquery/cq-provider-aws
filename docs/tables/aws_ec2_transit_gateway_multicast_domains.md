@@ -12,5 +12,5 @@
 |owner_id|text||
 |state|text||
 |tags|jsonb||
-|transit_gateway_multicast_domain_arn|text||
+|arn|text|The Amazon Resource Name (ARN) for the ec2 transit gateway multicast domain|
 |transit_gateway_multicast_domain_id|text||

@@ -9,6 +9,7 @@ A description of the file system.
 |creation_time|timestamp without time zone|The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z).|
 |creation_token|text|The opaque string specified in the request.|
 |id|text|The ID of the file system, assigned by Amazon EFS.|
+|arn|text|The Amazon Resource Name (ARN) for the elastic file system|
 |life_cycle_state|text|The lifecycle phase of the file system.|
 |number_of_mount_targets|integer|The current number of mount targets that the file system has.|
 |owner_id|text|The AWS account that created the file system.|
