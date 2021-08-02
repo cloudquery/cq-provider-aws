@@ -168,6 +168,6 @@ func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema
 }
 
 func resolveRoute53TrafficPoliciesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	tr := resource.Item.(types.TrafficPolicy)
+	tr := resource.Item.(types.TrafficPolicySummary)
 	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicy", *tr.Id, "", ""))
 }

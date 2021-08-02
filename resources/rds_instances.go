@@ -662,12 +662,6 @@ func RdsInstances() *schema.Table {
 						Description: "The status of the subnet.",
 						Type:        schema.TypeString,
 					},
-					{
-						Name:        "subnet_group_arn",
-						Description: "The Amazon Resource Name (ARN) for the rds subnet group",
-						Type:        schema.TypeString,
-						Resolver:    resolveEc2VpcPeeringConnectionsArn,
-					},
 				},
 			},
 			{
@@ -905,7 +899,7 @@ func resolveRdsInstanceDbParameterGroupsArn(_ context.Context, meta schema.Clien
 func resolveRdsInstanceDbSecurityGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	secgrp := resource.Item.(types.DBSecurityGroupMembership)
-	return resource.Set(c.Name, client.GenerateResourceARN("rds", "subgrp", *secgrp.DBSecurityGroupName, cl.Region, cl.AccountID))
+	return resource.Set(c.Name, client.GenerateResourceARN("rds", "secgrp", *secgrp.DBSecurityGroupName, cl.Region, cl.AccountID))
 }
 func resolveRdsInstanceOptionGroupMembershipsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)

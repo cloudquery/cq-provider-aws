@@ -94,6 +94,7 @@ func Ec2TransitGateways() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway",
 				Type:        schema.TypeString,
+				Resolver: schema.PathResolver("TransitGatewayId"),
 			},
 			{
 				Name:     "transit_gateway_cidr_blocks",
@@ -385,6 +386,7 @@ func Ec2TransitGateways() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the ec2 transit gateway multicast domain",
 						Type:        schema.TypeString,
+						Resolver: schema.PathResolver("TransitGatewayMulticastDomainArn"),
 					},
 					{
 						Name: "transit_gateway_multicast_domain_id",
@@ -573,6 +575,6 @@ func resolveEc2TransitGatewayRouteTablesArn(_ context.Context, meta schema.Clien
 }
 func resolveEc2VpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	vpc := resource.Item.(types.VpcAttachment)
+	vpc := resource.Item.(types.TransitGatewayVpcAttachment)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VpcId, cl.Region, cl.AccountID))
 }

@@ -895,11 +895,11 @@ func resolveEc2InstanceElasticGpuAssociationsArn(_ context.Context, meta schema.
 }
 func resolveEc2InstanceSecurityGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	sg := resource.Item.(types.SecurityGroup)
+	sg := resource.Item.(types.GroupIdentifier)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "security-group", *sg.GroupId, cl.Region, cl.AccountID))
 }
 func resolveEc2InstanceNetworkInterfacesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	ni := resource.Item.(types.NetworkInterface)
+	ni := resource.Item.(types.InstanceNetworkInterface)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "network-interface", *ni.NetworkInterfaceId, cl.Region, cl.AccountID))
 }

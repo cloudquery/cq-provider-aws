@@ -78,6 +78,6 @@ func fetchWafSubscribedRuleGroups(ctx context.Context, meta schema.ClientMeta, p
 
 func resolveWafSubscribedRuleGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	rg := resource.Item.(types.RuleGroup)
+	rg := resource.Item.(types.SubscribedRuleGroupSummary)
 	return resource.Set(c.Name, client.GenerateResourceARN("waf-regional", "rulegroup", *rg.RuleGroupId, cl.Region, cl.AccountID))
 }

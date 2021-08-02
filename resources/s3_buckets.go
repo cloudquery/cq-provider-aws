@@ -683,7 +683,7 @@ func resolveS3BucketLifecycleTransitions(ctx context.Context, meta schema.Client
 }
 
 func resolveS3BucketsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	buc := resource.Item.(types.Bucket)
+	buc := resource.Item.(*WrappedBucket)
 	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
 }
 

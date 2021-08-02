@@ -304,7 +304,7 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 }
 
 func resolveRoute53HealthChecksArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	hc := resource.Item.(types.HealthCheck)
+	hc := resource.Item.(Route53HealthCheckWrapper)
 	return resource.Set(c.Name, client.GenerateResourceARN("route53", "healthcheck", *hc.Id, "", ""))
 }
 

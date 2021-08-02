@@ -654,6 +654,6 @@ func getTagsByLoadBalancerName(id string, tagsResponse []types.TagDescription) [
 
 func resolveElbv1LoadBalancersArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	lb := resource.Item.(types.LoadBalancerDescription)
+	lb := resource.Item.(ELBv1LoadBalancerWrapper)
 	return resource.Set(c.Name, client.GenerateResourceARN("elasticloadbalancing", "loadbalancer", *lb.LoadBalancerName, cl.Region, cl.AccountID))
 }

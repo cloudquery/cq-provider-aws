@@ -179,6 +179,6 @@ func fetchCloudfrontCachePolicies(ctx context.Context, meta schema.ClientMeta, p
 
 func resolveCloudfrontCachePoliciesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	cp := resource.Item.(types.CachePolicy)
-	return resource.Set(c.Name, client.GenerateResourceARN("cloudfront", "cache-policy", *cp.Id, cl.Region, cl.AccountID))
+	cp := resource.Item.(types.CachePolicySummary)
+	return resource.Set(c.Name, client.GenerateResourceARN("cloudfront", "cache-policy", *cp.CachePolicy.Id, cl.Region, cl.AccountID))
 }

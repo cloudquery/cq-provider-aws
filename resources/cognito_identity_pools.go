@@ -165,6 +165,6 @@ func fetchCognitoIdentityPoolCognitoIdentityProviders(ctx context.Context, meta 
 }
 func resolveCognitoIdentityPoolsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	iden := resource.Item.(cognitoidentity.DescribeIdentityPoolOutput)
+	iden := resource.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
 	return resource.Set(c.Name, client.GenerateResourceARN("cognito-identity", "identitypool", *iden.IdentityPoolId, cl.Region, cl.AccountID))
 }

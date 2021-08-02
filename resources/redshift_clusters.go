@@ -70,7 +70,7 @@ func RedshiftClusters() *schema.Table {
 				Resolver:    schema.PathResolver("ClusterIdentifier"),
 			},
 			{
-				Name:        "arn",
+				Name:        "cluster_namespace_arn",
 				Description: "The namespace Amazon Resource Name (ARN) of the cluster.",
 				Type:        schema.TypeString,
 			},
@@ -789,6 +789,6 @@ func fetchRedshiftClusterVpcSecurityGroups(ctx context.Context, meta schema.Clie
 }
 func resolveRedshiftClusterParameterGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	pg := resource.Item.(types.ClusterParameterGroup)
+	pg := resource.Item.(types.ClusterParameterGroupStatus)
 	return resource.Set(c.Name, client.GenerateResourceARN("redshift", "parametergroup", *pg.ParameterGroupName, cl.Region, cl.AccountID))
 }

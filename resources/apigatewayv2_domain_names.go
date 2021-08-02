@@ -70,7 +70,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the api gateway key domain name",
 				Type:        schema.TypeString,
-				Resolver:    resolveApigatewayDomainNamesArn,
+				Resolver:    resolveApigatewayv2DomainNamesArn,
 			},
 		},
 		Relations: []*schema.Table{
@@ -226,4 +226,9 @@ func fetchApigatewayv2DomainNameRestApiMappings(ctx context.Context, meta schema
 		config.NextToken = response.NextToken
 	}
 	return nil
+}
+func resolveApigatewayv2DomainNamesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	d := resource.Item.(types.DomainName)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/domainnames", *d.DomainName, cl.Region, ""))
 }
