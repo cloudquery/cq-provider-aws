@@ -262,6 +262,12 @@ func Ec2TransitGateways() *schema.Table {
 						Name: "vpc_owner_id",
 						Type: schema.TypeString,
 					},
+					{
+						Name:        "vpc_arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 vpc",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2VpcArn,
+					},
 				},
 			},
 			{
@@ -412,7 +418,6 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
-
 func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeTransitGatewayAttachmentsInput
 	c := meta.(*client.Client)
@@ -432,7 +437,6 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 	}
 	return nil
 }
-
 func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeTransitGatewayRouteTablesInput
 	c := meta.(*client.Client)
@@ -452,7 +456,6 @@ func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMe
 	}
 	return nil
 }
-
 func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeTransitGatewayVpcAttachmentsInput
 	c := meta.(*client.Client)
@@ -472,7 +475,6 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 	}
 	return nil
 }
-
 func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeTransitGatewayPeeringAttachmentsInput
 	c := meta.(*client.Client)
@@ -492,7 +494,6 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 	}
 	return nil
 }
-
 func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ec2.DescribeTransitGatewayMulticastDomainsInput
 	c := meta.(*client.Client)
@@ -512,7 +513,6 @@ func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.Cli
 	}
 	return nil
 }
-
 func resolveEc2TransitGatewayTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGateway)
 	tags := map[string]*string{}
@@ -521,7 +521,6 @@ func resolveEc2TransitGatewayTags(ctx context.Context, meta schema.ClientMeta, r
 	}
 	return resource.Set("tags", tags)
 }
-
 func resolveEc2TransitGatewayAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGatewayAttachment)
 	tags := map[string]*string{}
@@ -530,7 +529,6 @@ func resolveEc2TransitGatewayAttachmentTags(ctx context.Context, meta schema.Cli
 	}
 	return resource.Set("tags", tags)
 }
-
 func resolveEc2TransitGatewayRouteTableTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGatewayRouteTable)
 	tags := map[string]*string{}
@@ -539,7 +537,6 @@ func resolveEc2TransitGatewayRouteTableTags(ctx context.Context, meta schema.Cli
 	}
 	return resource.Set("tags", tags)
 }
-
 func resolveEc2TransitGatewayVpcAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGatewayVpcAttachment)
 	tags := map[string]*string{}
@@ -548,7 +545,6 @@ func resolveEc2TransitGatewayVpcAttachmentTags(ctx context.Context, meta schema.
 	}
 	return resource.Set("tags", tags)
 }
-
 func resolveEc2TransitGatewayPeeringAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGatewayPeeringAttachment)
 	tags := map[string]*string{}
@@ -557,7 +553,6 @@ func resolveEc2TransitGatewayPeeringAttachmentTags(ctx context.Context, meta sch
 	}
 	return resource.Set("tags", tags)
 }
-
 func resolveEc2TransitGatewayMulticastDomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.TransitGatewayMulticastDomain)
 	tags := map[string]*string{}
@@ -575,4 +570,9 @@ func resolveEc2TransitGatewayRouteTablesArn(_ context.Context, meta schema.Clien
 	cl := meta.(*client.Client)
 	tgr := resource.Item.(types.TransitGatewayRouteTable)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "transit-gateway-route-table", *tgr.TransitGatewayRouteTableId, cl.Region, cl.AccountID))
+}
+func resolveEc2VpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	vpc := resource.Item.(types.VpcAttachment)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VpcId, cl.Region, cl.AccountID))
 }

@@ -66,6 +66,12 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Description: "The collection of tags associated with a domain name.",
 				Type:        schema.TypeJSON,
 			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway key domain name",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayDomainNamesArn,
+			},
 		},
 		Relations: []*schema.Table{
 			{

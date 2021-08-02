@@ -33,6 +33,12 @@ func Ec2Instances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the ec2 instance",
+				Type:        schema.TypeString,
+				Resolver:    resolveEc2instanceTagsArn,
+			},
+			{
 				Name:        "id",
 				Description: "The ID of the instance.",
 				Type:        schema.TypeString,
@@ -428,6 +434,12 @@ func Ec2Instances() *schema.Table {
 						Description: "The ID of the Elastic Graphics accelerator.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "elastic_gpu_arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 elastic gpu",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2InstanceElasticGpuAssociationsArn,
+					},
 				},
 			},
 			{
@@ -591,6 +603,12 @@ func Ec2Instances() *schema.Table {
 						Description: "The ID of the VPC.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 network interface",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2InstanceNetworkInterfacesArn,
+					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -742,6 +760,12 @@ func Ec2Instances() *schema.Table {
 						Description: "The name of the security group.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the ec2 security group",
+						Type:        schema.TypeString,
+						Resolver:    resolveEc2InstanceSecurityGroupsArn,
+					},
 				},
 			},
 		},
@@ -858,4 +882,24 @@ func fetchEc2InstanceSecurityGroups(ctx context.Context, meta schema.ClientMeta,
 	}
 	res <- instance.SecurityGroups
 	return nil
+}
+func resolveEc2instanceTagsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ins := resource.Item.(types.Instance)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "instance", *ins.InstanceId, cl.Region, cl.AccountID))
+}
+func resolveEc2InstanceElasticGpuAssociationsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	gpu := resource.Item.(types.ElasticGpuAssociation)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "elastic-gpu", *gpu.ElasticGpuId, cl.Region, cl.AccountID))
+}
+func resolveEc2InstanceSecurityGroupsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	sg := resource.Item.(types.SecurityGroup)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "security-group", *sg.GroupId, cl.Region, cl.AccountID))
+}
+func resolveEc2InstanceNetworkInterfacesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ni := resource.Item.(types.NetworkInterface)
+	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "network-interface", *ni.NetworkInterfaceId, cl.Region, cl.AccountID))
 }

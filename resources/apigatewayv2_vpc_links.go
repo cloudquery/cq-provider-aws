@@ -82,6 +82,13 @@ func Apigatewayv2VpcLinks() *schema.Table {
 				Description: "The version of the VPC link.",
 				Type:        schema.TypeString,
 			},
+
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway rest vpc link",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayVpcLinksArn,
+			},
 		},
 	}
 }

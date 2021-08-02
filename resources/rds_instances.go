@@ -734,6 +734,12 @@ func RdsInstances() *schema.Table {
 						Description: "The status of the DB instance's option group membership",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "option_group_arn",
+						Description: "The Amazon Resource Name (ARN) for the rds option group",
+						Type:        schema.TypeString,
+						Resolver:    resolveRdsInstanceOptionGroupMembershipsArn,
+					},
 				},
 			},
 			{
@@ -901,8 +907,8 @@ func resolveRdsInstanceDbSecurityGroupsArn(_ context.Context, meta schema.Client
 	secgrp := resource.Item.(types.DBSecurityGroupMembership)
 	return resource.Set(c.Name, client.GenerateResourceARN("rds", "subgrp", *secgrp.DBSecurityGroupName, cl.Region, cl.AccountID))
 }
-func resolveRdsInstanceDbSubnetGroupArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveRdsInstanceOptionGroupMembershipsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	secgrp := resource.Item.(types.DBSubnetGroup)
-	return resource.Set(c.Name, client.GenerateResourceARN("rds", "subgrp", *secgrp, cl.Region, cl.AccountID))
+	og := resource.Item.(types.OptionGroupMembership)
+	return resource.Set(c.Name, client.GenerateResourceARN("rds", "og", *og.OptionGroupName, cl.Region, cl.AccountID))
 }

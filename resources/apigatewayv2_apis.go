@@ -34,6 +34,12 @@ func Apigatewayv2Apis() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the api gateway key",
+				Type:        schema.TypeString,
+				Resolver:    resolveApigatewayv2ApisArn,
+			},
+			{
 				Name:        "name",
 				Description: "The name of the API.",
 				Type:        schema.TypeString,
@@ -227,6 +233,12 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("JwtConfiguration.Issuer"),
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway authorizer",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiAuthorizersArn,
+					},
 				},
 			},
 			{
@@ -276,6 +288,12 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "description",
 						Description: "The description for the deployment.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway deployment",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiDeploymentsArn,
 					},
 				},
 			},
@@ -398,6 +416,12 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("TlsConfig.ServerNameToVerify"),
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway integration",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiIntegrationsArn,
+					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -447,6 +471,12 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "template_selection_expression",
 								Description: "The template selection expressions for the integration response.",
 								Type:        schema.TypeString,
+							},
+							{
+								Name:        "arn",
+								Description: "The Amazon Resource Name (ARN) for the api gateway integration response",
+								Type:        schema.TypeString,
+								Resolver:    resolveApigatewayv2ApiIntegrationResponsesArn,
 							},
 						},
 					},
@@ -499,6 +529,12 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "schema",
 						Description: "The schema for the model. For application/json models, this should be JSON schema draft 4 model.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway model",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiModelsArn,
 					},
 				},
 			},
@@ -585,6 +621,12 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The target for the route.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway route",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiRoutesArn,
+					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -629,6 +671,12 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "route_response_id",
 								Description: "Represents the identifier of a route response.",
 								Type:        schema.TypeString,
+							},
+							{
+								Name:        "arn",
+								Description: "The Amazon Resource Name (ARN) for the api gateway route response",
+								Type:        schema.TypeString,
+								Resolver:    resolveApigatewayv2ApiRouteResponsesArn,
 							},
 						},
 					},
@@ -753,6 +801,13 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "tags",
 						Description: "The collection of tags. Each tag element is associated with a given resource.",
 						Type:        schema.TypeJSON,
+					},
+
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the api gateway stage",
+						Type:        schema.TypeString,
+						Resolver:    resolveApigatewayv2ApiStagesArn,
 					},
 				},
 			},
@@ -1024,4 +1079,60 @@ func fetchApigatewayv2ApiStages(ctx context.Context, meta schema.ClientMeta, par
 		config.NextToken = response.NextToken
 	}
 	return nil
+}
+
+func resolveApigatewayv2ApisArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	api := resource.Item.(types.Api)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", *api.ApiId, cl.Region, ""))
+}
+func resolveApigatewayv2ApiAuthorizersArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	auth := resource.Item.(types.Authorizer)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/authorizers/%s", *ap.ApiId, *auth.AuthorizerId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiDeploymentsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	dep := resource.Item.(types.Deployment)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/deployments/%s", *ap.ApiId, *dep.DeploymentId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiIntegrationsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	intg := resource.Item.(types.Integration)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/integrations/%s", *ap.ApiId, *intg.IntegrationId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiIntegrationResponsesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Parent.Item.(types.Api)
+	intg := resource.Parent.Item.(types.Integration)
+	intgres := resource.Item.(types.IntegrationResponse)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/integrations/%s/integrationresponses/%s", *ap.ApiId, *intg.IntegrationId, *intgres.IntegrationResponseId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiModelsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	mod := resource.Item.(types.Model)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/models/%s", *ap.ApiId, *mod.ModelId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiRoutesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	rt := resource.Item.(types.Route)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/routes/%s", *ap.ApiId, *rt.RouteId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiRouteResponsesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Parent.Item.(types.Api)
+	rt := resource.Parent.Item.(types.Route)
+	rts := resource.Item.(types.RouteResponse)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/routes/%s/routeresponses/%s", *ap.ApiId, *rt.RouteId, *rts.RouteResponseId), cl.Region, ""))
+}
+func resolveApigatewayv2ApiStagesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	ap := resource.Parent.Item.(types.Api)
+	st := resource.Item.(types.Stage)
+	return resource.Set(c.Name, client.GenerateResourceARN("apigateway", "/apis", fmt.Sprintf("%s/stages/%s", *ap.ApiId, *st.StageName), cl.Region, ""))
 }
