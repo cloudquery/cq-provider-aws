@@ -213,4 +213,3 @@ func resolveEc2VpcsArn(_ context.Context, meta schema.ClientMeta, resource *sche
 	vpc := resource.Item.(types.Vpc)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VpcId, cl.Region, cl.AccountID))
 }
-
