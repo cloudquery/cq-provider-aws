@@ -464,27 +464,27 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 	if err := resource.Set("region", bucketRegion); err != nil {
 		return err
 	}
-	if err := getBucketLogging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketLogging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := getBucketPolicy(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketPolicy(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := getBucketVersioning(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketVersioning(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := getBucketPublicAccessBlock(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketPublicAccessBlock(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := getBucketReplication(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketReplication(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := getBucketTagging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+	if err := resolveBucketTagging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 	return nil
@@ -610,7 +610,7 @@ type WrappedBucket struct {
 	ReplicationRules []types.ReplicationRule
 }
 
-func getBucketLogging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketLogging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	loggingOutput, err := svc.GetBucketLogging(ctx, &s3.GetBucketLoggingInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
@@ -634,7 +634,7 @@ func getBucketLogging(ctx context.Context, meta schema.ClientMeta, resource *sch
 	return nil
 }
 
-func getBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	policyOutput, err := svc.GetBucketPolicy(ctx, &s3.GetBucketPolicyInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
@@ -658,7 +658,7 @@ func getBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *sche
 	return resource.Set("policy", policyOutput.Policy)
 }
 
-func getBucketVersioning(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketVersioning(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	versioningOutput, err := svc.GetBucketVersioning(ctx, &s3.GetBucketVersioningInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
@@ -679,7 +679,7 @@ func getBucketVersioning(ctx context.Context, meta schema.ClientMeta, resource *
 	return nil
 }
 
-func getBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	publicAccessOutput, err := svc.GetPublicAccessBlock(ctx, &s3.GetPublicAccessBlockInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
@@ -711,7 +711,7 @@ func getBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta, res
 	return nil
 }
 
-func getBucketReplication(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketReplication(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	replicationOutput, err := svc.GetBucketReplication(ctx, &s3.GetBucketReplicationInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
@@ -740,7 +740,7 @@ func getBucketReplication(ctx context.Context, meta schema.ClientMeta, resource 
 	return nil
 }
 
-func getBucketTagging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+func resolveBucketTagging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
 	svc := meta.(*client.Client).Services().S3
 	taggingOutput, err := svc.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
