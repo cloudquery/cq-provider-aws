@@ -103,6 +103,7 @@ func Provider() *provider.Provider {
 			"iot.ca_certificates":                   IotCaCertificates(),
 			"iot.certificates":                      IotCertificates(),
 			"iot.streams":                           IotStreams(),
+			"iot.billing_groups":                    IotBillingGroups(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
