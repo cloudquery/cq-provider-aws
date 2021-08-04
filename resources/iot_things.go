@@ -92,7 +92,7 @@ func fetchIotThings(ctx context.Context, meta schema.ClientMeta, parent *schema.
 func resolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(types.ThingAttribute)
 	if !ok {
-		return fmt.Errorf("expected *types.ThingAttribute but got %T", resource.Item)
+		return fmt.Errorf("expected types.ThingAttribute but got %T", resource.Item)
 	}
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
@@ -126,7 +126,7 @@ func resolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, reso
 func resolveIotThingTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(types.ThingAttribute)
 	if !ok {
-		return fmt.Errorf("expected *types.ThingAttribute but got %T", resource.Item)
+		return fmt.Errorf("expected types.ThingAttribute but got %T", resource.Item)
 	}
 	client := meta.(*client.Client)
 	svc := client.Services().IOT

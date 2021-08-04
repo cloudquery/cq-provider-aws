@@ -100,6 +100,8 @@ func Provider() *provider.Provider {
 			"wafv2.managed_rule_groups":             Wafv2ManagedRuleGroups(),
 			"wafv2.rule_groups":                     Wafv2RuleGroups(),
 			"iot.things":                            IotThings(),
+			"iot.ca_certificates":                   IotCaCertificates(),
+			"iot.certificates":                      IotCertificates(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}

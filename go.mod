@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
-	github.com/aws/aws-sdk-go-v2 v1.6.0
+	github.com/aws/aws-sdk-go-v2 v1.7.1
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.1.6
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.1.3
@@ -33,6 +33,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/emr v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/fsx v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/iam v1.3.0
+	github.com/aws/aws-sdk-go-v2/service/iot v1.8.0
 	github.com/aws/aws-sdk-go-v2/service/kms v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
@@ -45,7 +46,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
-	github.com/aws/smithy-go v1.4.0
+	github.com/aws/smithy-go v1.6.0
 	github.com/cloudquery/cq-provider-sdk v0.3.0-beta
 	github.com/cloudquery/faker/v3 v3.7.4
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
