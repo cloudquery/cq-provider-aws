@@ -27,6 +27,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
@@ -384,4 +385,25 @@ type WafV2Client interface {
 	ListResourcesForWebACL(ctx context.Context, params *wafv2.ListResourcesForWebACLInput, optFns ...func(*wafv2.Options)) (*wafv2.ListResourcesForWebACLOutput, error)
 	ListTagsForResource(ctx context.Context, params *wafv2.ListTagsForResourceInput, optFns ...func(*wafv2.Options)) (*wafv2.ListTagsForResourceOutput, error)
 	GetPermissionPolicy(ctx context.Context, params *wafv2.GetPermissionPolicyInput, optFns ...func(*wafv2.Options)) (*wafv2.GetPermissionPolicyOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_iot.go . IOTClient
+type IOTClient interface {
+	ListThings(ctx context.Context, params *iot.ListThingsInput, optFns ...func(*iot.Options)) (*iot.ListThingsOutput, error)
+	ListThingTypes(ctx context.Context, params *iot.ListThingTypesInput, optFns ...func(*iot.Options)) (*iot.ListThingTypesOutput, error)
+	ListThingGroups(ctx context.Context, params *iot.ListThingGroupsInput, optFns ...func(*iot.Options)) (*iot.ListThingGroupsOutput, error)
+	DescribeThingGroup(ctx context.Context, params *iot.DescribeThingGroupInput, optFns ...func(*iot.Options)) (*iot.DescribeThingGroupOutput, error)
+	ListThingsInThingGroup(ctx context.Context, params *iot.ListThingsInThingGroupInput, optFns ...func(*iot.Options)) (*iot.ListThingsInThingGroupOutput, error)
+	ListBillingGroups(ctx context.Context, params *iot.ListBillingGroupsInput, optFns ...func(*iot.Options)) (*iot.ListBillingGroupsOutput, error)
+	DescribeBillingGroup(ctx context.Context, params *iot.DescribeBillingGroupInput, optFns ...func(*iot.Options)) (*iot.DescribeBillingGroupOutput, error)
+	ListTagsForResource(ctx context.Context, params *iot.ListTagsForResourceInput, optFns ...func(*iot.Options)) (*iot.ListTagsForResourceOutput, error)
+	ListThingPrincipals(ctx context.Context, params *iot.ListThingPrincipalsInput, optFns ...func(*iot.Options)) (*iot.ListThingPrincipalsOutput, error)
+	ListStreams(ctx context.Context, params *iot.ListStreamsInput, optFns ...func(*iot.Options)) (*iot.ListStreamsOutput, error)
+	DescribeStream(ctx context.Context, params *iot.DescribeStreamInput, optFns ...func(*iot.Options)) (*iot.DescribeStreamOutput, error)
+	ListSecurityProfiles(ctx context.Context, params *iot.ListSecurityProfilesInput, optFns ...func(*iot.Options)) (*iot.ListSecurityProfilesOutput, error)
+	DescribeSecurityProfile(ctx context.Context, params *iot.DescribeSecurityProfileInput, optFns ...func(*iot.Options)) (*iot.DescribeSecurityProfileOutput, error)
+	ListCACertificates(ctx context.Context, params *iot.ListCACertificatesInput, optFns ...func(*iot.Options)) (*iot.ListCACertificatesOutput, error)
+	DescribeCACertificate(ctx context.Context, params *iot.DescribeCACertificateInput, optFns ...func(*iot.Options)) (*iot.DescribeCACertificateOutput, error)
+	ListCertificatesByCA(ctx context.Context, params *iot.ListCertificatesByCAInput, optFns ...func(*iot.Options)) (*iot.ListCertificatesByCAOutput, error)
+	DescribeCertificate(ctx context.Context, params *iot.DescribeCertificateInput, optFns ...func(*iot.Options)) (*iot.DescribeCertificateOutput, error)
 }

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/iot"
+
 	"github.com/aws/smithy-go/logging"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -119,6 +121,7 @@ type Services struct {
 	ConfigService        ConfigServiceClient
 	Waf                  WafClient
 	WafV2                WafV2Client
+	IOT                  IOTClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -355,6 +358,7 @@ func initServices(awsCfg aws.Config) Services {
 		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Waf:                  waf.NewFromConfig(awsCfg),
 		WafV2:                wafv2.NewFromConfig(awsCfg),
+		IOT:                  iot.NewFromConfig(awsCfg),
 	}
 }
 
