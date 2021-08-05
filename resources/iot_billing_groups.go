@@ -118,7 +118,7 @@ func resolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 		BillingGroupName: i.BillingGroupName,
 	}
 
-	var certs []string
+	var things []string
 	for {
 		response, err := svc.ListThingsInBillingGroup(ctx, &input, func(options *iot.Options) {
 			options.Region = client.Region
@@ -127,12 +127,12 @@ func resolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 			return err
 		}
 
-		certs = append(certs, response.Things...)
+		things = append(things, response.Things...)
 
 		if aws.ToString(response.NextToken) == "" {
 			break
 		}
 		input.NextToken = response.NextToken
 	}
-	return resource.Set(c.Name, certs)
+	return resource.Set(c.Name, things)
 }
