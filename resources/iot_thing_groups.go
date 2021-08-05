@@ -151,7 +151,7 @@ func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *sc
 func resolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
-		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
+		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
 	}
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
@@ -180,7 +180,7 @@ func resolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 func resolveIotThingGroupRootToParentThingGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
-		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
+		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
 	}
 	if i.ThingGroupMetadata == nil {
 		return nil
