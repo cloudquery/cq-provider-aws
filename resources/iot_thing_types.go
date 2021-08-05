@@ -2,9 +2,11 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
+	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -17,6 +19,7 @@ func IotThingTypes() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -29,6 +32,11 @@ func IotThingTypes() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveIotThingTypeTags,
 			},
 			{
 				Name:        "arn",
@@ -100,4 +108,34 @@ func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *sch
 		input.NextToken = response.NextToken
 	}
 	return nil
+}
+func resolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(types.ThingTypeDefinition)
+	if !ok {
+		return fmt.Errorf("expected types.ThingTypeDefinition but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListTagsForResourceInput{
+		ResourceArn: i.ThingTypeArn,
+	}
+	tags := make(map[string]interface{})
+
+	for {
+		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+
+		if err != nil {
+			return err
+		}
+		for _, t := range response.Tags {
+			tags[*t.Key] = t.Value
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, tags)
 }
