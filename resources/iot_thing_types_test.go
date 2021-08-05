@@ -22,6 +22,15 @@ func buildIotThingTypesMock(t *testing.T, ctrl *gomock.Controller) client.Servic
 	m.EXPECT().ListThingTypes(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&groupsOutput, nil)
 
+	tags := iot.ListTagsForResourceOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tags.NextToken = nil
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&tags, nil)
+
 	return client.Services{
 		IOT: m,
 	}
