@@ -38,6 +38,11 @@ func IotThingGroups() *schema.Table {
 				Resolver:    resolveIotThingGroupThingsInGroup,
 			},
 			{
+				Name:     "policies",
+				Type:     schema.TypeStringArray,
+				Resolver: resolveIotThingGroupPolicies,
+			},
+			{
 				Name:        "index_name",
 				Description: "The dynamic thing group index name.",
 				Type:        schema.TypeString,
@@ -176,6 +181,37 @@ func resolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 		input.NextToken = response.NextToken
 	}
 	return resource.Set(c.Name, things)
+}
+func resolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
+	if !ok {
+		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListAttachedPoliciesInput{
+		Target: i.ThingGroupArn,
+	}
+
+	var policies []string
+	for {
+		response, err := svc.ListAttachedPolicies(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, p := range response.Policies {
+			policies = append(policies, *p.PolicyArn)
+		}
+
+		if aws.ToString(response.NextMarker) == "" {
+			break
+		}
+		input.Marker = response.NextMarker
+	}
+	return resource.Set(c.Name, policies)
 }
 func resolveIotThingGroupRootToParentThingGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)

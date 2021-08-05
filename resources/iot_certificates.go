@@ -2,9 +2,11 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
+	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -29,6 +31,11 @@ func IotCertificates() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "policies",
+				Type:     schema.TypeStringArray,
+				Resolver: resolveIotCertificatePolicies,
 			},
 			{
 				Name:        "ca_certificate_id",
@@ -170,4 +177,35 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 		input.Marker = response.NextMarker
 	}
 	return nil
+}
+func resolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*types.CertificateDescription)
+	if !ok {
+		return fmt.Errorf("expected *types.CertificateDescription but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListAttachedPoliciesInput{
+		Target: i.CertificateArn,
+	}
+
+	var policies []string
+	for {
+		response, err := svc.ListAttachedPolicies(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, p := range response.Policies {
+			policies = append(policies, *p.PolicyArn)
+		}
+
+		if aws.ToString(response.NextMarker) == "" {
+			break
+		}
+		input.Marker = response.NextMarker
+	}
+	return resource.Set(c.Name, policies)
 }

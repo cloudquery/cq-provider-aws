@@ -39,6 +39,15 @@ func buildIotThingGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Servi
 	m.EXPECT().ListThingsInThingGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&thingsInThingGroupOutput, nil)
 
+	p := iot.ListAttachedPoliciesOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.NextMarker = nil
+	m.EXPECT().ListAttachedPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
 	return client.Services{
 		IOT: m,
 	}

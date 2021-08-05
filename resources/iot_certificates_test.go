@@ -30,6 +30,15 @@ func buildIotCertificatesMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 	m.EXPECT().DescribeCertificate(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&cd, nil)
 
+	p := iot.ListAttachedPoliciesOutput{}
+	err = faker.FakeData(&p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.NextMarker = nil
+	m.EXPECT().ListAttachedPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&p, nil)
+
 	return client.Services{
 		IOT: m,
 	}
