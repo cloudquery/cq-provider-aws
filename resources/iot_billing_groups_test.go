@@ -45,7 +45,7 @@ func buildIotBillingGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 		t.Fatal(err)
 	}
 	tags.NextToken = nil
-	m.EXPECT().ListAttachedPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&tags, nil)
 
 	return client.Services{
