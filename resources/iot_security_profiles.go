@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/service/iot/types"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
+	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -32,6 +31,11 @@ func IotSecurityProfiles() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "targets",
+				Type:     schema.TypeStringArray,
+				Resolver: resolveIotSecurityProfileTargets,
 			},
 			{
 				Name:        "additional_metrics_to_retain",
@@ -228,6 +232,37 @@ func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, paren
 		input.NextToken = response.NextToken
 	}
 	return nil
+}
+func resolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*iot.DescribeSecurityProfileOutput)
+	if !ok {
+		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListTargetsForSecurityProfileInput{
+		SecurityProfileName: i.SecurityProfileName,
+	}
+
+	var targets []string
+	for {
+		response, err := svc.ListTargetsForSecurityProfile(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, t := range response.SecurityProfileTargets {
+			targets = append(targets, *t.Arn)
+		}
+
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, targets)
 }
 func fetchIotSecurityProfileAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	i, ok := parent.Item.(*iot.DescribeSecurityProfileOutput)

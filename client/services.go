@@ -408,4 +408,5 @@ type IOTClient interface {
 	ListCertificatesByCA(ctx context.Context, params *iot.ListCertificatesByCAInput, optFns ...func(*iot.Options)) (*iot.ListCertificatesByCAOutput, error)
 	DescribeCertificate(ctx context.Context, params *iot.DescribeCertificateInput, optFns ...func(*iot.Options)) (*iot.DescribeCertificateOutput, error)
 	ListCertificates(ctx context.Context, params *iot.ListCertificatesInput, optFns ...func(*iot.Options)) (*iot.ListCertificatesOutput, error)
+	ListTargetsForSecurityProfile(ctx context.Context, params *iot.ListTargetsForSecurityProfileInput, optFns ...func(*iot.Options)) (*iot.ListTargetsForSecurityProfileOutput, error)
 }

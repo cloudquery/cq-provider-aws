@@ -30,6 +30,16 @@ func buildIotSecurityProfilesMock(t *testing.T, ctrl *gomock.Controller) client.
 	m.EXPECT().DescribeSecurityProfile(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&profileOutput, nil)
 
+	targets := iot.ListTargetsForSecurityProfileOutput{}
+	err = faker.FakeData(&targets)
+	if err != nil {
+		t.Fatal(err)
+	}
+	targets.NextToken = nil
+
+	m.EXPECT().ListTargetsForSecurityProfile(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&targets, nil)
+
 	return client.Services{
 		IOT: m,
 	}

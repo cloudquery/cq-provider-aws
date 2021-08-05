@@ -295,6 +295,26 @@ func (mr *MockIOTClientMockRecorder) ListTagsForResource(arg0, arg1 interface{},
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockIOTClient)(nil).ListTagsForResource), varargs...)
 }
 
+// ListTargetsForSecurityProfile mocks base method.
+func (m *MockIOTClient) ListTargetsForSecurityProfile(arg0 context.Context, arg1 *iot.ListTargetsForSecurityProfileInput, arg2 ...func(*iot.Options)) (*iot.ListTargetsForSecurityProfileOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTargetsForSecurityProfile", varargs...)
+	ret0, _ := ret[0].(*iot.ListTargetsForSecurityProfileOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTargetsForSecurityProfile indicates an expected call of ListTargetsForSecurityProfile.
+func (mr *MockIOTClientMockRecorder) ListTargetsForSecurityProfile(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTargetsForSecurityProfile", reflect.TypeOf((*MockIOTClient)(nil).ListTargetsForSecurityProfile), varargs...)
+}
+
 // ListThingGroups mocks base method.
 func (m *MockIOTClient) ListThingGroups(arg0 context.Context, arg1 *iot.ListThingGroupsInput, arg2 ...func(*iot.Options)) (*iot.ListThingGroupsOutput, error) {
 	m.ctrl.T.Helper()
