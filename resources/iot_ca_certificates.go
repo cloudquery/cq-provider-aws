@@ -43,19 +43,22 @@ func IotCaCertificates() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "certificate_arn",
+				Name:        "arn",
 				Description: "The CA certificate ARN.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("CertificateArn"),
 			},
 			{
-				Name:        "certificate_id",
+				Name:        "id",
 				Description: "The CA certificate ID.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("CertificateId"),
 			},
 			{
-				Name:        "certificate_pem",
+				Name:        "pem",
 				Description: "The CA certificate data, in PEM format.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("CertificatePem"),
 			},
 			{
 				Name:        "creation_date",

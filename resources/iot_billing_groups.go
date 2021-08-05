@@ -37,6 +37,11 @@ func IotBillingGroups() *schema.Table {
 				Resolver:    resolveIotBillingGroupThingsInGroup,
 			},
 			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveIotBillingGroupTags,
+			},
+			{
 				Name:        "arn",
 				Description: "The ARN of the billing group.",
 				Type:        schema.TypeString,
@@ -135,4 +140,34 @@ func resolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 		input.NextToken = response.NextToken
 	}
 	return resource.Set(c.Name, things)
+}
+func resolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*iot.DescribeBillingGroupOutput)
+	if !ok {
+		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListTagsForResourceInput{
+		ResourceArn: i.BillingGroupArn,
+	}
+	tags := make(map[string]interface{})
+
+	for {
+		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+
+		if err != nil {
+			return err
+		}
+		for _, t := range response.Tags {
+			tags[*t.Key] = t.Value
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, tags)
 }

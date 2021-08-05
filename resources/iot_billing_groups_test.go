@@ -39,6 +39,15 @@ func buildIotBillingGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 	m.EXPECT().ListThingsInBillingGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&thingsInBillingGroupOutput, nil)
 
+	tags := iot.ListTagsForResourceOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tags.NextToken = nil
+	m.EXPECT().ListAttachedPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&tags, nil)
+
 	return client.Services{
 		IOT: m,
 	}

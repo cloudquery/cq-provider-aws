@@ -43,19 +43,22 @@ func IotThings() *schema.Table {
 				Type:        schema.TypeJSON,
 			},
 			{
-				Name:        "thing_arn",
+				Name:        "arn",
 				Description: "The thing ARN.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ThingArn"),
 			},
 			{
-				Name:        "thing_name",
+				Name:        "name",
 				Description: "The name of the thing.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ThingName"),
 			},
 			{
-				Name:        "thing_type_name",
+				Name:        "type_name",
 				Description: "The name of the thing type, if the thing has been associated with a type.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ThingTypeName"),
 			},
 			{
 				Name:        "version",
@@ -117,39 +120,4 @@ func resolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, reso
 		input.NextToken = response.NextToken
 	}
 	return resource.Set(c.Name, principals)
-}
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func resolveIotThingTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.ThingAttribute)
-	if !ok {
-		return fmt.Errorf("expected types.ThingAttribute but got %T", resource.Item)
-	}
-	client := meta.(*client.Client)
-	svc := client.Services().IOT
-	input := iot.ListTagsForResourceInput{
-		ResourceArn: i.ThingArn,
-	}
-	tags := make(map[string]interface{})
-
-	for {
-		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
-			options.Region = client.Region
-		})
-
-		if err != nil {
-			return err
-		}
-		for _, t := range response.Tags {
-			tags[*t.Key] = t.Value
-		}
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		input.NextToken = response.NextToken
-	}
-	return resource.Set(c.Name, tags)
 }

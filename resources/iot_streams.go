@@ -53,19 +53,22 @@ func IotStreams() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "stream_arn",
+				Name:        "arn",
 				Description: "The stream ARN.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("StreamArn"),
 			},
 			{
-				Name:        "stream_id",
+				Name:        "id",
 				Description: "The stream ID.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("StreamId"),
 			},
 			{
-				Name:        "stream_version",
+				Name:        "version",
 				Description: "The stream version.",
 				Type:        schema.TypeInt,
+				Resolver:    schema.PathResolver("StreamVersion"),
 			},
 		},
 		Relations: []*schema.Table{
