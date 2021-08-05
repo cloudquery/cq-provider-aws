@@ -106,6 +106,7 @@ func Provider() *provider.Provider {
 			"iot.billing_groups":                    IotBillingGroups(),
 			"iot.thing_groups":                      IotThingGroups(),
 			"iot.thing_types":                       IotThingTypes(),
+			"iot.security_profiles":                 IotSecurityProfiles(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
