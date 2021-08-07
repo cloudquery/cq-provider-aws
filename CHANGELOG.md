@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fixed Not fetching all Lambda functions [#135](https://github.com/cloudquery/cq-provider-aws/issues/135) [#136](https://github.com/cloudquery/cq-provider-aws/pull/136)
 * Ignore access denied in s3 relations[#138](https://github.com/cloudquery/cq-provider-aws/pull/138)
 
+
 ## [v0.5.3] - 2020-08-04
 ###### SDK Version: 0.3.1
 
