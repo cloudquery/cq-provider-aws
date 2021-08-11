@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	smithy "github.com/aws/smithy-go"
@@ -105,6 +106,7 @@ func S3Buckets() *schema.Table {
 			{
 				Name:        "aws_s3_bucket_grants",
 				Description: "Container for grant information.",
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Resolver:    fetchS3BucketGrants,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "grantee_id"}},
 				Columns: []schema.Column{
@@ -155,6 +157,8 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_cors_rules",
 				Description: "Specifies a cross-origin access rule for an Amazon S3 bucket.",
 				Resolver:    fetchS3BucketCorsRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -199,6 +203,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_encryption_rules",
 				Description: "Specifies the default server-side encryption configuration.",
 				Resolver:    fetchS3BucketEncryptionRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
 				Columns: []schema.Column{
 					{
@@ -230,6 +235,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_replication_rules",
 				Description: "Specifies which Amazon S3 objects to replicate and where to store the replicas.",
 				Resolver:    fetchS3BucketReplicationRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
@@ -347,6 +353,7 @@ func S3Buckets() *schema.Table {
 			{
 				Name:        "aws_s3_bucket_lifecycles",
 				Description: "A lifecycle rule for individual objects in an Amazon S3 bucket.",
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Resolver:    fetchS3BucketLifecycles,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
@@ -459,7 +466,6 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 		}
 		return err
 	}
-	svc := meta.(*client.Client).Services().S3
 	bucketRegion := "us-east-1"
 	if output != "" {
 		// This is a weird corner case by AWS API https://github.com/aws/aws-sdk-net/issues/323#issuecomment-196584538
@@ -468,105 +474,28 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 	if err := resource.Set("region", bucketRegion); err != nil {
 		return err
 	}
-
-	loggingOutput, err := svc.GetBucketLogging(ctx, &s3.GetBucketLoggingInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil {
-		return err
-	}
-	if loggingOutput.LoggingEnabled != nil {
-		if err := resource.Set("logging_target_bucket", loggingOutput.LoggingEnabled.TargetBucket); err != nil {
-			return err
-		}
-		if err := resource.Set("logging_target_prefix", loggingOutput.LoggingEnabled.TargetPrefix); err != nil {
-			return err
-		}
-	}
-
-	policyOutput, err := svc.GetBucketPolicy(ctx, &s3.GetBucketPolicyInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil && !(errors.As(err, &ae) && ae.ErrorCode() == "NoSuchBucketPolicy") {
-		return err
-	}
-	if policyOutput != nil {
-		if err := resource.Set("policy", policyOutput.Policy); err != nil {
-			return err
-		}
-	}
-
-	versioningOutput, err := svc.GetBucketVersioning(ctx, &s3.GetBucketVersioningInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil {
+	if err := resolveBucketLogging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	if err := resource.Set("versioning_status", versioningOutput.Status); err != nil {
-		return err
-	}
-	if err := resource.Set("versioning_mfa_delete", versioningOutput.MFADelete); err != nil {
+	if err := resolveBucketPolicy(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
 		return err
 	}
 
-	publicAccessOutput, err := svc.GetPublicAccessBlock(ctx, &s3.GetPublicAccessBlockInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil {
-		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
-		if errors.As(err, &ae) && ae.ErrorCode() != "NoSuchPublicAccessBlockConfiguration" {
-			return err
-		}
-	} else {
-		if err := resource.Set("block_public_acls", publicAccessOutput.PublicAccessBlockConfiguration.BlockPublicAcls); err != nil {
-			return err
-		}
-		if err := resource.Set("block_public_policy", publicAccessOutput.PublicAccessBlockConfiguration.BlockPublicPolicy); err != nil {
-			return err
-		}
-		if err := resource.Set("ignore_public_acls", publicAccessOutput.PublicAccessBlockConfiguration.IgnorePublicAcls); err != nil {
-			return err
-		}
-		if err := resource.Set("restrict_public_buckets", publicAccessOutput.PublicAccessBlockConfiguration.RestrictPublicBuckets); err != nil {
-			return err
-		}
+	if err := resolveBucketVersioning(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+		return err
 	}
 
-	replicationOutput, err := svc.GetBucketReplication(ctx, &s3.GetBucketReplicationInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil {
-		// If we received any error other than ReplicationConfigurationNotFoundError, we return and error
-		if errors.As(err, &ae) && ae.ErrorCode() != "ReplicationConfigurationNotFoundError" {
-			return err
-		}
-	} else {
-		if replicationOutput.ReplicationConfiguration != nil {
-			if err := resource.Set("replication_role", replicationOutput.ReplicationConfiguration.Role); err != nil {
-				return err
-			}
-			// We set this here for fetchReplicationRules to get and insert
-			resource.Item.(*WrappedBucket).ReplicationRules = replicationOutput.ReplicationConfiguration.Rules
-		}
+	if err := resolveBucketPublicAccessBlock(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+		return err
 	}
 
-	taggingOutput, err := svc.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: r.Name}, func(options *s3.Options) {
-		options.Region = bucketRegion
-	})
-	if err != nil {
-		if !errors.As(err, &ae) || ae.ErrorCode() != "NoSuchTagSet" {
-			return err
-		}
+	if err := resolveBucketReplication(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+		return err
 	}
-	if taggingOutput != nil {
-		tags := make(map[string]*string, len(taggingOutput.TagSet))
-		for _, t := range taggingOutput.TagSet {
-			tags[*t.Key] = t.Value
-		}
-		if err := resource.Set("tags", tags); err != nil {
-			return err
-		}
+
+	if err := resolveBucketTagging(ctx, meta, resource, *r.Name, bucketRegion); err != nil {
+		return err
 	}
 	return nil
 }
@@ -694,4 +623,160 @@ type WrappedBucket struct {
 	types.Bucket
 	ReplicationRole  *string
 	ReplicationRules []types.ReplicationRule
+}
+
+func resolveBucketLogging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	loggingOutput, err := svc.GetBucketLogging(ctx, &s3.GetBucketLoggingInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetBucketLogging", "bucket", bucketName, "err", err)
+			return nil
+		}
+		return err
+	}
+	if loggingOutput.LoggingEnabled == nil {
+		return nil
+	}
+	if err := resource.Set("logging_target_bucket", loggingOutput.LoggingEnabled.TargetBucket); err != nil {
+		return err
+	}
+	if err := resource.Set("logging_target_prefix", loggingOutput.LoggingEnabled.TargetPrefix); err != nil {
+		return err
+	}
+	return nil
+}
+
+func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	policyOutput, err := svc.GetBucketPolicy(ctx, &s3.GetBucketPolicyInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+	// check if we got an error but its access denied we can continue
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetBucketPolicy", "bucket", bucketName, "err", err)
+			return nil
+		}
+		// if we got an error and its not a NoSuchBucketError, return err
+		var ae smithy.APIError
+		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchBucketPolicy" {
+			return nil
+		}
+		return err
+	}
+	if policyOutput == nil {
+		return nil
+	}
+	return resource.Set("policy", policyOutput.Policy)
+}
+
+func resolveBucketVersioning(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	versioningOutput, err := svc.GetBucketVersioning(ctx, &s3.GetBucketVersioningInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetBucketVersioning", "bucket", bucketName, "err", err)
+			return nil
+		}
+		return err
+	}
+	if err := resource.Set("versioning_status", versioningOutput.Status); err != nil {
+		return err
+	}
+	if err := resource.Set("versioning_mfa_delete", versioningOutput.MFADelete); err != nil {
+		return err
+	}
+	return nil
+}
+
+func resolveBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	publicAccessOutput, err := svc.GetPublicAccessBlock(ctx, &s3.GetPublicAccessBlockInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+	var ae smithy.APIError
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetPublicAccessBlock", "bucket", bucketName, "err", err)
+			return nil
+		}
+		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
+		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchPublicAccessBlockConfiguration" {
+			return nil
+		}
+		return err
+	}
+	if err := resource.Set("block_public_acls", publicAccessOutput.PublicAccessBlockConfiguration.BlockPublicAcls); err != nil {
+		return err
+	}
+	if err := resource.Set("block_public_policy", publicAccessOutput.PublicAccessBlockConfiguration.BlockPublicPolicy); err != nil {
+		return err
+	}
+	if err := resource.Set("ignore_public_acls", publicAccessOutput.PublicAccessBlockConfiguration.IgnorePublicAcls); err != nil {
+		return err
+	}
+	if err := resource.Set("restrict_public_buckets", publicAccessOutput.PublicAccessBlockConfiguration.RestrictPublicBuckets); err != nil {
+		return err
+	}
+	return nil
+}
+
+func resolveBucketReplication(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	replicationOutput, err := svc.GetBucketReplication(ctx, &s3.GetBucketReplicationInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on getBucketReplication", "bucket", bucketName, "err", err)
+			return nil
+		}
+		// If we received any error other than ReplicationConfigurationNotFoundError, we return and error
+		var ae smithy.APIError
+		if errors.As(err, &ae) && ae.ErrorCode() == "ReplicationConfigurationNotFoundError" {
+			return nil
+		}
+		return err
+	}
+	if replicationOutput.ReplicationConfiguration == nil {
+		return nil
+	}
+	if err := resource.Set("replication_role", replicationOutput.ReplicationConfiguration.Role); err != nil {
+		return err
+	}
+	// We set this here for fetchReplicationRules to get and insert
+	resource.Item.(*WrappedBucket).ReplicationRules = replicationOutput.ReplicationConfiguration.Rules
+	return nil
+}
+
+func resolveBucketTagging(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, bucketName, bucketRegion string) error {
+	svc := meta.(*client.Client).Services().S3
+	taggingOutput, err := svc.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.Region = bucketRegion
+	})
+	if err != nil {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on getBucketReplication", "bucket", bucketName, "err", err)
+			return nil
+		}
+		var ae smithy.APIError
+		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchTagSet" {
+			return nil
+		}
+		return err
+	}
+	if taggingOutput == nil {
+		return nil
+	}
+	tags := make(map[string]*string, len(taggingOutput.TagSet))
+	for _, t := range taggingOutput.TagSet {
+		tags[*t.Key] = t.Value
+	}
+	return resource.Set("tags", tags)
 }
