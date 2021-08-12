@@ -202,6 +202,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_encryption_rules",
 				Description: "Specifies the default server-side encryption configuration.",
 				Resolver:    fetchS3BucketEncryptionRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
