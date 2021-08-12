@@ -21,7 +21,7 @@ func OrganizationsAccounts() *schema.Table {
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
-				Description: "The root/organizational unit  AWS account",
+				Description: "The root/organizational unit AWS account",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
 			},
