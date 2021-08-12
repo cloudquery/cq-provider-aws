@@ -191,8 +191,9 @@ func IamUsers() *schema.Table {
 						Resolver: schema.ParentResourceFieldResolver("user_id"),
 					},
 					{
-						Name: "arn",
-						Type: schema.TypeString,
+						Name:     "group_arn",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("Arn"),
 					},
 					{
 						Name: "create_date",
@@ -249,7 +250,6 @@ func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, _ *schema.Resour
 	if err != nil {
 		return err
 	}
-	meta.(*client.Client).ReportUsers = nil
 
 	root := report.GetUser(fmt.Sprintf("arn:aws:iam::%s:root", meta.(*client.Client).AccountID))
 	if root != nil {
