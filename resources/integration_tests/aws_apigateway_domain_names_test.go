@@ -1,4 +1,5 @@
 package integration_tests
+
 //
 //import (
 //	"github.com/cloudquery/cq-provider-aws/resources/integration_tests"
