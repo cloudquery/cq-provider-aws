@@ -154,13 +154,9 @@ type Client struct {
 	maxBackoff      int
 	ServicesManager ServicesManager
 	logger          hclog.Logger
-
 	// this is set by table clientList
 	AccountID string
 	Region    string
-
-	// this is for iam.user specific use-case
-	ReportUsers interface{}
 }
 
 // S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
@@ -313,14 +309,16 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			client.Region = client.regions[0]
 		}
 		for _, region := range client.regions {
-			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(awsCfg))
+			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
 		}
 	}
 
 	return &client, nil
 }
 
-func initServices(awsCfg aws.Config) Services {
+func initServices(region string, c aws.Config) Services {
+	awsCfg := c.Copy()
+	awsCfg.Region = region
 	return Services{
 		Autoscaling:          autoscaling.NewFromConfig(awsCfg),
 		Cloudfront:           cloudfront.NewFromConfig(awsCfg),

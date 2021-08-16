@@ -6,7 +6,6 @@ import (
 	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	smithy "github.com/aws/smithy-go"
@@ -96,13 +95,19 @@ func S3Buckets() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Role"),
 			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the s3 bucket",
+				Type:        schema.TypeString,
+				Resolver:    resolveS3BucketsArn,
+			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_s3_bucket_grants",
 				Description: "Container for grant information.",
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Resolver:    fetchS3BucketGrants,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "grantee_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -151,6 +156,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_cors_rules",
 				Description: "Specifies a cross-origin access rule for an Amazon S3 bucket.",
 				Resolver:    fetchS3BucketCorsRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
@@ -196,7 +202,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_encryption_rules",
 				Description: "Specifies the default server-side encryption configuration.",
 				Resolver:    fetchS3BucketEncryptionRules,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id"}},
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
@@ -227,6 +233,7 @@ func S3Buckets() *schema.Table {
 				Name:        "aws_s3_bucket_replication_rules",
 				Description: "Specifies which Amazon S3 objects to replicate and where to store the replicas.",
 				Resolver:    fetchS3BucketReplicationRules,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
@@ -344,6 +351,7 @@ func S3Buckets() *schema.Table {
 			{
 				Name:        "aws_s3_bucket_lifecycles",
 				Description: "A lifecycle rule for individual objects in an Amazon S3 bucket.",
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Resolver:    fetchS3BucketLifecycles,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				Columns: []schema.Column{
@@ -598,6 +606,11 @@ func resolveS3BucketLifecycleTransitions(ctx context.Context, meta schema.Client
 		return err
 	}
 	return resource.Set("transitions", data)
+}
+
+func resolveS3BucketsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	buc := resource.Item.(*WrappedBucket)
+	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
 }
 
 // ====================================================================================================================
