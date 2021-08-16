@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/identitystore"
+
 	"github.com/aws/smithy-go/logging"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -119,6 +121,7 @@ type Services struct {
 	ConfigService        ConfigServiceClient
 	Waf                  WafClient
 	WafV2                WafV2Client
+	IdentityStore        IdentityStoreClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -353,6 +356,7 @@ func initServices(region string, c aws.Config) Services {
 		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Waf:                  waf.NewFromConfig(awsCfg),
 		WafV2:                wafv2.NewFromConfig(awsCfg),
+		IdentityStore:        identitystore.NewFromConfig(awsCfg),
 	}
 }
 

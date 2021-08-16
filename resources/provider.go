@@ -100,6 +100,8 @@ func Provider() *provider.Provider {
 			"wafv2.web_acls":                        Wafv2WebAcls(),
 			"wafv2.managed_rule_groups":             Wafv2ManagedRuleGroups(),
 			"wafv2.rule_groups":                     Wafv2RuleGroups(),
+			"identity_store.users":                  IdentityStoreUsers(),
+			"identity_store.groups":                 IdentityStoreGroups(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
