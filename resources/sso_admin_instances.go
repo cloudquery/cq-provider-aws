@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/identitystore"
 	"github.com/aws/aws-sdk-go-v2/service/ssoadmin"
 	"github.com/aws/aws-sdk-go-v2/service/ssoadmin/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -46,6 +47,55 @@ func SsoAdminInstances() *schema.Table {
 			},
 		},
 		Relations: []*schema.Table{
+			{
+				Name:        "aws_sso_admin_instance_groups",
+				Description: "A group object, which contains a specified group’s metadata and attributes.",
+				Resolver:    fetchSsoAdminInstanceGroups,
+				Columns: []schema.Column{
+					{
+						Name:        "instance_cq_id",
+						Description: "Unique CloudQuery ID of aws_sso_admin_instances table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "display_name",
+						Description: "Contains the group’s display name value",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "id",
+						Description: "The identifier for a group in the identity store.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("GroupId"),
+					},
+				},
+			},
+			{
+				Name:        "aws_sso_admin_instance_users",
+				Description: "A user object, which contains a specified user’s metadata and attributes.",
+				Resolver:    fetchSsoAdminInstanceUsers,
+				Columns: []schema.Column{
+					{
+						Name:        "instance_cq_id",
+						Description: "Unique CloudQuery ID of aws_sso_admin_instances table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "id",
+						Description: "The identifier for a user in the identity store.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UserId"),
+					},
+					{
+						Name:        "name",
+						Description: "Contains the user’s user name value",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UserName"),
+					},
+				},
+			},
 			{
 				Name:        "aws_sso_admin_instance_permission_sets",
 				Description: "An entity that contains IAM policies.",
@@ -156,6 +206,58 @@ func fetchSsoAdminInstances(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
+func fetchSsoAdminInstanceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", parent.Item)
+	}
+	config := identitystore.ListGroupsInput{
+		IdentityStoreId: r.IdentityStoreId,
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IdentityStore
+	for {
+		response, err := svc.ListGroups(ctx, &config, func(options *identitystore.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+		res <- response.Groups
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		config.NextToken = response.NextToken
+	}
+
+	return nil
+}
+func fetchSsoAdminInstanceUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", parent.Item)
+	}
+	config := identitystore.ListUsersInput{
+		IdentityStoreId: r.IdentityStoreId,
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IdentityStore
+	for {
+		response, err := svc.ListUsers(ctx, &config, func(options *identitystore.Options) {
+			options.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+		res <- response.Users
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		config.NextToken = response.NextToken
+	}
+
+	return nil
+}
 func fetchSsoAdminInstancePermissionSets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.InstanceMetadata)
 	if !ok {
@@ -196,7 +298,6 @@ func fetchSsoAdminInstancePermissionSets(ctx context.Context, meta schema.Client
 	}
 	return nil
 }
-
 func resolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ps, ok := resource.Item.(types.PermissionSet)
 	if !ok {
@@ -221,7 +322,6 @@ func resolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta 
 	}
 	return resource.Set(c.Name, response.InlinePolicy)
 }
-
 func fetchSsoAdminInstancePermissionSetAccountAssignments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	ps, ok := parent.Item.(types.PermissionSet)
 	if !ok {
