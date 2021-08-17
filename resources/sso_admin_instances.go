@@ -35,9 +35,10 @@ func SsoAdminInstances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveSsoAdminInstanceTags,
+				Name:        "tags",
+				Description: "tags of the instance",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveSsoAdminInstanceTags,
 			},
 			{
 				Name:        "identity_store_id",
