@@ -8,7 +8,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 
-	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
+	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationIamGroups(t *testing.T) {
