@@ -299,6 +299,7 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 	if r.reportUser == nil {
 		return nil
 	}
+
 	location, err := time.LoadLocation("UTC")
 	if err != nil {
 		return err
@@ -309,6 +310,16 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 		if err := resource.Set("password_enabled", enabled); err != nil {
 			return err
 		}
+	}
+
+	if r.reportUser.ARN == "" {
+		resource.Set("password_next_rotation", nil)
+		resource.Set("password_last_changed", nil)
+		resource.Set("cert_1_last_rotated", nil)
+		resource.Set("cert_2_last_rotated", nil)
+		resource.Set("access_key_1_last_rotated", nil)
+		resource.Set("access_key_2_last_rotated", nil)
+		return nil
 	}
 
 	if r.PasswordNextRotation == "N/A" || r.PasswordNextRotation == "not_supported" {
@@ -441,12 +452,16 @@ func fetchIamUserAccessKeys(ctx context.Context, meta schema.ClientMeta, parent 
 				rotated := parent.Get("access_key_1_last_rotated")
 				if rotated != nil {
 					keys[i] = wrappedKey{key, rotated.(time.Time)}
+				}  else {
+					keys[i] = wrappedKey{key, *key.CreateDate}
 				}
 			case 1:
 				rotated := parent.Get("access_key_2_last_rotated")
 				if rotated != nil {
 					keys[i] = wrappedKey{key, rotated.(time.Time)}
-				}
+				} else {
+				keys[i] = wrappedKey{key, *key.CreateDate}
+			}
 			default:
 				keys[i] = wrappedKey{key, time.Time{}}
 			}
