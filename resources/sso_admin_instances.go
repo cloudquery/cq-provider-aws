@@ -35,12 +35,6 @@ func SsoAdminInstances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:        "tags",
-				Description: "tags of the instance",
-				Type:        schema.TypeJSON,
-				Resolver:    resolveSsoAdminInstanceTags,
-			},
-			{
 				Name:        "identity_store_id",
 				Description: "The identifier of the identity store that is connected to the SSO instance.",
 				Type:        schema.TypeString,
@@ -149,6 +143,12 @@ func SsoAdminInstances() *schema.Table {
 						Description: "The length of time that the application user sessions are valid for in the ISO-8601 standard.",
 						Type:        schema.TypeString,
 					},
+					{
+						Name:        "tags",
+						Description: "tags of the permission set",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveSsoPermissionSetTags,
+					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -212,21 +212,26 @@ func fetchSsoAdminInstances(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
-func resolveSsoAdminInstanceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.InstanceMetadata)
+func resolveSsoPermissionSetTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	ps, ok := resource.Item.(types.PermissionSet)
 	if !ok {
-		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Item)
+		return fmt.Errorf("expected to have types.PermissionSet but got %T", resource.Item)
+	}
+	im, ok := resource.Parent.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Parent.Item)
 	}
 
-	client := meta.(*client.Client)
-	svc := client.Services().SSOAdmin
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
 	config := ssoadmin.ListTagsForResourceInput{
-		InstanceArn: r.InstanceArn,
+		InstanceArn: im.InstanceArn,
+		ResourceArn: ps.PermissionSetArn,
 	}
 	tags := make(map[string]string)
 	for {
 		response, err := svc.ListTagsForResource(ctx, &config, func(o *ssoadmin.Options) {
-			o.Region = client.Region
+			o.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
@@ -243,6 +248,7 @@ func resolveSsoAdminInstanceTags(ctx context.Context, meta schema.ClientMeta, re
 	}
 	return resource.Set(c.Name, tags)
 }
+
 func fetchSsoAdminInstanceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.InstanceMetadata)
 	if !ok {
@@ -251,11 +257,11 @@ func fetchSsoAdminInstanceGroups(ctx context.Context, meta schema.ClientMeta, pa
 	config := identitystore.ListGroupsInput{
 		IdentityStoreId: r.IdentityStoreId,
 	}
-	client := meta.(*client.Client)
-	svc := client.Services().IdentityStore
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().IdentityStore
 	for {
 		response, err := svc.ListGroups(ctx, &config, func(options *identitystore.Options) {
-			options.Region = client.Region
+			options.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
@@ -277,11 +283,11 @@ func fetchSsoAdminInstanceUsers(ctx context.Context, meta schema.ClientMeta, par
 	config := identitystore.ListUsersInput{
 		IdentityStoreId: r.IdentityStoreId,
 	}
-	client := meta.(*client.Client)
-	svc := client.Services().IdentityStore
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().IdentityStore
 	for {
 		response, err := svc.ListUsers(ctx, &config, func(options *identitystore.Options) {
-			options.Region = client.Region
+			options.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
@@ -301,14 +307,14 @@ func fetchSsoAdminInstancePermissionSets(ctx context.Context, meta schema.Client
 		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", parent.Item)
 	}
 
-	client := meta.(*client.Client)
-	svc := client.Services().SSOAdmin
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
 	config := ssoadmin.ListPermissionSetsInput{
 		InstanceArn: r.InstanceArn,
 	}
 	for {
 		response, err := svc.ListPermissionSets(ctx, &config, func(o *ssoadmin.Options) {
-			o.Region = client.Region
+			o.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
@@ -319,7 +325,7 @@ func fetchSsoAdminInstancePermissionSets(ctx context.Context, meta schema.Client
 				InstanceArn:      r.InstanceArn,
 				PermissionSetArn: &p,
 			}, func(options *ssoadmin.Options) {
-				options.Region = client.Region
+				options.Region = awsClient.Region
 			})
 			if err != nil {
 				return err
@@ -344,15 +350,15 @@ func resolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta 
 	if !ok {
 		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Parent.Item)
 	}
-	client := meta.(*client.Client)
-	svc := client.Services().SSOAdmin
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
 
 	config := ssoadmin.GetInlinePolicyForPermissionSetInput{
 		PermissionSetArn: ps.PermissionSetArn,
 		InstanceArn:      im.InstanceArn,
 	}
 	response, err := svc.GetInlinePolicyForPermissionSet(ctx, &config, func(o *ssoadmin.Options) {
-		o.Region = client.Region
+		o.Region = awsClient.Region
 	})
 	if err != nil {
 		return err
@@ -368,18 +374,17 @@ func fetchSsoAdminInstancePermissionSetAccountAssignments(ctx context.Context, m
 	if !ok {
 		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", parent.Parent.Item)
 	}
-
-	client := meta.(*client.Client)
-	svc := client.Services().SSOAdmin
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
 
 	config := ssoadmin.ListAccountAssignmentsInput{
-		AccountId:        &client.AccountID,
+		AccountId:        &awsClient.AccountID,
 		PermissionSetArn: ps.PermissionSetArn,
 		InstanceArn:      im.InstanceArn,
 	}
 	for {
 		response, err := svc.ListAccountAssignments(ctx, &config, func(o *ssoadmin.Options) {
-			o.Region = client.Region
+			o.Region = awsClient.Region
 		})
 		if err != nil {
 			return err

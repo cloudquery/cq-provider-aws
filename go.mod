@@ -1,14 +1,13 @@
 module github.com/cloudquery/cq-provider-aws
 
-go 1.15
+go 1.16
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
 	github.com/aws/aws-sdk-go-v2 v1.8.0
-	github.com/aws/aws-sdk-go-v2/config v1.1.6
-	github.com/aws/aws-sdk-go-v2/credentials v1.1.6
+	github.com/aws/aws-sdk-go-v2/config v1.6.0
+	github.com/aws/aws-sdk-go-v2/credentials v1.3.2
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.1.3
-	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.3.1
@@ -44,7 +43,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.5.0
 	github.com/aws/aws-sdk-go-v2/service/sns v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.5.0
-	github.com/aws/aws-sdk-go-v2/service/sts v1.3.0
+	github.com/aws/aws-sdk-go-v2/service/sts v1.6.1
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.7.0
