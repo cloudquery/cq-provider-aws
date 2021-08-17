@@ -33,7 +33,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/emr v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/fsx v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/iam v1.3.0
-	github.com/aws/aws-sdk-go-v2/service/identitystore v1.4.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/identitystore v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/kms v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
@@ -43,7 +43,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.5.0
 	github.com/aws/aws-sdk-go-v2/service/sns v1.1.2
-	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.5.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.5.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
@@ -53,7 +53,6 @@ require (
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.5.0
 	github.com/hashicorp/go-hclog v0.16.1
-	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/spf13/cast v1.4.0
