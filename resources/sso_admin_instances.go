@@ -35,6 +35,11 @@ func SsoAdminInstances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveSsoAdminInstanceTags,
+			},
+			{
 				Name:        "identity_store_id",
 				Description: "The identifier of the identity store that is connected to the SSO instance.",
 				Type:        schema.TypeString,
@@ -205,6 +210,37 @@ func fetchSsoAdminInstances(ctx context.Context, meta schema.ClientMeta, parent 
 		config.NextToken = response.NextToken
 	}
 	return nil
+}
+func resolveSsoAdminInstanceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Item)
+	}
+
+	client := meta.(*client.Client)
+	svc := client.Services().SSOAdmin
+	config := ssoadmin.ListTagsForResourceInput{
+		InstanceArn: r.InstanceArn,
+	}
+	tags := make(map[string]string)
+	for {
+		response, err := svc.ListTagsForResource(ctx, &config, func(o *ssoadmin.Options) {
+			o.Region = client.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, t := range response.Tags {
+			tags[*t.Key] = *t.Value
+		}
+
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		config.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, tags)
 }
 func fetchSsoAdminInstanceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.InstanceMetadata)

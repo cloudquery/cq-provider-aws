@@ -36,6 +36,13 @@ func buildSsoAdminInstances(t *testing.T, ctrl *gomock.Controller) client.Servic
 	}
 	sso.EXPECT().DescribePermissionSet(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ps, nil)
 
+	tags := ssoadmin.ListTagsForResourceOutput{}
+	if err := faker.FakeData(&tags); err != nil {
+		t.Fatal(err)
+	}
+	tags.NextToken = nil
+	sso.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tags, nil)
+
 	aa := ssoadmin.ListAccountAssignmentsOutput{}
 	if err := faker.FakeData(&aa); err != nil {
 		t.Fatal(err)
