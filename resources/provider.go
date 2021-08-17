@@ -102,6 +102,7 @@ func Provider() *provider.Provider {
 			"wafv2.rule_groups":                     Wafv2RuleGroups(),
 			"identity_store.users":                  IdentityStoreUsers(),
 			"identity_store.groups":                 IdentityStoreGroups(),
+			"sso_admin.instances":                   SsoAdminInstances(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}

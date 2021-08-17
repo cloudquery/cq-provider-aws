@@ -43,6 +43,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.5.0
 	github.com/aws/aws-sdk-go-v2/service/sns v1.1.2
+	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.5.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
