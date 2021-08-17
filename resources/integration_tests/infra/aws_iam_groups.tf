@@ -1,13 +1,13 @@
 
-resource "aws_iam_group" "developers" {
+resource "aws_iam_group" "group_developers" {
   name = "aws_iam_group${var.test_prefix}${var.test_suffix}"
   path = "/users/"
 }
 
 
-resource "aws_iam_group_policy" "gr_po" {
+resource "aws_iam_group_policy" "group_policy" {
   name = "aws_iam_group_policy${var.test_prefix}${var.test_suffix}"
-  group = aws_iam_group.developers.name
+  group = aws_iam_group.group_developers.name
 
   policy = <<EOF
 {
