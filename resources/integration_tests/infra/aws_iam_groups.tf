@@ -24,3 +24,5 @@ resource "aws_iam_group_policy" "group_policy" {
 }
 EOF
 }
+
+// TODO add group policy attachment
