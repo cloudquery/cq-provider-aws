@@ -18,7 +18,7 @@ func TestIntegrationRoute53HealthChecks(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"resource_path": "/",
+					"resource_path":    "/",
 					"request_interval": 10.0,
 				},
 			}},
