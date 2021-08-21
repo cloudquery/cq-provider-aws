@@ -12,21 +12,14 @@ resource "aws_subnet" "fsx_test_subnet" {
 }
 
 resource "aws_fsx_backup" "test_fsx_backup" {
-  file_system_id = aws_fsx_windows_file_system.test_fsx.id
+  file_system_id = aws_fsx_lustre_file_system.test_fsx.id
 }
 
-resource "aws_fsx_windows_file_system" "test_fsx" {
-  storage_capacity = 2000
+resource "aws_fsx_lustre_file_system" "test_fsx" {
+  storage_capacity = 1200
   storage_type = "HDD"
-  deployment_type = "SINGLE_AZ_2"
-  throughput_capacity = 1024
+  deployment_type = "PERSISTENT_1"
+  per_unit_storage_throughput = 50
   subnet_ids = [aws_subnet.fsx_test_subnet.id]
-
-  self_managed_active_directory {
-    dns_ips     = ["10.0.1.111", "10.0.1.222"]
-    domain_name = "cqtest.example.com"
-    password    = "testPassword"
-    username    = "Admin"
-  }
 }
 
