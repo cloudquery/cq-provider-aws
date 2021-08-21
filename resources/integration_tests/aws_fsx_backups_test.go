@@ -7,10 +7,10 @@ import (
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
-func TestIntegrationMQBrokers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.MqBrokers(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+func TestIntegrationFsxBackups(t *testing.T) {
+	awsTestIntegrationHelper(t, resources.FsxBackups(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
-			Name: "aws_mq_brokers",
+			Name: "aws_fsx_backups",
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
