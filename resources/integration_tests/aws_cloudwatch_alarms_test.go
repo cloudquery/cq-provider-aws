@@ -48,8 +48,8 @@ func TestIntegrationDirectCloudwatchAlarms(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"id": "e1",
-							"label":     "Error Rate",
+							"id":    "e1",
+							"label": "Error Rate",
 						},
 					}},
 				},

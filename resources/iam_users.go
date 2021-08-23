@@ -452,7 +452,7 @@ func fetchIamUserAccessKeys(ctx context.Context, meta schema.ClientMeta, parent 
 				rotated := parent.Get("access_key_1_last_rotated")
 				if rotated != nil {
 					keys[i] = wrappedKey{key, rotated.(time.Time)}
-				}  else {
+				} else {
 					keys[i] = wrappedKey{key, *key.CreateDate}
 				}
 			case 1:
@@ -460,8 +460,8 @@ func fetchIamUserAccessKeys(ctx context.Context, meta schema.ClientMeta, parent 
 				if rotated != nil {
 					keys[i] = wrappedKey{key, rotated.(time.Time)}
 				} else {
-				keys[i] = wrappedKey{key, *key.CreateDate}
-			}
+					keys[i] = wrappedKey{key, *key.CreateDate}
+				}
 			default:
 				keys[i] = wrappedKey{key, time.Time{}}
 			}
