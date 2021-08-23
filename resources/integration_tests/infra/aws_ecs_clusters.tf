@@ -175,7 +175,7 @@ resource "aws_instance" "aws_ecs_clusters_ec2_instance" {
   instance_type = "t2.nano"
   iam_instance_profile = aws_iam_instance_profile.aws_ecs_clusters_ec2-instance-profile.name
   vpc_security_group_ids = [
-    aws_security_group.aws_emr_clusters_security_group.id]
+    aws_security_group.aws_ecs_clusters_security_group.id]
   //  key_name = "pnl-test"
   //  #CHANGE THIS
   ebs_optimized = "false"
@@ -189,12 +189,12 @@ resource "aws_instance" "aws_ecs_clusters_ec2_instance" {
 
   lifecycle {
     ignore_changes = [
-      "ami",
-      "user_data",
-      "subnet_id",
-      "key_name",
-      "ebs_optimized",
-      "private_ip"]
+      ami,
+      user_data,
+      subnet_id,
+      key_name,
+      ebs_optimized,
+      private_ip]
   }
 }
 
@@ -292,7 +292,7 @@ resource "aws_ecs_service" "aws_ecs_clusters_service" {
   }
   network_configuration {
     security_groups = [
-      aws_security_group.aws_emr_clusters_security_group.id]
+      aws_security_group.aws_ecs_clusters_security_group.id]
     subnets = [
       aws_subnet.aws_ecs_clusters_subnet1.id,
       aws_subnet.aws_ecs_clusters_subnet2.id]
@@ -300,7 +300,7 @@ resource "aws_ecs_service" "aws_ecs_clusters_service" {
     assign_public_ip = "false"
   }
   depends_on = [
-    "aws_lb_listener.aws_ecs_clusters_lb_listener"]
+    aws_lb_listener.aws_ecs_clusters_lb_listener]
 }
 
 ####################################################################
@@ -316,7 +316,7 @@ resource "aws_lb" "ecs_clusters_load_balancer" {
     aws_subnet.aws_ecs_clusters_subnet2.id]
   # enter the private subnet
   security_groups = [
-    aws_security_group.aws_emr_clusters_security_group.id]
+    aws_security_group.aws_ecs_clusters_security_group.id]
 }
 
 
