@@ -2,14 +2,16 @@ package integration_tests
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/Masterminds/squirrel"
+
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
-	"testing"
 )
 
 func TestIntegrationRoute53HealthChecks(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53HealthChecks(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Route53HealthChecks(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_route53_health_checks",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

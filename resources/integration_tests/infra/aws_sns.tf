@@ -1,4 +1,4 @@
-resource "aws_sns_topic" "sns_tests" {
+resource "aws_sns_topic" "sns_test" {
   name = "sns-tests-topic-${var.test_suffix}.fifo"
   fifo_topic                  = true
   content_based_deduplication = true
@@ -24,15 +24,15 @@ resource "aws_sns_topic" "sns_tests" {
   EOF
 }
 
-resource "aws_sqs_queue" "sns_tests_queue" {
-  name = "sns-tests-queue.fifo"
+resource "aws_sqs_queue" "sns_test_queue" {
+  name = "sns-tests-queue${var.test_suffix}.fifo"
   fifo_queue                  = true
   content_based_deduplication = true
 
 }
 
 resource "aws_sns_topic_subscription" "sns_test_subscription" {
-  topic_arn = aws_sns_topic.sns_tests.arn
+  topic_arn = aws_sns_topic.sns_test.arn
   protocol = "sqs"
-  endpoint = aws_sqs_queue.sns_tests_queue.arn
+  endpoint = aws_sqs_queue.sns_test_queue.arn
 }

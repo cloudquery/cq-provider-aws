@@ -1,9 +1,9 @@
 package integration_tests
 
 import (
-	"github.com/cloudquery/cq-provider-aws/resources"
 	"testing"
 
+	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 

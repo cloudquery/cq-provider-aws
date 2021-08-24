@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/Masterminds/squirrel"
+
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationIamServerCertificates(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamServerCertificates(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.IamServerCertificates(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_iam_server_certificates",
 			ExpectedValues: []providertest.ExpectedValue{

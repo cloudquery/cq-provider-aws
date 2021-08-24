@@ -1,6 +1,6 @@
 resource "aws_mq_configuration" "mq_test" {
   description    = "MQ Test Configuration"
-  name           = "mq_test_configuration"
+  name           = "mq_test_configuration${var.test_suffix}"
   engine_type    = "ActiveMQ"
   engine_version = "5.15.0"
 
@@ -38,8 +38,7 @@ resource "aws_mq_broker" "mq_test_broker" {
   publicly_accessible = false
 }
 
-
 resource "aws_security_group" "mq_test_sg" {
-  name = "mq_test_sq_${var.test_prefix}_${var.test_suffix}"
+  name = "mq_test_sg_${var.test_prefix}_${var.test_suffix}"
   description = "Managed By Terraform, AWS e2e Testing Resource"
 }

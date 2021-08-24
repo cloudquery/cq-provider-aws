@@ -1,4 +1,3 @@
-
 resource "aws_route53_zone" "route53_zone_dev" {
   name              = "dev.${var.test_prefix}${var.test_suffix}.com"
   tags = {

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
-
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
@@ -17,7 +16,7 @@ func TestIntegrationS3Buckets(t *testing.T) {
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"name": fmt.Sprintf("%s%s", res.Prefix, res.Suffix),
+						"name": fmt.Sprintf("bucket-%s%s", res.Prefix, res.Suffix),
 					},
 				},
 			},

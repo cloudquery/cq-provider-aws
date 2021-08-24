@@ -2,14 +2,16 @@ package integration_tests
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/Masterminds/squirrel"
+
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
-	"testing"
 )
 
 func TestIntegrationIamUsers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamUsers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.IamUsers(), []string{"aws_iam_users.tf", "aws_iam_groups.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_iam_users",
 			ExpectedValues: []providertest.ExpectedValue{{
@@ -55,7 +57,7 @@ func TestIntegrationIamUsers(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"group_name": fmt.Sprintf("aws_iam_user_group%s%s", res.Prefix, res.Suffix),
+							"group_name": fmt.Sprintf("aws_iam_group%s%s", res.Prefix, res.Suffix),
 						},
 					}},
 				},

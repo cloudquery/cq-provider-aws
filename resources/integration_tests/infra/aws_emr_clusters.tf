@@ -20,7 +20,7 @@ EOF
   keep_job_flow_alive_when_no_steps = true
 
   ec2_attributes {
-    subnet_id = aws_subnet.emr_clusters_subnet.id
+    subnet_id = aws_subnet.aws_vpc_subnet3.id
     emr_managed_master_security_group = aws_security_group.aws_emr_clusters_security_group.id
     emr_managed_slave_security_group = aws_security_group.aws_emr_clusters_security_group.id
     instance_profile = aws_iam_instance_profile.aws_emr_clusters_instance_profile.arn
@@ -39,12 +39,7 @@ EOF
       type = "gp2"
       volumes_per_instance = 1
     }
-
     bid_price = "0.30"
-
-
-
-
     autoscaling_policy = <<EOF
 {
 "Constraints": {
@@ -130,14 +125,13 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "aws_emr_clusters_instance_profile" {
-  name = "instance_profile_${var.test_prefix}${var.test_suffix}"
+  name = "emr-cluster-instance_profile_${var.test_prefix}${var.test_suffix}"
   path = "/"
   role = aws_iam_role.emr_clusters_instance_profile_role.id
 }
 
-
 resource "aws_iam_role" "emr_clusters_instance_profile_role" {
-  name = "instance_${var.test_prefix}${var.test_suffix}"
+  name = "emr-cluster-instance-profile-role_${var.test_prefix}"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -221,9 +215,8 @@ resource "aws_iam_role" "emr_clusters_instance_profile_role" {
 
 }
 
-
 resource "aws_iam_role" "emr_clusters_autoscaling_role" {
-  name = "autoscaling_${var.test_prefix}${var.test_suffix}"
+  name = "emr-cluster-autoscaling-role_${var.test_prefix}"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -265,7 +258,7 @@ resource "aws_iam_role" "emr_clusters_autoscaling_role" {
 }
 
 resource "aws_iam_role" "emr_clusters_service_role" {
-  name = "service_${var.test_prefix}${var.test_suffix}"
+  name = "emr_clusters_service_role_${var.test_prefix}${var.test_suffix}"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -372,7 +365,7 @@ resource "aws_iam_role" "emr_clusters_service_role" {
 }
 
 resource "aws_s3_bucket" "aws_emr_cluster_logs" {
-  bucket = "${var.test_prefix}${var.test_suffix}"
+  bucket = "emr-cluster-logs${var.test_prefix}${var.test_suffix}"
   acl = "private"
 
   tags = {
@@ -381,55 +374,7 @@ resource "aws_s3_bucket" "aws_emr_cluster_logs" {
   }
 }
 
-
-//todo might be moved to some general file
-resource "aws_vpc" "aws_emr_clusters_vpc" {
-  cidr_block = "172.16.0.0/16"
-
-  tags = {
-    Name = "tf-example"
-  }
-}
-
-
-resource "aws_route_table" "aws_emr_clusters_rt" {
-  vpc_id = aws_vpc.aws_emr_clusters_vpc.id
-
-
-}
-
-resource "aws_route" "public_internet_gateway" {
-  route_table_id         = aws_route_table.aws_emr_clusters_rt.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.aws_emr_clusters_gw.id
-
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route_table_association" "aws_ecs_clusters_a" {
-  subnet_id = aws_subnet.emr_clusters_subnet.id
-  route_table_id = aws_route_table.aws_emr_clusters_rt.id
-}
-
-resource "aws_internet_gateway" "aws_emr_clusters_gw" {
-  vpc_id = aws_vpc.aws_emr_clusters_vpc.id
-}
-
-
-resource "aws_subnet" "emr_clusters_subnet" {
-  vpc_id = aws_vpc.aws_emr_clusters_vpc.id
-  cidr_block = "172.16.10.0/24"
-  availability_zone = "us-east-1a"
-
-  tags = {
-    Name = "tf-example"
-  }
-}
-
-
-resource "aws_security_group_rule" "allow_tcp_from_master_to_service" {
+resource "aws_security_group_rule" "aws_emr_cluster_allow_tcp_from_master_to_service" {
   type = "ingress"
   from_port = 9443
   to_port = 9443
@@ -439,17 +384,15 @@ resource "aws_security_group_rule" "allow_tcp_from_master_to_service" {
 }
 
 resource "aws_security_group" "aws_emr_clusters_security_group" {
-  name = "aws_ecs_clusters_security_group${var.test_prefix}${var.test_suffix}"
+  name = "aws_emr_clusters_security_group${var.test_prefix}${var.test_suffix}"
 
-  vpc_id = aws_vpc.aws_emr_clusters_vpc.id
+  vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
     protocol = "tcp"
     from_port = "80"
     to_port = "80"
-    //    cidr_blocks = ["${split(",",var.lb_internal ? var.vpc_cidr : join(",",var.public_alb_whitelist))}"]
   }
-
 
   egress {
     from_port = 0

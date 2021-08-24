@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
-
 	"github.com/Masterminds/squirrel"
 
+	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationCognitoUserPools(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CognitoUserPools(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.CognitoUserPools(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cognito_user_pools",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

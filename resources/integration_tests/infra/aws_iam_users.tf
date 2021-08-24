@@ -50,14 +50,9 @@ resource "aws_iam_policy" "user_policy" {
 EOF
 }
 
-resource "aws_iam_user_policy_attachment" "test-attach" {
+resource "aws_iam_user_policy_attachment" "user_policy_attach" {
   user = aws_iam_user.iam_user.name
   policy_arn = aws_iam_policy.user_policy.arn
-}
-
-resource "aws_iam_group" "iam_user_group_developers" {
-  name = "aws_iam_user_group${var.test_prefix}${var.test_suffix}"
-  path = "/users/"
 }
 
 resource "aws_iam_group_membership" "team" {
@@ -67,7 +62,7 @@ resource "aws_iam_group_membership" "team" {
     aws_iam_user.iam_user.name,
   ]
 
-  group = aws_iam_group.iam_user_group_developers.name
+  group = aws_iam_group.group_developers.name
 }
 
 

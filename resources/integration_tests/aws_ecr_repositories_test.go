@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationEcrRepositories(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcrRepositories(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.EcrRepositories(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_ecr_repositories",
 			ExpectedValues: []providertest.ExpectedValue{
