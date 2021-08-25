@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "aws_cloudfront_distributions_bucket" {
   bucket = "b-${var.test_prefix}-${var.test_suffix}"
   acl = "private"
+  force_destroy = true
 }
 
 resource "aws_cloudfront_origin_access_identity" "aws_cloudfront_distributions_access_identity" {

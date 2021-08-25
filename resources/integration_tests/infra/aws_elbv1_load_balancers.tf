@@ -35,6 +35,7 @@ resource "aws_instance" "elbv1-instance-1" {
 resource "aws_s3_bucket" "elbv1-bucket" {
   bucket = "elbv1-bucket${var.test_prefix}${var.test_suffix}"
   acl = "private"
+  force_destroy = true
 }
 
 resource "aws_elb" "elbv1-loadbalancer" {

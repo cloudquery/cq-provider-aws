@@ -367,6 +367,7 @@ resource "aws_iam_role" "emr_clusters_service_role" {
 resource "aws_s3_bucket" "aws_emr_cluster_logs" {
   bucket = "emr-cluster-logs${var.test_prefix}${var.test_suffix}"
   acl = "private"
+  force_destroy = true
 
   tags = {
     Name = "${var.test_prefix}${var.test_suffix}"
