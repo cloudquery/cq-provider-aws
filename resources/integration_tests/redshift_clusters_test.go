@@ -9,7 +9,7 @@ import (
 
 func TestIntegrationRedshiftClusters(t *testing.T) {
 	const clusterFKName = "cluster_cq_id"
-	awsTestIntegrationHelper(t, resources.RedshiftClusters(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.RedshiftClusters(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_redshift_clusters",
 			ExpectedValues: []providertest.ExpectedValue{{

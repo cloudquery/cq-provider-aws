@@ -10,7 +10,7 @@ import (
 )
 
 func TestIntegrationDirectAutoscalingLaunchConfigurations(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.AutoscalingLaunchConfigurations(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.AutoscalingLaunchConfigurations(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_autoscaling_launch_configurations",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
@@ -19,7 +19,7 @@ func TestIntegrationDirectAutoscalingLaunchConfigurations(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"instance_type": "t2.micro",
+					"instance_type": "t2.nano",
 				},
 			}},
 			Relations: []*providertest.ResourceIntegrationVerification{
