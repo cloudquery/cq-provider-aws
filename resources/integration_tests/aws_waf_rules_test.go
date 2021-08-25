@@ -8,7 +8,7 @@ import (
 )
 
 func TestIntegrationWAFRules(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.WafRules(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.WafRules(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_waf_rules",
 			ExpectedValues: []providertest.ExpectedValue{{

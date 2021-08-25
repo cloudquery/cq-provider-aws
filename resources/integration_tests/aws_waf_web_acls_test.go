@@ -8,7 +8,7 @@ import (
 )
 
 func TestIntegrationWAFWebACLs(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.WafWebAcls(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.WafWebAcls(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_waf_web_acls",
 			ExpectedValues: []providertest.ExpectedValue{{
