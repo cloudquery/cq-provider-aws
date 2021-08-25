@@ -8,7 +8,7 @@ import (
 )
 
 func TestIntegrationApigatewayClientCertificates(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ApigatewayClientCertificates(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.ApigatewayClientCertificates(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_client_certificates",
 			ExpectedValues: []providertest.ExpectedValue{{

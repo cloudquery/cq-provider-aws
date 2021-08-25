@@ -10,7 +10,7 @@ import (
 )
 
 func TestIntegrationCloudtrailTrails(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudtrailTrails(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.CloudtrailTrails(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudtrail_trails",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

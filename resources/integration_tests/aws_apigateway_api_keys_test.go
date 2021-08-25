@@ -10,7 +10,7 @@ import (
 )
 
 func TestIntegrationApigatewayAPIKeys(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ApigatewayAPIKeys(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.ApigatewayAPIKeys(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_api_keys",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationDirectconnectVirtualInterfaces(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.DirectconnectVirtualInterfaces(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.DirectconnectVirtualInterfaces(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_directconnect_virtual_interfaces",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

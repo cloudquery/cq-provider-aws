@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationDirectconnectLags(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.DirectconnectLags(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.DirectconnectLags(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_directconnect_lags",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

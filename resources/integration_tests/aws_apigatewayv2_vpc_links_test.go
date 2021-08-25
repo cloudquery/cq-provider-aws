@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationApigatewayv2VpcLinks(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Apigatewayv2VpcLinks(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Apigatewayv2VpcLinks(), []string{"aws_apigatewayv2_vpc_links.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigatewayv2_vpc_links",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
