@@ -2,9 +2,9 @@ package integration_tests
 
 import (
 	"fmt"
-	"github.com/Masterminds/squirrel"
 	"testing"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
@@ -35,7 +35,6 @@ import (
 //	})
 //}
 
-
 func TestIntegrationRdsInstances(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.RdsInstances(), []string{"aws_rds_instances.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
@@ -56,7 +55,6 @@ func TestIntegrationRdsInstances(t *testing.T) {
 	})
 }
 
-
 func TestIntegrationRdsSubnetGroups(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.RdsSubnetGroups(), []string{"aws_rds_db_subnet_groups.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
@@ -75,7 +73,6 @@ func TestIntegrationRdsSubnetGroups(t *testing.T) {
 		}
 	})
 }
-
 
 func TestIntegrationRdsClusters(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.RdsClusters(), []string{"aws_rds_clusters.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
