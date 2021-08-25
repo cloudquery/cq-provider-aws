@@ -8,7 +8,7 @@ import (
 )
 
 func TestIntegrationWAFv2RuleGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Wafv2RuleGroups(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Wafv2RuleGroups(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_wafv2_rule_groups",
 			ExpectedValues: []providertest.ExpectedValue{{
