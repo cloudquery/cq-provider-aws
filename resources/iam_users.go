@@ -313,12 +313,24 @@ func postIamUserResolver(_ context.Context, _ schema.ClientMeta, resource *schem
 	}
 
 	if r.reportUser.ARN == "" {
-		resource.Set("password_next_rotation", nil)
-		resource.Set("password_last_changed", nil)
-		resource.Set("cert_1_last_rotated", nil)
-		resource.Set("cert_2_last_rotated", nil)
-		resource.Set("access_key_1_last_rotated", nil)
-		resource.Set("access_key_2_last_rotated", nil)
+		if err := resource.Set("password_next_rotation", nil); err != nil {
+			return err
+		}
+		if err := resource.Set("password_last_changed", nil); err != nil {
+			return err
+		}
+		if err := resource.Set("cert_1_last_rotated", nil); err != nil {
+			return err
+		}
+		if err := resource.Set("cert_2_last_rotated", nil); err != nil {
+			return err
+		}
+		if err := resource.Set("access_key_1_last_rotated", nil); err != nil {
+			return err
+		}
+		if err := resource.Set("access_key_2_last_rotated", nil); err != nil {
+			return err
+		}
 		return nil
 	}
 

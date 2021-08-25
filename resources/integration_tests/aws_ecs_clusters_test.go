@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/Masterminds/squirrel"
+
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationEcsClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcsClusters(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.EcsClusters(), []string{"aws_ecs_clusters.tf", "aws_vpc.tf", "aws_elbv2_load_balancers.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_ecs_clusters",
 			ExpectedValues: []providertest.ExpectedValue{

@@ -11,5 +11,5 @@ resource "aws_cloudwatch_log_metric_filter" "aws_cloudwatch_log_metric_filter" {
 }
 
 resource "aws_cloudwatch_log_group" "aws_cloudwatch_log_metric_filter_group" {
-  name = "MyApp/access.log"
+  name = "MyApp${var.test_prefix}${var.test_suffix}/access.log"
 }

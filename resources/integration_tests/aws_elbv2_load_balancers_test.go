@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationElbv2LoadBalancers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv2LoadBalancers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Elbv2LoadBalancers(), []string{"aws_elbv2_load_balancers.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elbv2_load_balancers",
 			ExpectedValues: []providertest.ExpectedValue{
@@ -31,7 +31,7 @@ func TestIntegrationElbv2LoadBalancers(t *testing.T) {
 					ForeignKeyName: "load_balancer_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{
 						{
-							Count: 1,
+							Count: 2,
 							Data: map[string]interface{}{
 								"load_balance_name": fmt.Sprintf("elbv2-%s", res.Suffix),
 							},

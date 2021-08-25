@@ -8,7 +8,7 @@ import (
 )
 
 func TestIntegrationElbv1LoadBalancers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv1LoadBalancers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Elbv1LoadBalancers(), []string{"aws_elbv1_load_balancers.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elbv1_load_balancers",
 			ExpectedValues: []providertest.ExpectedValue{

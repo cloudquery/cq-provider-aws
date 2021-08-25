@@ -118,17 +118,9 @@ resource "aws_iam_role" "lambda_func_iam_role" {
   })
 }
 
-resource "aws_lambda_layer_version" "lambda_func_layer" {
-  filename = data.archive_file.lambda_zip_inline.output_path
-  layer_name = "lambda_func_layer${var.test_prefix}${var.test_suffix}"
-
-  compatible_runtimes = [
-    "nodejs12.x"]
-}
-
 resource "aws_lambda_function" "lambda_func" {
-  filename = data.archive_file.lambda_zip_inline.output_path
-  source_code_hash = data.archive_file.lambda_zip_inline.output_base64sha256
+  filename = data.archive_file.lambda_func_zip_inline.output_path
+  source_code_hash = data.archive_file.lambda_func_zip_inline.output_base64sha256
   function_name = "function_${var.test_prefix}${var.test_suffix}"
   role = aws_iam_role.lambda_func_iam_role.arn
   handler = "exports.example"
@@ -140,10 +132,9 @@ resource "aws_lambda_function" "lambda_func" {
       foo = "bar"
     }
   }
-
 }
 
-data "archive_file" "lambda_zip_inline" {
+data "archive_file" "lambda_func_zip_inline" {
   type = "zip"
   output_path = "./tmp/lambda_zip_inline.zip"
   source {

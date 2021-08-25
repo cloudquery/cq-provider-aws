@@ -1,34 +1,42 @@
 resource "aws_lb" "aws_elbv2_load_balancer" {
   name = "elbv2-${var.test_suffix}"
-  load_balancer_type = "network"
 
-  subnets = [
-    aws_subnet.elbv2-subnet.id]
+  subnets = [aws_subnet.aws_vpc_subnet.id, aws_subnet.aws_vpc_subnet2.id]
+
   tags = {
     test = "test"
   }
 }
 
-//todo might be moved to some general file
-resource "aws_vpc" "elbv2-vpc" {
-  cidr_block = "172.16.0.0/16"
+resource "aws_lb_target_group" "aws_elbv2_lb_target_group" {
+  name = "elbv2-tg-${var.test_suffix}"
+  port = "80"
+  protocol = "HTTP"
+  vpc_id = aws_vpc.aws_vpc.id
+  target_type = "ip"
 
-  tags = {
-    Name = "tf-example"
+
+  #STEP 1 - ECS task Running
+  health_check {
+    healthy_threshold = "3"
+    interval = "10"
+    port = "8080"
+    path = "/index.html"
+    protocol = "HTTP"
+    unhealthy_threshold = "3"
   }
+
+  depends_on = [aws_lb.aws_elbv2_load_balancer]
 }
 
-resource "aws_internet_gateway" "elbv2-gw" {
-  vpc_id = aws_vpc.elbv2-vpc.id
-}
+resource "aws_lb_listener" "aws_elbv2_lb_listener" {
 
-resource "aws_subnet" "elbv2-subnet" {
-
-  vpc_id = aws_vpc.elbv2-vpc.id
-  cidr_block = "172.16.1.0/24"
-  availability_zone = "us-east-1a"
-
-  tags = {
-    Name = "tf-example"
+  default_action {
+    target_group_arn = aws_lb_target_group.aws_elbv2_lb_target_group.id
+    type = "forward"
   }
+
+  load_balancer_arn = aws_lb.aws_elbv2_load_balancer.arn
+  port = "80"
+  protocol = "HTTP"
 }

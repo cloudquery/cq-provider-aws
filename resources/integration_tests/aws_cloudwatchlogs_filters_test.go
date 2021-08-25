@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationCloudwatchlogsFilters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudwatchlogsFilters(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.CloudwatchlogsFilters(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudwatchlogs_filters",
 			ExpectedValues: []providertest.ExpectedValue{
@@ -19,7 +19,7 @@ func TestIntegrationCloudwatchlogsFilters(t *testing.T) {
 					Count: 1,
 					Data: map[string]interface{}{
 						"name":           fmt.Sprintf("aws_cloudwatch_log_metric_filter_%s%s", res.Prefix, res.Suffix),
-						"log_group_name": "MyApp/access.log",
+						"log_group_name": fmt.Sprintf("MyApp%s%s/access.log", res.Prefix, res.Suffix),
 					},
 				},
 			},

@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationCloudfrontDistributions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudfrontDistributions(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.CloudfrontDistributions(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudfront_distributions",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

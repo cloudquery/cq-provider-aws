@@ -19,7 +19,6 @@ resource "aws_iam_role" "role_test" {
 
 }
 
-
 resource "aws_iam_role_policy" "role_policy" {
   name = "aws_iam_role_policy${var.test_prefix}${var.test_suffix}"
   role = aws_iam_role.role_test.name

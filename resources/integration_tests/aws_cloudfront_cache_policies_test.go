@@ -5,12 +5,14 @@ import (
 	"testing"
 
 	"github.com/Masterminds/squirrel"
+
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationCloudfrontCachePolicies(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudfrontCachePolicies(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.CloudfrontCachePolicies(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudfront_cache_policies",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

@@ -1,9 +1,7 @@
-
 resource "aws_iam_group" "group_developers" {
   name = "aws_iam_group${var.test_prefix}${var.test_suffix}"
   path = "/users/"
 }
-
 
 resource "aws_iam_group_policy" "group_policy" {
   name = "aws_iam_group_policy${var.test_prefix}${var.test_suffix}"
