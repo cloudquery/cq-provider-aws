@@ -17,7 +17,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_launch_configuration" "as_conf" {
   name          = "${var.test_prefix}-${var.test_suffix}"
   image_id      = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = "t2.nano"
 
   ebs_block_device {
     device_name = "test_name"

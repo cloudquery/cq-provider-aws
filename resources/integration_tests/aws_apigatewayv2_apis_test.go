@@ -18,7 +18,7 @@ func TestIntegrationApigatewayv2ApisTest(t *testing.T) {
 }
 `
 	const apiFKName = "api_cq_id"
-	awsTestIntegrationHelper(t, resources.Apigatewayv2Apis(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Apigatewayv2Apis(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigatewayv2_apis",
 			ExpectedValues: []providertest.ExpectedValue{{
