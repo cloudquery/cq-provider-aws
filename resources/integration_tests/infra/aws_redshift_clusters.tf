@@ -26,4 +26,5 @@ resource "aws_redshift_cluster" "redshift_cluster" {
   node_type          = "dc2.large"
   cluster_type       = "single-node"
   cluster_parameter_group_name = aws_redshift_parameter_group.redshift_parameter_group.name
+  skip_final_snapshot = true
 }
