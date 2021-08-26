@@ -7,10 +7,10 @@ resource "aws_waf_ipset" "waf_ipset_2" {
   }
 }
 
-resource "aws_waf_rule" "waf_rule_2" {
+resource "aws_waf_rule" "waf_rule_3" {
   depends_on  = [aws_waf_ipset.waf_ipset_2]
-  name        = "waf_rule_2"
-  metric_name = "wafrule2"
+  name        = "waf_rule_3"
+  metric_name = "wafrule3"
 
   predicates {
     data_id = aws_waf_ipset.waf_ipset_2.id
@@ -22,7 +22,7 @@ resource "aws_waf_rule" "waf_rule_2" {
 resource "aws_waf_web_acl" "waf_web_acl_1" {
   depends_on = [
     aws_waf_ipset.waf_ipset_2,
-    aws_waf_rule.waf_rule_2,
+    aws_waf_rule.waf_rule_3,
   ]
   name        = "waf_web_acl_1"
   metric_name = "wafwebacl1"
@@ -37,7 +37,7 @@ resource "aws_waf_web_acl" "waf_web_acl_1" {
     }
 
     priority = 1
-    rule_id  = aws_waf_rule.waf_rule_2.id
+    rule_id  = aws_waf_rule.waf_rule_3.id
     type     = "REGULAR"
   }
 }
