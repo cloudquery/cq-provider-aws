@@ -3,12 +3,8 @@ resource "aws_dx_gateway" "aws_directconnect_virtual_gateways_gateway" {
   amazon_side_asn = "64512"
 }
 
-resource "aws_vpc" "aws_directconnect_virtual_gateways_vpc" {
-  cidr_block = "10.255.255.0/28"
-}
-
 resource "aws_vpn_gateway" "example" {
-  vpc_id = aws_vpc.aws_directconnect_virtual_gateways_vpc.id
+  vpc_id = aws_vpc.aws_vpc.id
 }
 
 resource "aws_dx_gateway_association" "aws_directconnect_virtual_gateways_association" {
