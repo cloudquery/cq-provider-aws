@@ -33,6 +33,7 @@ func awsTestIntegrationHelper(t *testing.T, table *schema.Table, resourceFiles [
 		Config:              cfg,
 		Configure:           client.Configure,
 		VerificationBuilder: verificationBuilder,
+		Resources:           resourceFiles,
 	})
 }
 

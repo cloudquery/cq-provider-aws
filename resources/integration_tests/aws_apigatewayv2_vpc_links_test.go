@@ -19,8 +19,8 @@ func TestIntegrationApigatewayv2VpcLinks(t *testing.T) {
 			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
-				Data:  map[string]interface{}{
-					//"vpc_link_version": "V2",
+				Data: map[string]interface{}{
+					"vpc_link_version": "V2",
 				},
 			}},
 		}
