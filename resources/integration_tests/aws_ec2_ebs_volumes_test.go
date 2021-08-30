@@ -12,12 +12,6 @@ func TestIntegrationEc2EbsVolumes(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.Ec2EbsVolumes(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: resources.Ec2EbsVolumes().Name,
-			//Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-			//	return sq.Where(squirrel.And{
-			//		squirrel.Eq{"tags->>'TestId'": res.Suffix},
-			//		squirrel.NotEq{"state_name": "terminated"},
-			//	})
-			//},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
@@ -30,7 +24,7 @@ func TestIntegrationEc2EbsVolumes(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
-							"Name":   fmt.Sprintf("ebs-%s%s", res.Prefix, res.Suffix),
+							"Name":   fmt.Sprintf("ec2-ebs-%s%s", res.Prefix, res.Suffix),
 						},
 					},
 				},

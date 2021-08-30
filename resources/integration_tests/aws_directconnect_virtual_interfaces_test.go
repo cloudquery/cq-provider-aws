@@ -15,13 +15,13 @@ func TestIntegrationDirectconnectVirtualInterfaces(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_directconnect_virtual_interfaces",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where(squirrel.And{squirrel.Eq{"virtual_interface_name": fmt.Sprintf("vif-%s-%s", res.Prefix, res.Suffix)}, squirrel.NotEq{"virtual_interface_state": "deleted"}})
+				return sq.Where(squirrel.And{squirrel.Eq{"virtual_interface_name": fmt.Sprintf("fx-pvif-%s-%s", res.Prefix, res.Suffix)}, squirrel.NotEq{"virtual_interface_state": "deleted"}})
 			},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"virtual_interface_name": fmt.Sprintf("vif-%s-%s", res.Prefix, res.Suffix),
+						"virtual_interface_name": fmt.Sprintf("fx-pvif-%s-%s", res.Prefix, res.Suffix),
 						"address_family":         "ipv4",
 						"amazon_address":         "175.45.176.2/30",
 						"asn":                    float64(65352),

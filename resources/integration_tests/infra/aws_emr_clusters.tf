@@ -39,7 +39,7 @@ EOF
       type                 = "gp2"
       volumes_per_instance = 1
     }
-    bid_price          = "0.30"
+    bid_price          = "0.60"
     autoscaling_policy = <<EOF
 {
 "Constraints": {
@@ -365,12 +365,12 @@ resource "aws_iam_role" "emr_clusters_service_role" {
 }
 
 resource "aws_s3_bucket" "aws_emr_cluster_logs" {
-  bucket = "emr-cluster-logs${var.test_prefix}${var.test_suffix}"
-  acl = "private"
+  bucket        = "emr-cluster-logs${var.test_prefix}${var.test_suffix}"
+  acl           = "private"
   force_destroy = true
 
   tags = {
-    Name = "${var.test_prefix}${var.test_suffix}"
+    Name        = "${var.test_prefix}${var.test_suffix}"
     Environment = "Dev"
   }
 }

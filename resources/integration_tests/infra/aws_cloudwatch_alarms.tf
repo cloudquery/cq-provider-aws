@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "cloudwatch_alarm" {
-  alarm_name                = "cl-alarm${var.test_prefix}-${var.test_suffix}"
+  alarm_name                = "cw-alarm${var.test_prefix}-${var.test_suffix}"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
   threshold                 = "10"
@@ -59,5 +59,5 @@ resource "aws_cloudwatch_log_metric_filter" "cloudwatch_log_filter" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
-  name = "cl-log-g${var.test_prefix}-${var.test_suffix}"
+  name = "cw-log-g${var.test_prefix}-${var.test_suffix}"
 }

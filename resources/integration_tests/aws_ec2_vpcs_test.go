@@ -156,7 +156,7 @@ func TestIntegrationEc2SecurityGroups(t *testing.T) {
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"group_name": fmt.Sprintf("%s%s-sg", res.Prefix, res.Suffix),
+						"group_name": fmt.Sprintf("ec2-sg-%s%s", res.Prefix, res.Suffix),
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
@@ -232,7 +232,7 @@ func TestIntegrationEc2NetworkAcls(t *testing.T) {
 						"is_default": false,
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
-							"Name":   fmt.Sprintf("acl-%s-%s", res.Prefix, res.Suffix),
+							"Name":   fmt.Sprintf("ec2-acl-%s-%s", res.Prefix, res.Suffix),
 							"TestId": res.Suffix,
 						},
 					},
@@ -328,7 +328,7 @@ func TestIntegrationEc2NatGateways(t *testing.T) {
 					Data: map[string]interface{}{
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
-							"Name":   fmt.Sprintf("nat-%s-%s", res.Prefix, res.Suffix),
+							"Name":   fmt.Sprintf("ec2-nat-%s-%s", res.Prefix, res.Suffix),
 							"TestId": res.Suffix,
 						},
 					},

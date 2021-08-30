@@ -1,5 +1,5 @@
 resource "aws_iam_role" "aws_ecs_clusters_ec2_iam_role" {
-  name = "ec2_iam_role_${var.test_prefix}${var.test_suffix}"
+  name = "ec2_ec2_iam_role_${var.test_prefix}${var.test_suffix}"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -25,7 +25,7 @@ resource "aws_iam_instance_profile" "aws_ecs_clusters_ec2-instance-profile" {
 }
 
 resource "aws_security_group" "aws_ecs_clusters_security_group" {
-  name = "aws_ecs_clusters_security_group${var.test_prefix}${var.test_suffix}"
+  name = "ecs_clusters_sg${var.test_prefix}${var.test_suffix}"
 
   vpc_id = aws_vpc.aws_vpc.id
 
@@ -75,7 +75,7 @@ resource "aws_instance" "aws_ecs_clusters_ec2_instance" {
   }
 
   tags = {
-    "Name" = "aws_ecs_ec2_instance${var.test_suffix}"
+    "Name" = "ecs_ec2_instance${var.test_suffix}"
   }
 }
 

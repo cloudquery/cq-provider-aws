@@ -20,7 +20,7 @@ func TestIntegrationEfsFilesystems(t *testing.T) {
 						"kms_key_id":       nil,
 						"encrypted":        false,
 						"performance_mode": "generalPurpose",
-						"creation_token":   fmt.Sprintf("efs-token-%s%s", res.Prefix, res.Suffix),
+						"creation_token":   fmt.Sprintf("efs-%s%s", res.Prefix, res.Suffix),
 					},
 				},
 			},

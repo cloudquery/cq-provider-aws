@@ -16,7 +16,10 @@ func TestIntegrationEc2Instances(t *testing.T) {
 			Name: resources.Ec2Instances().Name,
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
 				return sq.Where(squirrel.And{
-					squirrel.Eq{"tags->>'TestId'": res.Suffix},
+					squirrel.Eq{
+						"tags->>'TestId'": res.Suffix,
+						"tags->>'Name'":   fmt.Sprintf("ec2_instance%s", res.Suffix),
+					},
 					squirrel.NotEq{"state_name": "terminated"},
 				})
 			},
@@ -35,7 +38,7 @@ func TestIntegrationEc2Instances(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
-							"Name":   fmt.Sprintf("aws_ecs_ec2_instance%s", res.Suffix),
+							"Name":   fmt.Sprintf("ec2_instance%s", res.Suffix),
 						},
 					},
 				},
@@ -71,7 +74,7 @@ func TestIntegrationEc2Instances(t *testing.T) {
 							ExpectedValues: []providertest.ExpectedValue{{
 								Count: 1,
 								Data: map[string]interface{}{
-									"group_name": fmt.Sprintf("aws_ec2_instances_security_group%s%s", res.Prefix, res.Suffix),
+									"group_name": fmt.Sprintf("aws_ec2_instances_sg_%s%s", res.Prefix, res.Suffix),
 								},
 							}},
 						},
@@ -93,7 +96,7 @@ func TestIntegrationEc2Instances(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"group_name": fmt.Sprintf("aws_ec2_instances_security_group%s%s", res.Prefix, res.Suffix),
+							"group_name": fmt.Sprintf("aws_ec2_instances_sg_%s%s", res.Prefix, res.Suffix),
 						},
 					}},
 				},

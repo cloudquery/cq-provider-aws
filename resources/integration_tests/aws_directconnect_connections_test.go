@@ -15,13 +15,13 @@ func TestIntegrationDirectconnectConnections(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_directconnect_connections",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where(squirrel.And{squirrel.Eq{"name": fmt.Sprintf("tf-dx-connection%s-%s", res.Prefix, res.Suffix)}, squirrel.NotEq{"connection_state": "deleted"}})
+				return sq.Where(squirrel.And{squirrel.Eq{"name": fmt.Sprintf("dx-connection%s-%s", res.Prefix, res.Suffix)}, squirrel.NotEq{"connection_state": "deleted"}})
 			},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"name":                fmt.Sprintf("tf-dx-connection%s-%s", res.Prefix, res.Suffix),
+						"name":                fmt.Sprintf("dx-connection%s-%s", res.Prefix, res.Suffix),
 						"bandwidth":           "1Gbps",
 						"jumbo_frame_capable": false,
 						"location":            "EqDC2",

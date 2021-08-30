@@ -15,13 +15,13 @@ func TestIntegrationElasticbeanstalkEnvironments(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elasticbeanstalk_environments",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where(squirrel.Eq{"environment_name": firstN(fmt.Sprintf("ee-%s", res.Suffix), 40)})
+				return sq.Where(squirrel.Eq{"environment_name": firstN(fmt.Sprintf("beanstalk-ee-%s", res.Suffix), 40)})
 			},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"application_name":                fmt.Sprintf("ea-%s", res.Suffix),
+						"application_name":                fmt.Sprintf("beanstalk-ea-%s", res.Suffix),
 						"tier_name":                       "WebServer",
 						"tier_type":                       "Standard",
 						"tier_version":                    "1.0",

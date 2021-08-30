@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "aws_cloudfront_distributions_bucket" {
-  bucket = "b-${var.test_prefix}-${var.test_suffix}"
+  bucket        = "cf-buc-${var.test_prefix}-${var.test_suffix}"
   force_destroy = true
-  acl    = "private"
+  acl           = "private"
 }
 
 resource "aws_cloudfront_origin_access_identity" "aws_cloudfront_distributions_access_identity" {
@@ -32,7 +32,7 @@ resource "aws_s3_bucket_policy" "aws_cloudfront_distributions_bucket_policy" {
 resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distribution" {
   origin {
     domain_name = aws_s3_bucket.aws_cloudfront_distributions_bucket.bucket_regional_domain_name
-    origin_id   = "s3origin${var.test_prefix}-${var.test_suffix}"
+    origin_id   = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.aws_cloudfront_distributions_access_identity.cloudfront_access_identity_path
@@ -43,16 +43,6 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
   is_ipv6_enabled     = true
   comment             = "Some comment"
   default_root_object = "index.html"
-
-  //  logging_config {
-  //    include_cookies = false
-  //    bucket = "mylogs.s3.amazonaws.com"
-  //    prefix = "myprefix"
-  //  }
-
-  //  aliases = [
-  //    "mysite.example.com",
-  //    "yoursite.example.com"]
 
   default_cache_behavior {
     allowed_methods = [
@@ -66,7 +56,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
     cached_methods = [
       "GET",
     "HEAD"]
-    target_origin_id = "s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
 
     forwarded_values {
       query_string = false
@@ -99,7 +89,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
       "GET",
       "HEAD",
     "OPTIONS"]
-    target_origin_id = "s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
 
     forwarded_values {
       query_string = false
@@ -128,7 +118,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
     cached_methods = [
       "GET",
     "HEAD"]
-    target_origin_id = "s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
 
     forwarded_values {
       query_string = false

@@ -21,7 +21,7 @@ func TestIntegrationEc2CustomerGateways(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
-							"Name":   fmt.Sprintf("cgw-%s-%s", res.Prefix, res.Suffix),
+							"Name":   fmt.Sprintf("ec2-cgw-%s-%s", res.Prefix, res.Suffix),
 						},
 					},
 				},

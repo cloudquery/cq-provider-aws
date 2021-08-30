@@ -15,7 +15,7 @@ func TestIntegrationApigatewayVpcLinks(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        fmt.Sprintf("a-%s-%s", res.Prefix, res.Suffix),
+					"name":        fmt.Sprintf("apigw-vpc-link-%s-%s", res.Prefix, res.Suffix),
 					"description": "example description",
 				},
 			}},

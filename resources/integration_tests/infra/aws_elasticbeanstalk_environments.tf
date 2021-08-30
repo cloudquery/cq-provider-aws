@@ -1,75 +1,75 @@
 resource "aws_elastic_beanstalk_application" "aws_elasticbeanstalk_environments_app" {
-  name = "ea-${var.test_suffix}"
+  name        = "beanstalk-ea-${var.test_suffix}"
   description = "tf-test-desc"
 }
 
 resource "aws_elastic_beanstalk_environment" "aws_elasticbeanstalk_environments_env" {
-  name = substr("ee-${var.test_suffix}", 0, 40)
-  application = aws_elastic_beanstalk_application.aws_elasticbeanstalk_environments_app.name
+  name                = substr("beanstalk-ee-${var.test_suffix}", 0, 40)
+  application         = aws_elastic_beanstalk_application.aws_elasticbeanstalk_environments_app.name
   solution_stack_name = "64bit Amazon Linux 2 v3.3.4 running Go 1"
 
 
   setting {
     namespace = "aws:ec2:vpc"
-    name = "VPCId"
-    value = aws_vpc.aws_vpc.id
+    name      = "VPCId"
+    value     = aws_vpc.aws_vpc.id
   }
 
   setting {
     namespace = "aws:ec2:vpc"
-    name = "AssociatePublicIpAddress"
-    value = "True"
+    name      = "AssociatePublicIpAddress"
+    value     = "True"
   }
 
   setting {
     namespace = "aws:ec2:vpc"
-    name = "Subnets"
+    name      = "Subnets"
     value = join(",", [
       aws_subnet.aws_vpc_subnet2.id,
-      aws_subnet.aws_vpc_subnet3.id])
+    aws_subnet.aws_vpc_subnet3.id])
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
-    name = "IamInstanceProfile"
-    value = aws_iam_instance_profile.aws_elasticbeanstalk_environments_ip.id
+    name      = "IamInstanceProfile"
+    value     = aws_iam_instance_profile.aws_elasticbeanstalk_environments_ip.id
   }
 
 
   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
-    name = "MatcherHTTPCode"
-    value = "200"
+    name      = "MatcherHTTPCode"
+    value     = "200"
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
-    name = "LoadBalancerType"
-    value = "application"
+    name      = "LoadBalancerType"
+    value     = "application"
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
-    name = "InstanceType"
-    value = "t2.nano"
+    name      = "InstanceType"
+    value     = "t2.nano"
   }
   setting {
     namespace = "aws:ec2:vpc"
-    name = "ELBScheme"
-    value = "internet facing"
+    name      = "ELBScheme"
+    value     = "internet facing"
   }
   setting {
     namespace = "aws:autoscaling:asg"
-    name = "MinSize"
-    value = 1
+    name      = "MinSize"
+    value     = 1
   }
   setting {
     namespace = "aws:autoscaling:asg"
-    name = "MaxSize"
-    value = 2
+    name      = "MaxSize"
+    value     = 2
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
-    name = "SystemType"
-    value = "enhanced"
+    name      = "SystemType"
+    value     = "enhanced"
   }
 
   tags = {
@@ -79,7 +79,7 @@ resource "aws_elastic_beanstalk_environment" "aws_elasticbeanstalk_environments_
 }
 
 resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
-  name = "ir_${var.test_prefix}${var.test_suffix}"
+  name = "beanstalk-role_${var.test_prefix}${var.test_suffix}"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -89,64 +89,64 @@ resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid = ""
+        Sid    = ""
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      }]
+    }]
   })
 
   inline_policy {
-    name = "inline-${var.test_prefix}${var.test_suffix}"
+    name = "beanstalk-inline-${var.test_prefix}${var.test_suffix}"
 
     policy = jsonencode({
       Version = "2012-10-17"
-      Statement: [
+      Statement : [
         {
-          Sid: "BucketAccess",
-          Action: [
+          Sid : "BucketAccess",
+          Action : [
             "s3:Get*",
             "s3:List*",
             "s3:PutObject"
           ],
-          Effect: "Allow",
-          Resource: [
+          Effect : "Allow",
+          Resource : [
             "arn:aws:s3:::elasticbeanstalk-*",
             "arn:aws:s3:::elasticbeanstalk-*/*"
           ]
         },
         {
-          Sid: "XRayAccess",
-          Action:[
+          Sid : "XRayAccess",
+          Action : [
             "xray:PutTraceSegments",
             "xray:PutTelemetryRecords",
             "xray:GetSamplingRules",
             "xray:GetSamplingTargets",
             "xray:GetSamplingStatisticSummaries"
           ],
-          Effect: "Allow",
-          Resource: "*"
+          Effect : "Allow",
+          Resource : "*"
         },
         {
-          Sid: "CloudWatchLogsAccess",
-          Action: [
+          Sid : "CloudWatchLogsAccess",
+          Action : [
             "logs:PutLogEvents",
             "logs:CreateLogStream",
             "logs:DescribeLogStreams",
             "logs:DescribeLogGroups"
           ],
-          Effect: "Allow",
-          Resource: [
+          Effect : "Allow",
+          Resource : [
             "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*"
           ]
         },
         {
-          Sid: "ElasticBeanstalkHealthAccess",
-          Action: [
+          Sid : "ElasticBeanstalkHealthAccess",
+          Action : [
             "elasticbeanstalk:PutInstanceStatistics"
           ],
-          Effect: "Allow",
-          Resource: [
+          Effect : "Allow",
+          Resource : [
             "arn:aws:elasticbeanstalk:*:*:application/*",
             "arn:aws:elasticbeanstalk:*:*:environment/*"
           ]
@@ -157,7 +157,7 @@ resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
 }
 
 resource "aws_iam_instance_profile" "aws_elasticbeanstalk_environments_ip" {
-  name = "ip_${var.test_prefix}${var.test_suffix}"
+  name = "beanstalk-ip_${var.test_prefix}${var.test_suffix}"
   path = "/"
   role = aws_iam_role.aws_elasticbeanstalk_environments_ir.id
 }

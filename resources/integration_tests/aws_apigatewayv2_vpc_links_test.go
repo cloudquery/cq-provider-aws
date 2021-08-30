@@ -15,7 +15,7 @@ func TestIntegrationApigatewayv2VpcLinks(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigatewayv2_vpc_links",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where("name = ?", fmt.Sprintf("link-%s-%s", res.Prefix, res.Suffix))
+				return sq.Where("name = ?", fmt.Sprintf("apigw-link-%s-%s", res.Prefix, res.Suffix))
 			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,

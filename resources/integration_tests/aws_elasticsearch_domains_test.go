@@ -15,7 +15,7 @@ func TestIntegrationElasticsearchDomains(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elasticsearch_domains",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where(squirrel.Eq{"name": fmt.Sprintf("e-%s", res.Suffix)})
+				return sq.Where(squirrel.Eq{"name": fmt.Sprintf("elastic-domain-%.13s", res.Suffix)})
 			},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
@@ -25,7 +25,7 @@ func TestIntegrationElasticsearchDomains(t *testing.T) {
 						"ebs_volume_type":       "gp2",
 						"ebs_volume_size":       float64(10),
 						"ebs_enabled":           true,
-						"name":                  fmt.Sprintf("e-%s", res.Suffix),
+						"name":                  fmt.Sprintf("elastic-domain-%.13s", res.Suffix),
 						"snapshot_options_automated_snapshot_start_hour": float64(23),
 						//"health_check_interval":                          float64(30),
 						//"scheme":                                         "internet-facing",

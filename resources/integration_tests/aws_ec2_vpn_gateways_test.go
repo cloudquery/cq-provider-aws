@@ -20,7 +20,7 @@ func TestIntegrationEc2VpnGateways(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
-							"Name":   fmt.Sprintf("vg_%s%s", res.Prefix, res.Suffix),
+							"Name":   fmt.Sprintf("ec2_vpn_gw_%s%s", res.Prefix, res.Suffix),
 						},
 					},
 				},

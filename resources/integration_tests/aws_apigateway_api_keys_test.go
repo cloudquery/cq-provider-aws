@@ -14,12 +14,12 @@ func TestIntegrationApigatewayAPIKeys(t *testing.T) {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_api_keys",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where("name = ?", fmt.Sprintf("api-key-%s-%s", res.Prefix, res.Suffix))
+				return sq.Where("name = ?", fmt.Sprintf("apigw-key-%s-%s", res.Prefix, res.Suffix))
 			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name": fmt.Sprintf("api-key-%s-%s", res.Prefix, res.Suffix),
+					"name": fmt.Sprintf("apigw-key-%s-%s", res.Prefix, res.Suffix),
 				}},
 			},
 		}
