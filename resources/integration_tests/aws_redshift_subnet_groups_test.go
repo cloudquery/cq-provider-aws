@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -8,18 +9,17 @@ import (
 )
 
 func TestIntegrationRedshiftSubnetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RedshiftSubnetGroups(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.RedshiftSubnetGroups(), []string{"aws_vpc.tf", "aws_redshift_subnet_groups.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_redshift_subnet_groups",
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"cluster_subnet_group_name": "redshift-subnet-group-1",
+					"cluster_subnet_group_name": fmt.Sprintf("redshift-sg-%s%s", res.Prefix, res.Suffix),
 					"description":               "my test description",
 					"tags": map[string]interface{}{
-						"TestId":      res.Suffix,
-						"Type":        "integration_test",
-						"environment": "Production",
+						"TestId": res.Suffix,
+						"Type":   "integration_test",
 					},
 				},
 			}},

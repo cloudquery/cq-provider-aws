@@ -1,5 +1,5 @@
 resource "aws_redshift_parameter_group" "redshift_parameter_group" {
-  name   = "parameter-group-test-terraform"
+  name   = "redshift-pg-${var.test_prefix}${var.test_suffix}"
   family = "redshift-1.0"
 
   parameter {
@@ -19,12 +19,12 @@ resource "aws_redshift_parameter_group" "redshift_parameter_group" {
 }
 
 resource "aws_redshift_cluster" "redshift_cluster" {
-  cluster_identifier = "tf-redshift-cluster"
-  database_name      = "mydb"
-  master_username    = "foo"
-  master_password    = "Mustbe8characters"
-  node_type          = "dc2.large"
-  cluster_type       = "single-node"
+  cluster_identifier           = "redshift-cluster${var.test_prefix}${var.test_suffix}"
+  database_name                = "mydb"
+  master_username              = "foo"
+  master_password              = "Mustbe8characters"
+  node_type                    = "dc2.large"
+  cluster_type                 = "single-node"
   cluster_parameter_group_name = aws_redshift_parameter_group.redshift_parameter_group.name
-  skip_final_snapshot = true
+  skip_final_snapshot          = true
 }
