@@ -1,4 +1,4 @@
-resource "aws_api_gateway_rest_api" "example" {
+resource "aws_api_gateway_rest_api" "rest_api_example_1" {
   body = jsonencode({
     openapi = "3.0.1"
     info = {
@@ -29,15 +29,15 @@ resource "aws_api_gateway_rest_api" "example" {
 }
 
 
-resource "aws_api_gateway_deployment" "example" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
+resource "aws_api_gateway_deployment" "deployment_example_1" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
   variables = {
     test:"test"
   }
   description = "test description"
 
   triggers = {
-    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.example.body))
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.rest_api_example_1.body))
   }
 
   lifecycle {
@@ -46,41 +46,41 @@ resource "aws_api_gateway_deployment" "example" {
 }
 
 
-resource "aws_api_gateway_stage" "prod" {
-  deployment_id = aws_api_gateway_deployment.example.id
-  rest_api_id = aws_api_gateway_rest_api.example.id
-  stage_name = "stage${var.test_prefix}${var.test_suffix}"
+resource "aws_api_gateway_stage" "stage_1" {
+  deployment_id = aws_api_gateway_deployment.deployment_example_1.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
+  stage_name = "${var.test_prefix}stage1${var.test_suffix}"
   tags = {
     "hello" = "world"
   }
 }
 
-resource "aws_api_gateway_stage" "dev" {
-  deployment_id = aws_api_gateway_deployment.example.id
-  rest_api_id = aws_api_gateway_rest_api.example.id
-  stage_name = "stage1${var.test_prefix}${var.test_suffix}"
+resource "aws_api_gateway_stage" "stage_2" {
+  deployment_id = aws_api_gateway_deployment.deployment_example_1.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
+  stage_name = "${var.test_prefix}stage2${var.test_suffix}"
   tags = {
     "hello" = "world1"
   }
 }
 
-resource "aws_api_gateway_resource" "MyDemoResource" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
-  parent_id = aws_api_gateway_rest_api.example.root_resource_id
-  path_part = "mydemoresource"
+resource "aws_api_gateway_resource" "gateway_resource_1" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
+  parent_id = aws_api_gateway_rest_api.rest_api_example_1.root_resource_id
+  path_part = "gateway_resource_1"
 }
 
-resource "aws_api_gateway_method" "MyDemoMethod" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
-  resource_id = aws_api_gateway_resource.MyDemoResource.id
+resource "aws_api_gateway_method" "gateway_method_1" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
+  resource_id = aws_api_gateway_resource.gateway_resource_1.id
   http_method = "GET"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "MyDemoIntegration" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
-  resource_id = aws_api_gateway_resource.MyDemoResource.id
-  http_method = aws_api_gateway_method.MyDemoMethod.http_method
+resource "aws_api_gateway_integration" "gateway_integration_1" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
+  resource_id = aws_api_gateway_resource.gateway_resource_1.id
+  http_method = aws_api_gateway_method.gateway_method_1.http_method
   type = "MOCK"
   // cache_key_parameters = ["method.request.path.param"]
   cache_namespace = "foobar"
@@ -100,9 +100,9 @@ EOF
   }
 }
 
-resource "aws_api_gateway_authorizer" "demo" {
+resource "aws_api_gateway_authorizer" "gateway_authorizer_1" {
   name = "authorizer${var.test_prefix}${var.test_suffix}"
-  rest_api_id = aws_api_gateway_rest_api.example.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
   authorizer_uri = aws_lambda_function.authorizer.invoke_arn
   authorizer_credentials = aws_iam_role.invocation_role.arn
   authorizer_result_ttl_in_seconds = 500
@@ -195,8 +195,8 @@ EOF
   }
 }
 
-resource "aws_api_gateway_model" "MyDemoModel" {
-  rest_api_id = aws_api_gateway_rest_api.example.id
+resource "aws_api_gateway_model" "gateway_model_1" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
   name = "user"
   description = "a JSON schema"
   content_type = "application/json"
@@ -208,14 +208,14 @@ resource "aws_api_gateway_model" "MyDemoModel" {
 EOF
 }
 
-resource "aws_api_gateway_request_validator" "example" {
+resource "aws_api_gateway_request_validator" "request_validator_1" {
   name = "example"
-  rest_api_id = aws_api_gateway_rest_api.example.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
   validate_request_body = true
   validate_request_parameters = true
 }
 
-resource "aws_api_gateway_documentation_part" "example" {
+resource "aws_api_gateway_documentation_part" "documentation_part_1" {
   location {
 //    status_code = "200"
     type = "METHOD"
@@ -225,13 +225,13 @@ resource "aws_api_gateway_documentation_part" "example" {
   }
 
   properties = "{\"description\":\"Example description\"}"
-  rest_api_id = aws_api_gateway_rest_api.example.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
 }
 
-resource "aws_api_gateway_documentation_version" "example" {
+resource "aws_api_gateway_documentation_version" "documentation_version_1" {
   version = "example_version"
-  rest_api_id = aws_api_gateway_rest_api.example.id
+  rest_api_id = aws_api_gateway_rest_api.rest_api_example_1.id
   description = "Example description"
   depends_on = [
-    aws_api_gateway_documentation_part.example]
+    aws_api_gateway_documentation_part.documentation_part_1]
 }
