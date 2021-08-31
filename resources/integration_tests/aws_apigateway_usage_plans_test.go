@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationApigatewayUsagePlans(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":                 "apigw-up-" + res.Prefix + res.Suffix,
+					"name":                 fmt.Sprintf("apigw-up-%s%s", res.Prefix, res.Suffix),
 					"description":          "my description",
 					"product_code":         "MYCODE",
 					"quota_limit":          float64(20),
@@ -36,13 +37,13 @@ func TestIntegrationApigatewayUsagePlans(t *testing.T) {
 						{
 							Count: 1,
 							Data: map[string]interface{}{
-								"stage": "apigwv1-stage-" + res.Prefix + res.Suffix,
+								"stage": fmt.Sprintf("apigwv1-stage-%s%s", res.Prefix, res.Suffix),
 							},
 						},
 						{
 							Count: 1,
 							Data: map[string]interface{}{
-								"stage": "apigwv1-stage2-" + res.Prefix + res.Suffix,
+								"stage": fmt.Sprintf("apigwv1-stage2-%s%s", res.Prefix, res.Suffix),
 							},
 						},
 					},
@@ -53,7 +54,7 @@ func TestIntegrationApigatewayUsagePlans(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"name": "apigw-key-" + res.Prefix + "-" + res.Suffix,
+							"name": fmt.Sprintf("apigw-key-%s-%s", res.Prefix, res.Suffix),
 							"type": "API_KEY",
 						},
 					}},

@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationWAFv2WebACLs(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "wafv2-web-acl-" + res.Prefix + res.Suffix,
+					"name":        fmt.Sprintf("wafv2-web-acl-%s%s", res.Prefix, res.Suffix),
 					"description": "Example of a managed rule.",
 					"default_action": map[string]interface{}{
 						"Allow": map[string]interface{}{

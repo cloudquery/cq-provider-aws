@@ -104,23 +104,3 @@ func TestIntegrationEc2Instances(t *testing.T) {
 		}
 	})
 }
-
-//func TestIntegrationEc2Images(t *testing.T) {
-//	awsTestIntegrationHelper(t, resources.Ec2Images(), []string{"aws_ec2_instances.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
-//		return providertest.ResourceIntegrationVerification{
-//			Name: resources.Ec2Images().Name,
-//			ExpectedValues: []providertest.ExpectedValue{
-//				{
-//					Count: 1,
-//					Data: map[string]interface{}{
-//						"tags": map[string]interface{}{
-//							"Type":   "integration_test",
-//							"TestId": res.Suffix,
-//							"Name":   fmt.Sprintf("aws_ecs_ec2_instance%s", res.Suffix),
-//						},
-//					},
-//				},
-//			},
-//		}
-//	})
-//}

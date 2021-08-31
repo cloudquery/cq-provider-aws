@@ -15,7 +15,6 @@ data "aws_ami" "elbv1-ubuntu" {
 
   owners = [
   "099720109477"]
-  # Canonical
 }
 
 resource "aws_instance" "elbv1-instance-1" {

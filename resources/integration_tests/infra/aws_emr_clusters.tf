@@ -119,7 +119,6 @@ EOF
   ]
 EOF
   autoscaling_role    = aws_iam_role.emr_clusters_autoscaling_role.arn
-  //  autoscaling_role = "EMR_AutoScaling_DefaultRole"
   service_role = aws_iam_role.emr_clusters_service_role.arn
 
 }
@@ -133,8 +132,6 @@ resource "aws_iam_instance_profile" "aws_emr_clusters_instance_profile" {
 resource "aws_iam_role" "emr_clusters_instance_profile_role" {
   name = "emr-cluster-instance-profile-role_${var.test_prefix}"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -218,8 +215,6 @@ resource "aws_iam_role" "emr_clusters_instance_profile_role" {
 resource "aws_iam_role" "emr_clusters_autoscaling_role" {
   name = "emr-cluster-autoscaling-role_${var.test_prefix}"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -260,8 +255,6 @@ resource "aws_iam_role" "emr_clusters_autoscaling_role" {
 resource "aws_iam_role" "emr_clusters_service_role" {
   name = "emr_clusters_service_role_${var.test_prefix}${var.test_suffix}"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2008-10-17"
     Statement = [

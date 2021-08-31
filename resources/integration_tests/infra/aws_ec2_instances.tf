@@ -15,7 +15,6 @@ data "aws_ami" "aws_ec2_instances_ami_ubuntu" {
 
   owners = [
   "099720109477"]
-  # Canonical
 }
 
 resource "aws_instance" "aws_ec2_instances_ec2_instance" {

@@ -1,8 +1,6 @@
 resource "aws_iam_role" "aws_ecs_clusters_ec2_iam_role" {
   name = "ec2_ec2_iam_role_${var.test_prefix}${var.test_suffix}"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -53,8 +51,6 @@ resource "aws_instance" "aws_ecs_clusters_ec2_instance" {
   iam_instance_profile = aws_iam_instance_profile.aws_ecs_clusters_ec2-instance-profile.name
   vpc_security_group_ids = [
   aws_security_group.aws_ecs_clusters_security_group.id]
-  //  key_name = "pnl-test"
-  //  #CHANGE THIS
   ebs_optimized     = "false"
   source_dest_check = "false"
   user_data         = data.template_file.aws_ecs_clusters_user_data.rendered
@@ -96,7 +92,6 @@ data "aws_ami" "aws_ecs_clusters_ami_ubuntu" {
 
   owners = [
   "099720109477"]
-  # Canonical
 }
 
 data "aws_iam_policy_document" "aws_ecs_clusters_ecs-instance-policy" {
@@ -184,7 +179,6 @@ resource "aws_ecs_task_definition" "aws_ecs_clusters_task_definition" {
     {
       "name" : "web-server",
       "image" : "nginx",
-      # ecs registry image url
       "cpu" : 10,
       "memory" : 512,
       "logConfiguration" : {

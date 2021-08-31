@@ -27,13 +27,6 @@ func TestIntegrationElasticsearchDomains(t *testing.T) {
 						"ebs_enabled":           true,
 						"name":                  fmt.Sprintf("elastic-domain-%.13s", res.Suffix),
 						"snapshot_options_automated_snapshot_start_hour": float64(23),
-						//"health_check_interval":                          float64(30),
-						//"scheme":                                         "internet-facing",
-						//"tags": map[string]interface{}{
-						//	"Type":   "integration_test",
-						//	"TestId": res.Suffix,
-						//	"Name":   "foobar-terraform-elb",
-						//},
 					},
 				},
 			},

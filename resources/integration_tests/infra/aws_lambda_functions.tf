@@ -73,7 +73,6 @@ resource "aws_lambda_function_event_invoke_config" "lambda_func_invoke_config" {
   }
 }
 
-# See also the following AWS managed policy: AWSLambdaBasicExecutionRole
 resource "aws_iam_policy" "lambda_func_iam_policy_publish" {
   name        = "lambda_${var.test_prefix}${var.test_suffix}"
   path        = "/"
@@ -101,8 +100,6 @@ resource "aws_iam_role_policy_attachment" "lambda_func_policy_logs" {
 resource "aws_iam_role" "lambda_func_iam_role" {
   name = "lambda_func_role_${var.test_prefix}${var.test_suffix}"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

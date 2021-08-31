@@ -73,8 +73,6 @@ resource "aws_cloudtrail" "aws_cloudtrail_trails_trail" {
 
       type = "AWS::S3::Object"
 
-      # Make sure to append a trailing '/' to your ARN if you want
-      # to monitor all objects in a bucket.
       values = [
       "${aws_s3_bucket.aws_cloudtrail_trails_bucket.arn}/"]
     }

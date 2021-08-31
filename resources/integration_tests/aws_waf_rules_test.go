@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationWAFRules(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "waf-rule-" + res.Prefix + res.Suffix,
+					"name":        fmt.Sprintf("waf-rule-%s%s", res.Prefix, res.Suffix),
 					"metric_name": "wafrule1",
 					"tags": map[string]interface{}{
 						"TestId": res.Suffix,

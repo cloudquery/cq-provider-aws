@@ -13,7 +13,6 @@ resource "time_sleep" "aws_directconnect_virtual_interfaces_wait_for_id" {
   create_duration = "5m"
 
   triggers = {
-    # This sets up a proper dependency on the RAM association
     id = aws_dx_lag.aws_directconnect_virtual_interfaces_lag.id
   }
 }

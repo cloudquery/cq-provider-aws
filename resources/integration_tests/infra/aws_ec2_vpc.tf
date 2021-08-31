@@ -103,7 +103,6 @@ resource "aws_eip" "aws_ec2_vpc_eip" {
 
 resource "aws_nat_gateway" "aws_ec2_vpc_nat_gateway" {
   allocation_id = aws_eip.aws_ec2_vpc_eip.id
-  //  connectivity_type = "private"
   subnet_id = aws_subnet.aws_vpc_subnet.id
   tags = {
     Name = "ec2-nat-${var.test_prefix}-${var.test_suffix}"

@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationWAFWebACLs(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":                "waf-web-acl-" + res.Prefix + res.Suffix,
+					"name":                fmt.Sprintf("waf-web-acl-%s%s", res.Prefix, res.Suffix),
 					"metric_name":         "wafwebacl1",
 					"default_action_type": "ALLOW",
 					"tags": map[string]interface{}{

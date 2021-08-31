@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationWAFv2RuleGroups(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "wafv2-rg-" + res.Prefix + res.Suffix,
+					"name":        fmt.Sprintf("wafv2-rg-%s%s", res.Prefix, res.Suffix),
 					"description": "wafv2_rule_group_1 description",
 					"capacity":    float64(2),
 					"policy":      nil,

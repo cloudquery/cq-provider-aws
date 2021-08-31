@@ -50,10 +50,4 @@ func TestIntegrationRedshiftClusters(t *testing.T) {
 			},
 		}
 	})
-	// TODO: relations not tested:
-	// aws_redshift_cluster_security_groups
-	// aws_redshift_cluster_deferred_maintenance_windows
-	// aws_redshift_cluster_endpoint_vpc_endpoints
-	// aws_redshift_cluster_iam_roles
-	// aws_redshift_cluster_vpc_security_groups
 }

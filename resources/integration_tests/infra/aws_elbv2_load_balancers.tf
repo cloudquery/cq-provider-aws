@@ -15,8 +15,6 @@ resource "aws_lb_target_group" "aws_elbv2_lb_target_group" {
   vpc_id      = aws_vpc.aws_vpc.id
   target_type = "ip"
 
-
-  #STEP 1 - ECS task Running
   health_check {
     healthy_threshold   = "3"
     interval            = "10"
