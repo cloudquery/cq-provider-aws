@@ -1,5 +1,5 @@
 resource "aws_waf_ipset" "waf_ipset_1" {
-  name = "waf_ipset_1"
+  name = "waf-ipset-${var.test_prefix}${var.test_suffix}"
 
   ip_set_descriptors {
     type  = "IPV4"
@@ -9,7 +9,7 @@ resource "aws_waf_ipset" "waf_ipset_1" {
 
 resource "aws_waf_rule" "waf_rule_1" {
   depends_on  = [aws_waf_ipset.waf_ipset_1]
-  name        = "waf_rule_1"
+  name        = "waf-rule-${var.test_prefix}${var.test_suffix}"
   metric_name = "wafrule1"
 
   predicates {

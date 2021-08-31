@@ -14,7 +14,7 @@ func TestIntegrationWAFv2WebACLs(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "managed-rule-example",
+					"name":        "wafv2-web-acl-" + res.Prefix + res.Suffix,
 					"description": "Example of a managed rule.",
 					"default_action": map[string]interface{}{
 						"Allow": map[string]interface{}{

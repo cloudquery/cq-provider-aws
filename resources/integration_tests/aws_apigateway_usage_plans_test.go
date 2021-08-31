@@ -8,13 +8,13 @@ import (
 )
 
 func TestIntegrationApigatewayUsagePlans(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ApigatewayUsagePlans(), []string{"aws_apigateway_rest_apis.tf", "aws_apigateway_usage_plans.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.ApigatewayUsagePlans(), []string{"aws_lambda_functions.tf", "aws_apigateway_rest_apis.tf", "aws_apigateway_usage_plans.tf", "aws_apigateway_api_keys.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_apigateway_usage_plans",
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":                 "my-usage-plan",
+					"name":                 "apigw-up-" + res.Prefix + res.Suffix,
 					"description":          "my description",
 					"product_code":         "MYCODE",
 					"quota_limit":          float64(20),
@@ -36,13 +36,13 @@ func TestIntegrationApigatewayUsagePlans(t *testing.T) {
 						{
 							Count: 1,
 							Data: map[string]interface{}{
-								"stage": "cqtestingstage1integration",
+								"stage": "apigwv1-stage-" + res.Prefix + res.Suffix,
 							},
 						},
 						{
 							Count: 1,
 							Data: map[string]interface{}{
-								"stage": "cqtestingstage2integration",
+								"stage": "apigwv1-stage2-" + res.Prefix + res.Suffix,
 							},
 						},
 					},
@@ -53,7 +53,7 @@ func TestIntegrationApigatewayUsagePlans(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"name": "my_key",
+							"name": "apigw-key-" + res.Prefix + "-" + res.Suffix,
 							"type": "API_KEY",
 						},
 					}},

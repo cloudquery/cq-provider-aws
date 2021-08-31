@@ -14,7 +14,7 @@ func TestIntegrationWAFRules(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "waf_rule_1",
+					"name":        "waf-rule-" + res.Prefix + res.Suffix,
 					"metric_name": "wafrule1",
 					"tags": map[string]interface{}{
 						"TestId": res.Suffix,

@@ -9,7 +9,7 @@ import (
 )
 
 func TestIntegrationWAFv2ManagedRuleGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Wafv2ManagedRuleGroups(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Wafv2ManagedRuleGroups(), []string{}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_wafv2_managed_rule_groups",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {

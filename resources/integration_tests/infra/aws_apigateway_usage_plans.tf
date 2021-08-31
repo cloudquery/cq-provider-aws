@@ -1,5 +1,5 @@
 resource "aws_api_gateway_usage_plan" "api_gateway_usage_plan_1" {
-  name         = "my-usage-plan"
+  name         = "apigw-up-${var.test_prefix}${var.test_suffix}"
   description  = "my description"
   product_code = "MYCODE"
 
@@ -25,12 +25,8 @@ resource "aws_api_gateway_usage_plan" "api_gateway_usage_plan_1" {
   }
 }
 
-resource "aws_api_gateway_api_key" "apigateway_api_key_1" {
-  name = "my_key"
-}
-
 resource "aws_api_gateway_usage_plan_key" "apigateway_usage_plan_key_1" {
-  key_id        = aws_api_gateway_api_key.apigateway_api_key_1.id
+  key_id        = aws_api_gateway_api_key.aws_apigateway_api_keys_key.id
   key_type      = "API_KEY"
   usage_plan_id = aws_api_gateway_usage_plan.api_gateway_usage_plan_1.id
 }

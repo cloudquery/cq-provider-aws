@@ -1,5 +1,5 @@
 resource "aws_wafv2_rule_group" "wafv2_rule_group_1" {
-  name     = "wafv2_rule_group_1"
+  name     = "wafv2-rg-${var.test_prefix}${var.test_suffix}"
   description = "wafv2_rule_group_1 description"
   scope    = "REGIONAL"
   capacity = 2

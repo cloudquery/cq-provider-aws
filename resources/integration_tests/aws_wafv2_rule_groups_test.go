@@ -14,7 +14,7 @@ func TestIntegrationWAFv2RuleGroups(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name":        "wafv2_rule_group_1",
+					"name":        "wafv2-rg-" + res.Prefix + res.Suffix,
 					"description": "wafv2_rule_group_1 description",
 					"capacity":    float64(2),
 					"policy":      nil,
