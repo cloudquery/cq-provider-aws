@@ -1,6 +1,7 @@
 package integration_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -14,7 +15,7 @@ func TestIntegrationAccessAnalyzers(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"name": "analyzer-" + res.Prefix + res.Suffix,
+					"name": fmt.Sprintf("analyzer-%s%s", res.Prefix, res.Suffix),
 					"type": "ACCOUNT",
 					"tags": map[string]interface{}{
 						"TestId": res.Suffix,
