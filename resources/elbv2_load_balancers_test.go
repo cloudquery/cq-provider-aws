@@ -23,6 +23,19 @@ func buildElbv2LoadBalancers(t *testing.T, ctrl *gomock.Controller) client.Servi
 		&elasticloadbalancingv2.DescribeLoadBalancersOutput{
 			LoadBalancers: []elbv2Types.LoadBalancer{l},
 		}, nil)
+
+	var attr elbv2Types.LoadBalancerAttribute
+	if err := faker.FakeData(&attr); err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeLoadBalancerAttributes(
+		gomock.Any(),
+		&elasticloadbalancingv2.DescribeLoadBalancerAttributesInput{LoadBalancerArn: l.LoadBalancerArn},
+		gomock.Any(),
+	).Return(
+		&elasticloadbalancingv2.DescribeLoadBalancerAttributesOutput{Attributes: []elbv2Types.LoadBalancerAttribute{attr}},
+		nil,
+	)
 	return client.Services{
 		ELBv2: m,
 	}

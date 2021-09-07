@@ -38,6 +38,17 @@ func TestIntegrationElbv2LoadBalancers(t *testing.T) {
 						},
 					},
 				},
+				{
+					Name:           "aws_elbv2_load_balancer_attributes",
+					ForeignKeyName: "load_balancer_cq_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"key":   "access_logs.s3.enabled",
+							"value": "false",
+						},
+					}},
+				},
 			},
 		}
 	})

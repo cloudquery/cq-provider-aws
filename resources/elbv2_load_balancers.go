@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -183,6 +184,30 @@ func Elbv2LoadBalancers() *schema.Table {
 					},
 				},
 			},
+			{
+				Name:        "aws_elbv2_load_balancer_attributes",
+				Description: "Load balancer attributes",
+				Resolver:    fetchElbv2LoadBalancerAttributes,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "key"}},
+				Columns: []schema.Column{
+					{
+						Name:        "load_balancer_cq_id",
+						Description: "Unique CloudQuery ID of aws_elbv2_load_balancers table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "key",
+						Description: "The name of the attribute.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "value",
+						Description: "The value of the attribute.",
+						Type:        schema.TypeString,
+					},
+				},
+			},
 		},
 	}
 }
@@ -217,5 +242,21 @@ func fetchElbv2LoadBalancerAvailabilityZones(ctx context.Context, meta schema.Cl
 func fetchElbv2LoadBalancerAvailabilityZoneAddresses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p := parent.Item.(types.AvailabilityZone)
 	res <- p.LoadBalancerAddresses
+	return nil
+}
+func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	lb, ok := parent.Item.(types.LoadBalancer)
+	if !ok {
+		return fmt.Errorf("not a LoadBalancer instance: %T", parent.Item)
+	}
+	c := meta.(*client.Client)
+	svc := c.Services().ELBv2
+	result, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv2.DescribeLoadBalancerAttributesInput{LoadBalancerArn: lb.LoadBalancerArn}, func(options *elbv2.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		return err
+	}
+	res <- result.Attributes
 	return nil
 }
