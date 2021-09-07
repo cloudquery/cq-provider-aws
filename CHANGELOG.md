@@ -5,6 +5,34 @@ All notable changes to this provider will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.5.10] - 2020-08-19
+###### SDK Version: 0.3.4
+
+### :spider: Fixed
+* Fixed bad multiplexes in iam_roles_policies, iam_group_policies, iam_user_policies [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
+
+### :rocket: Added
+* Added multiple e2e integration tests for resources for increased stability [#158](https://github.com/cloudquery/cq-provider-aws/pull/158)
+
+
+## [v0.5.9] - 2020-08-19
+###### SDK Version: 0.3.3-rc2
+
+### :spider: Fixed
+* Fixed bad migration SQL [#160](https://github.com/cloudquery/cq-provider-aws/pull/160)
+
+
+## [v0.5.8] - 2020-08-19
+###### SDK Version: 0.3.3-rc2
+
+### :spider: Fixed
+* Fixed bad multiplexes (cloudfront.distributions, cloudtrail.trails, cognito.user_pools) and bad PK s3_bucket_core_rules [#158](https://github.com/cloudquery/cq-provider-aws/pull/158) Thanks [@jbertman](https://github.com/jbertman) for reporting
+* All providers must be wrapped in credentials cache, should fix [Assume Role issues](https://github.com/aws/aws-sdk-go-v2/issues/914) [#153](https://github.com/cloudquery/cq-provider-aws/pull/153)
+
+### :rocket: Added
+* Added support for provider e2e testing to improve stability, upcoming release should include more tests.
+
+
 ## [v0.5.7] - 2020-08-12
 ###### SDK Version: 0.3.2
 

@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
-
 	"github.com/Masterminds/squirrel"
-	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
+	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
-func TestIntegrationDirectCloudwatchAlarms(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudwatchAlarms(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+func TestIntegrationCloudwatchAlarms(t *testing.T) {
+	awsTestIntegrationHelper(t, resources.CloudwatchAlarms(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudwatch_alarms",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where("alarm_name = ?", fmt.Sprintf("%s-%s", res.Prefix, res.Suffix))
+				return sq.Where("name = ?", fmt.Sprintf("cw-alarm%s-%s", res.Prefix, res.Suffix))
 			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
@@ -26,32 +26,32 @@ func TestIntegrationDirectCloudwatchAlarms(t *testing.T) {
 			Relations: []*providertest.ResourceIntegrationVerification{
 				{
 					Name:           "aws_cloudwatch_alarm_metrics",
-					ForeignKeyName: "alarm_id",
+					ForeignKeyName: "alarm_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"metric_id": "m1",
+							"id": "m1",
 						},
 					}},
 				},
 				{
 					Name:           "aws_cloudwatch_alarm_metrics",
-					ForeignKeyName: "alarm_id",
+					ForeignKeyName: "alarm_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"metric_id": "m2",
+							"id": "m2",
 						},
 					}},
 				},
 				{
 					Name:           "aws_cloudwatch_alarm_metrics",
-					ForeignKeyName: "alarm_id",
+					ForeignKeyName: "alarm_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"metric_id": "e1",
-							"label":     "Error Rate",
+							"id":    "e1",
+							"label": "Error Rate",
 						},
 					}},
 				},

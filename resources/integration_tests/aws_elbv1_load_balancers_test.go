@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
-
-	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
+	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationElbv1LoadBalancers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv1LoadBalancers(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Elbv1LoadBalancers(), []string{"aws_elbv1_load_balancers.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elbv1_load_balancers",
 			ExpectedValues: []providertest.ExpectedValue{
@@ -24,13 +23,18 @@ func TestIntegrationElbv1LoadBalancers(t *testing.T) {
 						"health_check_healthy_threshold":               float64(2),
 						"health_check_interval":                        float64(30),
 						"scheme":                                       "internet-facing",
+						"tags": map[string]interface{}{
+							"Type":   "integration_test",
+							"TestId": res.Suffix,
+							"Name":   "foobar-terraform-elb",
+						},
 					},
 				},
 			},
 			Relations: []*providertest.ResourceIntegrationVerification{
 				{
 					Name:           "aws_elbv1_load_balancer_listeners",
-					ForeignKeyName: "load_balancer_id",
+					ForeignKeyName: "load_balancer_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{
 						{
 							Count: 1,
@@ -45,7 +49,7 @@ func TestIntegrationElbv1LoadBalancers(t *testing.T) {
 				},
 				{
 					Name:           "aws_elbv1_load_balancer_policies",
-					ForeignKeyName: "load_balancer_id",
+					ForeignKeyName: "load_balancer_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{
 						{
 							Count: 1,

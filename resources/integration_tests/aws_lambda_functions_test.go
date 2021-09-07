@@ -7,16 +7,15 @@ import (
 	"github.com/Masterminds/squirrel"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
-
-	"github.com/cloudquery/cq-provider-sdk/provider/providertest"
+	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
 
 func TestIntegrationLambdaFunctions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.LambdaFunctions(), func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.LambdaFunctions(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_lambda_functions",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where("function_name = ?", fmt.Sprintf("test_function_%s%s", res.Prefix, res.Suffix))
+				return sq.Where("name = ?", fmt.Sprintf("function_%s%s", res.Prefix, res.Suffix))
 			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
@@ -27,7 +26,7 @@ func TestIntegrationLambdaFunctions(t *testing.T) {
 			Relations: []*providertest.ResourceIntegrationVerification{
 				{
 					Name:           "aws_lambda_function_aliases",
-					ForeignKeyName: "function_id",
+					ForeignKeyName: "function_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
