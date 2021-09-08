@@ -3,7 +3,7 @@ cloudquery {
   policy_directory = "./cq/policies"
 
   provider "aws" {
-    source  = "cloudquery/cq-provider-aws"
+    source = "cloudquery/cq-provider-aws"
     version = "latest"
   }
 
@@ -18,5 +18,6 @@ provider "aws" {
     max_retries = 7
     max_backoff = 60
   }
-  resources = ["*"]
+  resources = [
+    "*"]
 }
