@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  integration_test:
+  nightly_fetch:
     strategy:
       matrix:
         dbversion: [ "postgres:latest" ]
