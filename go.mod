@@ -1,6 +1,6 @@
 module github.com/cloudquery/cq-provider-aws
 
-go 1.16
+go 1.17
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
