@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ###### SDK Version: 0.3.4
 
 ### :rocket: Added
-* Added integration test for ec2.images resource [#158](https://github.com/cloudquery/cq-provider-aws/pull/158)
+* Added integration test for ec2.images resource [#184](https://github.com/cloudquery/cq-provider-aws/pull/184)
 
 
 ## [v0.5.10] - 2020-08-19
