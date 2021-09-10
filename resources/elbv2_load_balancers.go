@@ -124,7 +124,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "load_balance_name",
 						Description: "The name of the load balancer",
 						Type:        schema.TypeString,
-						Resolver:    schema.ParentPathResolver("name"),
+						Resolver:    schema.ParentResourceFieldResolver("name"),
 					},
 					{
 						Name:        "outpost_id",
@@ -158,7 +158,7 @@ func Elbv2LoadBalancers() *schema.Table {
 								Name:        "zone_name",
 								Description: "The name of the Availability Zone..",
 								Type:        schema.TypeString,
-								Resolver:    schema.ParentPathResolver("zone_name"),
+								Resolver:    schema.ParentResourceFieldResolver("zone_name"),
 							},
 							{
 								Name:        "allocation_id",
