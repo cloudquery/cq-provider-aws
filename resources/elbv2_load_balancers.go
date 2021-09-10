@@ -121,6 +121,12 @@ func Elbv2LoadBalancers() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
+						Name:        "load_balance_name",
+						Description: "The name of the load balancer",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentPathResolver("name"),
+					},
+					{
 						Name:        "outpost_id",
 						Description: "[Application Load Balancers on Outposts] The ID of the Outpost.",
 						Type:        schema.TypeString,
@@ -147,6 +153,12 @@ func Elbv2LoadBalancers() *schema.Table {
 								Description: "Unique CloudQuery ID of aws_elbv2_load_balancer_availability_zones table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "zone_name",
+								Description: "The name of the Availability Zone..",
+								Type:        schema.TypeString,
+								Resolver:    schema.ParentPathResolver("zone_name"),
 							},
 							{
 								Name:        "allocation_id",

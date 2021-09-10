@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -32,30 +31,25 @@ func Apigatewayv2VpcLinks() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:        "id",
-				Description: "The ID of the VPC link.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("VpcLinkId"),
-			},
-			{
 				Name:        "name",
-				Description: "The name of the VPC link.",
+				Description: "The name of the VPC link.  This member is required.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "security_group_ids",
-				Description: "A list of security group IDs for the VPC link.",
+				Description: "A list of security group IDs for the VPC link.  This member is required.",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "subnet_ids",
-				Description: "A list of subnet IDs to include in the VPC link.",
+				Description: "A list of subnet IDs to include in the VPC link.  This member is required.",
 				Type:        schema.TypeStringArray,
 			},
 			{
-				Name:        "vpc_link_id",
-				Description: "The ID of the VPC link. (original field name)",
+				Name:        "id",
+				Description: "The ID of the VPC link.  This member is required.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("VpcLinkId"),
 			},
 			{
 				Name:        "created_date",
