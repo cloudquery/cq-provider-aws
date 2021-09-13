@@ -245,9 +245,7 @@ func TestIntegrationEc2NetworkAcls(t *testing.T) {
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,
 						Data: map[string]interface{}{
-							"icmp_type_code":      float64(0),
 							"egress":              true,
-							"icmp_type_code_type": float64(0),
 							"ipv6_cidr_block":     nil,
 							"port_range_from":     float64(443),
 							"port_range_to":       float64(443),
@@ -263,11 +261,7 @@ func TestIntegrationEc2NetworkAcls(t *testing.T) {
 						Count: 1,
 						Data: map[string]interface{}{
 							"egress":              true,
-							"icmp_type_code":      float64(0),
-							"icmp_type_code_type": float64(0),
 							"ipv6_cidr_block":     nil,
-							"port_range_from":     float64(0),
-							"port_range_to":       float64(0),
 							"protocol":            "-1",
 							"rule_action":         "deny",
 						},
@@ -280,8 +274,6 @@ func TestIntegrationEc2NetworkAcls(t *testing.T) {
 						Count: 1,
 						Data: map[string]interface{}{
 							"egress":              false,
-							"icmp_type_code":      float64(0),
-							"icmp_type_code_type": float64(0),
 							"ipv6_cidr_block":     nil,
 							"port_range_from":     float64(80),
 							"port_range_to":       float64(80),
@@ -297,11 +289,7 @@ func TestIntegrationEc2NetworkAcls(t *testing.T) {
 						Count: 1,
 						Data: map[string]interface{}{
 							"egress":              false,
-							"icmp_type_code":      float64(0),
-							"icmp_type_code_type": float64(0),
 							"ipv6_cidr_block":     nil,
-							"port_range_from":     float64(0),
-							"port_range_to":       float64(0),
 							"protocol":            "-1",
 							"rule_action":         "deny",
 						},
