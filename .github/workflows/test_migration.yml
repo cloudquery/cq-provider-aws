@@ -72,10 +72,10 @@ jobs:
         env:
           OS: Linux
 
-      - name: Check out code into the initial migration
+      - name: Check out code into the initial migration tag
         uses: actions/checkout@v2
         with:
-          ref: "tags/v.0.5.7"
+          ref: "v.0.5.7"
 
       - name: Get dependencies
         run: |
