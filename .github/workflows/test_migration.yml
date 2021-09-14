@@ -73,7 +73,9 @@ jobs:
           OS: Linux
 
       - name: Check out code into the initial migration tag
-        run: git checkout "refs/tags/v0.5.7"
+        run: |
+          git fetch origin -p
+          git checkout "refs/tags/v0.5.7"
 
       - name: Get dependencies
         run: |
