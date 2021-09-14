@@ -73,14 +73,11 @@ jobs:
           OS: Linux
 
       - name: Check out code into the initial migration tag
-        uses: actions/checkout@v2
-        with:
-          ref: "v.0.5.7"
+        run: git checkout "refs/tags/v0.5.7"
 
       - name: Get dependencies
         run: |
           go get -v -t -d ./...
-
 
       - name: Build
         run: go build -v .
@@ -93,13 +90,12 @@ jobs:
         env:
           CQ_REATTACH_PROVIDERS: .cq_reattach
 
-      - name: Check out code into the current version
-        uses: actions/checkout@v2
+      - name: Check out code into the initial migration tag
+        run: git checkout main
 
       - name: Get dependencies
         run: |
           go get -v -t -d ./...
-
 
       - name: Build
         run: go build -v .
