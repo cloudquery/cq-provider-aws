@@ -11,7 +11,7 @@ jobs:
   should_run:
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.cache-migrations.cache-miss }}
+      should_run: ${{ steps.cache-migrations.cache-hit != 'true' }}
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
