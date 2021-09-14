@@ -76,7 +76,7 @@ jobs:
         run: |
           git fetch origin -p
           git checkout "refs/tags/v0.5.7"
-          git checkout main client/testdata/defualt.hcl
+          git checkout origin/main client/testdata/defualt.hcl
 
       - name: Get dependencies
         run: |
