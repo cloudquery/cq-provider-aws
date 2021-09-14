@@ -25,7 +25,7 @@ jobs:
 
   test_migration:
     needs: should_run
-    if: github.repository == 'cloudquery/cq-provider-aws' && needs.should_run.outputs.should_run}} == 'true'
+    if: github.repository == 'cloudquery/cq-provider-aws' && needs.should_run.outputs.should_run == 'true'
     strategy:
       matrix:
         dbversion: [ "postgres:latest" ]
