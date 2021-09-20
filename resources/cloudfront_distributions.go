@@ -569,19 +569,19 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("CustomOriginConfig.HTTPSPort"),
 					},
 					{
-						Name:        "custom_origin_config_origin_protocol_policy",
+						Name:        "custom_origin_config_protocol_policy",
 						Description: "Specifies the protocol (HTTP or HTTPS) that CloudFront uses to connect to the origin",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginProtocolPolicy"),
 					},
 					{
-						Name:        "custom_origin_config_origin_keepalive_timeout",
+						Name:        "custom_origin_config_keepalive_timeout",
 						Description: "Specifies how long, in seconds, CloudFront persists its connection to the origin",
 						Type:        schema.TypeInt,
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginKeepaliveTimeout"),
 					},
 					{
-						Name:        "custom_origin_config_origin_read_timeout",
+						Name:        "custom_origin_config_read_timeout",
 						Description: "Specifies how long, in seconds, CloudFront waits for a response from the origin. This is also known as the origin response timeout",
 						Type:        schema.TypeInt,
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginReadTimeout"),
