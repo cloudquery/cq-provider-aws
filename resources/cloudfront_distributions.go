@@ -73,7 +73,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Items"),
 			},
 			{
-				Name:        "behavior_target_origin_id",
+				Name:        "default_cache_behavior_cache_policy_id",
 				Description: "The unique identifier of the cache policy that is attached to the default cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.CachePolicyId"),
@@ -217,7 +217,7 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "restrictions_geo_restriction_restriction_type",
+				Name:        "restrictions_geo_restriction_type",
 				Description: "The method that you want to use to restrict distribution of your content by country:  * none: No geo restriction is enabled, meaning access to content is not restricted by client geo location.  * blacklist: The Location elements specify the countries in which you don't want CloudFront to distribute your content.  * whitelist: The Location elements specify the countries in which you want CloudFront to distribute your content.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.RestrictionType"),
@@ -316,7 +316,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("AllowedMethods.Items"),
 					},
 					{
-						Name:        "allowed_methods_cached_methods",
+						Name:        "cached_methods",
 						Description: "A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("AllowedMethods.CachedMethods.Items"),
@@ -551,6 +551,12 @@ func CloudfrontDistributions() *schema.Table {
 						Type:        schema.TypeInt,
 					},
 					{
+						Name:        "custom_headers",
+						Description: "A list of HTTP header names and values that CloudFront adds to the requests that it sends to the origin",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveCloudfrontDistributionOriginCustomHeaders,
+					},
+					{
 						Name:        "custom_origin_config_http_port",
 						Description: "The HTTP port that CloudFront uses to connect to the origin",
 						Type:        schema.TypeInt,
@@ -610,31 +616,6 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("S3OriginConfig.OriginAccessIdentity"),
 					},
 				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_cloudfront_distribution_origin_custom_headers",
-						Description: "A complex type that contains HeaderName and HeaderValue elements, if any, for this distribution.",
-						Resolver:    fetchCloudfrontDistributionOriginCustomHeaders,
-						Columns: []schema.Column{
-							{
-								Name:        "distribution_origin_cq_id",
-								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_origins table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "header_name",
-								Description: "The name of a header that you want CloudFront to send to your origin",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "header_value",
-								Description: "The value for the header that you specified in the HeaderName field.  This member is required.",
-								Type:        schema.TypeString,
-							},
-						},
-					},
-				},
 			},
 			{
 				Name:        "aws_cloudfront_distribution_alias_icp_recordals",
@@ -683,25 +664,11 @@ func CloudfrontDistributions() *schema.Table {
 						Description: "The origin group's ID.  This member is required.",
 						Type:        schema.TypeString,
 					},
-				},
-				Relations: []*schema.Table{
 					{
-						Name:        "aws_cloudfront_distribution_origin_group_members",
-						Description: "An origin in an origin group.",
-						Resolver:    fetchCloudfrontDistributionOriginGroupMembers,
-						Columns: []schema.Column{
-							{
-								Name:        "distribution_origin_group_cq_id",
-								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_origin_groups table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "origin_id",
-								Description: "The ID for an origin in an origin group.  This member is required.",
-								Type:        schema.TypeString,
-							},
-						},
+						Name:        "members_origin_ids",
+						Description: "Items (origins) in an origin group.  This member is required.",
+						Type:        schema.TypeStringArray,
+						Resolver:    resolveCloudfrontDistributionOriginGroupMembersOriginIds,
 					},
 				},
 			},
@@ -811,17 +778,16 @@ func fetchCloudfrontDistributionOrigins(ctx context.Context, meta schema.ClientM
 	res <- distribution.Origins.Items
 	return nil
 }
-func fetchCloudfrontDistributionOriginCustomHeaders(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	origin, ok := parent.Item.(types.Origin)
-	if !ok {
-		return fmt.Errorf("not types.Origin")
-	}
-	if origin.CustomHeaders == nil {
+func resolveCloudfrontDistributionOriginCustomHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.Origin)
+	if r.CustomHeaders == nil {
 		return nil
 	}
-
-	res <- origin.CustomHeaders.Items
-	return nil
+	tags := map[string]interface{}{}
+	for _, t := range r.CustomHeaders.Items {
+		tags[*t.HeaderName] = *t.HeaderValue
+	}
+	return resource.Set(c.Name, tags)
 }
 func fetchCloudfrontDistributionAliasIcpRecordals(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
@@ -855,14 +821,14 @@ func resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes(ctx con
 	}
 	return resource.Set(c.Name, data)
 }
-func fetchCloudfrontDistributionOriginGroupMembers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	og, ok := parent.Item.(types.OriginGroup)
-	if !ok {
-		return fmt.Errorf("not types.OriginGroup")
-	}
-	if og.Members == nil {
+func resolveCloudfrontDistributionOriginGroupMembersOriginIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.OriginGroup)
+	if r.Members == nil {
 		return nil
 	}
-	res <- og.Members.Items
-	return nil
+	members := make([]string, 0, *r.Members.Quantity)
+	for _, t := range r.Members.Items {
+		members = append(members, *t.OriginId)
+	}
+	return resource.Set(c.Name, members)
 }
