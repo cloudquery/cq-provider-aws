@@ -201,7 +201,7 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "is_ipv6_enabled",
+				Name:        "ipv6_enabled",
 				Description: "Whether CloudFront responds to IPv6 DNS requests with an IPv6 address for your distribution.  This member is required.",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("IsIPV6Enabled"),
@@ -223,7 +223,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.RestrictionType"),
 			},
 			{
-				Name:        "restrictions_geo_restriction",
+				Name:        "restrictions_geo_restrictions",
 				Description: "A complex type that contains a Location element for each country in which you want CloudFront either to distribute your content (whitelist) or not distribute your content (blacklist)",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.Items"),
@@ -234,7 +234,7 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "viewer_certificate_a_c_m_certificate_arn",
+				Name:        "viewer_certificate_acm_certificate_arn",
 				Description: "If the distribution uses Aliases (alternate domain names or CNAMEs) and the SSL/TLS certificate is stored in AWS Certificate Manager (ACM) (https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html), provide the Amazon Resource Name (ARN) of the ACM certificate",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("ViewerCertificate.ACMCertificateArn"),
@@ -246,13 +246,13 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("ViewerCertificate.Certificate"),
 			},
 			{
-				Name:        "viewer_certificate_certificate_source",
+				Name:        "viewer_certificate_source",
 				Description: "This field is deprecated",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("ViewerCertificate.CertificateSource"),
 			},
 			{
-				Name:        "viewer_certificate_cloud_front_default_certificate",
+				Name:        "viewer_certificate_cloudfront_default_certificate",
 				Description: "If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net, set this field to true",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("ViewerCertificate.CloudFrontDefaultCertificate"),
