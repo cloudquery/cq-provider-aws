@@ -13,7 +13,7 @@ import (
 func CloudfrontDistributions() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_cloudfront_distributions",
-		Description:  "A summary of the information about a types.DistributionSummary.",
+		Description:  "A summary of the information about a CloudFront distribution.",
 		Resolver:     fetchCloudfrontDistributions,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -38,33 +38,15 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("ARN"),
 			},
 			{
-				Name:        "aliases_quantity",
-				Description: "The number of CNAME aliases, if any, that you want to associate with this distribution.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("Aliases.Quantity"),
-			},
-			{
 				Name:        "aliases",
 				Description: "A complex type that contains the CNAME aliases, if any, that you want to associate with this distribution.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("Aliases.Items"),
 			},
 			{
-				Name:        "cache_behaviors_quantity",
-				Description: "The number of cache behaviors for this distribution.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("CacheBehaviors.Quantity"),
-			},
-			{
 				Name:        "comment",
 				Description: "The comment originally specified when this distribution was created.  This member is required.",
 				Type:        schema.TypeString,
-			},
-			{
-				Name:        "custom_error_responses_quantity",
-				Description: "The number of HTTP status codes for which you want to specify a custom error page and/or a caching duration",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("CustomErrorResponses.Quantity"),
 			},
 			{
 				Name:        "cache_behavior_target_origin_id",
@@ -79,28 +61,16 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ViewerProtocolPolicy"),
 			},
 			{
-				Name:        "cache_behavior_allowed_methods_items",
+				Name:        "cache_behavior_allowed_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.Items"),
 			},
 			{
-				Name:        "cache_behavior_allowed_methods_quantity",
-				Description: "The number of HTTP methods that you want CloudFront to forward to your origin. Valid values are 2 (for GET and HEAD requests), 3 (for GET, HEAD, and OPTIONS requests) and 7 (for GET, HEAD, OPTIONS, PUT, PATCH, POST, and DELETE requests).  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_allowed_methods_cached_methods_items",
+				Name:        "cache_behavior_allowed_methods_cached_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Items"),
-			},
-			{
-				Name:        "cache_behavior_allowed_methods_cached_methods_quantity",
-				Description: "The number of HTTP methods for which you want CloudFront to cache responses. Valid values are 2 (for caching responses to GET and HEAD requests) and 3 (for caching responses to GET, HEAD, and OPTIONS requests).  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Quantity"),
 			},
 			{
 				Name:        "behavior_target_origin_id",
@@ -133,13 +103,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.Forward"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_cookies_whitelisted_names_quantity",
-				Description: "The number of cookie names in the Items list.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_forwarded_values_cookies_whitelisted_names_items",
+				Name:        "cache_behavior_forwarded_values_cookies_whitelisted_names",
 				Description: "A list of cookie names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames.Items"),
@@ -151,34 +115,16 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryString"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_headers_quantity",
-				Description: "The number of header names in the Items list.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Headers.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_forwarded_values_headers_items",
+				Name:        "cache_behavior_forwarded_values_headers",
 				Description: "A list of HTTP header names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Headers.Items"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_query_string_cache_keys_quantity",
-				Description: "The number of whitelisted query string parameters for a cache behavior.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_forwarded_values_query_string_cache_keys_items",
+				Name:        "cache_behavior_forwarded_values_query_string_cache_keys",
 				Description: "A list that contains the query string parameters that you want CloudFront to use as a basis for caching for a cache behavior",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys.Items"),
-			},
-			{
-				Name:        "cache_behavior_lambda_function_associations_quantity",
-				Description: "The number of Lambda function associations for this cache behavior.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.LambdaFunctionAssociations.Quantity"),
 			},
 			{
 				Name:        "cache_behavior_max_ttl",
@@ -217,13 +163,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Enabled"),
 			},
 			{
-				Name:        "cache_behavior_trusted_key_groups_quantity",
-				Description: "The number of key groups in the list.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_trusted_key_groups_items",
+				Name:        "cache_behavior_trusted_key_groups",
 				Description: "A list of key groups identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Items"),
@@ -235,13 +175,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Enabled"),
 			},
 			{
-				Name:        "cache_behavior_trusted_signers_quantity",
-				Description: "The number of AWS accounts in the list.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Quantity"),
-			},
-			{
-				Name:        "cache_behavior_trusted_signers_items",
+				Name:        "cache_behavior_trusted_signers",
 				Description: "A list of AWS account identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Items"),
@@ -278,21 +212,9 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "origins_quantity",
-				Description: "The number of origins for this distribution.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("Origins.Quantity"),
-			},
-			{
 				Name:        "price_class",
 				Description: "A complex type that contains information about price class for this streaming distribution.  This member is required.",
 				Type:        schema.TypeString,
-			},
-			{
-				Name:        "restrictions_geo_restriction_quantity",
-				Description: "When geo restriction is enabled, this is the number of countries in your whitelist or blacklist",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.Quantity"),
 			},
 			{
 				Name:        "restrictions_geo_restriction_restriction_type",
@@ -301,7 +223,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.RestrictionType"),
 			},
 			{
-				Name:        "restrictions_geo_restriction_items",
+				Name:        "restrictions_geo_restriction",
 				Description: "A complex type that contains a Location element for each country in which you want CloudFront either to distribute your content (whitelist) or not distribute your content (blacklist)",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.Items"),
@@ -359,12 +281,6 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("WebACLId"),
 			},
-			{
-				Name:        "origin_groups_quantity",
-				Description: "The number of origin groups.  This member is required.",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("OriginGroups.Quantity"),
-			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -394,28 +310,16 @@ func CloudfrontDistributions() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "allowed_methods_items",
+						Name:        "allowed_methods",
 						Description: "A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.  This member is required.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("AllowedMethods.Items"),
 					},
 					{
-						Name:        "allowed_methods_quantity",
-						Description: "The number of HTTP methods that you want CloudFront to forward to your origin. Valid values are 2 (for GET and HEAD requests), 3 (for GET, HEAD, and OPTIONS requests) and 7 (for GET, HEAD, OPTIONS, PUT, PATCH, POST, and DELETE requests).  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("AllowedMethods.Quantity"),
-					},
-					{
-						Name:        "allowed_methods_cached_methods_items",
+						Name:        "allowed_methods_cached_methods",
 						Description: "A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("AllowedMethods.CachedMethods.Items"),
-					},
-					{
-						Name:        "allowed_methods_cached_methods_quantity",
-						Description: "The number of HTTP methods for which you want CloudFront to cache responses. Valid values are 2 (for caching responses to GET and HEAD requests) and 3 (for caching responses to GET, HEAD, and OPTIONS requests).  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("AllowedMethods.CachedMethods.Quantity"),
 					},
 					{
 						Name:        "cache_policy_id",
@@ -445,13 +349,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("ForwardedValues.Cookies.Forward"),
 					},
 					{
-						Name:        "forwarded_values_cookies_whitelisted_names_quantity",
-						Description: "The number of cookie names in the Items list.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("ForwardedValues.Cookies.WhitelistedNames.Quantity"),
-					},
-					{
-						Name:        "forwarded_values_cookies_whitelisted_names_items",
+						Name:        "forwarded_values_cookies_whitelisted_names",
 						Description: "A list of cookie names.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("ForwardedValues.Cookies.WhitelistedNames.Items"),
@@ -463,34 +361,16 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("ForwardedValues.QueryString"),
 					},
 					{
-						Name:        "forwarded_values_headers_quantity",
-						Description: "The number of header names in the Items list.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("ForwardedValues.Headers.Quantity"),
-					},
-					{
-						Name:        "forwarded_values_headers_items",
+						Name:        "forwarded_values_headers",
 						Description: "A list of HTTP header names.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("ForwardedValues.Headers.Items"),
 					},
 					{
-						Name:        "forwarded_values_query_string_cache_keys_quantity",
-						Description: "The number of whitelisted query string parameters for a cache behavior.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("ForwardedValues.QueryStringCacheKeys.Quantity"),
-					},
-					{
-						Name:        "forwarded_values_query_string_cache_keys_items",
+						Name:        "forwarded_values_query_string_cache_keys",
 						Description: "A list that contains the query string parameters that you want CloudFront to use as a basis for caching for a cache behavior",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("ForwardedValues.QueryStringCacheKeys.Items"),
-					},
-					{
-						Name:        "lambda_function_associations_quantity",
-						Description: "The number of Lambda function associations for this cache behavior.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("LambdaFunctionAssociations.Quantity"),
 					},
 					{
 						Name:        "max_ttl",
@@ -526,13 +406,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("TrustedKeyGroups.Enabled"),
 					},
 					{
-						Name:        "trusted_key_groups_quantity",
-						Description: "The number of key groups in the list.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("TrustedKeyGroups.Quantity"),
-					},
-					{
-						Name:        "trusted_key_groups_items",
+						Name:        "trusted_key_groups",
 						Description: "A list of key groups identifiers.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("TrustedKeyGroups.Items"),
@@ -544,13 +418,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("TrustedSigners.Enabled"),
 					},
 					{
-						Name:        "trusted_signers_quantity",
-						Description: "The number of AWS accounts in the list.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("TrustedSigners.Quantity"),
-					},
-					{
-						Name:        "trusted_signers_items",
+						Name:        "trusted_signers",
 						Description: "A list of AWS account identifiers.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("TrustedSigners.Items"),
@@ -683,12 +551,6 @@ func CloudfrontDistributions() *schema.Table {
 						Type:        schema.TypeInt,
 					},
 					{
-						Name:        "custom_headers_quantity",
-						Description: "The number of custom headers, if any, for this distribution.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("CustomHeaders.Quantity"),
-					},
-					{
 						Name:        "custom_origin_config_http_port",
 						Description: "The HTTP port that CloudFront uses to connect to the origin",
 						Type:        schema.TypeInt,
@@ -719,16 +581,10 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginReadTimeout"),
 					},
 					{
-						Name:        "custom_origin_config_origin_ssl_protocols_items",
+						Name:        "custom_origin_config_origin_ssl_protocols",
 						Description: "A list that contains allowed SSL/TLS protocols for this distribution.  This member is required.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginSslProtocols.Items"),
-					},
-					{
-						Name:        "custom_origin_config_origin_ssl_protocols_quantity",
-						Description: "The number of SSL/TLS protocols that you want to allow CloudFront to use when establishing an HTTPS connection with this origin.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("CustomOriginConfig.OriginSslProtocols.Quantity"),
 					},
 					{
 						Name:        "origin_path",
@@ -823,21 +679,9 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes,
 					},
 					{
-						Name:        "failover_criteria_status_codes_quantity",
-						Description: "The number of status codes.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("FailoverCriteria.StatusCodes.Quantity"),
-					},
-					{
 						Name:        "id",
 						Description: "The origin group's ID.  This member is required.",
 						Type:        schema.TypeString,
-					},
-					{
-						Name:        "members_quantity",
-						Description: "The number of origins in an origin group.  This member is required.",
-						Type:        schema.TypeInt,
-						Resolver:    schema.PathResolver("Members.Quantity"),
 					},
 				},
 				Relations: []*schema.Table{
