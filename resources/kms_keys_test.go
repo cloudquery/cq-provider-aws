@@ -1,12 +1,13 @@
 package resources
 
 import (
+	"testing"
+
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/client/mocks"
 	"github.com/cloudquery/faker/v3"
 	"github.com/golang/mock/gomock"
-	"testing"
 )
 
 func buildKmsKeys(t *testing.T, ctrl *gomock.Controller) client.Services {
@@ -20,6 +21,15 @@ func buildKmsKeys(t *testing.T, ctrl *gomock.Controller) client.Services {
 	keys.NextMarker = nil
 	m.EXPECT().ListKeys(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&keys, nil)
+
+	tags := kms.ListResourceTagsOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tags.NextMarker = nil
+	m.EXPECT().ListResourceTags(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&tags, nil)
 
 	key := kms.DescribeKeyOutput{}
 	err = faker.FakeData(&key)
@@ -36,15 +46,6 @@ func buildKmsKeys(t *testing.T, ctrl *gomock.Controller) client.Services {
 	}
 	m.EXPECT().GetKeyRotationStatus(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&rotation, nil)
-
-	tags := kms.ListResourceTagsOutput{}
-	err = faker.FakeData(&tags)
-	if err != nil {
-		t.Fatal(err)
-	}
-	tags.NextMarker = nil
-	m.EXPECT().ListResourceTags(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&tags, nil)
 
 	return client.Services{
 		KMS: m,

@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
@@ -28,9 +29,8 @@ func KmsKeys() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveKmsKeyTags,
+				Name: "tags",
+				Type: schema.TypeJSON,
 			},
 			{
 				Name:        "region",
@@ -236,23 +236,21 @@ func resolveKmsKey(ctx context.Context, meta schema.ClientMeta, resource *schema
 		if err := resource.Set("rotation_enabled", output.KeyRotationEnabled); err != nil {
 			return err
 		}
+
+		tagsResponse, err := svc.ListResourceTags(ctx, &kms.ListResourceTagsInput{
+			KeyId: r.KeyId,
+		}, func(options *kms.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		tags := make(map[string]interface{})
+		for _, t := range tagsResponse.Tags {
+			tags[*t.TagKey] = *t.TagValue
+		}
+		return resource.Set("tags", tags)
 	}
 	return nil
-}
-func resolveKmsKeyTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.KeyListEntry)
-	if !ok {
-		return fmt.Errorf("expected types.KeyListEntry but got %T", resource.Item)
-	}
-	client := meta.(*client.Client)
-	svc := client.Services().KMS
-	svc.ListResourceTags(ctx, &kms.ListResourceTagsInput{
-		KeyId: r.KeyId,
-	}, func(options *kms.Options) {
-		options.Region = client.Region
-	})
-
-	tags := make(map[string]interface{})
-
-	return resource.Set(c.Name, tags)
 }

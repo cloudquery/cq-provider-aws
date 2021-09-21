@@ -49,133 +49,133 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "cache_behavior_target_origin_id",
+				Name:        "cache_behaviour_target_origin_id",
 				Description: "The value of ID for the origin that you want CloudFront to route requests to when they use the default cache behavior.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TargetOriginId"),
 			},
 			{
-				Name:        "cache_behavior_viewer_protocol_policy",
+				Name:        "cache_behaviour_viewer_protocol_policy",
 				Description: "The protocol that viewers can use to access the files in the origin specified by TargetOriginId when a request matches the path pattern in PathPattern",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ViewerProtocolPolicy"),
 			},
 			{
-				Name:        "cache_behavior_allowed_methods",
+				Name:        "cache_behaviour_allowed_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.Items"),
 			},
 			{
-				Name:        "cache_behavior_allowed_methods_cached_methods",
+				Name:        "cache_behaviour_allowed_methods_cached_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Items"),
 			},
 			{
-				Name:        "default_cache_behavior_cache_policy_id",
+				Name:        "cache_behaviour_cache_policy_id",
 				Description: "The unique identifier of the cache policy that is attached to the default cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.CachePolicyId"),
 			},
 			{
-				Name:        "cache_behavior_compress",
+				Name:        "cache_behaviour_compress",
 				Description: "Whether you want CloudFront to automatically compress certain files for this cache behavior",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.Compress"),
 			},
 			{
-				Name:        "cache_behavior_default_ttl",
+				Name:        "cache_behaviour_default_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.DefaultTTL"),
 			},
 			{
-				Name:        "cache_behavior_field_level_encryption_id",
+				Name:        "cache_behaviour_field_level_encryption_id",
 				Description: "The value of ID for the field-level encryption configuration that you want CloudFront to use for encrypting specific fields of data for the default cache behavior.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.FieldLevelEncryptionId"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_cookies_forward",
+				Name:        "cache_behaviour_forwarded_values_cookies_forward",
 				Description: "This field is deprecated",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.Forward"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_cookies_whitelisted_names",
+				Name:        "cache_behaviour_forwarded_values_cookies_whitelisted_names",
 				Description: "A list of cookie names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames.Items"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_query_string",
+				Name:        "cache_behaviour_forwarded_values_query_string",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryString"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_headers",
+				Name:        "cache_behaviour_forwarded_values_headers",
 				Description: "A list of HTTP header names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Headers.Items"),
 			},
 			{
-				Name:        "cache_behavior_forwarded_values_query_string_cache_keys",
+				Name:        "cache_behaviour_forwarded_values_query_string_cache_keys",
 				Description: "A list that contains the query string parameters that you want CloudFront to use as a basis for caching for a cache behavior",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys.Items"),
 			},
 			{
-				Name:        "cache_behavior_max_ttl",
+				Name:        "cache_behaviour_max_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.MaxTTL"),
 			},
 			{
-				Name:        "cache_behavior_min_ttl",
+				Name:        "cache_behaviour_min_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.MinTTL"),
 			},
 			{
-				Name:        "cache_behavior_origin_request_policy_id",
+				Name:        "cache_behaviour_origin_request_policy_id",
 				Description: "The unique identifier of the origin request policy that is attached to the default cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.OriginRequestPolicyId"),
 			},
 			{
-				Name:        "cache_behavior_realtime_log_config_arn",
+				Name:        "cache_behaviour_realtime_log_config_arn",
 				Description: "The Amazon Resource Name (ARN) of the real-time log configuration that is attached to this cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.RealtimeLogConfigArn"),
 			},
 			{
-				Name:        "cache_behavior_smooth_streaming",
+				Name:        "cache_behaviour_smooth_streaming",
 				Description: "Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify true; if not, specify false",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.SmoothStreaming"),
 			},
 			{
-				Name:        "cache_behavior_trusted_key_groups_enabled",
+				Name:        "cache_behaviour_trusted_key_groups_enabled",
 				Description: "This field is true if any of the key groups in the list have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies. If not, this field is false.  This member is required.",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Enabled"),
 			},
 			{
-				Name:        "cache_behavior_trusted_key_groups",
+				Name:        "cache_behaviour_trusted_key_groups",
 				Description: "A list of key groups identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Items"),
 			},
 			{
-				Name:        "cache_behavior_trusted_signers_enabled",
+				Name:        "cache_behaviour_trusted_signers_enabled",
 				Description: "This field is true if any of the AWS accounts have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Enabled"),
 			},
 			{
-				Name:        "cache_behavior_trusted_signers",
+				Name:        "cache_behaviour_trusted_signers",
 				Description: "A list of AWS account identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Items"),
@@ -284,9 +284,9 @@ func CloudfrontDistributions() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_cloudfront_distribution_cache_behaviors",
+				Name:        "aws_cloudfront_distribution_cache_behaviours",
 				Description: "A complex type that describes how CloudFront processes requests",
-				Resolver:    fetchCloudfrontDistributionCacheBehaviors,
+				Resolver:    fetchCloudfrontDistributionCacheBehaviours,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -426,13 +426,13 @@ func CloudfrontDistributions() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_cloudfront_distribution_cache_behavior_lambda_functions",
+						Name:        "aws_cloudfront_distribution_cache_behaviour_lambda_functions",
 						Description: "A complex type that contains a Lambda function association.",
-						Resolver:    fetchCloudfrontDistributionCacheBehaviorLambdaFunctions,
+						Resolver:    fetchCloudfrontDistributionCacheBehaviourLambdaFunctions,
 						Columns: []schema.Column{
 							{
-								Name:        "distribution_cache_behavior_cq_id",
-								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_cache_behaviors table (FK)",
+								Name:        "distribution_cache_behaviour_cq_id",
+								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_cache_behaviours table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -491,9 +491,9 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_cloudfront_distribution_default_cache_behavior_lambda_functions",
+				Name:        "aws_cloudfront_distribution_default_behaviour_lambda_functions",
 				Description: "A complex type that contains a Lambda function association.",
-				Resolver:    fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions,
+				Resolver:    fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -711,7 +711,7 @@ func resolveCloudfrontDistributionTags(ctx context.Context, meta schema.ClientMe
 	client := meta.(*client.Client)
 	svc := client.Services().Cloudfront
 	response, err := svc.ListTagsForResource(ctx, &cloudfront.ListTagsForResourceInput{
-		Resource: distribution.Id,
+		Resource: distribution.ARN,
 	}, func(options *cloudfront.Options) {
 		options.Region = client.Region
 	})
@@ -725,7 +725,7 @@ func resolveCloudfrontDistributionTags(ctx context.Context, meta schema.ClientMe
 	}
 	return resource.Set(c.Name, tags)
 }
-func fetchCloudfrontDistributionCacheBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchCloudfrontDistributionCacheBehaviours(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not types.DistributionSummary")
@@ -735,7 +735,7 @@ func fetchCloudfrontDistributionCacheBehaviors(ctx context.Context, meta schema.
 	}
 	return nil
 }
-func fetchCloudfrontDistributionCacheBehaviorLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchCloudfrontDistributionCacheBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cacheBehavior, ok := parent.Item.(types.CacheBehavior)
 	if !ok {
 		return fmt.Errorf("not types.CacheBehavior")
@@ -756,7 +756,7 @@ func fetchCloudfrontDistributionCustomErrorResponses(ctx context.Context, meta s
 	}
 	return nil
 }
-func fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not types.DistributionSummary")
@@ -815,7 +815,7 @@ func resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes(ctx con
 	if origin.FailoverCriteria == nil || origin.FailoverCriteria.StatusCodes == nil {
 		return nil
 	}
-	var data []int
+	data := make([]int, 0, *origin.FailoverCriteria.StatusCodes.Quantity)
 	for _, i := range origin.FailoverCriteria.StatusCodes.Items {
 		data = append(data, int(i))
 	}

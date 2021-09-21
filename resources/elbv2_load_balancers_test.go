@@ -30,7 +30,6 @@ func buildElbv2LoadBalancers(t *testing.T, ctrl *gomock.Controller) client.Servi
 		gomock.Any(),
 	).Return(fakeLoadBalancerAttributes(), nil)
 
-
 	tags := elasticloadbalancingv2.DescribeTagsOutput{}
 	err = faker.FakeData(&tags)
 	if err != nil {
