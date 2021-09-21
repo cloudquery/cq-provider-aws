@@ -136,3 +136,13 @@ DROP
 COLUMN "tags";
 ALTER TABLE "aws_kms_keys" RENAME COLUMN "id" TO "key_id";
 
+--aws_elbv2_load_balancer_availability_zones
+ALTER TABLE "aws_elbv2_load_balancer_availability_zones"
+    ADD CONSTRAINT "aws_elbv2_load_balancer_availability_zones_pk"
+        PRIMARY KEY(load_balancer_cq_id, zone_name);
+
+--aws_elbv2_load_balancer_availability_zone_addresses
+ALTER TABLE "aws_elbv2_load_balancer_availability_zone_addresses"
+    ADD CONSTRAINT "aws_elbv2_load_balancer_availability_zone_addresses_pk"
+        PRIMARY KEY(load_balancer_availability_zone_cq_id, ip_address);
+

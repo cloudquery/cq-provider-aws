@@ -92,7 +92,8 @@ ALTER TABLE "aws_cloudfront_distribution_origin_groups" RENAME COLUMN "failover_
 ALTER TABLE "aws_cloudtrail_trails"
     ADD COLUMN "tags" json;
 ALTER TABLE "aws_cloudtrail_trails"
-    DROP COLUMN "home_region";
+DROP
+COLUMN "home_region";
 
 --aws_elasticbeanstalk_environments
 ALTER TABLE "aws_elasticbeanstalk_environments"
@@ -116,7 +117,13 @@ ALTER TABLE "aws_kms_keys"
     ADD COLUMN "tags" json;
 ALTER TABLE "aws_kms_keys" RENAME COLUMN "key_id" TO "id";
 
---aws_elbv2_load_balancer_availability_zones  drop pk
+--aws_elbv2_load_balancer_availability_zones
+ALTER TABLE "aws_elbv2_load_balancer_availability_zones"
+DROP
+CONSTRAINT "aws_elbv2_load_balancer_availability_zones_pk";
 
---aws_elbv2_load_balancer_availability_zone_addresses  drop pk
+--aws_elbv2_load_balancer_availability_zone_addresses
+ALTER TABLE "aws_elbv2_load_balancer_availability_zone_addresses"
+DROP
+CONSTRAINT "aws_elbv2_load_balancer_availability_zone_addresses_pk";
 
