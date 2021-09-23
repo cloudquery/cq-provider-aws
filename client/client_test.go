@@ -100,3 +100,8 @@ func Test_initServices_NoNilValues(t *testing.T) {
 		t.Errorf("initServices().%s == nil", name)
 	}
 }
+
+
+func Test_obfusateAccountId(t testing.T) {
+
+}
