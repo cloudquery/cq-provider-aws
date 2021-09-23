@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
@@ -101,7 +103,7 @@ func Test_initServices_NoNilValues(t *testing.T) {
 	}
 }
 
-
-func Test_obfusateAccountId(t testing.T) {
-
+func Test_obfuscateAccountId(t *testing.T) {
+	assert.Equal(t, "1111xxxxxxxx", obfuscateAccountId("1111111111"))
+	assert.Equal(t, "11", obfuscateAccountId("11"))
 }

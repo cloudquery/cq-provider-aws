@@ -154,7 +154,7 @@ func S3Buckets() *schema.Table {
 			},
 			{
 				Name:        "aws_s3_bucket_cors_rules",
-					Description: "Specifies a cross-origin access rule for an Amazon S3 bucket.",
+				Description: "Specifies a cross-origin access rule for an Amazon S3 bucket.",
 				Resolver:    fetchS3BucketCorsRules,
 				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
