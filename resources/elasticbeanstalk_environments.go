@@ -34,9 +34,10 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveElasticbeanstalkEnvironmentTags,
+				Name:        "tags",
+				Type:        schema.TypeJSON,
+				Description: "Any tags assigned to the resource",
+				Resolver:    resolveElasticbeanstalkEnvironmentTags,
 			},
 			{
 				Name:        "abortable_operation_in_progress",
@@ -175,6 +176,7 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:        "aws_elasticbeanstalk_environment_links",
 				Description: "A link to another environment, defined in the environment's manifest",
 				Resolver:    fetchElasticbeanstalkEnvironmentLinks,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "link_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "environment_cq_id",
@@ -239,13 +241,10 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 	if !ok {
 		return fmt.Errorf("expected types.EnvironmentDescription but got %T", resource.Item)
 	}
-	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ElasticBeanstalk
 	tagsOutput, err := svc.ListTagsForResource(ctx, &elasticbeanstalk.ListTagsForResourceInput{
 		ResourceArn: p.EnvironmentArn,
-	}, func(o *elasticbeanstalk.Options) {
-		o.Region = region
-	})
+	}, func(o *elasticbeanstalk.Options) {})
 	if err != nil {
 		return err
 	}

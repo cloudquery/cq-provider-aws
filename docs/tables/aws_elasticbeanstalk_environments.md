@@ -6,7 +6,7 @@ Describes the properties of an environment.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|tags|jsonb||
+|tags|jsonb|Any tags assigned to the resource|
 |abortable_operation_in_progress|boolean|Indicates if there is an in-progress environment configuration update or application version deployment that you can cancel|
 |application_name|text|The name of the application associated with this environment.|
 |cname|text|The URL to the CNAME for this environment.|

@@ -33,22 +33,22 @@ func Apigatewayv2VpcLinks() *schema.Table {
 			},
 			{
 				Name:        "name",
-				Description: "The name of the VPC link.  This member is required.",
+				Description: "The name of the VPC link.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "security_group_ids",
-				Description: "A list of security group IDs for the VPC link.  This member is required.",
+				Description: "A list of security group IDs for the VPC link.",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "subnet_ids",
-				Description: "A list of subnet IDs to include in the VPC link.  This member is required.",
+				Description: "A list of subnet IDs to include in the VPC link.",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "id",
-				Description: "The ID of the VPC link.  This member is required.",
+				Description: "The ID of the VPC link.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("VpcLinkId"),
 			},

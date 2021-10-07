@@ -5,9 +5,9 @@ The settings for a trail.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
-|tags|jsonb||
+|tags|jsonb|Any tags assigned to the resource|
 |cloudwatch_logs_log_group_name|text||
-|is_logging|boolean| Whether the CloudTrail is currently logging AWS API calls.|
+|is_logging|boolean|Whether the CloudTrail is currently logging AWS API calls.|
 |latest_cloud_watch_logs_delivery_error|text|Displays any CloudWatch Logs error that CloudTrail encountered when attempting to deliver logs to CloudWatch Logs.|
 |latest_cloud_watch_logs_delivery_time|timestamp without time zone|Displays the most recent date and time when CloudTrail delivered logs to CloudWatch Logs.|
 |latest_delivery_error|text|Displays any Amazon S3 error that CloudTrail encountered when attempting to deliver log files to the designated bucket.|

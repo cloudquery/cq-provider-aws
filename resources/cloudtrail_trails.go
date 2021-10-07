@@ -29,9 +29,10 @@ func CloudtrailTrails() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveCloudtrailTrailTags,
+				Name:        "tags",
+				Type:        schema.TypeJSON,
+				Description: "Any tags assigned to the resource",
+				Resolver:    resolveCloudtrailTrailTags,
 			},
 			{
 				Name:     "cloudwatch_logs_log_group_name",
@@ -40,7 +41,7 @@ func CloudtrailTrails() *schema.Table {
 			},
 			{
 				Name:        "is_logging",
-				Description: " Whether the CloudTrail is currently logging AWS API calls.",
+				Description: "Whether the CloudTrail is currently logging AWS API calls.",
 				Type:        schema.TypeBool,
 			},
 			{

@@ -115,6 +115,7 @@ func Elbv2LoadBalancers() *schema.Table {
 				Name:        "aws_elbv2_load_balancer_availability_zones",
 				Description: "Information about an Availability Zone.",
 				Resolver:    fetchElbv2LoadBalancerAvailabilityZones,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "zone_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -149,6 +150,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description: "Information about a static IP address for a load balancer.",
 						Resolver:    fetchElbv2LoadBalancerAvailabilityZoneAddresses,
+						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_availability_zone_cq_id", "ip_address"}},
 						Columns: []schema.Column{
 							{
 								Name:        "load_balancer_availability_zone_cq_id",
@@ -314,9 +316,12 @@ func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, r
 		return nil
 	}
 	tags := make(map[string]*string)
-	for _, s := range tagsOutput.TagDescriptions[0].Tags {
-		tags[*s.Key] = s.Value
+	for _, td := range tagsOutput.TagDescriptions {
+		for _, s := range td.Tags {
+			tags[*s.Key] = s.Value
+		}
 	}
+
 	return resource.Set(c.Name, tags)
 }
 func fetchElbv2LoadBalancerAvailabilityZones(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {

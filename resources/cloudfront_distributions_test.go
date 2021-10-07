@@ -29,15 +29,6 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 		cloudfrontOutput,
 		nil,
 	)
-
-	tags := &cloudfront.ListTagsForResourceOutput{}
-	if err := faker.FakeData(&tags); err != nil {
-		t.Fatal(err)
-	}
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		tags,
-		nil,
-	)
 	return services
 }
 

@@ -1,9 +1,10 @@
 
-# Table: aws_cloudfront_distribution_alias_icp_recordals
+# Table: aws_cache_behaviour_lambda_function_associations
 
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |distribution_cq_id|uuid||
-|cname|text||
-|icp_recordal_status|text||
+|event_type|text||
+|lambda_function_arn|text||
+|include_body|boolean||
