@@ -32,7 +32,6 @@ func CloudtrailTrails() *schema.Table {
 				Name:        "tags",
 				Type:        schema.TypeJSON,
 				Description: "Any tags assigned to the resource",
-				Resolver:    resolveCloudtrailTrailTags,
 			},
 			{
 				Name:     "cloudwatch_logs_log_group_name",
@@ -229,15 +228,68 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	if err != nil {
 		return err
 	}
-	res <- response.TrailList
+
+	processTrailsBundle := func(trails []types.Trail) error {
+		input := cloudtrail.ListTagsInput{
+			ResourceIdList: make([]string, 0, len(trails)),
+		}
+		for _, h := range trails {
+			input.ResourceIdList = append(input.ResourceIdList, *h.TrailARN)
+		}
+		for {
+			response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {})
+			if err != nil {
+				return err
+			}
+			if len(response.ResourceTagList) == 0 {
+				break
+			}
+			for _, tr := range trails {
+				tags := getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList)
+				if len(tags) == 0 {
+					continue
+				}
+
+				wrapper := CloudTrailWrapper{
+					Trail: tr,
+					Tags:  make(map[string]interface{}, len(tags)),
+				}
+
+				for _, t := range tags {
+					wrapper.Tags[*t.Key] = t.Value
+				}
+				res <- wrapper
+			}
+
+			if aws.ToString(response.NextToken) == "" {
+				break
+			}
+			input.NextToken = response.NextToken
+		}
+		return nil
+	}
+
+	for i := 0; i < len(response.TrailList); i += 20 {
+		end := i + 10
+
+		if end > len(response.TrailList) {
+			end = len(response.TrailList)
+		}
+		trails := response.TrailList[i:end]
+		err := processTrailsBundle(trails)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
-	r, ok := resource.Item.(types.Trail)
+	r, ok := resource.Item.(CloudTrailWrapper)
 	if !ok {
-		return fmt.Errorf("expected types.Trail but got %T", resource.Item)
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
 	}
 	response, err := svc.GetTrailStatus(ctx,
 		&cloudtrail.GetTrailStatusInput{Name: r.TrailARN}, func(o *cloudtrail.Options) {
@@ -281,46 +333,13 @@ func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, re
 	}
 	return nil
 }
-func resolveCloudtrailTrailTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	client := meta.(*client.Client)
-	svc := client.Services().Cloudtrail
-	r, ok := resource.Item.(types.Trail)
-	if !ok {
-		return fmt.Errorf("expected types.Trail but got %T", resource.Item)
-	}
-	input := cloudtrail.ListTagsInput{
-		ResourceIdList: []string{
-			*r.TrailARN,
-		},
-	}
-	tags := make(map[string]interface{})
-	for {
-		response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
-			options.Region = client.Region
-		})
-		if err != nil {
-			return err
-		}
-		if len(response.ResourceTagList) == 0 {
-			break
-		}
-		for _, t := range response.ResourceTagList[0].TagsList {
-			tags[*t.Key] = t.Value
-		}
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		input.NextToken = response.NextToken
-	}
 
-	return resource.Set(c.Name, tags)
-}
 func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	groupName := ""
 	log := meta.(*client.Client).Logger()
-	r, ok := resource.Item.(types.Trail)
+	r, ok := resource.Item.(CloudTrailWrapper)
 	if !ok {
-		return fmt.Errorf("expected types.Trail but got %T", resource.Item)
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
 	}
 	if r.CloudWatchLogsLogGroupArn != nil {
 		matches := client.GroupNameRegex.FindStringSubmatch(*r.CloudWatchLogsLogGroupArn)
@@ -336,9 +355,9 @@ func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta 
 	return resource.Set("cloudwatch_logs_log_group_name", groupName)
 }
 func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(types.Trail)
+	r, ok := parent.Item.(CloudTrailWrapper)
 	if !ok {
-		return fmt.Errorf("expected types.Trail but got %T", parent.Item)
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", parent.Item)
 	}
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
@@ -350,4 +369,18 @@ func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientM
 	}
 	res <- response.EventSelectors
 	return nil
+}
+
+func getCloudTrailTagsByResourceID(id string, set []types.ResourceTag) []types.Tag {
+	for _, s := range set {
+		if *s.ResourceId == id {
+			return s.TagsList
+		}
+	}
+	return nil
+}
+
+type CloudTrailWrapper struct {
+	types.Trail
+	Tags map[string]interface{}
 }
