@@ -1,9 +1,14 @@
 package client
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"regexp"
+	"strings"
+	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
@@ -12,7 +17,81 @@ import (
 //log-group:([a-zA-Z0-9/]+):
 var GroupNameRegex = regexp.MustCompile("arn:aws:logs:[a-z0-9-]+:[0-9]+:log-group:([a-zA-Z0-9-/]+):")
 
+type SupportedServicesData struct {
+	Prices []struct {
+		Attributes struct {
+			Region  string `json:"aws:region"`
+			Service string `json:"aws:serviceName"`
+		} `json:"attributes"`
+		Id string `json:"id"`
+	} `json:"prices"`
+}
+
+var supportedServices *SupportedServicesData
+
+func downloadSupportedResourcesForRegions() (*SupportedServicesData, error) {
+	// Get the data
+	req, err := http.NewRequest(http.MethodGet, "https://api.regional-table.region-services.aws.a2z.com/index.json", nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to get aws supported resources for region, status code: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var data SupportedServicesData
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, item := range data.Prices {
+		// replacing the name because name from api does not always fit
+		parts := strings.Split(item.Id, ":")
+		data.Prices[i].Attributes.Service = parts[0]
+	}
+
+	return &data, nil
+}
+
+var once sync.Once
+
+func checkUnsupportedResourceForRegionError(err error) bool {
+	once.Do(func() {
+		supportedServices, _ = downloadSupportedResourcesForRegions()
+	})
+	errText := err.Error()
+
+	if supportedServices != nil && strings.Contains(errText, "no such host") {
+		var ae *smithy.OperationError
+		if errors.As(err, &ae) {
+			for _, p := range supportedServices.Prices {
+				pattern := fmt.Sprintf("lookup %s.+%s\\.amazonaws\\.com", p.Attributes.Service, p.Attributes.Region)
+				// match means that error is related to a supported service
+				if match, _ := regexp.MatchString(pattern, errText); match {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
+
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
+	if checkUnsupportedResourceForRegionError(err) {
+		return true
+	}
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
