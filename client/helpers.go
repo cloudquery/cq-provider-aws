@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"net"
 	"net/http"
 	"regexp"
 	"strings"
@@ -13,6 +13,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
 )
+
+const supportedServicesLink = "https://api.regional-table.region-services.aws.a2z.com/index.json"
 
 //log-group:([a-zA-Z0-9/]+):
 var GroupNameRegex = regexp.MustCompile("arn:aws:logs:[a-z0-9-]+:[0-9]+:log-group:([a-zA-Z0-9-/]+):")
@@ -27,11 +29,20 @@ type SupportedServicesData struct {
 	} `json:"prices"`
 }
 
-var supportedServices *SupportedServicesData
+// supportedServices map of the supported service-regions
+var supportedServices map[string]map[string]struct{}
+var getSupportedServices sync.Once
 
-func downloadSupportedResourcesForRegions() (*SupportedServicesData, error) {
-	// Get the data
-	req, err := http.NewRequest(http.MethodGet, "https://api.regional-table.region-services.aws.a2z.com/index.json", nil)
+// apiErrorServiceNames stores api subdomains and service names for error decoding
+var apiErrorServiceNames = map[string]string{
+	"mq":               "Amazon MQ",
+	"cognito-identity": "Amazon Cognito",
+	"cognito-idp":      "Amazon Cognito",
+	"ec2":              "Amazon Elastic Compute Cloud (EC2)",
+}
+
+func downloadSupportedResourcesForRegions() (map[string]map[string]struct{}, error) {
+	req, err := http.NewRequest(http.MethodGet, supportedServicesLink, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -45,51 +56,40 @@ func downloadSupportedResourcesForRegions() (*SupportedServicesData, error) {
 		return nil, fmt.Errorf("failed to get aws supported resources for region, status code: %d", resp.StatusCode)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	var data SupportedServicesData
-	err = json.Unmarshal(body, &data)
-	if err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return nil, err
 	}
 
-	for i, item := range data.Prices {
-		// replacing the name because name from api does not always fit
-		parts := strings.Split(item.Id, ":")
-		data.Prices[i].Attributes.Service = parts[0]
+	m := make(map[string]map[string]struct{})
+	for _, p := range data.Prices {
+		if _, ok := m[p.Attributes.Service]; !ok {
+			m[p.Attributes.Service] = make(map[string]struct{})
+		}
+		m[p.Attributes.Service][p.Attributes.Region] = struct{}{}
 	}
 
-	return &data, nil
+	return m, nil
 }
 
-var once sync.Once
-
-func checkUnsupportedResourceForRegionError(err error) bool {
-	once.Do(func() {
+func ignoreUnsupportedResourceForRegionError(err error) bool {
+	getSupportedServices.Do(func() {
 		supportedServices, _ = downloadSupportedResourcesForRegions()
 	})
-	errText := err.Error()
-
-	if supportedServices != nil && strings.Contains(errText, "no such host") {
-		var ae *smithy.OperationError
-		if errors.As(err, &ae) {
-			for _, p := range supportedServices.Prices {
-				pattern := fmt.Sprintf("lookup %s.+%s\\.amazonaws\\.com", p.Attributes.Service, p.Attributes.Region)
-				// match means that error is related to a supported service
-				if match, _ := regexp.MatchString(pattern, errText); match {
-					return false
-				}
-			}
-		}
+	var dnsErr *net.DNSError
+	if supportedServices != nil && errors.As(err, &dnsErr) && dnsErr.IsNotFound {
+		parts := strings.Split(dnsErr.Name, ".")
+		apiService := apiErrorServiceNames[parts[0]]
+		region := parts[1]
+		_, ok := supportedServices[apiService][region]
+		// if service-region combination is in the map than service is supported and error should not be ignored
+		return ok
 	}
 	return true
 }
 
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
-	if checkUnsupportedResourceForRegionError(err) {
+	if ignoreUnsupportedResourceForRegionError(err) {
 		return true
 	}
 	var ae smithy.APIError
