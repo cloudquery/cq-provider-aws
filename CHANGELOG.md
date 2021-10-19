@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2021-09-21
 ###### SDK Version: 0.4.9
 
+### :rocket: Added
+* Added ignore `AWSOrganizationsNotInUseException` error to ignore error filter.
+
 ### :spider: Fixed
 * Fixed [empty or missing](https://github.com/cloudquery/cq-provider-aws/issues/157) tags on some resources [#191](https://github.com/cloudquery/cq-provider-aws/pull/191)
 * Fixed duplicate of `id` field for `aws_apigatewayv2_vpc_links` - removed `vpc_link_id` field
