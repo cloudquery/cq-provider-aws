@@ -79,9 +79,17 @@ func ignoreUnsupportedResourceForRegionError(err error) bool {
 	var dnsErr *net.DNSError
 	if supportedServices != nil && errors.As(err, &dnsErr) && dnsErr.IsNotFound {
 		parts := strings.Split(dnsErr.Name, ".")
-		apiService := apiErrorServiceNames[parts[0]]
+		if len(parts) < 2 {
+			// usual aws domain has more than 2 parts
+			return false
+		}
+		apiService, ok := apiErrorServiceNames[parts[0]]
+		if !ok {
+			return false
+		}
 		region := parts[1]
-		_, ok := supportedServices[apiService][region]
+
+		_, ok = supportedServices[apiService][region]
 		// if service-region combination is in the map than service is supported and error should not be ignored
 		return ok
 	}
