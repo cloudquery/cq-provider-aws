@@ -15,8 +15,8 @@ cloudquery {
 provider "aws" {
   configuration {
 
-    accounts "${assume_account_id}"{
-      role_arn = "${assume_role_arn}"
+    accounts "${ASSUME_ROLE_ACCOUNT_ID}"{
+      role_arn = "${ASSUME_ROLE_ARN}"
     }
 
     max_retries = 7
