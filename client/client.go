@@ -84,6 +84,7 @@ var allRegions = []string{
 const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to configure provider for account %s. AWS Error: %w"
+	defaultVar                 = "default"
 )
 
 type Services struct {
@@ -236,9 +237,9 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID:        "default",
-			AccountID: "default",
-			RoleARN:   "default",
+			ID:        defaultVar,
+			AccountID: defaultVar,
+			RoleARN:   defaultVar,
 		})
 	}
 

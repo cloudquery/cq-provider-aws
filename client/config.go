@@ -18,9 +18,10 @@ type Config struct {
 func (c Config) Example() string {
 	return `configuration {
 	// Optional. if you want to assume role to multiple account and fetch data from them
-    //accounts "<YOUR ID>" {
+    //accounts "<YOUR ACCOUNT ID>" {
 	// Optional. Role ARN we want to assume when accessing this account
 	// role_arn = <YOUR_ROLE_ARN>
+	// account_id = <YOUR ACCOUNT ID> //optional
 	// }
 	// Optional. by default assumes all regions
 	// regions = ["us-east-1", "us-west-2"]
