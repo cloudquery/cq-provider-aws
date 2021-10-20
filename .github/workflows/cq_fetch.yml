@@ -122,6 +122,7 @@ jobs:
         run: |
           go get -v -t -d ./...
 
+
       - name: Build
         run: go build -v .
 
@@ -150,7 +151,7 @@ jobs:
       - name: Fetch
         run: |
           rm -rf .cq_reattach
-          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery fetch --config ./client/testdata/nightly.hcl --enable-console-log --fail-on-error
+          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery fetch --config ./client/testdata/assume_role.hcl --enable-console-log --fail-on-error
         env:
           CQ_REATTACH_PROVIDERS: .cq_reattach
           CQ_ASSUME_ROLE_ACCOUNT_ID: ${{ secrets.CQ_ASSUME_ROLE_ACCOUNT_ID }}
