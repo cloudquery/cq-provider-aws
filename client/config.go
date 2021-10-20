@@ -21,7 +21,8 @@ func (c Config) Example() string {
     //accounts "<YOUR ACCOUNT ID>" {
 	// Optional. Role ARN we want to assume when accessing this account
 	// role_arn = <YOUR_ROLE_ARN>
-	// account_id = <YOUR ACCOUNT ID> //optional
+	// Optional. Account ID we want to assume when accessing this account - override the block label
+	// account_id = <YOUR ACCOUNT ID>
 	// }
 	// Optional. by default assumes all regions
 	// regions = ["us-east-1", "us-west-2"]
