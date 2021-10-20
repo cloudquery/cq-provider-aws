@@ -17,7 +17,7 @@ provider "aws" {
 
     accounts "default" {
       role_arn = "${ASSUME_ROLE_ARN}"
-      external_id = "${ASSUME_ROLE_ACCOUNT_ID}"
+      account_id = "${ASSUME_ROLE_ACCOUNT_ID}"
     }
 
     max_retries = 7
