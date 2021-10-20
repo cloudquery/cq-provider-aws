@@ -154,8 +154,8 @@ jobs:
           CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery fetch --config ./client/testdata/assume_role.hcl --enable-console-log --fail-on-error
         env:
           CQ_REATTACH_PROVIDERS: .cq_reattach
-          CQ_ASSUME_ROLE_ACCOUNT_ID: ${{ secrets.CQ_ASSUME_ROLE_ACCOUNT_ID }}
-          CQ_ASSUME_ROLE_ARN: ${{ secrets.CQ_ASSUME_ROLE_ARN }}
+          CQ_VAR_ASSUME_ROLE_ACCOUNT_ID: ${{ secrets.CQ_ASSUME_ROLE_ACCOUNT_ID }}
+          CQ_VAR_ASSUME_ROLE_ARN: ${{ secrets.CQ_ASSUME_ROLE_ARN }}
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
