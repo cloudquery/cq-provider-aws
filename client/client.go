@@ -247,8 +247,9 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		var err error
 		var awsCfg aws.Config
 
+		// account id can be defined in account block label or in block attr
+		// we take the block att as default and use the block label if the attr is not defined
 		var accountID = account.AccountID
-
 		if accountID == "" {
 			accountID = account.ID
 		}
