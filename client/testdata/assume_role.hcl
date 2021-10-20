@@ -20,7 +20,7 @@ provider "aws" {
       account_id = "${ASSUME_ROLE_ACCOUNT_ID}"
     }
 
-    max_retries = 7
+    max_retries = 20
     max_backoff = 60
   }
   resources = [
