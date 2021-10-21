@@ -14,8 +14,6 @@ import (
 	"github.com/aws/smithy-go"
 )
 
-const supportedServicesLink = "https://api.regional-table.region-services.aws.a2z.com/index.json"
-
 //log-group:([a-zA-Z0-9/]+):
 var GroupNameRegex = regexp.MustCompile("arn:aws:logs:[a-z0-9-]+:[0-9]+:log-group:([a-zA-Z0-9-/]+):")
 
@@ -41,6 +39,9 @@ var apiErrorServiceNames = map[string]string{
 	"ec2":              "Amazon Elastic Compute Cloud (EC2)",
 }
 
+const supportedServicesLink = "https://api.regional-table.region-services.aws.a2z.com/index.json"
+
+// downloadSupportedResourcesForRegions gets the data about AWS services and regions they are available in
 func downloadSupportedResourcesForRegions() (map[string]map[string]struct{}, error) {
 	req, err := http.NewRequest(http.MethodGet, supportedServicesLink, nil)
 	if err != nil {
@@ -72,6 +73,7 @@ func downloadSupportedResourcesForRegions() (map[string]map[string]struct{}, err
 	return m, nil
 }
 
+// ignoreUnsupportedResourceForRegionError returns true request was sent to a service that does not exist in specified region
 func ignoreUnsupportedResourceForRegionError(err error) bool {
 	getSupportedServices.Do(func() {
 		supportedServices, _ = downloadSupportedResourcesForRegions()
