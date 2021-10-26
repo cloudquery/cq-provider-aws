@@ -142,6 +142,10 @@ func resolveEmrClustersVpcId(ctx context.Context, meta schema.ClientMeta, resour
 		return err
 	}
 
+	if output.Cluster == nil || output.Cluster.Ec2InstanceAttributes == nil && output.Cluster.Ec2InstanceAttributes.Ec2SubnetId == nil {
+		return nil
+	}
+
 	subnetId := *output.Cluster.Ec2InstanceAttributes.Ec2SubnetId
 	subnetsOutput, err := ec2Svc.DescribeSubnets(ctx, &ec2.DescribeSubnetsInput{
 		SubnetIds: []string{subnetId},

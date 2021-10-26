@@ -38,5 +38,9 @@ ALTER TABLE IF EXISTS "aws_kms_keys" RENAME COLUMN "key_id" TO "id";
 ALTER TABLE IF EXISTS "aws_elbv2_load_balancer_availability_zone_addresses" DROP CONSTRAINT IF EXISTS "aws_elbv2_load_balancer_availability_zone_addresses_pk";
 ALTER TABLE IF EXISTS "aws_elbv2_load_balancer_availability_zone_addresses" ADD CONSTRAINT "aws_elbv2_load_balancer_availability_zone_addresses_pk" UNIQUE ("load_balancer_availability_zone_cq_id", "cq_id");
 
+--aws_emr_clusters_vpc_id
+ALTER TABLE IF EXISTS "aws_emr_clusters"
+ADD
+COLUMN "vpc_id";
 
 
