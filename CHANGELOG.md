@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### :rocket: Added
 * Added ignore `AWSOrganizationsNotInUseException` error to ignore error filter.
+* Added `web_acl_arn` column to `aws_elbv2_load_balancers` table.
 
 ### :spider: Fixed
 * Fixed [empty or missing](https://github.com/cloudquery/cq-provider-aws/issues/157) tags on some resources [#191](https://github.com/cloudquery/cq-provider-aws/pull/191)
