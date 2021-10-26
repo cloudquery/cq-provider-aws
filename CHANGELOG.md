@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### :rocket: Added
 * Added ignore `AWSOrganizationsNotInUseException` error to ignore error filter.
-* Added `web_acl_arn` column to `aws_elbv2_load_balancers` table.
 
 ### :spider: Fixed
 * Fixed [empty or missing](https://github.com/cloudquery/cq-provider-aws/issues/157) tags on some resources [#191](https://github.com/cloudquery/cq-provider-aws/pull/191)
 * Fixed duplicate of `id` field for `aws_apigatewayv2_vpc_links` - removed `vpc_link_id` field
 * Fixed duplicate of `region` field for `aws_cloudtrail_trails` - removed `home_region` field
 * Fixed naming according to convention `aws_elasticbeanstalk_environments`:`environment_name` -> `name`, `aws_kms_keys`: `key_id` -> `id`
+* Fixed [Web ACL (WAF) attachment](https://github.com/cloudquery/cq-provider-aws/issues/209)
 
 ## [v0.5.16] - 2021-10-07
 ###### SDK Version: v0.4.9
