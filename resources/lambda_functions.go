@@ -992,6 +992,10 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		}
 	}
 
+	if resource.Get("code_image_uri") != nil {
+		return nil
+	}
+
 	functionSigning, err := svc.GetFunctionCodeSigningConfig(ctx, &lambda.GetFunctionCodeSigningConfigInput{
 		FunctionName: r.Configuration.FunctionName,
 	}, func(options *lambda.Options) {
