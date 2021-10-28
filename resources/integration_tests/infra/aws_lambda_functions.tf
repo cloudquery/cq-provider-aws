@@ -74,7 +74,7 @@ resource "aws_lambda_function_event_invoke_config" "lambda_func_invoke_config" {
 }
 
 resource "aws_iam_policy" "lambda_func_iam_policy_publish" {
-  name        = "lambda_${var.test_prefix}${var.test_suffix}"
+  name        = "lambda_policy_${var.test_prefix}${var.test_suffix}"
   path        = "/"
   description = "IAM policy for publishing from a lambda"
 
@@ -98,15 +98,15 @@ resource "aws_iam_role_policy_attachment" "lambda_func_policy_logs" {
 }
 
 resource "aws_iam_role" "lambda_func_iam_role" {
-  name = "lambda_func_role_${var.test_prefix}${var.test_suffix}"
+  name = "lambda_role_${var.test_prefix}${var.test_suffix}"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Sid       = ""
         Principal = {
           Service = "lambda.amazonaws.com"
         }
@@ -118,7 +118,7 @@ resource "aws_iam_role" "lambda_func_iam_role" {
 resource "aws_lambda_function" "lambda_func" {
   filename         = data.archive_file.lambda_func_zip_inline.output_path
   source_code_hash = data.archive_file.lambda_func_zip_inline.output_base64sha256
-  function_name    = "function_${var.test_prefix}${var.test_suffix}"
+  function_name    = "func_${var.test_prefix}${var.test_suffix}"
   role             = aws_iam_role.lambda_func_iam_role.arn
   handler          = "exports.example"
   runtime          = "nodejs12.x"
@@ -129,6 +129,46 @@ resource "aws_lambda_function" "lambda_func" {
       foo = "bar"
     }
   }
+}
+
+
+resource "local_file" "lambda_dockerfile" {
+  content  = "FROM public.ecr.aws/lambda/nodejs:14"
+  filename = "${path.cwd}/container/Dockerfile"
+}
+
+resource "docker_registry_image" "lambda_image" {
+  name       = "${aws_ecr_repository.container_lambda_repo.repository_url}:latest"
+  build {
+    context = "${path.cwd}/container"
+  }
+  depends_on = [
+    local_file.lambda_dockerfile,
+    aws_ecr_repository.container_lambda_repo
+  ]
+}
+
+
+resource "aws_ecr_repository" "container_lambda_repo" {
+  name                 = "e${var.test_prefix}${var.test_suffix}"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+
+resource "aws_lambda_function" "lambda_func_container" {
+  image_uri     = "${aws_ecr_repository.container_lambda_repo.repository_url}:latest"
+  function_name = "function_contaier_${var.test_prefix}${var.test_suffix}"
+  role          = aws_iam_role.lambda_func_iam_role.arn
+  package_type  = "Image"
+  timeout       = 120
+  depends_on    = [
+    aws_ecr_repository.container_lambda_repo,
+    docker_registry_image.lambda_image
+  ]
 }
 
 data "archive_file" "lambda_func_zip_inline" {
