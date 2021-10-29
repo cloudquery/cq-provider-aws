@@ -12,7 +12,7 @@ provider transforms AWS resources to a relational database.
 
 ## What is CloudQuery
 
-CloudQuery extracts, transform and load your cloud infrastructure and SaaS apps configuration to SQL database.
+CloudQuery extracts, transforms, and loads your cloud infrastructure and SaaS apps configuration to SQL database.
 This abstracts various scattered APIs enabling you to define security, compliance, governance  and cost policies with SQL.
 
 CloudQuery can be easily extended to more resources and SaaS providers (open an [Issue](https://github.com/cloudquery/cloudquery/issues)).
