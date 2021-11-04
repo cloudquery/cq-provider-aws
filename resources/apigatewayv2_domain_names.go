@@ -339,6 +339,7 @@ func awsRestjson1_deserializeOpErrorGetDomainNames(response *smithyhttp.Response
 		return err
 	}
 
+	//lint:ignore
 	errorBody.Seek(0, io.SeekStart)
 	if len(code) != 0 {
 		errorCode = restjson.SanitizeErrorCode(code)
@@ -443,6 +444,7 @@ func awsRestjson1_deserializeErrorBadRequestException(response *smithyhttp.Respo
 		return err
 	}
 
+	//lint:ignore
 	errorBody.Seek(0, io.SeekStart)
 
 	return output
@@ -479,6 +481,7 @@ func awsRestjson1_deserializeErrorNotFoundException(response *smithyhttp.Respons
 		return err
 	}
 
+	//lint:ignore
 	errorBody.Seek(0, io.SeekStart)
 
 	return output
@@ -533,6 +536,7 @@ func awsRestjson1_deserializeDocument__listOfDomainName(v *[]types.DomainName, v
 		return fmt.Errorf("unexpected JSON type %v", value)
 	}
 
+	//lint:ignore
 	var cv []types.DomainName
 	if *v == nil {
 		cv = []types.DomainName{}
@@ -720,6 +724,7 @@ func awsRestjson1_deserializeDocumentDomainNameConfigurations(v *[]types.DomainN
 		return fmt.Errorf("unexpected JSON type %v", value)
 	}
 
+	//lint:ignore
 	var cv []types.DomainNameConfiguration
 	if *v == nil {
 		cv = []types.DomainNameConfiguration{}
@@ -1012,6 +1017,7 @@ func awsRestjson1_deserializeDocument__listOf__string(v *[]string, value interfa
 		return fmt.Errorf("unexpected JSON type %v", value)
 	}
 
+	//lint:ignore
 	var cv []string
 	if *v == nil {
 		cv = []string{}
