@@ -90,9 +90,8 @@ func ApigatewayAPIKeys() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchApigatewayApiKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	includeValues := true
 	config := apigateway.GetApiKeysInput{
-		IncludeValues: &includeValues,
+		IncludeValues: aws.Bool(true),
 	}
 	c := meta.(*client.Client)
 	svc := c.Services().Apigateway
