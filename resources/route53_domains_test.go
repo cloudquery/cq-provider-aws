@@ -32,6 +32,14 @@ func buildRoute53Domains(t *testing.T, ctrl *gomock.Controller) client.Services 
 		&detail, nil,
 	)
 
+	var tagsOut route53domains.ListTagsForDomainOutput
+	if err := faker.FakeData(&tagsOut); err != nil {
+		t.Fatal(err)
+	}
+	mock.EXPECT().ListTagsForDomain(gomock.Any(), &route53domains.ListTagsForDomainInput{DomainName: ds.DomainName}, gomock.Any()).Return(
+		&tagsOut, nil,
+	)
+
 	return client.Services{
 		Route53Domains: mock,
 	}

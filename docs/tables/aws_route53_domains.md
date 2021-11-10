@@ -19,6 +19,7 @@ The domain names registered with Amazon Route 53.
 |admin_contact_phone_number|text|The phone number of the contact.|
 |admin_contact_state|text|The state or province of the contact's city.|
 |admin_contact_zip_code|text|The zip or postal code of the contact's address.|
+|admin_contact_extra_params|jsonb|A mapping of name to value parameter pairs required by certain top-level domains.|
 |domain_name|text|The name of a domain.|
 |registrant_contact_address_line1|text|First line of the contact's address.|
 |registrant_contact_address_line2|text|Second line of contact's address, if any.|
@@ -33,6 +34,7 @@ The domain names registered with Amazon Route 53.
 |registrant_contact_phone_number|text|The phone number of the contact.|
 |registrant_contact_state|text|The state or province of the contact's city.|
 |registrant_contact_zip_code|text|The zip or postal code of the contact's address.|
+|registrant_contact_extra_params|jsonb|A mapping of name to value parameter pairs required by certain top-level domains.|
 |tech_contact_address_line1|text|First line of the contact's address.|
 |tech_contact_address_line2|text|Second line of contact's address, if any.|
 |tech_contact_city|text|The city of the contact's address.|
@@ -46,6 +48,7 @@ The domain names registered with Amazon Route 53.
 |tech_contact_phone_number|text|The phone number of the contact.|
 |tech_contact_state|text|The state or province of the contact's city.|
 |tech_contact_zip_code|text|The zip or postal code of the contact's address.|
+|tech_contact_extra_params|jsonb|A mapping of name to value parameter pairs required by certain top-level domains.|
 |abuse_contact_email|text|Email address to contact to report incorrect contact information for a domain, to report that the domain is being used to send spam, to report that someone is cybersquatting on a domain name, or report some other type of abuse.|
 |abuse_contact_phone|text|Phone number for reporting abuse.|
 |admin_privacy|boolean|Specifies whether contact information is concealed from WHOIS queries|
@@ -62,3 +65,4 @@ The domain names registered with Amazon Route 53.
 |tech_privacy|boolean|Specifies whether contact information is concealed from WHOIS queries|
 |updated_date|timestamp without time zone|The last updated date of the domain as found in the response to a WHOIS query.|
 |who_is_server|text|The fully qualified name of the WHOIS server that can answer the WHOIS query for the domain.|
+|tags|jsonb|A list of tags|

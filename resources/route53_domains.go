@@ -2,10 +2,12 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
+	"github.com/aws/aws-sdk-go-v2/service/route53domains/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -109,6 +111,12 @@ func Route53Domains() *schema.Table {
 				Resolver:    schema.PathResolver("AdminContact.ZipCode"),
 			},
 			{
+				Name:        "admin_contact_extra_params",
+				Description: "A mapping of name to value parameter pairs required by certain top-level domains.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRoute53DomainContactExtraParams(func(d *route53domains.GetDomainDetailOutput) *types.ContactDetail { return d.AdminContact }),
+			},
+			{
 				Name:        "domain_name",
 				Description: "The name of a domain.",
 				Type:        schema.TypeString,
@@ -192,6 +200,12 @@ func Route53Domains() *schema.Table {
 				Resolver:    schema.PathResolver("RegistrantContact.ZipCode"),
 			},
 			{
+				Name:        "registrant_contact_extra_params",
+				Description: "A mapping of name to value parameter pairs required by certain top-level domains.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRoute53DomainContactExtraParams(func(d *route53domains.GetDomainDetailOutput) *types.ContactDetail { return d.RegistrantContact }),
+			},
+			{
 				Name:        "tech_contact_address_line1",
 				Description: "First line of the contact's address.",
 				Type:        schema.TypeString,
@@ -268,6 +282,12 @@ func Route53Domains() *schema.Table {
 				Description: "The zip or postal code of the contact's address.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("TechContact.ZipCode"),
+			},
+			{
+				Name:        "tech_contact_extra_params",
+				Description: "A mapping of name to value parameter pairs required by certain top-level domains.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRoute53DomainContactExtraParams(func(d *route53domains.GetDomainDetailOutput) *types.ContactDetail { return d.TechContact }),
 			},
 			{
 				Name:        "abuse_contact_email",
@@ -349,31 +369,14 @@ func Route53Domains() *schema.Table {
 				Description: "The fully qualified name of the WHOIS server that can answer the WHOIS query for the domain.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "tags",
+				Description: "A list of tags",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRoute53DomainTags,
+			},
 		},
 		Relations: []*schema.Table{
-			{
-				Name:        "aws_route53_domain_admin_contact_extra_params",
-				Description: "ExtraParam includes the following elements.",
-				Resolver:    fetchRoute53DomainAdminContactExtraParams,
-				Columns: []schema.Column{
-					{
-						Name:        "domain_cq_id",
-						Description: "Unique CloudQuery ID of aws_route53_domains table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name of an additional parameter that is required by a top-level domain",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value that corresponds with the name of an extra parameter.  This member is required.",
-						Type:        schema.TypeString,
-					},
-				},
-			},
 			{
 				Name:        "aws_route53_domain_nameservers",
 				Description: "Nameserver includes the following elements.",
@@ -394,52 +397,6 @@ func Route53Domains() *schema.Table {
 						Name:        "glue_ips",
 						Description: "Glue IP address of a name server entry",
 						Type:        schema.TypeStringArray,
-					},
-				},
-			},
-			{
-				Name:        "aws_route53_domain_registrant_contact_extra_params",
-				Description: "ExtraParam includes the following elements.",
-				Resolver:    fetchRoute53DomainRegistrantContactExtraParams,
-				Columns: []schema.Column{
-					{
-						Name:        "domain_cq_id",
-						Description: "Unique CloudQuery ID of aws_route53_domains table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name of an additional parameter that is required by a top-level domain",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value that corresponds with the name of an extra parameter.  This member is required.",
-						Type:        schema.TypeString,
-					},
-				},
-			},
-			{
-				Name:        "aws_route53_domain_tech_contact_extra_params",
-				Description: "ExtraParam includes the following elements.",
-				Resolver:    fetchRoute53DomainTechContactExtraParams,
-				Columns: []schema.Column{
-					{
-						Name:        "domain_cq_id",
-						Description: "Unique CloudQuery ID of aws_route53_domains table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name of an additional parameter that is required by a top-level domain",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value that corresponds with the name of an extra parameter.  This member is required.",
-						Type:        schema.TypeString,
 					},
 				},
 			},
@@ -479,17 +436,6 @@ func fetchRoute53Domains(ctx context.Context, meta schema.ClientMeta, parent *sc
 	return nil
 }
 
-func fetchRoute53DomainAdminContactExtraParams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	d, ok := parent.Item.(*route53domains.GetDomainDetailOutput)
-	if !ok {
-		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", parent.Item)
-	}
-	if d.AdminContact != nil {
-		res <- d.AdminContact.ExtraParams
-	}
-	return nil
-}
-
 func fetchRoute53DomainNameservers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	d, ok := parent.Item.(*route53domains.GetDomainDetailOutput)
 	if !ok {
@@ -499,24 +445,48 @@ func fetchRoute53DomainNameservers(ctx context.Context, meta schema.ClientMeta, 
 	return nil
 }
 
-func fetchRoute53DomainRegistrantContactExtraParams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	d, ok := parent.Item.(*route53domains.GetDomainDetailOutput)
+func resolveRoute53DomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Route53Domains
+	d, ok := resource.Item.(*route53domains.GetDomainDetailOutput)
 	if !ok {
-		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", parent.Item)
+		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", resource.Item)
 	}
-	if d.RegistrantContact != nil {
-		res <- d.RegistrantContact.ExtraParams
+	out, err := svc.ListTagsForDomain(ctx, &route53domains.ListTagsForDomainInput{DomainName: d.DomainName}, func(options *route53domains.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		return err
 	}
-	return nil
+	tags := make(map[string]string, len(out.TagList))
+	for _, v := range out.TagList {
+		key := aws.ToString(v.Key)
+		if key == "" {
+			continue
+		}
+		tags[key] = aws.ToString(v.Value)
+	}
+	return resource.Set(col.Name, tags)
 }
 
-func fetchRoute53DomainTechContactExtraParams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	d, ok := parent.Item.(*route53domains.GetDomainDetailOutput)
-	if !ok {
-		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", parent.Item)
+func resolveRoute53DomainContactExtraParams(extractValue func(*route53domains.GetDomainDetailOutput) *types.ContactDetail) func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
+	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
+		d, ok := resource.Item.(*route53domains.GetDomainDetailOutput)
+		if !ok {
+			return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", resource.Item)
+		}
+		detail := extractValue(d)
+		if detail == nil {
+			return nil
+		}
+		m := make(map[string]string, len(detail.ExtraParams))
+		for _, p := range detail.ExtraParams {
+			m[string(p.Name)] = aws.ToString(p.Value)
+		}
+		b, err := json.Marshal(m)
+		if err != nil {
+			return err
+		}
+		return resource.Set(col.Name, b)
 	}
-	if d.TechContact != nil {
-		res <- d.TechContact.ExtraParams
-	}
-	return nil
 }
