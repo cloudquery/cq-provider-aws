@@ -20,18 +20,13 @@ func Route53Domains() *schema.Table {
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "domain_name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
-			},
-			{
-				Name:        "region",
-				Description: "The AWS Region of the resource.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
 			},
 			{
 				Name:        "admin_contact_address_line1",
@@ -382,6 +377,7 @@ func Route53Domains() *schema.Table {
 				Name:        "aws_route53_domain_nameservers",
 				Description: "Nameserver includes the following elements.",
 				Resolver:    fetchRoute53DomainNameservers,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"domain_cq_id", "name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "domain_cq_id",

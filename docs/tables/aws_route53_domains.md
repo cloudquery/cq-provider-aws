@@ -5,7 +5,6 @@ The domain names registered with Amazon Route 53.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
-|region|text|The AWS Region of the resource.|
 |admin_contact_address_line1|text|First line of the contact's address.|
 |admin_contact_address_line2|text|Second line of contact's address, if any.|
 |admin_contact_city|text|The city of the contact's address.|
