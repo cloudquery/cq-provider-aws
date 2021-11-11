@@ -17,7 +17,8 @@ func Route53Domains() *schema.Table {
 		Name:         "aws_route53_domains",
 		Description:  "The domain names registered with Amazon Route 53.",
 		Resolver:     fetchRoute53Domains,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.AccountMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Columns: []schema.Column{
 			{
@@ -412,7 +413,8 @@ func fetchRoute53Domains(ctx context.Context, meta schema.ClientMeta, parent *sc
 	svc := c.Services().Route53Domains
 	var input route53domains.ListDomainsInput
 	optsFunc := func(options *route53domains.Options) {
-		options.Region = c.Region
+		// Set region to default global region
+		options.Region = "us-east-1"
 	}
 	for {
 		output, err := svc.ListDomains(ctx, &input, optsFunc)
@@ -453,7 +455,8 @@ func resolveRoute53DomainTags(ctx context.Context, meta schema.ClientMeta, resou
 		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", resource.Item)
 	}
 	out, err := svc.ListTagsForDomain(ctx, &route53domains.ListTagsForDomainInput{DomainName: d.DomainName}, func(options *route53domains.Options) {
-		options.Region = c.Region
+		// Set region to default global region
+		options.Region = "us-east-1"
 	})
 	if err != nil {
 		return err
