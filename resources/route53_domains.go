@@ -19,7 +19,7 @@ func Route53Domains() *schema.Table {
 		Resolver:     fetchRoute53Domains,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "domain_name"}},
 		Columns: []schema.Column{
 			{
