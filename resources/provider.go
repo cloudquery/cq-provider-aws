@@ -71,6 +71,7 @@ func Provider() *provider.Provider {
 			"elasticsearch.domains":                 ElasticsearchDomains(),
 			"elbv1.load_balancers":                  Elbv1LoadBalancers(),
 			"elbv2.load_balancers":                  Elbv2LoadBalancers(),
+			"elbv2.listeners":                       Elbv2Listeners(),
 			"elbv2.target_groups":                   Elbv2TargetGroups(),
 			"emr.clusters":                          EmrClusters(),
 			"fsx.backups":                           FsxBackups(),
