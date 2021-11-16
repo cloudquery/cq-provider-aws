@@ -55,7 +55,6 @@ func buildElbv2LoadBalancers(t *testing.T, ctrl *gomock.Controller) client.Servi
 	}
 	m.EXPECT().DescribeTags(gomock.Any(), gomock.Any(), gomock.Any()).Times(2).Return(&tags, nil)
 
-
 	lis := elbv2Types.Listener{}
 	if err := faker.FakeData(&lis); err != nil {
 		t.Fatal(err)
