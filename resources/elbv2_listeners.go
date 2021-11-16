@@ -341,7 +341,13 @@ func Elbv2Listeners() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchElbv2Listeners(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var config elbv2.DescribeListenersInput
+	lb, ok := parent.Item.(types.LoadBalancer)
+	if !ok {
+		return fmt.Errorf("expected to have types.LoadBalancer but got %T", parent.Item)
+	}
+	config := elbv2.DescribeListenersInput{
+		LoadBalancerArn: lb.LoadBalancerArn,
+	}
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv2
 	for {
