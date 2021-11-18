@@ -4,6 +4,14 @@ All notable changes to this provider will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unereleased] - 2021-11-18
+###### SDK Version: 0.5.1
+
+### :rocket: Added
+* Added `aws_ecs_cluster_services` relation of `aws_ecs_clusters`
+* Added `aws_ecs_cluster_container_instances` relation of `aws_ecs_clusters`
+
+
 ## [v0.6.4] - 2021-11-16
 ###### SDK Version: 0.5.1
 
