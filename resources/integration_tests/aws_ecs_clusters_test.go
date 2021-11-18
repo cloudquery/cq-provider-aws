@@ -2,8 +2,9 @@ package integration_tests
 
 import (
 	"fmt"
-	"github.com/Masterminds/squirrel"
 	"testing"
+
+	"github.com/Masterminds/squirrel"
 
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
