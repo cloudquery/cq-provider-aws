@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -1034,6 +1035,9 @@ func fetchEcsClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 		if err != nil {
 			return err
 		}
+		if len(listClustersOutput.ClusterArns) == 0 {
+			return nil
+		}
 		describeClusterOutput, err := svc.DescribeClusters(ctx, &ecs.DescribeClustersInput{Clusters: listClustersOutput.ClusterArns}, func(o *ecs.Options) {
 			o.Region = region
 		})
@@ -1118,6 +1122,12 @@ func fetchEcsClusterServices(ctx context.Context, meta schema.ClientMeta, parent
 		listServicesOutput, err := svc.ListServices(ctx, &config, func(o *ecs.Options) {
 			o.Region = region
 		})
+		if err != nil {
+			return err
+		}
+		if len(listServicesOutput.ServiceArns) == 0 {
+			return nil
+		}
 		describeServicesInput := ecs.DescribeServicesInput{
 			Cluster:  cluster.ClusterArn,
 			Services: listServicesOutput.ServiceArns,
@@ -1243,6 +1253,12 @@ func fetchEcsClusterContainerInstances(ctx context.Context, meta schema.ClientMe
 		listContainerInstances, err := svc.ListContainerInstances(ctx, &config, func(o *ecs.Options) {
 			o.Region = region
 		})
+		if err != nil {
+			return err
+		}
+		if len(listContainerInstances.ContainerInstanceArns) == 0 {
+			return nil
+		}
 		describeServicesInput := ecs.DescribeContainerInstancesInput{
 			Cluster:            cluster.ClusterArn,
 			ContainerInstances: listContainerInstances.ContainerInstanceArns,
