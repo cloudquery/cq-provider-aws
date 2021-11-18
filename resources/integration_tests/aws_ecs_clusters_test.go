@@ -30,6 +30,54 @@ func TestIntegrationEcsClusters(t *testing.T) {
 					},
 				},
 			},
+			Relations: []*providertest.ResourceIntegrationVerification{
+				{
+					Name:           "aws_ecs_cluster_services",
+					ForeignKeyName: "cluster_cq_id",
+					ExpectedValues: []providertest.ExpectedValue{
+						{
+							Count: 1,
+							Data: map[string]interface{}{
+								"desired_count":                            float64(1),
+								"enable_ecs_managed_tags":                  false,
+								"launch_type":                              "EC2",
+								"deployment_configuration_maximum_percent": float64(200),
+								"deployment_configuration_deployment_circuit_breaker_rollback": false,
+								"deployment_configuration_deployment_circuit_breaker_enable":   false,
+								"enable_execute_command":            false,
+								"health_check_grace_period_seconds": float64(0),
+							},
+						},
+					},
+					Relations: []*providertest.ResourceIntegrationVerification{
+						{
+							Name:           "aws_ecs_cluster_service_load_balancers",
+							ForeignKeyName: "cluster_service_cq_id",
+							ExpectedValues: []providertest.ExpectedValue{
+								{
+									Count: 1,
+									Data: map[string]interface{}{
+										"container_name": "web-server",
+										"container_port": float64(8080),
+									},
+								},
+							},
+						},
+						{
+							Name:           "aws_ecs_cluster_service_deployments",
+							ForeignKeyName: "cluster_service_cq_id",
+							ExpectedValues: []providertest.ExpectedValue{
+								{
+									Count: 1,
+									Data: map[string]interface{}{
+										"launch_type": "EC2",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		}
 	})
 }
