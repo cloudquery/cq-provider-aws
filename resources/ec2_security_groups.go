@@ -484,6 +484,9 @@ func fetchEc2SecurityGroupIpPermissionsEgressUserIdGroupPairs(ctx context.Contex
 
 func resolveSGArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	sg := resource.Item.(types.SecurityGroup)
-	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "security-group", *sg.GroupId, cl.Region, cl.AccountID))
+	sg, ok := resource.Item.(types.SecurityGroup)
+	if ok {
+		return resource.Set(c.Name, client.GenerateResourceARN("ec2", "security-group", *sg.GroupId, cl.Region, cl.AccountID))
+	}
+	return fmt.Errorf("not ec2 security group")
 }

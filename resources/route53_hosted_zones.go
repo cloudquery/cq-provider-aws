@@ -482,19 +482,31 @@ func getRoute53tagsByResourceID(id string, set []types.ResourceTagSet) []types.T
 	return nil
 }
 func resolveRoute53HostedZoneArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	hz := resource.Item.(Route53HostedZoneWrapper)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "hostedzone", *hz.Id, "", ""))
+	hz, ok := resource.Item.(Route53HostedZoneWrapper)
+	if ok {
+		return resource.Set(c.Name, client.GenerateResourceARN("route53", "hostedzone", *hz.Id, "", ""))
+	}
+	return fmt.Errorf("not route53 hosted zone")
 }
 func resolveRoute53HostedZoneQueryLoggingConfigsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ql := resource.Item.(types.QueryLoggingConfig)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "queryloggingconfig", *ql.Id, "", ""))
+	ql, ok := resource.Item.(types.QueryLoggingConfig)
+	if ok {
+		return resource.Set(c.Name, client.GenerateResourceARN("route53", "queryloggingconfig", *ql.Id, "", ""))
+	}
+	return fmt.Errorf("not route53 query logging config")
 }
 func resolveRoute53HostedZoneTrafficPolicyInstancesArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	tp := resource.Item.(types.TrafficPolicyInstance)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicyinstance", *tp.Id, "", ""))
+	tp, ok := resource.Item.(types.TrafficPolicyInstance)
+	if ok {
+		return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicyinstance", *tp.Id, "", ""))
+	}
+	return fmt.Errorf("not route53 traffic policy instance")
 }
 func resolveRoute53HostedZoneVpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	vpc := resource.Item.(types.VPC)
-	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VPCId, cl.Region, cl.AccountID))
+	vpc, ok := resource.Item.(types.VPC)
+	if ok {
+		return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VPCId, cl.Region, cl.AccountID))
+	}
+	return fmt.Errorf("not ec2 vpc")
 }
