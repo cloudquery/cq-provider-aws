@@ -154,7 +154,8 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 
 	createVolumePermissions := make([]map[string]string, len(output.CreateVolumePermissions))
 	for i, p := range output.CreateVolumePermissions {
-		createVolumePermissions[i]["group"] = (string)(p.Group)
+		createVolumePermissions[i] = map[string]string{}
+		createVolumePermissions[i]["group"] = string(p.Group)
 		if p.UserId != nil {
 			createVolumePermissions[i]["user_id"] = *p.UserId
 		} else {
