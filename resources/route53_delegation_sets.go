@@ -71,8 +71,8 @@ func fetchRoute53DelegationSets(ctx context.Context, meta schema.ClientMeta, par
 }
 func resolveRoute53DelegationSetsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	dl, ok := resource.Item.(types.DelegationSet)
-	if ok {
-		return resource.Set(c.Name, client.GenerateResourceARN("route53", "delegationset", *dl.Id, "", ""))
+	if !ok {
+		return fmt.Errorf("not route53 delegation set")
 	}
-	return fmt.Errorf("not route53 delegation set")
+	return resource.Set(c.Name, client.GenerateResourceARN("route53", "delegationset", *dl.Id, "", ""))
 }

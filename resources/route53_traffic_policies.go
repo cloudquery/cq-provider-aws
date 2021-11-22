@@ -168,8 +168,9 @@ func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema
 }
 func resolveRoute53TrafficPoliciesArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	tr, ok := resource.Item.(types.TrafficPolicySummary)
-	if ok {
-		return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicy", *tr.Id, "", ""))
+	if !ok {
+		return fmt.Errorf("not route53 traffic policy")
 	}
-	return fmt.Errorf("not route53 traffic policy")
+	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicy", *tr.Id, "", ""))
+
 }

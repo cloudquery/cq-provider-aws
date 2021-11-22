@@ -610,10 +610,11 @@ func resolveS3BucketLifecycleTransitions(ctx context.Context, meta schema.Client
 
 func resolveS3BucketsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	buc, ok := resource.Item.(*WrappedBucket)
-	if ok {
-		return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
+	if !ok {
+		return fmt.Errorf("not s3 bucket")
 	}
-	return fmt.Errorf("not s3 bucket")
+	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
+
 }
 
 // ====================================================================================================================

@@ -90,8 +90,9 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 func generateConfigRecorderArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	cfg, ok := resource.Item.(types.ConfigurationRecorder)
-	if ok {
-		return resource.Set(c.Name, client.GenerateResourceARN("config", "config-recorder", *cfg.Name, cl.Region, cl.AccountID))
+	if !ok {
+		return fmt.Errorf("not config config recorder")
 	}
-	return fmt.Errorf("not config config recorder")
+	return resource.Set(c.Name, client.GenerateResourceARN("config", "config-recorder", *cfg.Name, cl.Region, cl.AccountID))
+
 }
