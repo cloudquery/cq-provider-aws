@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
@@ -42,6 +41,11 @@ func AutoscalingGroups() *schema.Table {
 				Name:     "load_balancer_target_groups",
 				Type:     schema.TypeJSON,
 				Resolver: resolveAutoscalingGroupLoadBalancerTargetGroups,
+			},
+			{
+				Name:     "notifications_configurations",
+				Type:     schema.TypeJSON,
+				Resolver: resolveAutoscalingGroupNotificationsConfigurations,
 			},
 			{
 				Name:        "name",
@@ -468,35 +472,6 @@ func AutoscalingGroups() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_autoscaling_group_notification_configurations",
-				Description: "Describes a notification.",
-				Resolver:    fetchAutoscalingGroupNotificationConfigurations,
-				Columns: []schema.Column{
-					{
-						Name:        "group_cq_id",
-						Description: "Unique CloudQuery ID of aws_autoscaling_groups table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "auto_scaling_group_name",
-						Description: "The name of the Auto Scaling group.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "notification_type",
-						Description: "One of the following event notification types:  * autoscaling:EC2_INSTANCE_LAUNCH  * autoscaling:EC2_INSTANCE_LAUNCH_ERROR  * autoscaling:EC2_INSTANCE_TERMINATE  * autoscaling:EC2_INSTANCE_TERMINATE_ERROR  * autoscaling:TEST_NOTIFICATION",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "topic_arn",
-						Description: "The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (Amazon SNS) topic.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("TopicARN"),
-					},
-				},
-			},
-			{
 				Name:        "aws_autoscaling_group_lifecycle_hooks",
 				Description: "Describes a lifecycle hook, which tells Amazon EC2 Auto Scaling that you want to perform an action whenever it launches instances or terminates instances.",
 				Resolver:    fetchAutoscalingGroupLifecycleHooks,
@@ -683,6 +658,17 @@ func resolveAutoscalingGroupLoadBalancerTargetGroups(ctx context.Context, meta s
 	}
 	return resource.Set(c.Name, j)
 }
+func resolveAutoscalingGroupNotificationsConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p, ok := resource.Item.(autoscalingGroupWrapper)
+	if !ok {
+		return fmt.Errorf("expected to have autoscalingGroupWrapper but got %T", resource.Item)
+	}
+	j := map[string]interface{}{}
+	for _, n := range p.NotificationConfigurations {
+		j[*n.NotificationType] = *n.TopicARN
+	}
+	return resource.Set(c.Name, j)
+}
 func resolveAutoscalingGroupsEnabledMetrics(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p, ok := resource.Item.(autoscalingGroupWrapper)
 	if !ok {
@@ -779,14 +765,6 @@ func fetchAutoscalingGroupScalingPolicyStepAdjustments(ctx context.Context, meta
 		return fmt.Errorf("expected to have types.ScalingPolicy but got %T", parent.Item)
 	}
 	res <- p.StepAdjustments
-	return nil
-}
-func fetchAutoscalingGroupNotificationConfigurations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	p, ok := parent.Item.(autoscalingGroupWrapper)
-	if !ok {
-		return fmt.Errorf("expected to have autoscalingGroupWrapper but got %T", parent.Item)
-	}
-	res <- p.NotificationConfigurations
 	return nil
 }
 func fetchAutoscalingGroupLifecycleHooks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
