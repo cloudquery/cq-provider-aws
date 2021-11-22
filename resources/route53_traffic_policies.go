@@ -172,5 +172,4 @@ func resolveRoute53TrafficPoliciesArn(_ context.Context, _ schema.ClientMeta, re
 		return fmt.Errorf("not route53 traffic policy")
 	}
 	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicy", *tr.Id, "", ""))
-
 }
