@@ -614,7 +614,6 @@ func resolveS3BucketsArn(_ context.Context, _ schema.ClientMeta, resource *schem
 		return fmt.Errorf("not s3 bucket")
 	}
 	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
-
 }
 
 // ====================================================================================================================
