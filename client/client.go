@@ -120,6 +120,7 @@ type Services struct {
 	Route53Domains       Route53DomainsClient
 	RDS                  RdsClient
 	S3                   S3Client
+	S3Control            S3ControlClient
 	S3Manager            S3ManagerClient
 	SQS                  SQSClient
 	Apigateway           ApigatewayClient
@@ -129,7 +130,6 @@ type Services struct {
 	Waf                  WafClient
 	WafV2                WafV2Client
 }
-
 type ServicesAccountRegionMap map[string]map[string]*Services
 
 // ServicesManager will hold the entire map of (account X region) services
