@@ -46,6 +46,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
@@ -377,6 +378,7 @@ func initServices(region string, c aws.Config) Services {
 		Route53:              route53.NewFromConfig(awsCfg),
 		Route53Domains:       route53domains.NewFromConfig(awsCfg),
 		S3:                   s3.NewFromConfig(awsCfg),
+		S3Control:            s3control.NewFromConfig(awsCfg),
 		S3Manager:            newS3ManagerFromConfig(awsCfg),
 		SNS:                  sns.NewFromConfig(awsCfg),
 		SQS:                  sqs.NewFromConfig(awsCfg),
