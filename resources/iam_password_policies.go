@@ -77,7 +77,7 @@ func IamPasswordPolicies() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "config_exists",
+				Name:        "policy_exists",
 				Description: "Specifies whether IAM user passwords configuration exists",
 				Type:        schema.TypeBool,
 			},
@@ -109,5 +109,5 @@ func fetchIamPasswordPolicies(ctx context.Context, meta schema.ClientMeta, paren
 
 type PasswordPolicy struct {
 	types.PasswordPolicy
-	ConfigExists bool
+	PolicyExists bool
 }
