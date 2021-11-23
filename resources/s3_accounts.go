@@ -81,16 +81,8 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 		}
 	}
 	if resp != nil {
-		s3AccountConfig.BlockPublicAcls = resp.PublicAccessBlockConfiguration.BlockPublicAcls
-		s3AccountConfig.BlockPublicPolicy = resp.PublicAccessBlockConfiguration.BlockPublicPolicy
-		s3AccountConfig.IgnorePublicAcls = resp.PublicAccessBlockConfiguration.IgnorePublicAcls
-		s3AccountConfig.RestrictPublicBuckets = resp.PublicAccessBlockConfiguration.RestrictPublicBuckets
-	} else {
-		s3AccountConfig.BlockPublicAcls = false
-		s3AccountConfig.BlockPublicPolicy = false
-		s3AccountConfig.IgnorePublicAcls = false
-		s3AccountConfig.RestrictPublicBuckets = false
-	}
+		  res <- s3AccountConfig{resp.PublicAccessBlockConfiguration, true}
+		}
 
 	res <- s3AccountConfig
 	return nil
