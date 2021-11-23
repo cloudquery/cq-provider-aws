@@ -3,13 +3,9 @@ package resources
 import (
 	"context"
 	"fmt"
-	"net"
 
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice/types"
-	"github.com/spf13/cast"
-	"github.com/thoas/go-funk"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -144,7 +140,7 @@ func DmsReplicationInstances() *schema.Table {
 				Name:        "private_ip_addresses",
 				Description: "One or more private IP addresses for the replication instance.",
 				Type:        schema.TypeInetArray,
-				Resolver:    ipAddressesResolver("ReplicationInstancePrivateIpAddresses"),
+				Resolver:    schema.IPAddressesResolver("ReplicationInstancePrivateIpAddresses"),
 			},
 			{
 				Name:        "public_ip_address",
@@ -156,7 +152,7 @@ func DmsReplicationInstances() *schema.Table {
 				Name:        "public_ip_addresses",
 				Description: "One or more public IP addresses for the replication instance.",
 				Type:        schema.TypeInetArray,
-				Resolver:    ipAddressesResolver("ReplicationInstancePublicIpAddresses"),
+				Resolver:    schema.IPAddressesResolver("ReplicationInstancePublicIpAddresses"),
 			},
 			{
 				Name:        "status",
@@ -284,29 +280,4 @@ func fetchDmsReplicationInstanceVpcSecurityGroups(_ context.Context, _ schema.Cl
 	}
 	res <- replicationInstance.VpcSecurityGroups
 	return nil
-}
-
-// ipAddressesResolver resolves the ip string value and returns net.IP
-//
-// Examples:
-// ipAddressesResolver("IP")
-func ipAddressesResolver(path string) schema.ColumnResolver {
-	return func(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
-		ipStrs, err := cast.ToStringSliceE(funk.Get(r.Item, path, funk.WithAllowZero()))
-		if err != nil {
-			return err
-		}
-		ips := make([]net.IP, len(ipStrs))
-		for i, ipStr := range ipStrs {
-			ip := net.ParseIP(ipStr)
-			if ipStr != "" && ip == nil {
-				return fmt.Errorf("failed to parse IP from %s", ipStr)
-			}
-			if to4 := ip.To4(); to4 != nil {
-				ip = to4
-			}
-			ips[i] = ip
-		}
-		return r.Set(c.Name, ips)
-	}
 }
