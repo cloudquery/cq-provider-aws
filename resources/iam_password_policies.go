@@ -94,7 +94,7 @@ func fetchIamPasswordPolicies(ctx context.Context, meta schema.ClientMeta, paren
 	svc := meta.(*client.Client).Services().IAM
 	response, err := svc.GetAccountPasswordPolicy(ctx, &config)
 	if err != nil {
-		var nse types.NoSuchEntityException
+		var nse *types.NoSuchEntityException
 		if !errors.As(err, &nse) {
 			return err
 		}
