@@ -47,6 +47,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
@@ -120,6 +121,7 @@ type Services struct {
 	Route53Domains       Route53DomainsClient
 	RDS                  RdsClient
 	S3                   S3Client
+	S3Control            S3ControlClient
 	S3Manager            S3ManagerClient
 	SageMaker            SageMakerClient
 	SQS                  SQSClient
@@ -379,6 +381,7 @@ func initServices(region string, c aws.Config) Services {
 		Route53:              route53.NewFromConfig(awsCfg),
 		Route53Domains:       route53domains.NewFromConfig(awsCfg),
 		S3:                   s3.NewFromConfig(awsCfg),
+		S3Control:            s3control.NewFromConfig(awsCfg),
 		S3Manager:            newS3ManagerFromConfig(awsCfg),
 		SageMaker:            sagemaker.NewFromConfig(awsCfg),
 		SNS:                  sns.NewFromConfig(awsCfg),
