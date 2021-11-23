@@ -307,6 +307,15 @@ func buildDmsReplicationInstances(t *testing.T, ctrl *gomock.Controller) client.
 		&databasemigrationservice.DescribeReplicationInstancesOutput{
 			ReplicationInstances: []databasemigrationserviceTypes.ReplicationInstance{l},
 		}, nil)
+	lt := databasemigrationserviceTypes.Tag{}
+	if err := faker.FakeData(&lt); err != nil {
+		t.Fatal(err)
+	}
+	lt.ResourceArn = l.ReplicationInstanceArn
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&databasemigrationservice.ListTagsForResourceOutput{
+			TagList: []databasemigrationserviceTypes.Tag{lt},
+		}, nil)
 	return client.Services{
 		DMS: m,
 	}

@@ -19,6 +19,7 @@ func DmsReplicationInstances() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -31,6 +32,11 @@ func DmsReplicationInstances() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "tags",
+				Description: "Any tags assigned to the resource",
+				Type:        schema.TypeJSON,
 			},
 			{
 				Name:        "allocated_storage",
@@ -251,21 +257,45 @@ func DmsReplicationInstances() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchDmsReplicationInstances(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
-	var config databasemigrationservice.DescribeReplicationInstancesInput
 	c := meta.(*client.Client)
 	svc := c.Services().DMS
-	output, err := svc.DescribeReplicationInstances(ctx, &config, func(options *databasemigrationservice.Options) {
+
+	var describeReplicationInstancesInput *databasemigrationservice.DescribeReplicationInstancesInput
+	describeReplicationInstancesOutput, err := svc.DescribeReplicationInstances(ctx, describeReplicationInstancesInput, func(options *databasemigrationservice.Options) {
 		options.Region = c.Region
 	})
 	if err != nil {
 		return err
 	}
-	res <- output.ReplicationInstances
+
+	listTagsForResourceInput := databasemigrationservice.ListTagsForResourceInput{}
+	for _, replicationInstance := range describeReplicationInstancesOutput.ReplicationInstances {
+		listTagsForResourceInput.ResourceArnList = append(listTagsForResourceInput.ResourceArnList, *replicationInstance.ReplicationInstanceArn)
+	}
+	var listTagsForResourceOutput *databasemigrationservice.ListTagsForResourceOutput
+	listTagsForResourceOutput, err = svc.ListTagsForResource(ctx, &listTagsForResourceInput, func(options *databasemigrationservice.Options) {
+		options.Region = c.Region
+	})
+	replicationInstanceTags := make(map[string]map[string]interface{})
+	for _, tag := range listTagsForResourceOutput.TagList {
+		if replicationInstanceTags[*tag.ResourceArn] == nil {
+			replicationInstanceTags[*tag.ResourceArn] = make(map[string]interface{})
+		}
+		replicationInstanceTags[*tag.ResourceArn][*tag.Key] = *tag.Value
+	}
+
+	for _, replicationInstance := range describeReplicationInstancesOutput.ReplicationInstances {
+		wrapper := DmsReplicationInstanceWrapper{
+			ReplicationInstance: replicationInstance,
+			Tags:                replicationInstanceTags[*replicationInstance.ReplicationInstanceArn],
+		}
+		res <- wrapper
+	}
 	return nil
 }
 
 func fetchDmsReplicationInstanceReplicationSubnetGroupSubnets(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	replicationInstance, ok := parent.Item.(types.ReplicationInstance)
+	replicationInstance, ok := parent.Item.(DmsReplicationInstanceWrapper)
 	if !ok {
 		return fmt.Errorf("not dms replication instance")
 	}
@@ -274,10 +304,15 @@ func fetchDmsReplicationInstanceReplicationSubnetGroupSubnets(_ context.Context,
 }
 
 func fetchDmsReplicationInstanceVpcSecurityGroups(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	replicationInstance, ok := parent.Item.(types.ReplicationInstance)
+	replicationInstance, ok := parent.Item.(DmsReplicationInstanceWrapper)
 	if !ok {
 		return fmt.Errorf("not dms replication instance")
 	}
 	res <- replicationInstance.VpcSecurityGroups
 	return nil
+}
+
+type DmsReplicationInstanceWrapper struct {
+	types.ReplicationInstance
+	Tags map[string]interface{}
 }
