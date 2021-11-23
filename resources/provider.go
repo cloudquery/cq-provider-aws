@@ -33,6 +33,7 @@ func Provider() *provider.Provider {
 			"autoscaling.launch_configurations":     AutoscalingLaunchConfigurations(),
 			"cloudfront.cache_policies":             CloudfrontCachePolicies(),
 			"cloudfront.distributions":              CloudfrontDistributions(),
+			"codebuild.projects":                    CodebuildProjects(),
 			"cloudtrail.trails":                     CloudtrailTrails(),
 			"cloudwatch.alarms":                     CloudwatchAlarms(),
 			"cloudwatchlogs.filters":                CloudwatchlogsFilters(),
