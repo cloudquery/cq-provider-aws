@@ -107,6 +107,8 @@ resource "aws_codebuild_project" "codebuild_project" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
+    privileged_mode = true
+
     environment_variable {
       name  = "SOME_KEY1"
       value = "SOME_VALUE1"
@@ -139,6 +141,25 @@ resource "aws_codebuild_project" "codebuild_project" {
     git_submodules_config {
       fetch_submodules = true
     }
+
+
+  }
+  secondary_sources {
+    type              = "S3"
+    source_identifier = "package"
+    location          = "${aws_s3_bucket.codebuild_s3.bucket}/package.zip"
+  }
+
+  secondary_artifacts {
+    type                = "S3"
+    artifact_identifier = "package"
+    location            = aws_s3_bucket.codebuild_s3.bucket
+  }
+
+  file_system_locations {
+    identifier = "CODEBUILD_MY_EFS"
+    location   = "${aws_efs_file_system.codebuild_efs.dns_name}:/path"
+    mount_point = "/path"
   }
 
   source_version = "master"
@@ -161,6 +182,14 @@ resource "aws_codebuild_project" "codebuild_project" {
   }
 }
 
+resource "aws_efs_file_system" "codebuild_efs" {
+  creation_token = "efs${var.test_prefix}${var.test_suffix}"
+
+  tags = {
+    Name = "MyProduct"
+  }
+}
+
 
 resource "aws_security_group" "codebuild_sg" {
   name = "ecs_clusters_sg${var.test_prefix}${var.test_suffix}"
@@ -168,18 +197,20 @@ resource "aws_security_group" "codebuild_sg" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
-    protocol = "tcp"
+    protocol  = "tcp"
     from_port = "80"
-    to_port = "80"
+    to_port   = "80"
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = [
-      "0.0.0.0/0"]
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = [
+      "0.0.0.0/0"
+    ]
     ipv6_cidr_blocks = [
-      "::/0"]
+      "::/0"
+    ]
   }
 }
