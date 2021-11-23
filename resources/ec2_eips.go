@@ -56,8 +56,7 @@ func Ec2Eips() *schema.Table {
 			{
 				Name:        "customer_owned_ipv4_pool",
 				Description: "The ID of the customer-owned address pool.",
-				Type:        schema.TypeCIDR,
-				Resolver:    schema.IPNetResolver("IP"),
+				Type:        schema.TypeString,
 			},
 			{
 				Name:        "domain",

@@ -18,6 +18,11 @@ func buildEc2Eips(t *testing.T, ctrl *gomock.Controller) client.Services {
 	if err != nil {
 		t.Fatal(err)
 	}
+	ip := "1.1.1.1"
+	a.CarrierIp = &ip
+	a.PublicIp = &ip
+	a.CustomerOwnedIp = &ip
+
 	m.EXPECT().DescribeAddresses(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeAddressesOutput{
 			Addresses: []ec2Types.Address{a},
