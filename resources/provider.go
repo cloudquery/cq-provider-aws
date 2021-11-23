@@ -20,6 +20,7 @@ func Provider() *provider.Provider {
 		ErrorClassifier: client.ErrorClassifier,
 		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
+			"regions":                               Regions(),
 			"accessanalyzer.analyzers":              AccessAnalyzerAnalyzer(),
 			"apigateway.api_keys":                   ApigatewayAPIKeys(),
 			"apigateway.client_certificates":        ApigatewayClientCertificates(),
