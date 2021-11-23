@@ -13,8 +13,8 @@ import (
 
 func S3Accounts() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_s3_accounts",
-		Description:  "TODO-FILL-THIS-IN",
+		Name:         "aws_s3_account_config",
+		Description:  "Account configurations for S3",
 		Resolver:     fetchS3AccountConfig,
 		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -27,14 +27,9 @@ func S3Accounts() *schema.Table {
 				Resolver: client.ResolveAWSAccount,
 			},
 			{
-				Name:     "region",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveAWSRegion,
-			},
-			{
 				Name:        "config_exists",
 				Type:        schema.TypeBool,
-				Description: "Specifies whether Amazon S3 access control exists",
+				Description: "Specifies whether Amazon S3 public access control config exists",
 			},
 			{
 				Name:        "block_public_acls",
