@@ -81,10 +81,11 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 		}
 	}
 	if resp != nil {
-		  res <- s3AccountConfig{resp.PublicAccessBlockConfiguration, true}
-		}
+		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
+	} else {
+		res <- s3AccountConfig
+	}
 
-	res <- s3AccountConfig
 	return nil
 }
 
