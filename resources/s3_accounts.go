@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"errors"
-	"log"
 
 	aws "github.com/aws/aws-sdk-go-v2/aws"
 	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
@@ -74,19 +73,12 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 		options.Region = c.Region
 	})
 
-	var re *awshttp.ResponseError
-	if errors.As(err, &re) {
-		log.Printf("requestID: %s, error: %v", re.ServiceRequestID(), re.Unwrap())
-	}
-
 	if err != nil {
 		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
-
 		var nspabc *s3controlTypes.NoSuchPublicAccessBlockConfiguration
 		if !errors.As(err, &nspabc) {
 			return err
 		}
-
 		res <- s3AccountConfig
 	} else {
 		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
