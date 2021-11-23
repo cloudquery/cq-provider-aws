@@ -22,6 +22,10 @@ func buildEc2Eips(t *testing.T, ctrl *gomock.Controller) client.Services {
 	a.CarrierIp = &ip
 	a.PublicIp = &ip
 	a.CustomerOwnedIp = &ip
+	a.PrivateIpAddress = &ip
+	pool := "1.1.1.1/0"
+	a.CustomerOwnedIpv4Pool = &pool
+	a.PublicIpv4Pool = &pool
 
 	m.EXPECT().DescribeAddresses(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ec2.DescribeAddressesOutput{
