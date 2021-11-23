@@ -20,6 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentity v1.3.1
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.3.3
 	github.com/aws/aws-sdk-go-v2/service/configservice v1.5.1
+	github.com/aws/aws-sdk-go-v2/service/databasemigrationservice v1.12.0
 	github.com/aws/aws-sdk-go-v2/service/directconnect v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0
@@ -113,7 +114,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/thoas/go-funk v0.9.1 // indirect
+	github.com/thoas/go-funk v0.9.1
 	github.com/tmccombs/hcl2json v0.3.3 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
