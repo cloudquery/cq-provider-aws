@@ -125,6 +125,7 @@ func fetchEc2EbsSnapshots(ctx context.Context, meta schema.ClientMeta, parent *s
 	var config ec2.DescribeSnapshotsInput
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
+	config.OwnerIds = []string{c.AccountID}
 	for {
 		output, err := svc.DescribeSnapshots(ctx, &config, func(options *ec2.Options) {
 			options.Region = c.Region
@@ -150,6 +151,7 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 	}, func(options *ec2.Options) {
 		options.Region = cl.Region
 	})
+
 	if err != nil {
 		return err
 	}

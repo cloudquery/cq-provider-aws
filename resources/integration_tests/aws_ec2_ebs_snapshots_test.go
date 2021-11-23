@@ -9,14 +9,14 @@ import (
 )
 
 func TestIntegrationEc2EbsSnapshots(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Ec2EbsVolumes(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.Ec2EbsSnapshots(), []string{"aws_ec2_ebs_snapshots.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: resources.Ec2EbsSnapshots().Name,
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"volume_size": "40",
+						"volume_size": 40,
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
