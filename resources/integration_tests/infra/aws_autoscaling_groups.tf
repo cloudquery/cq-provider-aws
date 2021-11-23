@@ -28,7 +28,7 @@ data "aws_ami" "autoscaling_groups_ami" {
 resource "aws_launch_template" "autoscaling_groups_lt" {
   name_prefix   = "example"
   image_id      = data.aws_ami.autoscaling_groups_ami.id
-  instance_type = "c1.medium"
+  instance_type = "t2.nano"
 }
 
 resource "aws_autoscaling_group" "autoscaling_group" {
@@ -37,11 +37,11 @@ resource "aws_autoscaling_group" "autoscaling_group" {
   desired_capacity      = 1
   max_size              = 1
   min_size              = 1
-  wait_for_elb_capacity = 1
-  health_check_type = "EC2"
-  health_check_grace_period = "300"
+  wait_for_elb_capacity = 0
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
   vpc_zone_identifier   = [aws_subnet.aws_vpc_subnet.id, aws_subnet.aws_vpc_subnet3.id]
-
+  load_balancers        = [aws_elb.elbv1-loadbalancer.name]
   tag {
     key                 = "foo"
     value               = "bar"
@@ -71,14 +71,15 @@ resource "aws_autoscaling_group" "autoscaling_group" {
       }
 
       override {
-        instance_type     = "c1.medium"
+        instance_type = "t2.nano"
       }
       override {
-        instance_type     = "c1.large"
+        instance_type = "t2.small"
       }
     }
   }
 }
+
 
 resource "aws_autoscaling_policy" "bat" {
   name                   = "policy-${var.test_prefix}-${var.test_suffix}"
@@ -106,10 +107,10 @@ resource "aws_autoscaling_notification" "example_notifications" {
 }
 
 resource "aws_sns_topic" "autoscaling_group_hook_sns" {
-  name                        = "ag-topic-${var.test_suffix}"
-  display_name                = "${var.test_prefix}-${var.test_suffix}"
+  name         = "ag-topic-${var.test_suffix}"
+  display_name = "${var.test_prefix}-${var.test_suffix}"
 
-  delivery_policy             = <<EOF
+  delivery_policy = <<EOF
       {
         "http": {
           "defaultHealthyRetryPolicy": {
@@ -131,9 +132,9 @@ resource "aws_sns_topic" "autoscaling_group_hook_sns" {
 }
 
 resource "aws_autoscaling_lifecycle_hook" "autoscaling_group_hook" {
-  name                    = "foobar${var.test_prefix}${var.test_suffix}"
-  default_result          = "CONTINUE"
-  heartbeat_timeout       = 2000
+  name                   = "foobar${var.test_prefix}${var.test_suffix}"
+  default_result         = "CONTINUE"
+  heartbeat_timeout      = 2000
   autoscaling_group_name = aws_autoscaling_group.autoscaling_group.name
 
   lifecycle_transition    = "autoscaling:EC2_INSTANCE_LAUNCHING"

@@ -8,9 +8,9 @@ import (
 	"testing"
 )
 
-func TestIntegrationDirectAutoscalingGroups(t *testing.T) {
+func TestIntegrationAutoscalingGroups(t *testing.T) {
 	resource := resources.AutoscalingGroups()
-	awsTestIntegrationHelper(t, resource, []string{"aws_autoscaling_groups.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resource, []string{"aws_autoscaling_groups.tf", "aws_vpc.tf", "aws_elbv1_load_balancers.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: resource.Name,
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
@@ -27,7 +27,7 @@ func TestIntegrationDirectAutoscalingGroups(t *testing.T) {
 					"min_size":                              float64(1),
 					"capacity_rebalance":                    true,
 					"new_instances_protected_from_scale_in": false,
-					"health_check_type":                     "EC2",
+					"health_check_type":                     "ELB",
 					"termination_policies":                  []interface{}{"Default"},
 				},
 			}},
@@ -39,8 +39,7 @@ func TestIntegrationDirectAutoscalingGroups(t *testing.T) {
 						Count: 1,
 						Data: map[string]interface{}{
 							"protected_from_scale_in": false,
-							"type":                    "c1.medium",
-							"launch_template_version": "1",
+							"type":                    "t2.nano",
 						},
 					}},
 				},
