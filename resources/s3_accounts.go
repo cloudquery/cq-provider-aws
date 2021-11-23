@@ -79,11 +79,9 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 		if errors.As(err, &ae) && ae.ErrorCode() != "NoSuchPublicAccessBlockConfiguration" {
 			return err
 		}
-	}
-	if resp != nil {
-		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
-	} else {
 		res <- s3AccountConfig
+	} else {
+		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
 	}
 
 	return nil
