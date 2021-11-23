@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -149,7 +150,7 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return nil
+		return err
 	}
 
 	createVolumePermissions := make([]map[string]string, len(output.CreateVolumePermissions))
@@ -162,8 +163,12 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 			createVolumePermissions[i]["user_id"] = ""
 		}
 	}
+	b, err := json.Marshal(createVolumePermissions)
+	if err != nil {
+		return err
+	}
 
-	return resource.Set("create_volume_permissions", createVolumePermissions)
+	return resource.Set("create_volume_permissions", b)
 }
 func resolveEc2ebsSnapshotTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Snapshot)
