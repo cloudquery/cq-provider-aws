@@ -24,6 +24,7 @@ Contains the details of an Amazon RDS DB snapshot
 |option_group_name|text|Provides the option group name for the DB snapshot.|
 |percent_progress|integer|The percentage of the estimated data that has been transferred.|
 |port|integer|Specifies the port that the database engine was listening on at the time of the snapshot.|
+|processor_features|jsonb|The number of CPU cores and the number of threads per core for the DB instance class of the DB instance when the DB snapshot was created.|
 |snapshot_create_time|timestamp without time zone|Specifies when the snapshot was taken in Coordinated Universal Time (UTC).|
 |snapshot_type|text|Provides the type of the DB snapshot.|
 |source_db_snapshot_identifier|text|The DB snapshot Amazon Resource Name (ARN) that the DB snapshot was copied from. It only has value in case of cross-customer or cross-region copy.|

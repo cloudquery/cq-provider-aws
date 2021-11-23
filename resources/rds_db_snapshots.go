@@ -129,6 +129,12 @@ func RdsDbSnapshots() *schema.Table {
 				Type:        schema.TypeInt,
 			},
 			{
+				Name:        "processor_features",
+				Description: "The number of CPU cores and the number of threads per core for the DB instance class of the DB instance when the DB snapshot was created.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRDSDBSnapshotProcessorFeatures,
+			},
+			{
 				Name:        "snapshot_create_time",
 				Description: "Specifies when the snapshot was taken in Coordinated Universal Time (UTC).",
 				Type:        schema.TypeTimestamp,
@@ -187,31 +193,6 @@ func RdsDbSnapshots() *schema.Table {
 				Resolver:    resolveRDSDBSnapshotAttributes,
 			},
 		},
-		Relations: []*schema.Table{
-			{
-				Name:        "aws_rds_db_snapshot_processor_features",
-				Description: "Contains the processor features of a DB instance class",
-				Resolver:    fetchRdsDbSnapshotProcessorFeatures,
-				Columns: []schema.Column{
-					{
-						Name:        "db_snapshot_cq_id",
-						Description: "Unique CloudQuery ID of aws_rds_db_snapshots table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name of the processor feature",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value of a processor feature name.",
-						Type:        schema.TypeString,
-					},
-				},
-			},
-		},
 	}
 }
 
@@ -235,15 +216,6 @@ func fetchRdsDbSnapshots(ctx context.Context, meta schema.ClientMeta, parent *sc
 		}
 		input.Marker = output.Marker
 	}
-	return nil
-}
-
-func fetchRdsDbSnapshotProcessorFeatures(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	s, ok := parent.Item.(types.DBSnapshot)
-	if !ok {
-		return fmt.Errorf("not a types.DBSnapshot: %T", parent.Item)
-	}
-	res <- s.ProcessorFeatures
 	return nil
 }
 
@@ -281,6 +253,19 @@ func resolveRDSDBSnapshotAttributes(ctx context.Context, meta schema.ClientMeta,
 	}
 
 	b, err := json.Marshal(out.DBSnapshotAttributesResult.DBSnapshotAttributes)
+	if err != nil {
+		return err
+	}
+	return resource.Set(column.Name, b)
+}
+
+func resolveRDSDBSnapshotProcessorFeatures(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, column schema.Column) error {
+	s, ok := resource.Item.(types.DBSnapshot)
+	if !ok {
+		return fmt.Errorf("not a types.DBSnapshot: %T", resource.Item)
+	}
+
+	b, err := json.Marshal(s.ProcessorFeatures)
 	if err != nil {
 		return err
 	}
