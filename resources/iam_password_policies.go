@@ -77,6 +77,12 @@ func IamPasswordPolicies() *schema.Table {
 				Description: "Specifies whether IAM user passwords must contain at least one uppercase character (A to Z). ",
 				Type:        schema.TypeBool,
 			},
+			{
+				Name:        "config_exists",
+				Description: "Specifies whether IAM user passwords configuration exists",
+				Type:        schema.TypeBool,
+			},
+		},
 		},
 	}
 }
