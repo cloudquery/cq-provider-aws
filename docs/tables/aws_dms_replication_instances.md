@@ -6,6 +6,7 @@ Provides information that defines a replication instance.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb|Any tags assigned to the resource|
 |allocated_storage|integer|The amount of storage (in gigabytes) that is allocated for the replication instance.|
 |auto_minor_version_upgrade|boolean|Boolean value indicating if minor version upgrades will be automatically applied to the instance.|
 |availability_zone|text|The Availability Zone for the instance.|

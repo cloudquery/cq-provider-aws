@@ -276,6 +276,9 @@ func fetchDmsReplicationInstances(ctx context.Context, meta schema.ClientMeta, _
 	listTagsForResourceOutput, err = svc.ListTagsForResource(ctx, &listTagsForResourceInput, func(options *databasemigrationservice.Options) {
 		options.Region = c.Region
 	})
+	if err != nil {
+		return err
+	}
 	replicationInstanceTags := make(map[string]map[string]interface{})
 	for _, tag := range listTagsForResourceOutput.TagList {
 		if replicationInstanceTags[*tag.ResourceArn] == nil {
