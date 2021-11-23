@@ -9,7 +9,13 @@ import (
 )
 
 func main() {
-	err := docs.GenerateDocs(resources.Provider(), "./docs")
+	outputPath := "./docs"
+	err := os.RemoveAll(outputPath)
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+
+	err = docs.GenerateDocs(resources.Provider(), outputPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to generate docs: %s\n", err)
 	}
