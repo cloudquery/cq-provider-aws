@@ -19,6 +19,7 @@ func Ec2EbsSnapshots() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "snapshot_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
