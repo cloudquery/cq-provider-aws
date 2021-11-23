@@ -3,11 +3,11 @@ package resources
 import (
 	"context"
 	"errors"
+	"log"
 
 	aws "github.com/aws/aws-sdk-go-v2/aws"
 	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
 	s3controlTypes "github.com/aws/aws-sdk-go-v2/service/s3control/types"
-	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -73,12 +73,20 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 	resp, err := svc.GetPublicAccessBlock(ctx, &accountConfig, func(options *s3control.Options) {
 		options.Region = c.Region
 	})
+
+	var re *awshttp.ResponseError
+	if errors.As(err, &re) {
+		log.Printf("requestID: %s, error: %v", re.ServiceRequestID(), re.Unwrap())
+	}
+
 	if err != nil {
 		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
-		var ae smithy.APIError
-		if errors.As(err, &ae) && ae.ErrorCode() != "NoSuchPublicAccessBlockConfiguration" {
+
+		var nspabc *s3controlTypes.NoSuchPublicAccessBlockConfiguration
+		if !errors.As(err, &nspabc) {
 			return err
 		}
+
 		res <- s3AccountConfig
 	} else {
 		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
