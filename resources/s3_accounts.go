@@ -57,13 +57,11 @@ func S3Accounts() *schema.Table {
 }
 
 func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
-	var s3AccountConfig S3AccountConfig
 	c := meta.(*client.Client)
 
 	svc := c.Services().S3Control
 	var accountConfig s3control.GetPublicAccessBlockInput
 	accountConfig.AccountId = aws.String(c.AccountID)
-	s3AccountConfig.ConfigExists = false
 	resp, err := svc.GetPublicAccessBlock(ctx, &accountConfig, func(options *s3control.Options) {
 		options.Region = c.Region
 	})
@@ -74,7 +72,7 @@ func fetchS3AccountConfig(ctx context.Context, meta schema.ClientMeta, _ *schema
 		if !errors.As(err, &nspabc) {
 			return err
 		}
-		res <- s3AccountConfig
+		res <- S3AccountConfig{s3controlTypes.PublicAccessBlockConfiguration{}, false}
 	} else {
 		res <- S3AccountConfig{*resp.PublicAccessBlockConfiguration, true}
 	}
