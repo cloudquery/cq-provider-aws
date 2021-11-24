@@ -19,10 +19,10 @@ Describes a scaling policy.
 |type|text|One of the following policy types:  * TargetTrackingScaling  * StepScaling  * SimpleScaling (default)  For more information, see Target tracking scaling policies (https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-target-tracking.html) and Step and simple scaling policies (https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-simple-step.html) in the Amazon EC2 Auto Scaling User Guide.|
 |scaling_adjustment|integer|The amount by which to scale, based on the specified adjustment type|
 |step_adjustments|jsonb|A set of adjustments that enable you to scale based on the size of the alarm breach.|
-|target_tracking_configuration_target_value|float|The target value for the metric.  This member is required.|
-|target_tracking_configuration_customized_metric_name|text|The name of the metric.  This member is required.|
-|target_tracking_configuration_customized_metric_namespace|text|The namespace of the metric.  This member is required.|
-|target_tracking_configuration_customized_metric_statistic|text|The statistic of the metric.  This member is required.|
+|target_tracking_configuration_target_value|float|The target value for the metric.|
+|target_tracking_configuration_customized_metric_name|text|The name of the metric.|
+|target_tracking_configuration_customized_metric_namespace|text|The namespace of the metric.|
+|target_tracking_configuration_customized_metric_statistic|text|The statistic of the metric.|
 |target_tracking_configuration_customized_metric_dimensions|jsonb|The dimensions of the metric|
 |target_tracking_configuration_customized_metric_unit|text|The unit of the metric.|
 |target_tracking_configuration_disable_scale_in|boolean|Indicates whether scaling in by the target tracking scaling policy is disabled. If scaling in is disabled, the target tracking scaling policy doesn't remove instances from the Auto Scaling group|

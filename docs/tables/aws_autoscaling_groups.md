@@ -9,14 +9,14 @@ Describes an Auto Scaling group.
 |load_balancers|jsonb||
 |load_balancer_target_groups|jsonb||
 |notifications_configurations|jsonb||
-|name|text|The name of the Auto Scaling group.  This member is required.|
-|availability_zones|text[]|One or more Availability Zones for the group.  This member is required.|
-|created_time|timestamp without time zone|The date and time the group was created.  This member is required.|
-|default_cooldown|integer|The duration of the default cooldown period, in seconds.  This member is required.|
-|desired_capacity|integer|The desired size of the group.  This member is required.|
+|name|text|The name of the Auto Scaling group.|
+|availability_zones|text[]|One or more Availability Zones for the group.|
+|created_time|timestamp without time zone|The date and time the group was created.|
+|default_cooldown|integer|The duration of the default cooldown period, in seconds.|
+|desired_capacity|integer|The desired size of the group.|
 |health_check_type|text|The service to use for the health checks|
-|max_size|integer|The maximum size of the group.  This member is required.|
-|min_size|integer|The minimum size of the group.  This member is required.|
+|max_size|integer|The maximum size of the group.|
+|min_size|integer|The minimum size of the group.|
 |arn|text|The Amazon Resource Name (ARN) of the Auto Scaling group.|
 |capacity_rebalance|boolean|Indicates whether Capacity Rebalancing is enabled.|
 |enabled_metrics|jsonb|The metrics enabled for the group.|

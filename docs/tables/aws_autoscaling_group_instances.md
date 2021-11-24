@@ -5,11 +5,11 @@ Describes an EC2 instance.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |group_cq_id|uuid|Unique CloudQuery ID of aws_autoscaling_groups table (FK)|
-|availability_zone|text|The Availability Zone in which the instance is running.  This member is required.|
+|availability_zone|text|The Availability Zone in which the instance is running.|
 |health_status|text|The last reported health status of the instance|
-|id|text|The ID of the instance.  This member is required.|
+|id|text|The ID of the instance.|
 |lifecycle_state|text|A description of the current lifecycle state|
-|protected_from_scale_in|boolean|Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.  This member is required.|
+|protected_from_scale_in|boolean|Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.|
 |type|text|The instance type of the EC2 instance.|
 |launch_configuration_name|text|The launch configuration associated with the instance.|
 |launch_template_id|text|The ID of the launch template|
