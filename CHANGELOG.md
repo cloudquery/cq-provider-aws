@@ -2,280 +2,211 @@
 
 All notable changes to this provider will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
-to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
 * Added arn column for security group resource [#278](https://github.com/cloudquery/cq-provider-aws/issues/277)
 * Added `aws_codebuild_projects` resource [#270](https://github.com/cloudquery/cq-provider-aws/issues/270)
 
-## [v0.6.4] - 2021-11-16
+### :spider: Fixed
+* Fixed `aws_ec2_ebs_volumes` pagination during fetch [#279](https://github.com/cloudquery/cq-provider-aws/issues/279)
 
+## [v0.6.4] - 2021-11-16
 ###### SDK Version: 0.5.1
 
 ### :spider: Fixed
-
 * Fixed trails not fetched if they have no tags defined [#258](https://github.com/cloudquery/cq-provider-aws/issues/258)
 
 ### :rocket: Added
-
 * Added Elbv2 Listeners resource [#256](https://github.com/cloudquery/cq-provider-aws/issues/256)
 
-## [v0.6.3] - 2021-11-11
 
+## [v0.6.3] - 2021-11-11
 ###### SDK Version: 0.5.1
 
 ### :spider: Fixed
-
 * Fixed [#164](https://github.com/cloudquery/cq-provider-aws/issues/164) apigateway_api_keys does not return key value
 
 ### :rocket: Added
-
 * Added Route53 Domains resource
 
 ## [v0.6.2] - 2021-11-03
-
 ###### SDK Version: 0.5.1
 
 ### :spider: Fixed
-
 * Fixed [#241](https://github.com/cloudquery/cq-provider-aws/issues/241) Failed to fetch ApiGatewayV2: GetDomainNames
-* Fixed [#236](https://github.com/cloudquery/cq-provider-aws/issues/236) error in `aws_cloud_trails` get tags request
-  because ARNs in request were from different regions
+* Fixed [#236](https://github.com/cloudquery/cq-provider-aws/issues/236) error in `aws_cloud_trails` get tags request because ARNs in request were from different regions
 
 ## [v0.6.1] - 2021-10-29
-
 ###### SDK Version: 0.5.0
-
-* added skip GetFunctionCodeSigningConfig for container
-  functions [#230](https://github.com/cloudquery/cq-provider-aws/pull/230)
+* added skip GetFunctionCodeSigningConfig for container functions [#230](https://github.com/cloudquery/cq-provider-aws/pull/230)
 
 ## [v0.6.0] - 2021-10-26
-
 ###### SDK Version: 0.5.0
 
 ### :rocket: Added
-
-* Added ignore `AWSOrganizationsNotInUseException` error to ignore error
-  filter. [#213](https://github.com/cloudquery/cq-provider-aws/pull/213)
-* Added ignore error when regions are disabled for a specific
-  service [#210](https://github.com/cloudquery/cq-provider-aws/issues/210)
-* Increased testing coverage with assume role fetch
-  workflow [#218](https://github.com/cloudquery/cq-provider-aws/pull/218)
+* Added ignore `AWSOrganizationsNotInUseException` error to ignore error filter. [#213](https://github.com/cloudquery/cq-provider-aws/pull/213)
+* Added ignore error when regions are disabled for a specific service [#210](https://github.com/cloudquery/cq-provider-aws/issues/210)
+* Increased testing coverage with assume role fetch workflow [#218](https://github.com/cloudquery/cq-provider-aws/pull/218)
 * Added `vpc_id` to `emr_clusters` resource [#221](https://github.com/cloudquery/cq-provider-aws/issues/221)
 
 ### :spider: Fixed
-
-* Fixed [#157](https://github.com/cloudquery/cq-provider-aws/issues/157) tags on multiple resources kms,
-  gateways_v2_vpc_links, elbv2 groups/balancers, ecs clusters, directconnect gateways, cloudtrail trails,
-  elasticsearch_domains, elasticbeanstalk_environments  [#191](https://github.com/cloudquery/cq-provider-aws/pull/191)
+* Fixed [#157](https://github.com/cloudquery/cq-provider-aws/issues/157) tags on multiple resources kms, gateways_v2_vpc_links, elbv2 groups/balancers, ecs clusters, directconnect gateways, cloudtrail trails, elasticsearch_domains, elasticbeanstalk_environments  [#191](https://github.com/cloudquery/cq-provider-aws/pull/191)
 * Fixed duplicate of `id` field for `aws_apigatewayv2_vpc_links` - removed `vpc_link_id` field
 * Fixed duplicate of `region` field for `aws_cloudtrail_trails` - removed `home_region` field
-* Fixed naming according to convention `aws_elasticbeanstalk_environments`:`environment_name` -> `name`
-  , `aws_kms_keys`: `key_id` -> `id`
+* Fixed naming according to convention `aws_elasticbeanstalk_environments`:`environment_name` -> `name`, `aws_kms_keys`: `key_id` -> `id`
 * Fixed [Web ACL (WAF) attachment](https://github.com/cloudquery/cq-provider-aws/issues/209)
-* Fixed violation
-  in `aws_apigateway_domain_name_base_path_mappings_pk` [#222](https://github.com/cloudquery/cq-provider-aws/issues/222)
+* Fixed violation in `aws_apigateway_domain_name_base_path_mappings_pk` [#222](https://github.com/cloudquery/cq-provider-aws/issues/222)
 
 ### :gear: Changed
-
-* Upgraded to SDK
-  Version [v0.5.0](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v050---2021-10-21)
+* Upgraded to SDK Version [v0.5.0](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v050---2021-10-21)
 
 ## [v0.5.16] - 2021-10-07
-
 ###### SDK Version: v0.4.9
 
 ### :rocket: Added
-
 * Added for SQS queues resource [#202](https://github.com/cloudquery/cq-provider-aws/issues/202).
 
 ### :gear: Changed
-
 * Upgraded to SDK Version [v0.4.9](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md)
 
 ### :spider: Fixed
-
 * Fixed migration tests [#203](https://github.com/cloudquery/cq-provider-aws/pull/203)
 
 ## [v0.5.15] - 2021-10-03
-
 ###### SDK Version: v0.4.7
 
 ### :gear: Changed
-
-* Upgraded to SDK
-  Version [v0.4.7](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v047---2021-09-23)
+* Upgraded to SDK Version [v0.4.7](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v047---2021-09-23)
 
 ## [v0.5.14] - 2021-09-13
-
 ###### SDK Version: v0.4.4
 
 ### :spider: Fixed
-
-* Fixed kms key fetching when provider tried to fetch aws managed keys rotation
-  properties [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
+* Fixed kms key fetching when provider tried to fetch aws managed keys rotation properties [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
 
 ### :gear: Changed
-
-* Upgraded to SDK
-  Version [v0.4.4](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v044---2021-09-13)
+* Upgraded to SDK Version [v0.4.4](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v044---2021-09-13)
 
 ## [v0.5.13] - 2021-09-09
-
 ###### SDK Version: v0.4.3
 
 ### :spider: Fixed
-
 remove region multiplex on web acl resource[#188](https://github.com/cloudquery/cq-provider-aws/pull/188)
 
-## [v0.5.12] - 2021-09-09
 
+
+## [v0.5.12] - 2021-09-09
 ###### SDK Version: v0.4.3
 
 ### :spider: Fixed
-
 * Fixed bad migrations [#187](https://github.com/cloudquery/cq-provider-aws/pull/187)
 
-## [v0.5.11] - 2021-09-09
 
+## [v0.5.11] - 2021-09-09
 ###### SDK Version: v0.4.3
 
 ### :spider: Fixed
-
-* Fixed kms key fetching when provider tried to fetch aws managed keys rotation
-  properties [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
+* Fixed kms key fetching when provider tried to fetch aws managed keys rotation properties [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
 
 ### :rocket: Added
-
 * Add Elbv2 Attributes [#177](https://github.com/cloudquery/cq-provider-aws/pull/177)
 * Added integration test for ec2.images resource [#184](https://github.com/cloudquery/cq-provider-aws/pull/184)
 
 ### :gear: Changed
-
 * Upgraded to SDK Version [v0.4.3](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md)
 
 ## [v0.5.10] - 2021-08-19
-
 ###### SDK Version: 0.3.4
 
 ### :spider: Fixed
-
-* Fixed bad multiplexes in iam_roles_policies, iam_group_policies,
-  iam_user_policies [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
+* Fixed bad multiplexes in iam_roles_policies, iam_group_policies, iam_user_policies [#168](https://github.com/cloudquery/cq-provider-aws/pull/168)
 
 ### :rocket: Added
+* Added multiple e2e integration tests for resources for increased stability [#158](https://github.com/cloudquery/cq-provider-aws/pull/158)
 
-* Added multiple e2e integration tests for resources for increased
-  stability [#158](https://github.com/cloudquery/cq-provider-aws/pull/158)
 
 ## [v0.5.9] - 2021-08-19
-
 ###### SDK Version: 0.3.3-rc2
 
 ### :spider: Fixed
-
 * Fixed bad migration SQL [#160](https://github.com/cloudquery/cq-provider-aws/pull/160)
 
-## [v0.5.8] - 2021-08-19
 
+## [v0.5.8] - 2021-08-19
 ###### SDK Version: 0.3.3-rc2
 
 ### :spider: Fixed
-
-* Fixed bad multiplexes (cloudfront.distributions, cloudtrail.trails, cognito.user_pools) and bad PK
-  s3_bucket_core_rules [#158](https://github.com/cloudquery/cq-provider-aws/pull/158)
-  Thanks [@jbertman](https://github.com/jbertman) for reporting
-* All providers must be wrapped in credentials cache, should
-  fix [Assume Role issues](https://github.com/aws/aws-sdk-go-v2/issues/914) [#153](https://github.com/cloudquery/cq-provider-aws/pull/153)
+* Fixed bad multiplexes (cloudfront.distributions, cloudtrail.trails, cognito.user_pools) and bad PK s3_bucket_core_rules [#158](https://github.com/cloudquery/cq-provider-aws/pull/158) Thanks [@jbertman](https://github.com/jbertman) for reporting
+* All providers must be wrapped in credentials cache, should fix [Assume Role issues](https://github.com/aws/aws-sdk-go-v2/issues/914) [#153](https://github.com/cloudquery/cq-provider-aws/pull/153)
 
 ### :rocket: Added
-
 * Added support for provider e2e testing to improve stability, upcoming release should include more tests.
 
-## [v0.5.7] - 2021-08-12
 
+## [v0.5.7] - 2021-08-12
 ###### SDK Version: 0.3.2
 
 ### :spider: Fixed
-
 * Updated organizational accounts call [#146](https://github.com/cloudquery/cq-provider-aws/pull/146)
 
-## [v0.5.6] - 2021-08-12
 
+## [v0.5.6] - 2021-08-12
 ###### SDK Version: 0.3.2
 
 ### :spider: Fixed
-
 * Removed problematic s3 bucket primary keys [#144](https://github.com/cloudquery/cq-provider-aws/pull/144)
 
+
 ## [v0.5.5] - 2021-08-11
-
 ###### SDK Version: 0.3.2
-
 ### :gear: Changed
-
-* Upgraded to SDK
-  Version [0.3.2](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v032---2020-08-11)
+* Upgraded to SDK Version [0.3.2](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v032---2020-08-11)
 
 ### :spider: Fixed
-
 * Fixed relation tables inserts - Delete filter issue [#141](https://github.com/cloudquery/cq-provider-aws/pull/141)
 
 ### :rocket: Added
-
 * Added some resources missing Arn's [#142](https://github.com/cloudquery/cq-provider-aws/issues/142)
 
 ## [v0.5.4] - 2021-08-07
-
 ###### SDK Version: 0.3.1
 
 ### :spider: Fixed
-
 * Fixed cognito identity pools [#138](https://github.com/cloudquery/cq-provider-aws/pull/138)
-* Fixed Not fetching all Lambda
-  functions [#135](https://github.com/cloudquery/cq-provider-aws/issues/135) [#136](https://github.com/cloudquery/cq-provider-aws/pull/136)
+* Fixed Not fetching all Lambda functions [#135](https://github.com/cloudquery/cq-provider-aws/issues/135) [#136](https://github.com/cloudquery/cq-provider-aws/pull/136)
 * Ignore access denied in s3 relations[#138](https://github.com/cloudquery/cq-provider-aws/pull/138)
 
-## [v0.5.3] - 2021-08-04
 
+## [v0.5.3] - 2021-08-04
 ###### SDK Version: 0.3.1
 
 ### :spider: Fixed
-
-* Fixed [#130](https://github.com/cloudquery/cq-provider-aws/issues/130) IAM User Tags not
-  persisting [#125](https://github.com/cloudquery/cq-provider-aws/pull/132)
+* Fixed [#130](https://github.com/cloudquery/cq-provider-aws/issues/130) IAM User Tags not persisting [#125](https://github.com/cloudquery/cq-provider-aws/pull/132)
 * Fixed s3 bucket resource resolving errors [#131](https://github.com/cloudquery/cq-provider-aws/pull/131)
 
 ## [v0.5.2] - 2021-08-01
-
 ###### SDK Version: 0.3.1
 
 ### :rocket: Added
-
 * Added support for arm64 [#128](https://github.com/cloudquery/cq-provider-aws/pull/128)
 
 ## [v0.5.1] - 2021-07-30
-
 ###### SDK Version: 0.3.1
 
 ### :rocket: Added
-
-* Added new resource directconnect lags
-  by [@James-Quigley](https://github.com/James-Quigley) [#122](https://github.com/cloudquery/cq-provider-aws/pull/122)
+* Added new resource directconnect lags by [@James-Quigley](https://github.com/James-Quigley) [#122](https://github.com/cloudquery/cq-provider-aws/pull/122)
 
 ### :gear: Changed
-
 * Updated SDK to version [0.3.1](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md#v031---2020-07-30)
 
 ### :spider: Fixed
-
 * Fixed iam policies encoded policies parsing [#125](https://github.com/cloudquery/cq-provider-aws/pull/125)
 * Fixed cognito_user_pools input [#126](https://github.com/cloudquery/cq-provider-aws/pull/126)
 
-## [v0.5.0] - 2021-07-28
 
+## [v0.5.0] - 2021-07-28
 ###### SDK Version: 0.3.0
 
 ### :rocket: Added
@@ -283,25 +214,18 @@ remove region multiplex on web acl resource[#188](https://github.com/cloudquery/
 * Added a changelog :)
 
 ### :gear: Changed
-
 * Upgraded to SDK Version [0.3.0](https://github.com/cloudquery/cq-provider-sdk/blob/main/CHANGELOG.md)
-* **Breaking Change**: default CloudQuery "id" from `id`
-  to `cq_id` [#41](https://github.com/cloudquery/cq-provider-sdk/pull/41)
+* **Breaking Change**: default CloudQuery "id" from `id` to `cq_id` [#41](https://github.com/cloudquery/cq-provider-sdk/pull/41)
 * `aws_ec2_instance_licenses` table changed to `json` field `licenses`
-* `aws_ecs_cluster_default_capacity_provider_strategies ` table changed to `json`
-  field `default_capacity_provider_strategy`
-* `aws_lambda_function_event_source_mapping_access_configurations  ` table changed to `json`
-  field `source_access_configurations`
+* `aws_ecs_cluster_default_capacity_provider_strategies ` table changed to `json` field `default_capacity_provider_strategy`
+* `aws_lambda_function_event_source_mapping_access_configurations  ` table changed to `json` field `source_access_configurations`
 * `aws_rds_instance_status_infos  ` table changed to `json` field `status_infos`
 * `aws_wafv2_rule_group_available_labels  ` table changed to `json` field `available_labels`
 * `aws_wafv2_rule_group_consumed_labels  ` table changed to `json` field `consumed_labels`
-* `aws_rds_cluster_db_cluster_option_group_memberships` table change to `json`
-  field `db_cluster_option_group_memberships` [#118](https://github.com/cloudquery/cq-provider-aws/pull/118)
+* `aws_rds_cluster_db_cluster_option_group_memberships` table change to `json` field `db_cluster_option_group_memberships` [#118](https://github.com/cloudquery/cq-provider-aws/pull/118)
 
 ### :spider: Fixed
-
-* Fixed AWS Debug flag will now write into log instead of
-  stdout. [#119](https://github.com/cloudquery/cq-provider-aws/pull/119)
+* Fixed AWS Debug flag will now write into log instead of stdout. [#119](https://github.com/cloudquery/cq-provider-aws/pull/119)
 
 ## [0.4.11] - 2021-07-15
 
@@ -310,7 +234,6 @@ Base version at which changelog was introduced.
 ###### SDK Version: 0.2.8
 
 ### Supported Resources
-
 - accessanalyzer.analyzers
 - apigateway.api_keys
 - apigateway.client_certificates
