@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -50,28 +51,28 @@ func AutoscalingGroups() *schema.Table {
 			},
 			{
 				Name:        "name",
-				Description: "The name of the Auto Scaling group.  This member is required.",
+				Description: "The name of the Auto Scaling group.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("AutoScalingGroupName"),
 			},
 			{
 				Name:        "availability_zones",
-				Description: "One or more Availability Zones for the group.  This member is required.",
+				Description: "One or more Availability Zones for the group.",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "created_time",
-				Description: "The date and time the group was created.  This member is required.",
+				Description: "The date and time the group was created.",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "default_cooldown",
-				Description: "The duration of the default cooldown period, in seconds.  This member is required.",
+				Description: "The duration of the default cooldown period, in seconds.",
 				Type:        schema.TypeInt,
 			},
 			{
 				Name:        "desired_capacity",
-				Description: "The desired size of the group.  This member is required.",
+				Description: "The desired size of the group.",
 				Type:        schema.TypeInt,
 			},
 			{
@@ -81,12 +82,12 @@ func AutoscalingGroups() *schema.Table {
 			},
 			{
 				Name:        "max_size",
-				Description: "The maximum size of the group.  This member is required.",
+				Description: "The maximum size of the group.",
 				Type:        schema.TypeInt,
 			},
 			{
 				Name:        "min_size",
-				Description: "The minimum size of the group.  This member is required.",
+				Description: "The minimum size of the group.",
 				Type:        schema.TypeInt,
 			},
 			{
@@ -208,7 +209,7 @@ func AutoscalingGroups() *schema.Table {
 					},
 					{
 						Name:        "availability_zone",
-						Description: "The Availability Zone in which the instance is running.  This member is required.",
+						Description: "The Availability Zone in which the instance is running.",
 						Type:        schema.TypeString,
 					},
 					{
@@ -218,7 +219,7 @@ func AutoscalingGroups() *schema.Table {
 					},
 					{
 						Name:        "id",
-						Description: "The ID of the instance.  This member is required.",
+						Description: "The ID of the instance.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("InstanceId"),
 					},
@@ -229,7 +230,7 @@ func AutoscalingGroups() *schema.Table {
 					},
 					{
 						Name:        "protected_from_scale_in",
-						Description: "Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.  This member is required.",
+						Description: "Indicates whether the instance is protected from termination by Amazon EC2 Auto Scaling when scaling in.",
 						Type:        schema.TypeBool,
 					},
 					{
@@ -387,26 +388,32 @@ func AutoscalingGroups() *schema.Table {
 						Type:        schema.TypeInt,
 					},
 					{
+						Name:        "step_adjustments",
+						Description: "A set of adjustments that enable you to scale based on the size of the alarm breach.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveAutoscalingGroupScalingPoliciesStepAdjustments,
+					},
+					{
 						Name:        "target_tracking_configuration_target_value",
-						Description: "The target value for the metric.  This member is required.",
+						Description: "The target value for the metric.",
 						Type:        schema.TypeFloat,
 						Resolver:    schema.PathResolver("TargetTrackingConfiguration.TargetValue"),
 					},
 					{
 						Name:        "target_tracking_configuration_customized_metric_name",
-						Description: "The name of the metric.  This member is required.",
+						Description: "The name of the metric.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("TargetTrackingConfiguration.CustomizedMetricSpecification.MetricName"),
 					},
 					{
 						Name:        "target_tracking_configuration_customized_metric_namespace",
-						Description: "The namespace of the metric.  This member is required.",
+						Description: "The namespace of the metric.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("TargetTrackingConfiguration.CustomizedMetricSpecification.Namespace"),
 					},
 					{
 						Name:        "target_tracking_configuration_customized_metric_statistic",
-						Description: "The statistic of the metric.  This member is required.",
+						Description: "The statistic of the metric.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("TargetTrackingConfiguration.CustomizedMetricSpecification.Statistic"),
 					},
@@ -439,36 +446,6 @@ func AutoscalingGroups() *schema.Table {
 						Description: "Identifies the resource associated with the metric type",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("TargetTrackingConfiguration.PredefinedMetricSpecification.ResourceLabel"),
-					},
-				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_autoscaling_group_scaling_policy_step_adjustments",
-						Description: "Describes information used to create a step adjustment for a step scaling policy",
-						Resolver:    fetchAutoscalingGroupScalingPolicyStepAdjustments,
-						Columns: []schema.Column{
-							{
-								Name:        "group_scaling_policy_cq_id",
-								Description: "Unique CloudQuery ID of aws_autoscaling_group_scaling_policies table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "scaling_adjustment",
-								Description: "The amount by which to scale, based on the specified adjustment type",
-								Type:        schema.TypeInt,
-							},
-							{
-								Name:        "metric_interval_lower_bound",
-								Description: "The lower bound for the difference between the alarm threshold and the CloudWatch metric",
-								Type:        schema.TypeFloat,
-							},
-							{
-								Name:        "metric_interval_upper_bound",
-								Description: "The upper bound for the difference between the alarm threshold and the CloudWatch metric",
-								Type:        schema.TypeFloat,
-							},
-						},
 					},
 				},
 			},
@@ -746,6 +723,17 @@ func resolveAutoscalingGroupScalingPoliciesAlarms(ctx context.Context, meta sche
 	}
 	return resource.Set(c.Name, j)
 }
+func resolveAutoscalingGroupScalingPoliciesStepAdjustments(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p, ok := resource.Item.(types.ScalingPolicy)
+	if !ok {
+		return fmt.Errorf("expected to have types.ScalingPolicy but got %T", resource.Item)
+	}
+	data, err := json.Marshal(p.StepAdjustments)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
+}
 func resolveAutoscalingGroupScalingPoliciesTargetTrackingConfigurationCustomizedMetricDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p, ok := resource.Item.(types.ScalingPolicy)
 	if !ok {
@@ -759,14 +747,6 @@ func resolveAutoscalingGroupScalingPoliciesTargetTrackingConfigurationCustomized
 		j[*d.Name] = *d.Value
 	}
 	return resource.Set(c.Name, j)
-}
-func fetchAutoscalingGroupScalingPolicyStepAdjustments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	p, ok := parent.Item.(types.ScalingPolicy)
-	if !ok {
-		return fmt.Errorf("expected to have types.ScalingPolicy but got %T", parent.Item)
-	}
-	res <- p.StepAdjustments
-	return nil
 }
 func fetchAutoscalingGroupLifecycleHooks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(autoscalingGroupWrapper)
