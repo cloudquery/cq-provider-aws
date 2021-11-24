@@ -210,6 +210,12 @@ func CodebuildProjects() *schema.Table {
 				Resolver:    schema.PathResolver("Environment.Certificate"),
 			},
 			{
+				Name:        "environment_variables",
+				Description: "A set of environment variables to make available to builds for this build project.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveCodebuildProjectsEnvironmentVariables,
+			},
+			{
 				Name:        "environment_image_pull_credentials_type",
 				Description: "The type of credentials CodeBuild uses to pull images in your build",
 				Type:        schema.TypeString,
@@ -467,34 +473,6 @@ func CodebuildProjects() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_codebuild_project_environment_variables",
-				Description: "Information about an environment variable for a build project or a build.",
-				Resolver:    fetchCodebuildProjectEnvironmentVariables,
-				Columns: []schema.Column{
-					{
-						Name:        "project_cq_id",
-						Description: "Unique CloudQuery ID of aws_codebuild_projects table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name or key of the environment variable.  This member is required.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value of the environment variable",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "type",
-						Description: "The type of environment variable",
-						Type:        schema.TypeString,
-					},
-				},
-			},
-			{
 				Name:        "aws_codebuild_project_file_system_locations",
 				Description: "Information about a file system created by Amazon Elastic File System (EFS)",
 				Resolver:    fetchCodebuildProjectFileSystemLocations,
@@ -710,6 +688,20 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
+func resolveCodebuildProjectsEnvironmentVariables(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p, ok := resource.Item.(types.Project)
+	if !ok {
+		return fmt.Errorf("not a types.Project instance: %T", resource.Item)
+	}
+	if p.Environment == nil {
+		return nil
+	}
+	j := map[string]interface{}{}
+	for _, e := range p.Environment.EnvironmentVariables {
+		j[*e.Name] = *e.Value
+	}
+	return resource.Set(c.Name, j)
+}
 func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p, ok := resource.Item.(types.Project)
 	if !ok {
@@ -745,17 +737,6 @@ func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schem
 		return err
 	}
 	return resource.Set(c.Name, data)
-}
-func fetchCodebuildProjectEnvironmentVariables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	p, ok := parent.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", parent.Item)
-	}
-	if p.Environment == nil {
-		return nil
-	}
-	res <- p.Environment.EnvironmentVariables
-	return nil
 }
 func fetchCodebuildProjectFileSystemLocations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p, ok := parent.Item.(types.Project)

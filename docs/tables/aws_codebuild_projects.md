@@ -36,6 +36,7 @@ Information about a build project.
 |environment_image|text|The image tag or image digest that identifies the Docker image to use for this build project|
 |environment_type|text|The type of build environment to use for related builds.  * The environment type ARM_CONTAINER is available only in regions US East (N|
 |environment_certificate|text|The ARN of the Amazon S3 bucket, path prefix, and object key that contains the PEM-encoded certificate for the build project|
+|environment_variables|jsonb|A set of environment variables to make available to builds for this build project.|
 |environment_image_pull_credentials_type|text|The type of credentials CodeBuild uses to pull images in your build|
 |environment_privileged_mode|boolean|Enables running the Docker daemon inside a Docker container|
 |environment_registry_credential|text|The Amazon Resource Name (ARN) or name of credentials created using Secrets Manager|
