@@ -16,7 +16,7 @@ func TestIntegrationEc2EbsSnapshots(t *testing.T) {
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"volume_size": 40,
+						// "volume_size": 40,
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
