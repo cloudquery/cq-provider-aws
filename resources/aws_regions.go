@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func Regions() *schema.Table {
+func AwsRegions() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_regions",
 		Description:  "Describes a Region.",
