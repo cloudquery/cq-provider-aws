@@ -20,6 +20,7 @@ func Provider() *provider.Provider {
 		ErrorClassifier: client.ErrorClassifier,
 		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
+			"aws.regions":                           AwsRegions(),
 			"accessanalyzer.analyzers":              AccessAnalyzerAnalyzer(),
 			"apigateway.api_keys":                   ApigatewayAPIKeys(),
 			"apigateway.client_certificates":        ApigatewayClientCertificates(),
@@ -63,6 +64,7 @@ func Provider() *provider.Provider {
 			"ec2.vpc_endpoints":                     Ec2VpcEndpoints(),
 			"ec2.vpc_peering_connections":           Ec2VpcPeeringConnections(),
 			"ec2.vpcs":                              Ec2Vpcs(),
+			"ec2.eips":                              Ec2Eips(),
 			"ec2.vpn_gateways":                      Ec2VpnGateways(),
 			"ecr.repositories":                      EcrRepositories(),
 			"ecs.clusters":                          EcsClusters(),
@@ -76,6 +78,7 @@ func Provider() *provider.Provider {
 			"emr.clusters":                          EmrClusters(),
 			"emr.block_public_access_configs":       EmrBlockPublicAccessConfigs(),
 			"fsx.backups":                           FsxBackups(),
+			"guardduty.detectors":                   GuarddutyDetectors(),
 			"iam.accounts":                          IamAccounts(),
 			"iam.groups":                            IamGroups(),
 			"iam.openid_connect_identity_providers": IamOpenidConnectIdentityProviders(),
