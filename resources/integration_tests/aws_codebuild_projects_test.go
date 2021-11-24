@@ -33,15 +33,39 @@ func TestIntegrationCodebuildProjects(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type": "integration_test", "TestId": "windowsfifl5fe", "Environment": "Test",
 						},
-						"environment_variables": map[string]interface{}{
-							"SOME_KEY1": "SOME_VALUE1",
-							"SOME_KEY2": "SOME_VALUE2",
-						},
 						"timeout_in_minutes": float64(5),
 					},
 				},
 			},
 			Relations: []*providertest.ResourceIntegrationVerification{
+				{
+					Name:           "aws_codebuild_project_environment_variables",
+					ForeignKeyName: "project_cq_id",
+					ExpectedValues: []providertest.ExpectedValue{
+						{
+							Count: 1,
+							Data: map[string]interface{}{
+								"name":  "SOME_KEY1",
+								"value": "SOME_VALUE1",
+								"type":  "PLAINTEXT",
+							},
+						},
+					},
+				},
+				{
+					Name:           "aws_codebuild_project_environment_variables",
+					ForeignKeyName: "project_cq_id",
+					ExpectedValues: []providertest.ExpectedValue{
+						{
+							Count: 1,
+							Data: map[string]interface{}{
+								"name":  "SOME_KEY2",
+								"value": "SOME_VALUE2",
+								"type":  "PARAMETER_STORE",
+							},
+						},
+					},
+				},
 				{
 					Name:           "aws_codebuild_project_secondary_sources",
 					ForeignKeyName: "project_cq_id",

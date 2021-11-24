@@ -36,11 +36,10 @@ Information about a build project.
 |environment_image|text|The image tag or image digest that identifies the Docker image to use for this build project|
 |environment_type|text|The type of build environment to use for related builds.  * The environment type ARM_CONTAINER is available only in regions US East (N|
 |environment_certificate|text|The ARN of the Amazon S3 bucket, path prefix, and object key that contains the PEM-encoded certificate for the build project|
-|environment_variables|jsonb|A set of environment variables to make available to builds for this build project.|
 |environment_image_pull_credentials_type|text|The type of credentials CodeBuild uses to pull images in your build|
 |environment_privileged_mode|boolean|Enables running the Docker daemon inside a Docker container|
 |environment_registry_credential|text|The Amazon Resource Name (ARN) or name of credentials created using Secrets Manager|
-|environment_registry_credential_credential_provider|text|The service that created the credentials to access a private Docker registry. The valid value, SECRETS_MANAGER, is for Secrets Manager.  This member is required.|
+|environment_registry_credential_credential_provider|text|The service that created the credentials to access a private Docker registry. The valid value, SECRETS_MANAGER, is for Secrets Manager.|
 |last_modified|timestamp without time zone|When the build project's settings were last modified, expressed in Unix time format.|
 |logs_config_cloud_watch_logs_status|text|The current status of the logs in CloudWatch Logs for a build project|
 |logs_config_cloud_watch_logs_group_name|text|The group name of the logs in CloudWatch Logs|
@@ -63,7 +62,7 @@ Information about a build project.
 |source_build_status_config_target_url|text|Specifies the target url of the build status CodeBuild sends to the source provider|
 |source_buildspec|text|The buildspec file declaration to use for the builds in this build project|
 |source_git_clone_depth|integer|Information about the Git clone depth for the build project.|
-|source_git_submodules_config_fetch_submodules|boolean|Set to true to fetch Git submodules for your CodeBuild build project.  This member is required.|
+|source_git_submodules_config_fetch_submodules|boolean|Set to true to fetch Git submodules for your CodeBuild build project.|
 |source_insecure_ssl|boolean|Enable this flag to ignore SSL warnings while connecting to the project source code.|
 |source_location|text|Information about the location of the source code to be built|
 |source_report_build_status|boolean|Set to true to report the status of a build's start and finish to your source provider|
