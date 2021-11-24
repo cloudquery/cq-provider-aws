@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -198,7 +199,7 @@ func SagemakerTrainingJobs() *schema.Table {
 			},
 			{
 				Name:        "training_job_status",
-				Description: "The status of the training job.  This member is required.",
+				Description: "The status of the training job.",
 				Type:        schema.TypeString,
 			},
 		},
@@ -230,34 +231,15 @@ func SagemakerTrainingJobs() *schema.Table {
 						Type:        schema.TypeBool,
 					},
 					{
+						Name:        "metric_definitions",
+						Description: "A list of metric definition objects",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions,
+					},
+					{
 						Name:        "training_image",
 						Description: "The registry path of the Docker image that contains the training algorithm",
 						Type:        schema.TypeString,
-					},
-				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_sagemaker_training_job_algorithm_specification_metric_definitions",
-						Description: "Specifies a metric that the training algorithm writes to stderr or stdout. Amazon SageMakerhyperparameter tuning captures all defined metrics",
-						Resolver:    fetchSagemakerTrainingJobAlgorithmSpecificationMetricDefinitions,
-						Columns: []schema.Column{
-							{
-								Name:        "training_job_algorithm_specification_cq_id",
-								Description: "Unique CloudQuery ID of aws_sagemaker_training_job_algorithm_specification table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "name",
-								Description: "The name of the metric.  This member is required.",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "regex",
-								Description: "A regular expression that searches the output of a training job and gets the value of the metric",
-								Type:        schema.TypeString,
-							},
-						},
 					},
 				},
 			},
@@ -278,6 +260,12 @@ func SagemakerTrainingJobs() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
+						Name:        "collection_configurations",
+						Description: "Configuration information for Debugger tensor collections",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations,
+					},
+					{
 						Name:        "hook_parameters",
 						Description: "Configuration information for the Debugger hook parameters.",
 						Type:        schema.TypeJSON,
@@ -286,31 +274,6 @@ func SagemakerTrainingJobs() *schema.Table {
 						Name:        "local_path",
 						Description: "Path to local storage location for metrics and tensors",
 						Type:        schema.TypeString,
-					},
-				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_sagemaker_training_job_debug_hook_config_collection_configurations",
-						Description: "Configuration information for the Debugger output tensor collections.",
-						Resolver:    fetchSagemakerTrainingJobDebugHookConfigCollectionConfigurations,
-						Columns: []schema.Column{
-							{
-								Name:        "training_job_debug_hook_config_cq_id",
-								Description: "Unique CloudQuery ID of aws_sagemaker_training_job_debug_hook_config table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "collection_name",
-								Description: "The name of the tensor collection",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "collection_parameters",
-								Description: "Parameter values for the tensor collection",
-								Type:        schema.TypeJSON,
-							},
-						},
 					},
 				},
 			},
@@ -684,6 +647,117 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 	}
 	return nil
 }
+
+func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.AlgorithmSpecification
+	return nil
+}
+func resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(*types.AlgorithmSpecification)
+	if !ok {
+		return fmt.Errorf("expected AlgorithmSpecification but got %T", r)
+	}
+	var metricDefinitions = make([]map[string]interface{}, len(r.MetricDefinitions))
+
+	for i, metric := range r.MetricDefinitions {
+		metricDefinitions[i] = map[string]interface{}{
+			"name":  aws.ToString(metric.Name),
+			"regex": aws.ToString(metric.Regex),
+		}
+	}
+	b, err := json.Marshal(metricDefinitions)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, b)
+}
+func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.DebugHookConfig
+	return nil
+}
+func resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(*types.DebugHookConfig)
+	if !ok {
+		return fmt.Errorf("expected DebugHookConfig but got %T", r)
+	}
+	var collectionConfigurations = make([]map[string]interface{}, len(r.CollectionConfigurations))
+
+	for i, config := range r.CollectionConfigurations {
+		collectionConfigurations[i] = map[string]interface{}{
+			"collection_name":       aws.ToString(config.CollectionName),
+			"collection_parameters": config.CollectionParameters,
+		}
+	}
+	b, err := json.Marshal(collectionConfigurations)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, b)
+}
+func fetchSagemakerTrainingJobDebugRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.DebugRuleConfigurations
+	return nil
+}
+func fetchSagemakerTrainingJobDebugRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.DebugRuleEvaluationStatuses
+	return nil
+}
+func fetchSagemakerTrainingJobFinalMetricDataLists(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.FinalMetricDataList
+	return nil
+}
+func fetchSagemakerTrainingJobInputDataConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.InputDataConfig
+	return nil
+}
+func fetchSagemakerTrainingJobProfilerRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.ProfilerRuleConfigurations
+	return nil
+}
+func fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.ProfilerRuleEvaluationStatuses
+	return nil
+}
+func fetchSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if !ok {
+		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	res <- r.SecondaryStatusTransitions
+	return nil
+}
 func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
@@ -786,7 +860,6 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 	}
 	return resource.Set(c.Name, vpcConfig)
 }
-
 func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 
@@ -812,93 +885,4 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 	}
 
 	return resource.Set("tags", tags)
-}
-
-func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.AlgorithmSpecification
-	return nil
-}
-func fetchSagemakerTrainingJobAlgorithmSpecificationMetricDefinitions(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*types.AlgorithmSpecification)
-	if !ok {
-		return fmt.Errorf("expected AlgorithmSpecification but got %T", r)
-	}
-	res <- r.MetricDefinitions
-	return nil
-}
-func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.DebugHookConfig
-	return nil
-}
-func fetchSagemakerTrainingJobDebugHookConfigCollectionConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*types.DebugHookConfig)
-	if !ok {
-		return fmt.Errorf("expected DebugHookConfig but got %T", r)
-	}
-	res <- r.CollectionConfigurations
-	return nil
-}
-func fetchSagemakerTrainingJobDebugRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.DebugRuleConfigurations
-	return nil
-}
-func fetchSagemakerTrainingJobDebugRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.DebugRuleEvaluationStatuses
-	return nil
-}
-func fetchSagemakerTrainingJobFinalMetricDataLists(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.FinalMetricDataList
-	return nil
-}
-func fetchSagemakerTrainingJobInputDataConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.InputDataConfig
-	return nil
-}
-func fetchSagemakerTrainingJobProfilerRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.ProfilerRuleConfigurations
-	return nil
-}
-func fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.ProfilerRuleEvaluationStatuses
-	return nil
-}
-func fetchSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.SecondaryStatusTransitions
-	return nil
 }
