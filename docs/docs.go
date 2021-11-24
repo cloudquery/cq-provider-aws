@@ -18,8 +18,7 @@ func main() {
 		os.Exit(1)
 	}
 	for _, d := range dir {
-		err = os.RemoveAll(path.Join([]string{outputPath + "/tables", d.Name()}...))
-		if err != nil {
+		if err := os.RemoveAll(path.Join([]string{outputPath + "/tables", d.Name()}...)); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to generate docs: %s\n", err)
 			os.Exit(1)
 		}
