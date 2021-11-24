@@ -12,7 +12,8 @@ func main() {
 	outputPath := "./docs"
 	err := os.RemoveAll(outputPath)
 	if err != nil {
-		fmt.Printf("%+v", err)
+		fmt.Fprintf(os.Stderr, "Failed to generate docs: %s\n", err)
+		os.Exit(1)
 	}
 
 	err = docs.GenerateDocs(resources.Provider(), outputPath)
