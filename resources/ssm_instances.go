@@ -169,7 +169,7 @@ func SsmInstances() *schema.Table {
 					},
 					{
 						Name:        "execution_summary_execution_time",
-						Description: "The time the execution ran as a datetime object that is saved in the following format: yyyy-MM-dd'T'HH:mm:ss'Z'.  This member is required.",
+						Description: "The time the execution ran as a datetime object that is saved in the following format: yyyy-MM-dd'T'HH:mm:ss'Z'.",
 						Type:        schema.TypeTimestamp,
 						Resolver:    schema.PathResolver("ExecutionSummary.ExecutionTime"),
 					},
