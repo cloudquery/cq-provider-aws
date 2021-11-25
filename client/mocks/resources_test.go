@@ -5,13 +5,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cloudquery/cq-provider-sdk/logging"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 	"github.com/cloudquery/faker/v3"
 	"github.com/golang/mock/gomock"
 	"github.com/hashicorp/go-hclog"
 	"github.com/jackc/pgx/v4"
+
+	"github.com/cloudquery/cq-provider-sdk/logging"
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/resources"
@@ -63,6 +64,11 @@ func TestResources(t *testing.T) {
 			resource:    "cloudwatchlogs.filters",
 			mockBuilder: buildCloudwatchLogsFiltersMock,
 			mainTable:   resources.CloudwatchlogsFilters(),
+		},
+		{
+			resource:    "config.configuration_recorders",
+			mockBuilder: buildConfigConfigurationRecordersMock,
+			mainTable:   resources.ConfigConfigurationRecorders(),
 		},
 		{
 			resource:    "directconnect.gateways",
