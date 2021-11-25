@@ -7,7 +7,7 @@ Information about the compliance as defined by the resource type
 |instance_cq_id|uuid|Unique CloudQuery ID of aws_ssm_instances table (FK)|
 |compliance_type|text|The compliance type|
 |details|jsonb|A "Key": "Value" tag combination for the compliance item.|
-|execution_summary_execution_time|timestamp without time zone|The time the execution ran as a datetime object that is saved in the following format: yyyy-MM-dd'T'HH:mm:ss'Z'.  This member is required.|
+|execution_summary_execution_time|timestamp without time zone|The time the execution ran as a datetime object that is saved in the following format: yyyy-MM-dd'T'HH:mm:ss'Z'.|
 |execution_summary_execution_id|text|An ID created by the system when PutComplianceItems was called|
 |execution_summary_execution_type|text|The type of execution|
 |id|text|An ID for the compliance item|
