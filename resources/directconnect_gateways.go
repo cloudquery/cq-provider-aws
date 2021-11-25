@@ -78,13 +78,13 @@ func DirectconnectGateways() *schema.Table {
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"directconnect_gateway_cq_id", "association_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "directconnect_gateway_cq_id",
+						Name:        "gateway_cq_id",
 						Description: "Unique CloudQuery ID of aws_directconnect_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:        "directconnect_gateway_id",
+						Name:        "gateway_id",
 						Description: "The ID of the Direct Connect gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
@@ -163,10 +163,16 @@ func DirectconnectGateways() *schema.Table {
 				Resolver:    fetchDirectconnectGatewayAttachments,
 				Columns: []schema.Column{
 					{
-						Name:        "directconnect_gateway_id",
+						Name:        "gateway_cq_id",
 						Description: "Unique CloudQuery ID of aws_directconnect_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "gateway_id",
+						Description: "The ID of the Direct Connect gateway.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "attachment_state",
