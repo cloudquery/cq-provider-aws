@@ -123,9 +123,9 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	if len(resp.ConfigurationRecorders) == 0 {
 		return nil
 	}
-	var names []string
-	for _, configurationRecorder := range resp.ConfigurationRecorders {
-		names = append(names, *configurationRecorder.Name)
+	names := make([]string, len(resp.ConfigurationRecorders))
+	for i, configurationRecorder := range resp.ConfigurationRecorders {
+		names[i] = *configurationRecorder.Name
 	}
 	status, err := c.Services().ConfigService.DescribeConfigurationRecorderStatus(ctx, &configservice.DescribeConfigurationRecorderStatusInput{
 		ConfigurationRecorderNames: names,
