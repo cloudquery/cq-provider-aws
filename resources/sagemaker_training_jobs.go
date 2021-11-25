@@ -202,6 +202,16 @@ func SagemakerTrainingJobs() *schema.Table {
 				Description: "The status of the training job.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:     "secondary_status_transitions",
+				Type:     schema.TypeJSON,
+				Resolver: resolveSagemakerTrainingJobSecondaryStatusTransitions,
+			},
+			{
+				Name:     "final_metric_data_list",
+				Type:     schema.TypeJSON,
+				Resolver: resolveSagemakerTrainingJobFinalMetricDataList,
+			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -365,34 +375,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_sagemaker_training_job_final_metric_data_list",
-				Description: "The name, value, and date and time of a metric that was emitted to Amazon CloudWatch.",
-				Resolver:    fetchSagemakerTrainingJobFinalMetricDataLists,
-				Columns: []schema.Column{
-					{
-						Name:        "training_job_cq_id",
-						Description: "Unique CloudQuery ID of aws_sagemaker_training_jobs table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "metric_name",
-						Description: "The name of the metric.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "timestamp",
-						Description: "The date and time that the algorithm emitted the metric.",
-						Type:        schema.TypeTimestamp,
-					},
-					{
-						Name:        "value",
-						Description: "The value of the metric.",
-						Type:        schema.TypeFloat,
-					},
-				},
-			},
-			{
 				Name:        "aws_sagemaker_training_job_input_data_config",
 				Description: "A channel is a named input source that training algorithms can consume.",
 				Resolver:    fetchSagemakerTrainingJobInputDataConfigs,
@@ -409,49 +391,49 @@ func SagemakerTrainingJobs() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "data_source_file_system_data_source_directory_path",
+						Name:        "data_source_file_directory_path",
 						Description: "The full path to the directory to associate with the channel.  This member is required.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.FileSystemDataSource.DirectoryPath"),
 					},
 					{
-						Name:        "data_source_file_system_data_source_file_system_access_mode",
+						Name:        "data_source_file_system_access_mode",
 						Description: "The access mode of the mount of the directory associated with the channel",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.FileSystemDataSource.FileSystemAccessMode"),
 					},
 					{
-						Name:        "data_source_file_system_data_source_file_system_id",
+						Name:        "data_source_file_system_id",
 						Description: "The file system id.  This member is required.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.FileSystemDataSource.FileSystemId"),
 					},
 					{
-						Name:        "data_source_file_system_data_source_file_system_type",
+						Name:        "data_source_file_system_type",
 						Description: "The file system type.  This member is required.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.FileSystemDataSource.FileSystemType"),
 					},
 					{
-						Name:        "data_source_s3_data_source_s3_data_type",
+						Name:        "data_source_s3_data_type",
 						Description: "If you choose S3Prefix, S3Uri identifies a key name prefix",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.S3DataSource.S3DataType"),
 					},
 					{
-						Name:        "data_source_s3_data_source_s3_uri",
+						Name:        "data_source_s3_uri",
 						Description: "Depending on the value specified for the S3DataType, identifies either a key name prefix or a manifest",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.S3DataSource.S3Uri"),
 					},
 					{
-						Name:        "data_source_s3_data_source_attribute_names",
+						Name:        "data_source_attribute_names",
 						Description: "A list of one or more attribute names to use that are found in a specified augmented manifest file.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("DataSource.S3DataSource.AttributeNames"),
 					},
 					{
-						Name:        "data_source_s3_data_source_s3_data_distribution_type",
+						Name:        "data_source_s3_data_distribution_type",
 						Description: "If you want Amazon SageMaker to replicate the entire dataset on each ML compute instance that is launched for model training, specify FullyReplicated",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataSource.S3DataSource.S3DataDistributionType"),
@@ -571,39 +553,6 @@ func SagemakerTrainingJobs() *schema.Table {
 					},
 				},
 			},
-			{
-				Name:        "aws_sagemaker_training_job_secondary_status_transitions",
-				Description: "An array element of DescribeTrainingJobResponse$SecondaryStatusTransitions",
-				Resolver:    fetchSagemakerTrainingJobSecondaryStatusTransitions,
-				Columns: []schema.Column{
-					{
-						Name:        "training_job_cq_id",
-						Description: "Unique CloudQuery ID of aws_sagemaker_training_jobs table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "start_time",
-						Description: "A timestamp that shows when the training job transitioned to the current secondary status state.  This member is required.",
-						Type:        schema.TypeTimestamp,
-					},
-					{
-						Name:        "status",
-						Description: "Contains a secondary status information from a training job",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "end_time",
-						Description: "A timestamp that shows when the training job transitioned out of this secondary status state into another secondary status state or when the training job has ended.",
-						Type:        schema.TypeTimestamp,
-					},
-					{
-						Name:        "status_message",
-						Description: "A detailed description of the progress within a secondary status",
-						Type:        schema.TypeString,
-					},
-				},
-			},
 		},
 	}
 }
@@ -718,14 +667,6 @@ func fetchSagemakerTrainingJobDebugRuleEvaluationStatuses(_ context.Context, _ s
 	res <- r.DebugRuleEvaluationStatuses
 	return nil
 }
-func fetchSagemakerTrainingJobFinalMetricDataLists(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.FinalMetricDataList
-	return nil
-}
 func fetchSagemakerTrainingJobInputDataConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
@@ -748,14 +689,6 @@ func fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses(_ context.Context, 
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
 	res <- r.ProfilerRuleEvaluationStatuses
-	return nil
-}
-func fetchSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
-	}
-	res <- r.SecondaryStatusTransitions
 	return nil
 }
 func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -885,4 +818,47 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 	}
 
 	return resource.Set("tags", tags)
+}
+func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
+
+	if !ok {
+		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", r)
+	}
+	var secondaryStatusTransitions = make([]map[string]interface{}, len(r.SecondaryStatusTransitions))
+
+	for i, status := range r.SecondaryStatusTransitions {
+		secondaryStatusTransitions[i] = map[string]interface{}{
+			"start_time":     status.StartTime,
+			"end_time":       status.EndTime,
+			"status":         status.Status,
+			"status_message": status.StatusMessage,
+		}
+	}
+	b, err := json.Marshal(secondaryStatusTransitions)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, b)
+}
+func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
+
+	if !ok {
+		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", r)
+	}
+	var finalMetricDataList = make([]map[string]interface{}, len(r.FinalMetricDataList))
+
+	for i, config := range r.FinalMetricDataList {
+		finalMetricDataList[i] = map[string]interface{}{
+			"metric_name": config.MetricName,
+			"value":       config.Value,
+			"timestamp":   config.Timestamp,
+		}
+	}
+	b, err := json.Marshal(finalMetricDataList)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, b)
 }
