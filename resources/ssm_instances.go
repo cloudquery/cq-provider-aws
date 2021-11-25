@@ -19,7 +19,7 @@ func SsmInstances() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "instance_id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -32,6 +32,12 @@ func SsmInstances() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) of the managed instance.",
+				Type:        schema.TypeString,
+				Resolver:    resolveSSMInstanceARN,
 			},
 			{
 				Name:        "activation_id",
@@ -264,4 +270,13 @@ func fetchSsmInstanceComplianceItems(ctx context.Context, meta schema.ClientMeta
 		input.NextToken = output.NextToken
 	}
 	return nil
+}
+
+func resolveSSMInstanceARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	instance, ok := resource.Item.(types.InstanceInformation)
+	if !ok {
+		return fmt.Errorf("not a %T instance: %T", instance, resource.Item)
+	}
+	cl := meta.(*client.Client)
+	return resource.Set(c.Name, client.GenerateResourceARN("ssm", "managed-instance", *instance.InstanceId, cl.Region, cl.AccountID))
 }

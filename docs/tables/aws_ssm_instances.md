@@ -6,6 +6,7 @@ Describes a filter for a specific list of instances.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|arn|text|The Amazon Resource Name (ARN) of the managed instance.|
 |activation_id|text|The activation ID created by Amazon Web Services Systems Manager when the server or virtual machine (VM) was registered.|
 |agent_version|text|The version of SSM Agent running on your Linux instance.|
 |association_overview_detailed_status|text|Detailed status information about the aggregated associations.|
