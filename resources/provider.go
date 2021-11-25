@@ -3,9 +3,10 @@ package resources
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 var (
@@ -20,6 +21,7 @@ func Provider() *provider.Provider {
 		ErrorClassifier: client.ErrorClassifier,
 		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
+			"aws.regions":                           AwsRegions(),
 			"accessanalyzer.analyzers":              AccessAnalyzerAnalyzer(),
 			"apigateway.api_keys":                   ApigatewayAPIKeys(),
 			"apigateway.client_certificates":        ApigatewayClientCertificates(),
@@ -45,6 +47,7 @@ func Provider() *provider.Provider {
 			"directconnect.lags":                    DirectconnectLags(),
 			"directconnect.virtual_gateways":        DirectconnectVirtualGateways(),
 			"directconnect.virtual_interfaces":      DirectconnectVirtualInterfaces(),
+			"dms.replication_instances":             DmsReplicationInstances(),
 			"ec2.byoip_cidrs":                       Ec2ByoipCidrs(),
 			"ec2.customer_gateways":                 Ec2CustomerGateways(),
 			"ec2.ebs_volumes":                       Ec2EbsVolumes(),
@@ -63,6 +66,7 @@ func Provider() *provider.Provider {
 			"ec2.vpc_endpoints":                     Ec2VpcEndpoints(),
 			"ec2.vpc_peering_connections":           Ec2VpcPeeringConnections(),
 			"ec2.vpcs":                              Ec2Vpcs(),
+			"ec2.eips":                              Ec2Eips(),
 			"ec2.vpn_gateways":                      Ec2VpnGateways(),
 			"ecr.repositories":                      EcrRepositories(),
 			"ecs.clusters":                          EcsClusters(),
@@ -76,6 +80,7 @@ func Provider() *provider.Provider {
 			"emr.clusters":                          EmrClusters(),
 			"emr.block_public_access_configs":       EmrBlockPublicAccessConfigs(),
 			"fsx.backups":                           FsxBackups(),
+			"guardduty.detectors":                   GuarddutyDetectors(),
 			"iam.accounts":                          IamAccounts(),
 			"iam.groups":                            IamGroups(),
 			"iam.openid_connect_identity_providers": IamOpenidConnectIdentityProviders(),
@@ -93,6 +98,8 @@ func Provider() *provider.Provider {
 			"organizations.accounts":                OrganizationsAccounts(),
 			"rds.certificates":                      RdsCertificates(),
 			"rds.clusters":                          RdsClusters(),
+			"rds.cluster_snapshots":                 RdsClusterSnapshots(),
+			"rds.db_snapshots":                      RdsDbSnapshots(),
 			"rds.db_subnet_groups":                  RdsSubnetGroups(),
 			"rds.instances":                         RdsInstances(),
 			"redshift.clusters":                     RedshiftClusters(),

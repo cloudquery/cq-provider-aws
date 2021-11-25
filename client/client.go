@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/guardduty"
+
 	"github.com/aws/smithy-go/logging"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -23,6 +25,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
+	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -100,6 +103,7 @@ type Services struct {
 	CognitoIdentityPools CognitoIdentityPoolsClient
 	CognitoUserPools     CognitoUserPoolsClient
 	Directconnect        DirectconnectClient
+	DMS                  DatabasemigrationserviceClient
 	ECR                  EcrClient
 	ECS                  EcsClient
 	EC2                  Ec2Client
@@ -131,6 +135,7 @@ type Services struct {
 	ConfigService        ConfigServiceClient
 	Waf                  WafClient
 	WafV2                WafV2Client
+	GuardDuty            GuardDutyClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -360,6 +365,7 @@ func initServices(region string, c aws.Config) Services {
 		CognitoUserPools:     cognitoidentityprovider.NewFromConfig(awsCfg),
 		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Directconnect:        directconnect.NewFromConfig(awsCfg),
+		DMS:                  databasemigrationservice.NewFromConfig(awsCfg),
 		EC2:                  ec2.NewFromConfig(awsCfg),
 		ECR:                  ecr.NewFromConfig(awsCfg),
 		ECS:                  ecs.NewFromConfig(awsCfg),
@@ -371,6 +377,7 @@ func initServices(region string, c aws.Config) Services {
 		ELBv2:                elbv2.NewFromConfig(awsCfg),
 		EMR:                  emr.NewFromConfig(awsCfg),
 		FSX:                  fsx.NewFromConfig(awsCfg),
+		GuardDuty:            guardduty.NewFromConfig(awsCfg),
 		IAM:                  iam.NewFromConfig(awsCfg),
 		KMS:                  kms.NewFromConfig(awsCfg),
 		Lambda:               lambda.NewFromConfig(awsCfg),
