@@ -120,6 +120,9 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	if err != nil {
 		return err
 	}
+	if len(resp.ConfigurationRecorders) == 0 {
+		return nil
+	}
 	var names []string
 	for _, configurationRecorder := range resp.ConfigurationRecorders {
 		names = append(names, *configurationRecorder.Name)
@@ -133,10 +136,10 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	for _, configurationRecorder := range resp.ConfigurationRecorders {
 		var configurationRecorderStatus types.ConfigurationRecorderStatus
 		for _, s := range status.ConfigurationRecordersStatus {
-			if s.Name != configurationRecorder.Name {
-				continue
+			if s.Name == configurationRecorder.Name {
+				configurationRecorderStatus = s
+				break
 			}
-			configurationRecorderStatus = s
 		}
 		res <- configurationRecorderWrapper{
 			ConfigurationRecorder:      configurationRecorder,
