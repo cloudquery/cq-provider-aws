@@ -66,11 +66,6 @@ func TestResources(t *testing.T) {
 			mainTable:   resources.CloudwatchlogsFilters(),
 		},
 		{
-			resource:    "config.configuration_recorders",
-			mockBuilder: buildConfigConfigurationRecordersMock,
-			mainTable:   resources.ConfigConfigurationRecorders(),
-		},
-		{
 			resource:    "directconnect.gateways",
 			mockBuilder: buildDirectconnectGatewaysMock,
 			mainTable:   resources.DirectconnectGateways(),

@@ -12,8 +12,6 @@ import (
 	cloudwatchTypes "github.com/aws/aws-sdk-go-v2/service/cloudwatch/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	cloudwatchlogsTypes "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
-	"github.com/aws/aws-sdk-go-v2/service/configservice"
-	configserviceTypes "github.com/aws/aws-sdk-go-v2/service/configservice/types"
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	databasemigrationserviceTypes "github.com/aws/aws-sdk-go-v2/service/databasemigrationservice/types"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
@@ -225,30 +223,6 @@ func buildCloudwatchLogsFiltersMock(t *testing.T, ctrl *gomock.Controller) clien
 		}, nil)
 	return client.Services{
 		CloudwatchLogs: m,
-	}
-}
-
-func buildConfigConfigurationRecordersMock(t *testing.T, ctrl *gomock.Controller) client.Services {
-	m := mocks.NewMockConfigServiceClient(ctrl)
-	l := configserviceTypes.ConfigurationRecorder{}
-	if err := faker.FakeData(&l); err != nil {
-		t.Fatal(err)
-	}
-	sl := configserviceTypes.ConfigurationRecorderStatus{}
-	if err := faker.FakeData(&sl); err != nil {
-		t.Fatal(err)
-	}
-	sl.Name = l.Name
-	m.EXPECT().DescribeConfigurationRecorderStatus(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&configservice.DescribeConfigurationRecorderStatusOutput{
-			ConfigurationRecordersStatus: []configserviceTypes.ConfigurationRecorderStatus{sl},
-		}, nil)
-	m.EXPECT().DescribeConfigurationRecorders(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&configservice.DescribeConfigurationRecordersOutput{
-			ConfigurationRecorders: []configserviceTypes.ConfigurationRecorder{l},
-		}, nil)
-	return client.Services{
-		ConfigService: m,
 	}
 }
 
