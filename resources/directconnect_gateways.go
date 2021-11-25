@@ -75,7 +75,7 @@ func DirectconnectGateways() *schema.Table {
 				Name:        "aws_directconnect_gateway_associations",
 				Description: "Information about the association between an Direct Connect Gateway and either a Virtual Private Gateway, or Transit Gateway",
 				Resolver:    fetchDirectconnectGatewayAssociations,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"directconnect_gateway_cq_id", "association_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"gateway_cq_id", "association_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "gateway_cq_id",
