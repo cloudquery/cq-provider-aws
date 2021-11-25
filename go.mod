@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
-	github.com/aws/aws-sdk-go-v2 v1.11.0
+	github.com/aws/aws-sdk-go-v2 v1.11.1
 	github.com/aws/aws-sdk-go-v2/config v1.3.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.2.1
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.2.1
@@ -20,6 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentity v1.3.1
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.3.3
 	github.com/aws/aws-sdk-go-v2/service/configservice v1.5.1
+	github.com/aws/aws-sdk-go-v2/service/databasemigrationservice v1.12.0
 	github.com/aws/aws-sdk-go-v2/service/directconnect v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0
@@ -32,6 +33,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/emr v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/fsx v1.2.0
+	github.com/aws/aws-sdk-go-v2/service/guardduty v1.7.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/kms v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.3.0
@@ -40,14 +42,15 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/rds v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/redshift v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.4.0
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.8.0
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.19.1
+	github.com/aws/aws-sdk-go-v2/service/s3control v1.14.1
 	github.com/aws/aws-sdk-go-v2/service/sns v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.9.1
 	github.com/aws/aws-sdk-go-v2/service/sts v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.9.0
-	github.com/cloudquery/cq-provider-sdk v0.5.1
+	github.com/cloudquery/cq-provider-sdk v0.5.2
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -62,9 +65,10 @@ require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.1.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.1.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.3.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.3.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/codebuild v1.14.1
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.5.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.5.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/route53domains v1.6.0
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
 	github.com/creasty/defaults v1.5.2 // indirect
@@ -132,6 +136,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.0.0 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.0.0 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.1 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.0.1 // indirect
 )

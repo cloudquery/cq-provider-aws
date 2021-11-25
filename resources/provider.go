@@ -3,9 +3,10 @@ package resources
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 var (
@@ -20,6 +21,7 @@ func Provider() *provider.Provider {
 		ErrorClassifier: client.ErrorClassifier,
 		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
+			"aws.regions":                           AwsRegions(),
 			"accessanalyzer.analyzers":              AccessAnalyzerAnalyzer(),
 			"apigateway.api_keys":                   ApigatewayAPIKeys(),
 			"apigateway.client_certificates":        ApigatewayClientCertificates(),
@@ -31,8 +33,10 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":             Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                Apigatewayv2VpcLinks(),
 			"autoscaling.launch_configurations":     AutoscalingLaunchConfigurations(),
+			"autoscaling.groups":                    AutoscalingGroups(),
 			"cloudfront.cache_policies":             CloudfrontCachePolicies(),
 			"cloudfront.distributions":              CloudfrontDistributions(),
+			"codebuild.projects":                    CodebuildProjects(),
 			"cloudtrail.trails":                     CloudtrailTrails(),
 			"cloudwatch.alarms":                     CloudwatchAlarms(),
 			"cloudwatchlogs.filters":                CloudwatchlogsFilters(),
@@ -45,9 +49,11 @@ func Provider() *provider.Provider {
 			"directconnect.lags":                    DirectconnectLags(),
 			"directconnect.virtual_gateways":        DirectconnectVirtualGateways(),
 			"directconnect.virtual_interfaces":      DirectconnectVirtualInterfaces(),
+			"dms.replication_instances":             DmsReplicationInstances(),
 			"ec2.byoip_cidrs":                       Ec2ByoipCidrs(),
 			"ec2.customer_gateways":                 Ec2CustomerGateways(),
 			"ec2.ebs_volumes":                       Ec2EbsVolumes(),
+			"ec2.ebs_snapshots":                     Ec2EbsSnapshots(),
 			"ec2.flow_logs":                         Ec2FlowLogs(),
 			"ec2.images":                            Ec2Images(),
 			"ec2.instances":                         Ec2Instances(),
@@ -62,6 +68,7 @@ func Provider() *provider.Provider {
 			"ec2.vpc_endpoints":                     Ec2VpcEndpoints(),
 			"ec2.vpc_peering_connections":           Ec2VpcPeeringConnections(),
 			"ec2.vpcs":                              Ec2Vpcs(),
+			"ec2.eips":                              Ec2Eips(),
 			"ec2.vpn_gateways":                      Ec2VpnGateways(),
 			"ecr.repositories":                      EcrRepositories(),
 			"ecs.clusters":                          EcsClusters(),
@@ -73,7 +80,9 @@ func Provider() *provider.Provider {
 			"elbv2.load_balancers":                  Elbv2LoadBalancers(),
 			"elbv2.target_groups":                   Elbv2TargetGroups(),
 			"emr.clusters":                          EmrClusters(),
+			"emr.block_public_access_configs":       EmrBlockPublicAccessConfigs(),
 			"fsx.backups":                           FsxBackups(),
+			"guardduty.detectors":                   GuarddutyDetectors(),
 			"iam.accounts":                          IamAccounts(),
 			"iam.groups":                            IamGroups(),
 			"iam.openid_connect_identity_providers": IamOpenidConnectIdentityProviders(),
@@ -91,6 +100,8 @@ func Provider() *provider.Provider {
 			"organizations.accounts":                OrganizationsAccounts(),
 			"rds.certificates":                      RdsCertificates(),
 			"rds.clusters":                          RdsClusters(),
+			"rds.cluster_snapshots":                 RdsClusterSnapshots(),
+			"rds.db_snapshots":                      RdsDbSnapshots(),
 			"rds.db_subnet_groups":                  RdsSubnetGroups(),
 			"rds.instances":                         RdsInstances(),
 			"redshift.clusters":                     RedshiftClusters(),
@@ -101,6 +112,7 @@ func Provider() *provider.Provider {
 			"route53.reusable_delegation_sets":      Route53ReusableDelegationSets(),
 			"route53.traffic_policies":              Route53TrafficPolicies(),
 			"s3.buckets":                            S3Buckets(),
+			"s3.accounts":                           S3Accounts(),
 			"sns.subscriptions":                     SnsSubscriptions(),
 			"sns.topics":                            SnsTopics(),
 			"sqs.queues":                            SQSQueues(),

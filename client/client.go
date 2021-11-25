@@ -20,9 +20,11 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/aws/aws-sdk-go-v2/service/codebuild"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
+	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -36,6 +38,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
+	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -46,6 +49,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
@@ -98,6 +102,7 @@ type Services struct {
 	CognitoIdentityPools CognitoIdentityPoolsClient
 	CognitoUserPools     CognitoUserPoolsClient
 	Directconnect        DirectconnectClient
+	DMS                  DatabasemigrationserviceClient
 	ECR                  EcrClient
 	ECS                  EcsClient
 	EC2                  Ec2Client
@@ -119,6 +124,7 @@ type Services struct {
 	Route53Domains       Route53DomainsClient
 	RDS                  RdsClient
 	S3                   S3Client
+	S3Control            S3ControlClient
 	S3Manager            S3ManagerClient
 	SQS                  SQSClient
 	Apigateway           ApigatewayClient
@@ -127,8 +133,9 @@ type Services struct {
 	ConfigService        ConfigServiceClient
 	Waf                  WafClient
 	WafV2                WafV2Client
+	Codebuild            CodebuildClient
+	GuardDuty            GuardDutyClient
 }
-
 type ServicesAccountRegionMap map[string]map[string]*Services
 
 // ServicesManager will hold the entire map of (account X region) services
@@ -356,6 +363,7 @@ func initServices(region string, c aws.Config) Services {
 		CognitoUserPools:     cognitoidentityprovider.NewFromConfig(awsCfg),
 		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Directconnect:        directconnect.NewFromConfig(awsCfg),
+		DMS:                  databasemigrationservice.NewFromConfig(awsCfg),
 		EC2:                  ec2.NewFromConfig(awsCfg),
 		ECR:                  ecr.NewFromConfig(awsCfg),
 		ECS:                  ecs.NewFromConfig(awsCfg),
@@ -367,6 +375,7 @@ func initServices(region string, c aws.Config) Services {
 		ELBv2:                elbv2.NewFromConfig(awsCfg),
 		EMR:                  emr.NewFromConfig(awsCfg),
 		FSX:                  fsx.NewFromConfig(awsCfg),
+		GuardDuty:            guardduty.NewFromConfig(awsCfg),
 		IAM:                  iam.NewFromConfig(awsCfg),
 		KMS:                  kms.NewFromConfig(awsCfg),
 		Lambda:               lambda.NewFromConfig(awsCfg),
@@ -377,11 +386,13 @@ func initServices(region string, c aws.Config) Services {
 		Route53:              route53.NewFromConfig(awsCfg),
 		Route53Domains:       route53domains.NewFromConfig(awsCfg),
 		S3:                   s3.NewFromConfig(awsCfg),
+		S3Control:            s3control.NewFromConfig(awsCfg),
 		S3Manager:            newS3ManagerFromConfig(awsCfg),
 		SNS:                  sns.NewFromConfig(awsCfg),
 		SQS:                  sqs.NewFromConfig(awsCfg),
 		Waf:                  waf.NewFromConfig(awsCfg),
 		WafV2:                wafv2.NewFromConfig(awsCfg),
+		Codebuild:            codebuild.NewFromConfig(awsCfg),
 	}
 }
 
