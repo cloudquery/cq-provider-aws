@@ -56,7 +56,7 @@ func SsmInstances() *schema.Table {
 				Resolver:    schema.PathResolver("AssociationOverview.DetailedStatus"),
 			},
 			{
-				Name:        "association_overview_instance_association_status_aggregated_count",
+				Name:        "association_instance_status_aggregated_count",
 				Description: "The number of associations for the instance(s).",
 				Type:        schema.TypeJSON,
 				Resolver:    schema.PathResolver("AssociationOverview.InstanceAssociationStatusAggregatedCount"),
@@ -74,8 +74,8 @@ func SsmInstances() *schema.Table {
 			{
 				Name:        "ip_address",
 				Description: "The IP address of the managed instance.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("IPAddress"),
+				Type:        schema.TypeInet,
+				Resolver:    schema.IPAddressResolver("IPAddress"),
 			},
 			{
 				Name:        "iam_role",
