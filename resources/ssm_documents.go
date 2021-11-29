@@ -21,6 +21,7 @@ func SsmDocuments() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: ssmDocumentPostResolver,
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -33,6 +34,12 @@ func SsmDocuments() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) of the managed instance.",
+				Type:        schema.TypeString,
+				Resolver:    resolveSSMDocumentARN,
 			},
 			{
 				Name:        "approved_version",
@@ -288,4 +295,13 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 		return err
 	}
 	return resource.Set("account_sharing_info_list", b)
+}
+
+func resolveSSMDocumentARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	d, ok := resource.Item.(*types.DocumentDescription)
+	if !ok {
+		return fmt.Errorf("not a %T instance: %T", d, resource.Item)
+	}
+	cl := meta.(*client.Client)
+	return resource.Set(c.Name, client.GenerateResourceARN("ssm", "document", *d.Name, cl.Region, cl.AccountID))
 }
