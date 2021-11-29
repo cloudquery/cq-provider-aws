@@ -10,10 +10,10 @@ Describes a filter for a specific list of instances.
 |activation_id|text|The activation ID created by Amazon Web Services Systems Manager when the server or virtual machine (VM) was registered.|
 |agent_version|text|The version of SSM Agent running on your Linux instance.|
 |association_overview_detailed_status|text|Detailed status information about the aggregated associations.|
-|association_overview_instance_association_status_aggregated_count|jsonb|The number of associations for the instance(s).|
+|association_instance_status_aggregated_count|jsonb|The number of associations for the instance(s).|
 |association_status|text|The status of the association.|
 |computer_name|text|The fully qualified host name of the managed instance.|
-|ip_address|text|The IP address of the managed instance.|
+|ip_address|inet|The IP address of the managed instance.|
 |iam_role|text|The Identity and Access Management (IAM) role assigned to the on-premises Systems Manager managed instance|
 |instance_id|text|The instance ID.|
 |is_latest_version|boolean|Indicates whether the latest version of SSM Agent is running on your Linux Managed Instance|

@@ -3,6 +3,7 @@ package resources
 import (
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -18,6 +19,7 @@ func buildSSMInstances(t *testing.T, ctrl *gomock.Controller) client.Services {
 	if err := faker.FakeData(&i); err != nil {
 		t.Fatal(err)
 	}
+	i.IPAddress = aws.String("192.168.1.1")
 	mock.EXPECT().DescribeInstanceInformation(
 		gomock.Any(),
 		&ssm.DescribeInstanceInformationInput{},
