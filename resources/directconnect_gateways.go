@@ -66,7 +66,6 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The error message if the state of an object failed to advance.",
 				Type:        schema.TypeString,
 			},
-
 		},
 		Relations: []*schema.Table{
 			{
