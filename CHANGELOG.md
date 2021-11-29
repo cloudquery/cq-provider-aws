@@ -10,13 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 💥 Breaking Changes
 * renamed `aws_directconnect_gateways` table columns [#300](https://github.com/cloudquery/cq-provider-aws/pull/300)
-    - "aws_directconnect_gateways" rename from "direct_connect_gateway_state" to "state"
-    - "aws_directconnect_gateways" rename from "direct_connect_gateway_name" to "name"
-    - "aws_directconnect_gateways" DROP COLUMN "directconnect_gateway_id"
-    - "aws_directconnect_gateway_associations" rename from "directconnect_gateway_cq_id" to "gateway_cq_id"
-    - "aws_directconnect_gateway_associations" rename from "directconnect_gateway_id" to "gateway_id"
+    - "aws_directconnect_gateways" rename from `direct_connect_gateway_state` to `state`
+    - "aws_directconnect_gateways" rename from `direct_connect_gateway_name` to `name`
+    - "aws_directconnect_gateways" drop column `directconnect_gateway_id`
+    - "aws_directconnect_gateway_associations" rename from `directconnect_gateway_cq_id` to `gateway_cq_id`
+    - "aws_directconnect_gateway_associations" rename from `directconnect_gateway_id` to `gateway_id`
 
 ### :rocket: Added
+* Add `KmsMasterKeyId` column to `sns` resource [#309](https://github.com/cloudquery/cq-provider-aws/pull/309)
 * Added support for ecs clusters dependencies [#267](https://github.com/cloudquery/cq-provider-aws/pull/267) fixes [#260](https://github.com/cloudquery/cq-provider-aws/issues/260.
   -  Added `aws_ecs_cluster_services` relation of `aws_ecs_clusters`
   -  Added `aws_ecs_cluster_container_instances` relation of `aws_ecs_clusters`
