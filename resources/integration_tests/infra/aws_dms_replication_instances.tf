@@ -41,6 +41,7 @@ resource "aws_iam_role_policy_attachment" "dms_vpc_role_AmazonDMSVPCManagementRo
 
 resource "aws_security_group" "dms_sg" {
   name        = "dms-sg-${var.test_prefix}_${var.test_suffix}"
+  description = "Security group for DMS"
 }
 
 # Create a new replication instance
