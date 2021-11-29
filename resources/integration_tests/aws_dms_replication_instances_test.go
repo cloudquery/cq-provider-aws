@@ -17,14 +17,14 @@ func TestIntegrationDmsReplicationInstances(t *testing.T) {
 				{
 					Count: 1,
 					Data: map[string]interface{}{
-						"allocated_storage": float64(20),
-						"auto_minor_version_upgrade": true,
-						"availability_zone": "us-east-1a",
-						"multi_az": false,
+						"allocated_storage":            float64(20),
+						"auto_minor_version_upgrade":   true,
+						"availability_zone":            "us-east-1a",
+						"multi_az":                     false,
 						"preferred_maintenance_window": "sun:10:30-sun:14:30",
-						"publicly_accessible": false,
-						"class": "dms.t2.micro",
-						"identifier":    fmt.Sprintf("dms-replication-instance-%s-%s", res.Prefix, res.Suffix),
+						"publicly_accessible":          false,
+						"class":                        "dms.t2.micro",
+						"identifier":                   fmt.Sprintf("dms-replication-instance-%s-%s", res.Prefix, res.Suffix),
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"Name":   fmt.Sprintf("dms-replication-instance-%s-%s", res.Prefix, res.Suffix),
