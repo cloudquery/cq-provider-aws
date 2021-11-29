@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ###### SDK Version: 0.5.2
 
 ### 💥 Breaking Changes
-* renamed `aws_directconnect_gateways` table columns [#300](https://github.com/cloudquery/cq-provider-aws/pull/300)
+* Renamed `aws_directconnect_gateways` table columns [#300](https://github.com/cloudquery/cq-provider-aws/pull/300)
     - "aws_directconnect_gateways" rename from `direct_connect_gateway_state` to `state`
     - "aws_directconnect_gateways" rename from `direct_connect_gateway_name` to `name`
     - "aws_directconnect_gateways" drop column `directconnect_gateway_id`
@@ -17,23 +17,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - "aws_directconnect_gateway_associations" rename from `directconnect_gateway_id` to `gateway_id`
 
 ### :rocket: Added
-* Add `KmsMasterKeyId` column to `sns` resource [#309](https://github.com/cloudquery/cq-provider-aws/pull/309)
+* Added `KmsMasterKeyId` column to `sns` resource [#309](https://github.com/cloudquery/cq-provider-aws/pull/309)
 * Added support for ecs clusters dependencies [#267](https://github.com/cloudquery/cq-provider-aws/pull/267) fixes [#260](https://github.com/cloudquery/cq-provider-aws/issues/260.
   -  Added `aws_ecs_cluster_services` relation of `aws_ecs_clusters`
   -  Added `aws_ecs_cluster_container_instances` relation of `aws_ecs_clusters`
 * Added support for aws sagemaker resources [#291](https://github.com/cloudquery/cq-provider-aws/pull/291)
-* Add support for SSM instance and compliance Items `aws_ssm_instances` and `aws_ssm_instance_compliance_items` [#299](https://github.com/cloudquery/cq-provider-aws/pull/299)
-* Add DMS Replication Instance resources `aws_dms_instances` [#280](https://github.com/cloudquery/cq-provider-aws/pull/280).
-* Add RDS Cluster and DB snapshots and attributes [#287](https://github.com/cloudquery/cq-provider-aws/pull/287)
-* Add support for `aws_regions` table allowing to view all enabled regions for an account [#293](https://github.com/cloudquery/cq-provider-aws/pull/293)
-* Add support for `aws_guardduty_detectors` [#286](https://github.com/cloudquery/cq-provider-aws/pull/286) resource.
-* Add `aws_ec2_ebs_snapshots` [#283](https://github.com/cloudquery/cq-provider-aws/pull/283) and `aws_ec2_eips` [#284](https://github.com/cloudquery/cq-provider-aws/pull/284) resources 
+* Added support for SSM instance and compliance Items `aws_ssm_instances` and `aws_ssm_instance_compliance_items` [#299](https://github.com/cloudquery/cq-provider-aws/pull/299)
+* Added DMS Replication Instance resources `aws_dms_instances` [#280](https://github.com/cloudquery/cq-provider-aws/pull/280).
+* Added RDS Cluster, DB snapshots, attributes [#287](https://github.com/cloudquery/cq-provider-aws/pull/287)
+* Added support for `aws_regions` table allowing to view all enabled regions for an account [#293](https://github.com/cloudquery/cq-provider-aws/pull/293)
+* Added support for `aws_guardduty_detectors` [#286](https://github.com/cloudquery/cq-provider-aws/pull/286) resource.
+* Added `aws_ec2_ebs_snapshots` [#283](https://github.com/cloudquery/cq-provider-aws/pull/283) and `aws_ec2_eips` [#284](https://github.com/cloudquery/cq-provider-aws/pull/284) resources 
 * Added arn column for security group resource [#278](https://github.com/cloudquery/cq-provider-aws/issues/277)
 * Added `aws_codebuild_projects` resource [#270](https://github.com/cloudquery/cq-provider-aws/issues/270)
 * Added  `aws_autoscaling_groups` resource [#268](https://github.com/cloudquery/cq-provider-aws/issues/268)
 * Added AWS EMR Block Public Access [#269](https://github.com/cloudquery/cq-provider-aws/pull/269) Closes [#249](https://github.com/cloudquery/cq-provider-aws/issues/249)
 * Improved AWS Assume Role documentation [#264](https://github.com/cloudquery/cq-provider-aws/pull/264)
-* Support S3 Account settings [#285](https://github.com/cloudquery/cq-provider-aws/pull/285) Fixes [#282](https://github.com/cloudquery/cq-provider-aws/issues/282)
+* Added Support S3 Account settings [#285](https://github.com/cloudquery/cq-provider-aws/pull/285) Fixes [#282](https://github.com/cloudquery/cq-provider-aws/issues/282)
 * Stored Data Showing Account Password Policy Doesn't Exist [#281](https://github.com/cloudquery/cq-provider-aws/issues/281)
   
   
