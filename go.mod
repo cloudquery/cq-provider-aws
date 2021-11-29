@@ -140,6 +140,3 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.0.1 // indirect
 )
 
-replace (
-	github.com/cloudquery/cq-provider-sdk v0.5.2 => ../cq-provider-sdk
-)
