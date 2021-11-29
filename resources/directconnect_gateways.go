@@ -39,19 +39,22 @@ func DirectconnectGateways() *schema.Table {
 				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "direct_connect_gateway_id",
+				Name:        "id",
 				Description: "The ID of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayId"),
 			},
 			{
-				Name:        "direct_connect_gateway_name",
+				Name:        "name",
 				Description: "The name of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayName"),
 			},
 			{
-				Name:        "direct_connect_gateway_state",
+				Name:        "state",
 				Description: "The state of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayState"),
 			},
 			{
 				Name:        "owner_account",
@@ -63,12 +66,7 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The error message if the state of an object failed to advance.",
 				Type:        schema.TypeString,
 			},
-			{
-				Name:        "id",
-				Description: "The ID of the Direct Connect gateway.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("DirectConnectGatewayId"),
-			},
+
 		},
 		Relations: []*schema.Table{
 			{
