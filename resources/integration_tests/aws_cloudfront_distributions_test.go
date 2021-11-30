@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Masterminds/squirrel"
-
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
@@ -14,13 +12,10 @@ func TestIntegrationCloudfrontDistributions(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.CloudfrontDistributions(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_cloudfront_distributions",
-			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
-				return sq.Where("cache_behaviour_target_origin_id = ?", fmt.Sprintf("cf-s3origin%s-%s", res.Prefix, res.Suffix))
-			},
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"cache_behaviour_target_origin_id": fmt.Sprintf("cf-s3origin%s-%s", res.Prefix, res.Suffix),
+					"cache_behavior_target_origin_id": fmt.Sprintf("cf-s3origin%s-%s", res.Prefix, res.Suffix),
 				},
 			}},
 			Relations: []*providertest.ResourceIntegrationVerification{
@@ -37,7 +32,7 @@ func TestIntegrationCloudfrontDistributions(t *testing.T) {
 					}},
 				},
 				{
-					Name:           "aws_cloudfront_distribution_cache_behaviours",
+					Name:           "aws_cloudfront_distribution_cache_behaviors",
 					ForeignKeyName: "distribution_cq_id",
 					ExpectedValues: []providertest.ExpectedValue{{
 						Count: 1,

@@ -655,35 +655,6 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_cloudfront_distribution_default_behaviour_lambda_functions",
-				Description: "A complex type that contains a Lambda function association.",
-				Resolver:    fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions,
-				Columns: []schema.Column{
-					{
-						Name:        "distribution_cq_id",
-						Description: "Unique CloudQuery ID of aws_cloudfront_distributions table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "event_type",
-						Description: "Specifies the event type that triggers a Lambda function invocation",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "lambda_function_arn",
-						Description: "The ARN of the Lambda function",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("LambdaFunctionARN"),
-					},
-					{
-						Name:        "include_body",
-						Description: "A flag that allows a Lambda function to have read access to the body content. For more information, see Accessing the Request Body by Choosing the Include Body Option (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-include-body-access.html) in the Amazon CloudFront Developer Guide.",
-						Type:        schema.TypeBool,
-					},
-				},
-			},
-			{
 				Name:        "aws_cloudfront_distribution_alias_icp_recordals",
 				Description: "AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront",
 				Resolver:    fetchCloudfrontDistributionAliasIcpRecordals,
@@ -868,17 +839,6 @@ func resolveCloudfrontDistributionOriginGroupsMembersOriginIds(ctx context.Conte
 		members = append(members, *t.OriginId)
 	}
 	return resource.Set(c.Name, members)
-}
-func fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	distribution, ok := parent.Item.(types.DistributionSummary)
-	if !ok {
-		return fmt.Errorf("not types.DistributionSummary")
-	}
-	if distribution.DefaultCacheBehavior == nil || distribution.DefaultCacheBehavior.LambdaFunctionAssociations == nil {
-		return nil
-	}
-	res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
-	return nil
 }
 func fetchCloudfrontDistributionAliasIcpRecordals(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
