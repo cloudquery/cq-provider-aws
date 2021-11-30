@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
@@ -50,133 +49,133 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "cache_behaviour_target_origin_id",
+				Name:        "cache_behavior_target_origin_id",
 				Description: "The value of ID for the origin that you want CloudFront to route requests to when they use the default cache behavior.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TargetOriginId"),
 			},
 			{
-				Name:        "cache_behaviour_viewer_protocol_policy",
+				Name:        "cache_behavior_viewer_protocol_policy",
 				Description: "The protocol that viewers can use to access the files in the origin specified by TargetOriginId when a request matches the path pattern in PathPattern",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ViewerProtocolPolicy"),
 			},
 			{
-				Name:        "cache_behaviour_allowed_methods",
+				Name:        "cache_behavior_allowed_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.Items"),
 			},
 			{
-				Name:        "cache_behaviour_allowed_methods_cached_methods",
+				Name:        "cache_behavior_allowed_methods_cached_methods",
 				Description: "A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.AllowedMethods.CachedMethods.Items"),
 			},
 			{
-				Name:        "cache_behaviour_cache_policy_id",
+				Name:        "cache_behavior_cache_policy_id",
 				Description: "The unique identifier of the cache policy that is attached to the default cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.CachePolicyId"),
 			},
 			{
-				Name:        "cache_behaviour_compress",
+				Name:        "cache_behavior_compress",
 				Description: "Whether you want CloudFront to automatically compress certain files for this cache behavior",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.Compress"),
 			},
 			{
-				Name:        "cache_behaviour_default_ttl",
+				Name:        "cache_behavior_default_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.DefaultTTL"),
 			},
 			{
-				Name:        "cache_behaviour_field_level_encryption_id",
+				Name:        "cache_behavior_field_level_encryption_id",
 				Description: "The value of ID for the field-level encryption configuration that you want CloudFront to use for encrypting specific fields of data for the default cache behavior.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.FieldLevelEncryptionId"),
 			},
 			{
-				Name:        "cache_behaviour_forwarded_values_cookies_forward",
+				Name:        "cache_behavior_forwarded_values_cookies_forward",
 				Description: "This field is deprecated",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.Forward"),
 			},
 			{
-				Name:        "cache_behaviour_forwarded_values_cookies_whitelisted_names",
+				Name:        "cache_behavior_forwarded_values_cookies_whitelisted_names",
 				Description: "A list of cookie names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames.Items"),
 			},
 			{
-				Name:        "cache_behaviour_forwarded_values_query_string",
+				Name:        "cache_behavior_forwarded_values_query_string",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryString"),
 			},
 			{
-				Name:        "cache_behaviour_forwarded_values_headers",
+				Name:        "cache_behavior_forwarded_values_headers",
 				Description: "A list of HTTP header names.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.Headers.Items"),
 			},
 			{
-				Name:        "cache_behaviour_forwarded_values_query_string_cache_keys",
+				Name:        "cache_behavior_forwarded_values_query_string_cache_keys",
 				Description: "A list that contains the query string parameters that you want CloudFront to use as a basis for caching for a cache behavior",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys.Items"),
 			},
 			{
-				Name:        "cache_behaviour_max_ttl",
+				Name:        "cache_behavior_max_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.MaxTTL"),
 			},
 			{
-				Name:        "cache_behaviour_min_ttl",
+				Name:        "cache_behavior_min_ttl",
 				Description: "This field is deprecated",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.MinTTL"),
 			},
 			{
-				Name:        "cache_behaviour_origin_request_policy_id",
+				Name:        "cache_behavior_origin_request_policy_id",
 				Description: "The unique identifier of the origin request policy that is attached to the default cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.OriginRequestPolicyId"),
 			},
 			{
-				Name:        "cache_behaviour_realtime_log_config_arn",
+				Name:        "cache_behavior_realtime_log_config_arn",
 				Description: "The Amazon Resource Name (ARN) of the real-time log configuration that is attached to this cache behavior",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.RealtimeLogConfigArn"),
 			},
 			{
-				Name:        "cache_behaviour_smooth_streaming",
+				Name:        "cache_behavior_smooth_streaming",
 				Description: "Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify true; if not, specify false",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.SmoothStreaming"),
 			},
 			{
-				Name:        "cache_behaviour_trusted_key_groups_enabled",
+				Name:        "cache_behavior_trusted_key_groups_enabled",
 				Description: "This field is true if any of the key groups in the list have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies. If not, this field is false.  This member is required.",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Enabled"),
 			},
 			{
-				Name:        "cache_behaviour_trusted_key_groups",
+				Name:        "cache_behavior_trusted_key_groups",
 				Description: "A list of key groups identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedKeyGroups.Items"),
 			},
 			{
-				Name:        "cache_behaviour_trusted_signers_enabled",
+				Name:        "cache_behavior_trusted_signers_enabled",
 				Description: "This field is true if any of the AWS accounts have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Enabled"),
 			},
 			{
-				Name:        "cache_behaviour_trusted_signers",
+				Name:        "cache_behavior_trusted_signers",
 				Description: "A list of AWS account identifiers.",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("DefaultCacheBehavior.TrustedSigners.Items"),
@@ -282,12 +281,18 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("WebACLId"),
 			},
+			{
+				Name:        "alias_icp_recordals",
+				Description: "AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveCloudfrontDistributionsAliasIcpRecordals,
+			},
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_cloudfront_distribution_cache_behaviours",
+				Name:        "aws_cloudfront_distribution_cache_behaviors",
 				Description: "A complex type that describes how CloudFront processes requests",
-				Resolver:    fetchCloudfrontDistributionCacheBehaviours,
+				Resolver:    fetchCloudfrontDistributionCacheBehaviors,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -427,13 +432,13 @@ func CloudfrontDistributions() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_cloudfront_distribution_cache_behaviour_lambda_functions",
+						Name:        "aws_cloudfront_distribution_cache_behavior_lambda_functions",
 						Description: "A complex type that contains a Lambda function association.",
-						Resolver:    fetchCloudfrontDistributionCacheBehaviourLambdaFunctions,
+						Resolver:    fetchCloudfrontDistributionCacheBehaviorLambdaFunctions,
 						Columns: []schema.Column{
 							{
-								Name:        "distribution_cache_behaviour_cq_id",
-								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_cache_behaviours table (FK)",
+								Name:        "distribution_cache_behavior_cq_id",
+								Description: "Unique CloudQuery ID of aws_cloudfront_distribution_cache_behaviors table (FK)",
 								Type:        schema.TypeUUID,
 								Resolver:    schema.ParentIdResolver,
 							},
@@ -492,9 +497,9 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_cloudfront_distribution_default_behaviour_lambda_functions",
+				Name:        "aws_cloudfront_distribution_default_cache_behavior_lambda_functions",
 				Description: "A complex type that contains a Lambda function association.",
-				Resolver:    fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions,
+				Resolver:    fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -555,7 +560,7 @@ func CloudfrontDistributions() *schema.Table {
 						Name:        "custom_headers",
 						Description: "A list of HTTP header names and values that CloudFront adds to the requests that it sends to the origin",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveCloudfrontDistributionOriginCustomHeaders,
+						Resolver:    resolveCloudfrontDistributionOriginsCustomHeaders,
 					},
 					{
 						Name:        "custom_origin_config_http_port",
@@ -619,6 +624,65 @@ func CloudfrontDistributions() *schema.Table {
 				},
 			},
 			{
+				Name:        "aws_cloudfront_distribution_origin_groups",
+				Description: "An origin group includes two origins (a primary origin and a second origin to failover to) and a failover criteria that you specify",
+				Resolver:    fetchCloudfrontDistributionOriginGroups,
+				Columns: []schema.Column{
+					{
+						Name:        "distribution_cq_id",
+						Description: "Unique CloudQuery ID of aws_cloudfront_distributions table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "failover_criteria_status_codes",
+						Description: "The items (status codes) for an origin group.  This member is required.",
+						Type:        schema.TypeIntArray,
+						Resolver:    resolveCloudfrontDistributionOriginGroupsFailoverCriteriaStatusCodes,
+					},
+					{
+						Name:        "id",
+						Description: "The origin group's ID.  This member is required.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "members_origin_ids",
+						Description: "Items (origins) in an origin group.  This member is required.",
+						Type:        schema.TypeStringArray,
+						Resolver:    resolveCloudfrontDistributionOriginGroupsMembersOriginIds,
+					},
+				},
+			},
+			{
+				Name:        "aws_cloudfront_distribution_default_behaviour_lambda_functions",
+				Description: "A complex type that contains a Lambda function association.",
+				Resolver:    fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions,
+				Columns: []schema.Column{
+					{
+						Name:        "distribution_cq_id",
+						Description: "Unique CloudQuery ID of aws_cloudfront_distributions table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "event_type",
+						Description: "Specifies the event type that triggers a Lambda function invocation",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "lambda_function_arn",
+						Description: "The ARN of the Lambda function",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("LambdaFunctionARN"),
+					},
+					{
+						Name:        "include_body",
+						Description: "A flag that allows a Lambda function to have read access to the body content. For more information, see Accessing the Request Body by Choosing the Include Body Option (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-include-body-access.html) in the Amazon CloudFront Developer Guide.",
+						Type:        schema.TypeBool,
+					},
+				},
+			},
+			{
 				Name:        "aws_cloudfront_distribution_alias_icp_recordals",
 				Description: "AWS services in China customers must file for an Internet Content Provider (ICP) recordal if they want to serve content publicly on an alternate domain name, also known as a CNAME, that they've added to CloudFront",
 				Resolver:    fetchCloudfrontDistributionAliasIcpRecordals,
@@ -643,36 +707,6 @@ func CloudfrontDistributions() *schema.Table {
 					},
 				},
 			},
-			{
-				Name:        "aws_cloudfront_distribution_origin_groups",
-				Description: "An origin group includes two origins (a primary origin and a second origin to failover to) and a failover criteria that you specify",
-				Resolver:    fetchCloudfrontDistributionOriginGroups,
-				Columns: []schema.Column{
-					{
-						Name:        "distribution_cq_id",
-						Description: "Unique CloudQuery ID of aws_cloudfront_distributions table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "failover_criteria_status_codes",
-						Description: "The items (status codes) for an origin group.  This member is required.",
-						Type:        schema.TypeIntArray,
-						Resolver:    resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes,
-					},
-					{
-						Name:        "id",
-						Description: "The origin group's ID.  This member is required.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "members_origin_ids",
-						Description: "Items (origins) in an origin group.  This member is required.",
-						Type:        schema.TypeStringArray,
-						Resolver:    resolveCloudfrontDistributionOriginGroupMembersOriginIds,
-					},
-				},
-			},
 		},
 	}
 }
@@ -680,6 +714,7 @@ func CloudfrontDistributions() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchCloudfrontDistributions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config cloudfront.ListDistributionsInput
 	c := meta.(*client.Client)
@@ -726,7 +761,18 @@ func resolveCloudfrontDistributionTags(ctx context.Context, meta schema.ClientMe
 	}
 	return resource.Set(c.Name, tags)
 }
-func fetchCloudfrontDistributionCacheBehaviours(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func resolveCloudfrontDistributionsAliasIcpRecordals(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	distribution, ok := resource.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not types.DistributionSummary")
+	}
+	j := map[string]interface{}{}
+	for _, a := range distribution.AliasICPRecordals {
+		j[*a.CNAME] = a.ICPRecordalStatus
+	}
+	return resource.Set(c.Name, j)
+}
+func fetchCloudfrontDistributionCacheBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
 		return fmt.Errorf("not types.DistributionSummary")
@@ -736,7 +782,7 @@ func fetchCloudfrontDistributionCacheBehaviours(ctx context.Context, meta schema
 	}
 	return nil
 }
-func fetchCloudfrontDistributionCacheBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchCloudfrontDistributionCacheBehaviorLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cacheBehavior, ok := parent.Item.(types.CacheBehavior)
 	if !ok {
 		return fmt.Errorf("not types.CacheBehavior")
@@ -757,15 +803,12 @@ func fetchCloudfrontDistributionCustomErrorResponses(ctx context.Context, meta s
 	}
 	return nil
 }
-func fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	distribution, ok := parent.Item.(types.DistributionSummary)
+func fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	r, ok := parent.Item.(types.DistributionSummary)
 	if !ok {
-		return fmt.Errorf("not types.DistributionSummary")
+		return fmt.Errorf("types.DistributionSummary")
 	}
-	if distribution.DefaultCacheBehavior == nil || distribution.DefaultCacheBehavior.LambdaFunctionAssociations == nil {
-		return nil
-	}
-	res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
+	res <- r.DefaultCacheBehavior.LambdaFunctionAssociations.Items
 	return nil
 }
 func fetchCloudfrontDistributionOrigins(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
@@ -779,7 +822,7 @@ func fetchCloudfrontDistributionOrigins(ctx context.Context, meta schema.ClientM
 	res <- distribution.Origins.Items
 	return nil
 }
-func resolveCloudfrontDistributionOriginCustomHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveCloudfrontDistributionOriginsCustomHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Origin)
 	if r.CustomHeaders == nil {
 		return nil
@@ -789,14 +832,6 @@ func resolveCloudfrontDistributionOriginCustomHeaders(ctx context.Context, meta 
 		tags[*t.HeaderName] = *t.HeaderValue
 	}
 	return resource.Set(c.Name, tags)
-}
-func fetchCloudfrontDistributionAliasIcpRecordals(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	distribution, ok := parent.Item.(types.DistributionSummary)
-	if !ok {
-		return fmt.Errorf("not types.DistributionSummary")
-	}
-	res <- distribution.AliasICPRecordals
-	return nil
 }
 func fetchCloudfrontDistributionOriginGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	distribution, ok := parent.Item.(types.DistributionSummary)
@@ -808,7 +843,7 @@ func fetchCloudfrontDistributionOriginGroups(ctx context.Context, meta schema.Cl
 	}
 	return nil
 }
-func resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveCloudfrontDistributionOriginGroupsFailoverCriteriaStatusCodes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	origin, ok := resource.Item.(types.OriginGroup)
 	if !ok {
 		return fmt.Errorf("not types.OriginGroup")
@@ -822,7 +857,7 @@ func resolveCloudfrontDistributionOriginGroupFailoverCriteriaStatusCodes(ctx con
 	}
 	return resource.Set(c.Name, data)
 }
-func resolveCloudfrontDistributionOriginGroupMembersOriginIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveCloudfrontDistributionOriginGroupsMembersOriginIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.OriginGroup)
 	if r.Members == nil {
 		return nil
@@ -832,4 +867,23 @@ func resolveCloudfrontDistributionOriginGroupMembersOriginIds(ctx context.Contex
 		members = append(members, *t.OriginId)
 	}
 	return resource.Set(c.Name, members)
+}
+func fetchCloudfrontDistributionDefaultBehaviourLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not types.DistributionSummary")
+	}
+	if distribution.DefaultCacheBehavior == nil || distribution.DefaultCacheBehavior.LambdaFunctionAssociations == nil {
+		return nil
+	}
+	res <- distribution.DefaultCacheBehavior.LambdaFunctionAssociations.Items
+	return nil
+}
+func fetchCloudfrontDistributionAliasIcpRecordals(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	distribution, ok := parent.Item.(types.DistributionSummary)
+	if !ok {
+		return fmt.Errorf("not types.DistributionSummary")
+	}
+	res <- distribution.AliasICPRecordals
+	return nil
 }
