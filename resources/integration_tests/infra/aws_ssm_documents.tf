@@ -1,4 +1,4 @@
-resource "aws_ssm_document" "mytestdoc" {
+resource "aws_ssm_document" "ssm_document" {
   name          = "${var.test_prefix}doc${var.test_suffix}"
   document_type = "Command"
 
