@@ -159,10 +159,15 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 }
 
 func fetchElasticbeanstalkConfigurationSettingOptionSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	option, ok := parent.Item.(types.ConfigurationOptionSetting)
+	option, ok := parent.Item.(types.ConfigurationSettingsDescription)
 	if !ok {
+		meta.Logger().Error("parent.Item", "Item", parent.Item)
 		return fmt.Errorf("not types.ConfigurationOptionSetting")
 	}
-	res <- option
+	meta.Logger().Error("Output", "option", option)
+	for _, t := range option.OptionSettings {
+		res <- t
+	}
+
 	return nil
 }

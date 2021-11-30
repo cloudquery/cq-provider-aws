@@ -148,11 +148,9 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 		}
 
 		for _, option := range output.Options {
-			meta.Logger().Error("Inserting Data", "Config Option Name", option.Name, "Application", environment.ApplicationName, "Env", environment.EnvironmentName)
-			d := ConfigOptions{
+			res <- ConfigOptions{
 				option, client.GenerateResourceARN("elasticbeanstalk", "application", *environment.ApplicationName, c.Region, c.AccountID), *environment.DateCreated,
 			}
-			res <- d
 		}
 	}
 	return nil
