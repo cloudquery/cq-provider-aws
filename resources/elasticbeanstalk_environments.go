@@ -16,6 +16,8 @@ func ElasticbeanstalkApplications() *schema.Table {
 		Name:         "aws_elasticbeanstalk_applications",
 		Description:  "Describes the properties of an application.",
 		Resolver:     fetchElasticbeanstalkApplications,
+		Multiplex:    client.AccountRegionMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		Columns: []schema.Column{
@@ -113,13 +115,10 @@ func ElasticbeanstalkApplications() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_elasticbeanstalk_environments",
-				Description:  "Describes the properties of an environment.",
-				Resolver:     fetchElasticbeanstalkEnvironments,
-				Multiplex:    client.AccountRegionMultiplex,
-				IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-				DeleteFilter: client.DeleteAccountRegionFilter,
-				Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+				Name:        "aws_elasticbeanstalk_environments",
+				Description: "Describes the properties of an environment.",
+				Resolver:    fetchElasticbeanstalkEnvironments,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 
 				Relations: []*schema.Table{
 					{
@@ -384,6 +383,7 @@ func fetchElasticbeanstalkApplications(ctx context.Context, meta schema.ClientMe
 	if err != nil {
 		return err
 	}
+	fmt.Printf("application data %+v", output.Applications)
 	res <- output.Applications
 	return nil
 }
