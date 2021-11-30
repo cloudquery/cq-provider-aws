@@ -136,7 +136,7 @@ func AcmCertificates() *schema.Table {
 				}),
 			},
 			{
-				Name:        "renewal_summary_renewal_status",
+				Name:        "renewal_summary_status",
 				Description: "The status of ACM's managed renewal (https://docs.aws.amazon.com/acm/latest/userguide/acm-renewal.html) of the certificate.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("RenewalSummary.RenewalStatus"),
