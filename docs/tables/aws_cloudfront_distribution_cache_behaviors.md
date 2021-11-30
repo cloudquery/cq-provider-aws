@@ -1,5 +1,5 @@
 
-# Table: aws_cloudfront_distribution_cache_behaviours
+# Table: aws_cloudfront_distribution_cache_behaviors
 A complex type that describes how CloudFront processes requests
 ## Columns
 | Name        | Type           | Description  |

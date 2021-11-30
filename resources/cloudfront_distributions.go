@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
@@ -217,13 +218,13 @@ func CloudfrontDistributions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "restrictions_geo_restriction_type",
+				Name:        "geo_restriction_type",
 				Description: "The method that you want to use to restrict distribution of your content by country:  * none: No geo restriction is enabled, meaning access to content is not restricted by client geo location.  * blacklist: The Location elements specify the countries in which you don't want CloudFront to distribute your content.  * whitelist: The Location elements specify the countries in which you want CloudFront to distribute your content.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.RestrictionType"),
 			},
 			{
-				Name:        "restrictions_geo_restrictions",
+				Name:        "geo_restrictions",
 				Description: "A complex type that contains a Location element for each country in which you want CloudFront either to distribute your content (whitelist) or not distribute your content (blacklist)",
 				Type:        schema.TypeStringArray,
 				Resolver:    schema.PathResolver("Restrictions.GeoRestriction.Items"),
@@ -593,7 +594,7 @@ func CloudfrontDistributions() *schema.Table {
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginReadTimeout"),
 					},
 					{
-						Name:        "custom_origin_config_origin_ssl_protocols",
+						Name:        "custom_origin_config_ssl_protocols",
 						Description: "A list that contains allowed SSL/TLS protocols for this distribution.  This member is required.",
 						Type:        schema.TypeStringArray,
 						Resolver:    schema.PathResolver("CustomOriginConfig.OriginSslProtocols.Items"),

@@ -15,7 +15,7 @@ An origin
 |custom_origin_config_protocol_policy|text|Specifies the protocol (HTTP or HTTPS) that CloudFront uses to connect to the origin|
 |custom_origin_config_keepalive_timeout|integer|Specifies how long, in seconds, CloudFront persists its connection to the origin|
 |custom_origin_config_read_timeout|integer|Specifies how long, in seconds, CloudFront waits for a response from the origin. This is also known as the origin response timeout|
-|custom_origin_config_origin_ssl_protocols|text[]|A list that contains allowed SSL/TLS protocols for this distribution.  This member is required.|
+|custom_origin_config_ssl_protocols|text[]|A list that contains allowed SSL/TLS protocols for this distribution.  This member is required.|
 |origin_path|text|An optional path that CloudFront appends to the origin domain name when CloudFront requests content from the origin|
 |origin_shield_enabled|boolean|A flag that specifies whether Origin Shield is enabled|
 |origin_shield_region|text|The AWS Region for Origin Shield|
