@@ -35,9 +35,8 @@ import (
 	route53Types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	snsTypes "github.com/aws/aws-sdk-go-v2/service/sns/types"
-	"github.com/golang/mock/gomock"
-
 	"github.com/cloudquery/faker/v3"
+	"github.com/golang/mock/gomock"
 
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/client/mocks"
@@ -636,6 +635,7 @@ func buildSnsTopics(t *testing.T, ctrl *gomock.Controller) client.Services {
 				"FifoTopic":                 "false",
 				"ContentBasedDeduplication": "true",
 				"DisplayName":               "cloudquery",
+				"KmsMasterKeyId":            "test/key",
 				"Owner":                     "owner",
 				"Policy":                    `{"stuff": 3}`,
 				"DeliveryPolicy":            `{"stuff": 3}`,
