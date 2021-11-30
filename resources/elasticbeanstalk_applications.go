@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -127,7 +126,6 @@ func fetchElasticbeanstalkApplications(ctx context.Context, meta schema.ClientMe
 	if err != nil {
 		return err
 	}
-	fmt.Printf("application data %+v", output.Applications)
 	res <- output.Applications
 	return nil
 }
