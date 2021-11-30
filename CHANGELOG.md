@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### :rocket: Added
-* Added `aws_ssm_documents` resource
-* Added `aws_ssm_instances` resource
-* Added arn column for security group resource [#278](https://github.com/cloudquery/cq-provider-aws/issues/277)
+* Added `aws_ssm_documents` resource [#307](https://github.com/cloudquery/cq-provider-aws/pull/307)
+* Added `aws_ssm_instances` resource [#299](https://github.com/cloudquery/cq-provider-aws/pull/299)
+* Added arn column for security group resource [#277](https://github.com/cloudquery/cq-provider-aws/issues/277)
 * Added `aws_codebuild_projects` resource [#270](https://github.com/cloudquery/cq-provider-aws/issues/270)
 * Added `aws_autoscaling_groups` resource [#268](https://github.com/cloudquery/cq-provider-aws/issues/268)
 * Added `aws_ecs_cluster_services` relation of `aws_ecs_clusters`
