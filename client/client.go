@@ -20,9 +20,11 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/aws/aws-sdk-go-v2/service/codebuild"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
+	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -36,6 +38,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
+	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -44,8 +47,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
+	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
+	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
@@ -83,6 +91,7 @@ var allRegions = []string{
 const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to configure provider for account %s. AWS Error: %w"
+	defaultVar                 = "default"
 )
 
 type Services struct {
@@ -95,6 +104,7 @@ type Services struct {
 	CognitoIdentityPools CognitoIdentityPoolsClient
 	CognitoUserPools     CognitoUserPoolsClient
 	Directconnect        DirectconnectClient
+	DMS                  DatabasemigrationserviceClient
 	ECR                  EcrClient
 	ECS                  EcsClient
 	EC2                  Ec2Client
@@ -113,15 +123,22 @@ type Services struct {
 	Organizations        OrganizationsClient
 	Redshift             RedshiftClient
 	Route53              Route53Client
+	Route53Domains       Route53DomainsClient
 	RDS                  RdsClient
 	S3                   S3Client
+	S3Control            S3ControlClient
 	S3Manager            S3ManagerClient
+	SSM                  SSMClient
+	SageMaker            SageMakerClient
+	SQS                  SQSClient
 	Apigateway           ApigatewayClient
 	Apigatewayv2         Apigatewayv2Client
 	Lambda               LambdaClient
 	ConfigService        ConfigServiceClient
 	Waf                  WafClient
 	WafV2                WafV2Client
+	Codebuild            CodebuildClient
+	GuardDuty            GuardDutyClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -148,6 +165,7 @@ func (s *ServicesManager) InitServicesForAccountAndRegion(accountId string, regi
 type Client struct {
 	// Those are already normalized values after configure and this is why we don't want to hold
 	// config directly.
+	accounts        []Account
 	regions         []string
 	logLevel        *string
 	maxRetries      int
@@ -177,18 +195,18 @@ func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, o
 	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
 }
 
-func NewAwsClient(logger hclog.Logger, regions []string) Client {
+func NewAwsClient(logger hclog.Logger, accounts []Account, regions []string) Client {
 	return Client{
 		ServicesManager: ServicesManager{
 			services: ServicesAccountRegionMap{},
 		},
-		logger:  logger,
-		regions: regions,
+		logger:   logger,
+		accounts: accounts,
+		regions:  regions,
 	}
 }
-
 func (c *Client) Logger() hclog.Logger {
-	return c.logger
+	return &awsLogger{c.logger, c.accounts}
 }
 
 func (c *Client) Services() *Services {
@@ -197,25 +215,28 @@ func (c *Client) Services() *Services {
 
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
+		accounts:        c.accounts,
 		regions:         c.regions,
 		logLevel:        c.logLevel,
 		maxRetries:      c.maxRetries,
 		maxBackoff:      c.maxBackoff,
 		ServicesManager: c.ServicesManager,
-		logger:          c.logger.With("account_id", accountID),
+		logger:          c.logger.With("account_id", obfuscateAccountId(accountID)),
 		AccountID:       accountID,
 		Region:          c.Region,
 	}
 }
 
 func (c *Client) withAccountIDAndRegion(accountID string, region string) *Client {
+
 	return &Client{
+		accounts:        c.accounts,
 		regions:         c.regions,
 		logLevel:        c.logLevel,
 		maxRetries:      c.maxRetries,
 		maxBackoff:      c.maxBackoff,
 		ServicesManager: c.ServicesManager,
-		logger:          c.logger.With("account_id", accountID, "Region", region),
+		logger:          c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region),
 		AccountID:       accountID,
 		Region:          region,
 	}
@@ -224,7 +245,7 @@ func (c *Client) withAccountIDAndRegion(accountID string, region string) *Client
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger, awsConfig.Regions)
+	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
 
 	if len(client.regions) == 0 {
 		client.regions = allRegions
@@ -233,18 +254,27 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID:      "default",
-			RoleARN: "default",
+			ID:        defaultVar,
+			AccountID: defaultVar,
+			RoleARN:   defaultVar,
 		})
 	}
 
 	for _, account := range awsConfig.Accounts {
 		var err error
 		var awsCfg aws.Config
+
+		// account id can be defined in account block label or in block attr
+		// we take the block att as default and use the block label if the attr is not defined
+		var accountID = account.AccountID
+		if accountID == "" {
+			accountID = account.ID
+		}
+
 		// This is a try to solve https://aws.amazon.com/premiumsupport/knowledge-center/iam-validate-access-credentials/
 		// with this https://github.com/aws/aws-sdk-go-v2/issues/515#issuecomment-607387352
 		switch {
-		case account.ID != "default" && account.RoleARN != "":
+		case accountID != "default" && account.RoleARN != "":
 			// assume role if specified (SDK takes it from default or env var: AWS_PROFILE)
 			awsCfg, err = config.LoadDefaultConfig(
 				ctx,
@@ -252,7 +282,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 			)
 			if err != nil {
-				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, account.ID, err)
+				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err)
 			}
 			opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
 			if account.ExternalID != "" {
@@ -262,11 +292,11 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			}
 			provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
 			awsCfg.Credentials = aws.NewCredentialsCache(provider)
-		case account.ID != "default":
+		case accountID != "default":
 			awsCfg, err = config.LoadDefaultConfig(
 				ctx,
 				config.WithDefaultRegion(defaultRegion),
-				config.WithSharedConfigProfile(account.ID),
+				config.WithSharedConfigProfile(accountID),
 				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 			)
 		default:
@@ -278,19 +308,19 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, account.ID, err)
+			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err)
 		}
 
 		if awsConfig.AWSDebug {
 			awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
-			awsCfg.Logger = AwsLogger{logger.With("account", account)}
+			awsCfg.Logger = AwsLogger{logger.With("account", obfuscateAccountId(accountID))}
 		}
 		svc := sts.NewFromConfig(awsCfg)
 		output, err := svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
 			o.Region = "aws-global"
 		})
 		if err != nil {
-			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, account.ID, err)
+			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err)
 		}
 		// This is a work-around to skip disabled regions
 		// https://github.com/aws/aws-sdk-go-v2/issues/1068
@@ -300,14 +330,19 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				o.Region = "us-east-1"
 			})
 		if err != nil {
-			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.ID, err)
+			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
 		client.regions = filterDisabledRegions(client.regions, res.Regions)
+
+		if len(client.regions) == 0 {
+			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
+		}
 
 		if client.AccountID == "" {
 			// set default
 			client.AccountID = *output.Account
 			client.Region = client.regions[0]
+			client.accounts = append(client.accounts, Account{ID: *output.Account, RoleARN: *output.Arn})
 		}
 		for _, region := range client.regions {
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
@@ -321,14 +356,19 @@ func initServices(region string, c aws.Config) Services {
 	awsCfg := c.Copy()
 	awsCfg.Region = region
 	return Services{
+		Analyzer:             accessanalyzer.NewFromConfig(awsCfg),
+		Apigateway:           apigateway.NewFromConfig(awsCfg),
+		Apigatewayv2:         apigatewayv2.NewFromConfig(awsCfg),
 		Autoscaling:          autoscaling.NewFromConfig(awsCfg),
 		Cloudfront:           cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:           cloudtrail.NewFromConfig(awsCfg),
 		Cloudwatch:           cloudwatch.NewFromConfig(awsCfg),
 		CloudwatchLogs:       cloudwatchlogs.NewFromConfig(awsCfg),
-		CognitoUserPools:     cognitoidentityprovider.NewFromConfig(awsCfg),
 		CognitoIdentityPools: cognitoidentity.NewFromConfig(awsCfg),
+		CognitoUserPools:     cognitoidentityprovider.NewFromConfig(awsCfg),
+		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Directconnect:        directconnect.NewFromConfig(awsCfg),
+		DMS:                  databasemigrationservice.NewFromConfig(awsCfg),
 		EC2:                  ec2.NewFromConfig(awsCfg),
 		ECR:                  ecr.NewFromConfig(awsCfg),
 		ECS:                  ecs.NewFromConfig(awsCfg),
@@ -336,27 +376,30 @@ func initServices(region string, c aws.Config) Services {
 		Eks:                  eks.NewFromConfig(awsCfg),
 		ElasticBeanstalk:     elasticbeanstalk.NewFromConfig(awsCfg),
 		ElasticSearch:        elasticsearchservice.NewFromConfig(awsCfg),
-		EMR:                  emr.NewFromConfig(awsCfg),
-		FSX:                  fsx.NewFromConfig(awsCfg),
-		S3:                   s3.NewFromConfig(awsCfg),
-		SNS:                  sns.NewFromConfig(awsCfg),
 		ELBv1:                elbv1.NewFromConfig(awsCfg),
 		ELBv2:                elbv2.NewFromConfig(awsCfg),
+		EMR:                  emr.NewFromConfig(awsCfg),
+		FSX:                  fsx.NewFromConfig(awsCfg),
+		GuardDuty:            guardduty.NewFromConfig(awsCfg),
 		IAM:                  iam.NewFromConfig(awsCfg),
 		KMS:                  kms.NewFromConfig(awsCfg),
+		Lambda:               lambda.NewFromConfig(awsCfg),
 		MQ:                   mq.NewFromConfig(awsCfg),
 		Organizations:        organizations.NewFromConfig(awsCfg),
 		RDS:                  rds.NewFromConfig(awsCfg),
 		Redshift:             redshift.NewFromConfig(awsCfg),
 		Route53:              route53.NewFromConfig(awsCfg),
+		Route53Domains:       route53domains.NewFromConfig(awsCfg),
+		S3:                   s3.NewFromConfig(awsCfg),
+		S3Control:            s3control.NewFromConfig(awsCfg),
 		S3Manager:            newS3ManagerFromConfig(awsCfg),
-		Apigateway:           apigateway.NewFromConfig(awsCfg),
-		Lambda:               lambda.NewFromConfig(awsCfg),
-		Apigatewayv2:         apigatewayv2.NewFromConfig(awsCfg),
-		Analyzer:             accessanalyzer.NewFromConfig(awsCfg),
-		ConfigService:        configservice.NewFromConfig(awsCfg),
+		SageMaker:            sagemaker.NewFromConfig(awsCfg),
+		SNS:                  sns.NewFromConfig(awsCfg),
+		SSM:                  ssm.NewFromConfig(awsCfg),
+		SQS:                  sqs.NewFromConfig(awsCfg),
 		Waf:                  waf.NewFromConfig(awsCfg),
 		WafV2:                wafv2.NewFromConfig(awsCfg),
+		Codebuild:            codebuild.NewFromConfig(awsCfg),
 	}
 }
 
@@ -394,4 +437,11 @@ func (a AwsLogger) Logf(classification logging.Classification, format string, v 
 	} else {
 		a.l.Debug(fmt.Sprintf(format, v...))
 	}
+}
+
+func obfuscateAccountId(accountId string) string {
+	if len(accountId) <= 4 {
+		return accountId
+	}
+	return accountId[:4] + "xxxxxxxx"
 }

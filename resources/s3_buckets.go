@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -608,7 +609,10 @@ func resolveS3BucketLifecycleTransitions(ctx context.Context, meta schema.Client
 }
 
 func resolveS3BucketsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	buc := resource.Item.(*WrappedBucket)
+	buc, ok := resource.Item.(*WrappedBucket)
+	if !ok {
+		return fmt.Errorf("not s3 bucket")
+	}
 	return resource.Set(c.Name, client.GenerateResourceARN("s3", "", *buc.Name, "", ""))
 }
 
@@ -653,13 +657,13 @@ func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *
 	})
 	// check if we got an error but its access denied we can continue
 	if err != nil {
-		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketPolicy", "bucket", bucketName, "err", err)
-			return nil
-		}
 		// if we got an error and its not a NoSuchBucketError, return err
 		var ae smithy.APIError
 		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchBucketPolicy" {
+			return nil
+		}
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetBucketPolicy", "bucket", bucketName, "err", err)
 			return nil
 		}
 		return err
@@ -696,14 +700,14 @@ func resolveBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta,
 	publicAccessOutput, err := svc.GetPublicAccessBlock(ctx, &s3.GetPublicAccessBlockInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.Region = bucketRegion
 	})
-	var ae smithy.APIError
 	if err != nil {
-		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetPublicAccessBlock", "bucket", bucketName, "err", err)
+		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
+		var ae smithy.APIError
+		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchPublicAccessBlockConfiguration" {
 			return nil
 		}
-		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
-		if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchPublicAccessBlockConfiguration" {
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetPublicAccessBlock", "bucket", bucketName, "err", err)
 			return nil
 		}
 		return err
@@ -730,13 +734,13 @@ func resolveBucketReplication(ctx context.Context, meta schema.ClientMeta, resou
 	})
 
 	if err != nil {
-		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on getBucketReplication", "bucket", bucketName, "err", err)
-			return nil
-		}
 		// If we received any error other than ReplicationConfigurationNotFoundError, we return and error
 		var ae smithy.APIError
 		if errors.As(err, &ae) && ae.ErrorCode() == "ReplicationConfigurationNotFoundError" {
+			return nil
+		}
+		if client.IgnoreAccessDeniedServiceDisabled(err) {
+			meta.Logger().Warn("received access denied on GetBucketReplication", "bucket", bucketName, "err", err)
 			return nil
 		}
 		return err

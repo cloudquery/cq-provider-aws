@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	autoscalingTypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
@@ -13,6 +12,8 @@ import (
 	cloudwatchTypes "github.com/aws/aws-sdk-go-v2/service/cloudwatch/types"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	cloudwatchlogsTypes "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
+	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
+	databasemigrationserviceTypes "github.com/aws/aws-sdk-go-v2/service/databasemigrationservice/types"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	directconnectTypes "github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -34,10 +35,11 @@ import (
 	route53Types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	snsTypes "github.com/aws/aws-sdk-go-v2/service/sns/types"
-	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-aws/client/mocks"
 	"github.com/cloudquery/faker/v3"
 	"github.com/golang/mock/gomock"
+
+	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-aws/client/mocks"
 )
 
 func buildAutoscalingLaunchConfigurationsMock(t *testing.T, ctrl *gomock.Controller) client.Services {
@@ -290,6 +292,34 @@ func buildDirectconnectVirtualInterfacesMock(t *testing.T, ctrl *gomock.Controll
 	}
 }
 
+func buildDmsReplicationInstances(t *testing.T, ctrl *gomock.Controller) client.Services {
+	m := mocks.NewMockDatabasemigrationserviceClient(ctrl)
+	l := databasemigrationserviceTypes.ReplicationInstance{}
+	if err := faker.FakeData(&l); err != nil {
+		t.Fatal(err)
+	}
+	l.ReplicationInstancePrivateIpAddress = aws.String("1.2.3.4")
+	l.ReplicationInstancePrivateIpAddresses = []string{"1.2.3.4"}
+	l.ReplicationInstancePublicIpAddress = aws.String("1.2.3.4")
+	l.ReplicationInstancePublicIpAddresses = []string{"1.2.3.4"}
+	m.EXPECT().DescribeReplicationInstances(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&databasemigrationservice.DescribeReplicationInstancesOutput{
+			ReplicationInstances: []databasemigrationserviceTypes.ReplicationInstance{l},
+		}, nil)
+	lt := databasemigrationserviceTypes.Tag{}
+	if err := faker.FakeData(&lt); err != nil {
+		t.Fatal(err)
+	}
+	lt.ResourceArn = l.ReplicationInstanceArn
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&databasemigrationservice.ListTagsForResourceOutput{
+			TagList: []databasemigrationserviceTypes.Tag{lt},
+		}, nil)
+	return client.Services{
+		DMS: m,
+	}
+}
+
 func buildEc2ByoipCidrsMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockEc2Client(ctrl)
 	l := ec2Types.ByoipCidr{}
@@ -529,8 +559,21 @@ func buildEcrRepositoriesMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 
 func buildEmrClusters(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockEmrClient(ctrl)
+	ec2m := mocks.NewMockEc2Client(ctrl)
 	l := emrTypes.ClusterSummary{}
 	err := faker.FakeData(&l)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	c := emrTypes.Cluster{}
+	err = faker.FakeDataSkipFields(&c, []string{"Configurations", "InstanceCollectionType", "RepoUpgradeOnBoot", "ScaleDownBehavior"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := ec2.DescribeSubnetsOutput{}
+	err = faker.FakeData(&s)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -539,8 +582,16 @@ func buildEmrClusters(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&emr.ListClustersOutput{
 			Clusters: []emrTypes.ClusterSummary{l},
 		}, nil)
+
+	m.EXPECT().DescribeCluster(gomock.Any(), gomock.Any(), gomock.Any()).Return(&emr.DescribeClusterOutput{
+		Cluster: &c,
+	}, nil)
+
+	ec2m.EXPECT().DescribeSubnets(gomock.Any(), gomock.Any(), gomock.Any()).Return(&s, nil)
+
 	return client.Services{
 		EMR: m,
+		EC2: ec2m,
 	}
 }
 
@@ -584,6 +635,7 @@ func buildSnsTopics(t *testing.T, ctrl *gomock.Controller) client.Services {
 				"FifoTopic":                 "false",
 				"ContentBasedDeduplication": "true",
 				"DisplayName":               "cloudquery",
+				"KmsMasterKeyId":            "test/key",
 				"Owner":                     "owner",
 				"Policy":                    `{"stuff": 3}`,
 				"DeliveryPolicy":            `{"stuff": 3}`,
@@ -785,6 +837,13 @@ func buildKmsKeys(t *testing.T, ctrl *gomock.Controller) client.Services {
 		t.Fatal(err)
 	}
 
+	tags := kms.ListResourceTagsOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tags.NextMarker = nil
+
 	m.EXPECT().ListKeys(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&kms.ListKeysOutput{
 			Keys: []kmsTypes.KeyListEntry{k},
@@ -793,6 +852,8 @@ func buildKmsKeys(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&km, nil)
 	m.EXPECT().GetKeyRotationStatus(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&krs, nil)
+	m.EXPECT().ListResourceTags(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&tags, nil)
 	return client.Services{
 		KMS: m,
 	}

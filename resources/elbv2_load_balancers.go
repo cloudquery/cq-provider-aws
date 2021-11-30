@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/service/wafv2"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
@@ -35,6 +37,17 @@ func Elbv2LoadBalancers() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "web_acl_arn",
+				Description: "arn of associated web acl",
+				Type:        schema.TypeString,
+				Resolver:    resolveElbv2loadBalancerWebACLArn,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveElbv2loadBalancerTags,
+			},
+			{
 				Name:        "canonical_hosted_zone_id",
 				Description: "The ID of the Amazon Route 53 hosted zone associated with the load balancer.",
 				Type:        schema.TypeString,
@@ -57,7 +70,7 @@ func Elbv2LoadBalancers() *schema.Table {
 			},
 			{
 				Name:        "ip_address_type",
-				Description: "The type of IP addresses used by the subnets for your load balancer.",
+				Description: "The type of IP addresses used by the subnets for your load balancer",
 				Type:        schema.TypeString,
 			},
 			{
@@ -74,7 +87,7 @@ func Elbv2LoadBalancers() *schema.Table {
 			},
 			{
 				Name:        "scheme",
-				Description: "The nodes of an Internet-facing load balancer have public IP addresses.",
+				Description: "The nodes of an Internet-facing load balancer have public IP addresses",
 				Type:        schema.TypeString,
 			},
 			{
@@ -84,7 +97,7 @@ func Elbv2LoadBalancers() *schema.Table {
 			},
 			{
 				Name:        "state_code",
-				Description: "The state code.",
+				Description: "The state code",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("State.Code"),
 			},
@@ -106,6 +119,7 @@ func Elbv2LoadBalancers() *schema.Table {
 			},
 		},
 		Relations: []*schema.Table{
+			Elbv2Listeners(),
 			{
 				Name:        "aws_elbv2_load_balancer_availability_zones",
 				Description: "Information about an Availability Zone.",
@@ -131,7 +145,7 @@ func Elbv2LoadBalancers() *schema.Table {
 					},
 					{
 						Name:        "subnet_id",
-						Description: "The ID of the subnet.",
+						Description: "The ID of the subnet",
 						Type:        schema.TypeString,
 					},
 					{
@@ -145,7 +159,6 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:        "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description: "Information about a static IP address for a load balancer.",
 						Resolver:    fetchElbv2LoadBalancerAvailabilityZoneAddresses,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_availability_zone_cq_id", "ip_address"}},
 						Columns: []schema.Column{
 							{
 								Name:        "load_balancer_availability_zone_cq_id",
@@ -290,6 +303,56 @@ func fetchElbv2LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
+func resolveElbv2loadBalancerWebACLArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p, ok := resource.Item.(types.LoadBalancer)
+	if !ok {
+		return fmt.Errorf("expected to have types.LoadBalancer but got %T", resource.Item)
+	}
+	// only application load balancer can have web acl arn
+	if p.Type != types.LoadBalancerTypeEnumApplication {
+		return nil
+	}
+	client := meta.(*client.Client).Services().WafV2
+	input := wafv2.GetWebACLForResourceInput{ResourceArn: p.LoadBalancerArn}
+	response, err := client.GetWebACLForResource(ctx, &input, func(options *wafv2.Options) {})
+	if err != nil {
+		return err
+	}
+	if response.WebACL == nil {
+		return nil
+	}
+
+	return resource.Set(c.Name, response.WebACL.ARN)
+}
+func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	region := meta.(*client.Client).Region
+	svc := meta.(*client.Client).Services().ELBv2
+	loadBalancer, ok := resource.Item.(types.LoadBalancer)
+	if !ok {
+		return fmt.Errorf("expected to have types.LoadBalancer but got %T", resource.Item)
+	}
+	tagsOutput, err := svc.DescribeTags(ctx, &elbv2.DescribeTagsInput{
+		ResourceArns: []string{
+			*loadBalancer.LoadBalancerArn,
+		},
+	}, func(o *elbv2.Options) {
+		o.Region = region
+	})
+	if err != nil {
+		return err
+	}
+	if len(tagsOutput.TagDescriptions) == 0 {
+		return nil
+	}
+	tags := make(map[string]*string)
+	for _, td := range tagsOutput.TagDescriptions {
+		for _, s := range td.Tags {
+			tags[*s.Key] = s.Value
+		}
+	}
+
+	return resource.Set(c.Name, tags)
+}
 func fetchElbv2LoadBalancerAvailabilityZones(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p := parent.Item.(types.LoadBalancer)
 	res <- p.AvailabilityZones
@@ -300,6 +363,10 @@ func fetchElbv2LoadBalancerAvailabilityZoneAddresses(ctx context.Context, meta s
 	res <- p.LoadBalancerAddresses
 	return nil
 }
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
 
 type lbAttributes struct {
 	AccessLogsS3Enabled                   bool   `mapstructure:"access_logs.s3.enabled"`
