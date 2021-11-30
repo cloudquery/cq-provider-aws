@@ -1,5 +1,3 @@
-ALTER TABLE IF EXISTS "aws_iam_password_policies" ADD COLUMN policy_exists boolean;
-
 ALTER TABLE IF EXISTS "aws_config_configuration_recorders" ADD COLUMN status_last_error_code text,
                                                            ADD COLUMN status_last_error_message text,
                                                            ADD COLUMN status_last_start_time timestamp without time zone,
