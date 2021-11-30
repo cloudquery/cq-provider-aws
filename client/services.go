@@ -207,6 +207,7 @@ type EfsClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_elasticbeanstalk.go . ElasticbeanstalkClient
 type ElasticbeanstalkClient interface {
+	DescribeApplications(ctx context.Context, params *elasticbeanstalk.DescribeApplicationsInput, optFns ...func(*elasticbeanstalk.Options)) (*elasticbeanstalk.DescribeApplicationsOutput, error)
 	DescribeEnvironments(ctx context.Context, params *elasticbeanstalk.DescribeEnvironmentsInput, optFns ...func(*elasticbeanstalk.Options)) (*elasticbeanstalk.DescribeEnvironmentsOutput, error)
 	ListTagsForResource(ctx context.Context, params *elasticbeanstalk.ListTagsForResourceInput, optFns ...func(*elasticbeanstalk.Options)) (*elasticbeanstalk.ListTagsForResourceOutput, error)
 }
