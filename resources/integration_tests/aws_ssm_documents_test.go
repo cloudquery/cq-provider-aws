@@ -22,6 +22,7 @@ func TestIntegrationSSMDocuments(t *testing.T) {
 					"name":            fmt.Sprintf("%sdoc%s", res.Prefix, res.Suffix),
 					"account_ids":     []interface{}{"all"},
 					"tags": map[string]interface{}{
+						"Name":   fmt.Sprintf("%sdoc%s", res.Prefix, res.Suffix),
 						"TestId": res.Suffix,
 						"Type":   "integration_test",
 					},

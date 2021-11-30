@@ -26,4 +26,8 @@ DOC
     type = "Share"
     account_ids = "All"
   }
+
+  tags = {
+    Name = "${var.test_prefix}doc${var.test_suffix}"
+  }
 }
