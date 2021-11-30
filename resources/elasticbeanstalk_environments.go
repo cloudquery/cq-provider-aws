@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func ElasticbeanstalkEnvironments() *schema.Table {
+func ElasticbeanstalkApplications() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_elasticbeanstalk_applications",
 		Description:  "Describes the properties of an application.",
