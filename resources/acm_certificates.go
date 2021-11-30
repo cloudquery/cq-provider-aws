@@ -20,6 +20,7 @@ func AcmCertificates() *schema.Table {
 		Multiplex:    client.AccountRegionMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -147,7 +148,7 @@ func AcmCertificates() *schema.Table {
 				Resolver:    schema.PathResolver("RenewalSummary.UpdatedAt"),
 			},
 			{
-				Name:        "renewal_summary_renewal_status_reason",
+				Name:        "renewal_summary_failure_reason",
 				Description: "The reason that a renewal request was unsuccessful.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("RenewalSummary.RenewalStatusReason"),
