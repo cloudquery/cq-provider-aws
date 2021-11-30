@@ -1,7 +1,6 @@
 package resources
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
@@ -20,12 +19,11 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(la)
 
-	m.EXPECT().DescribeApplications(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&elasticbeanstalk.DescribeApplicationsOutput{
-			Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
-		}, nil)
+	// m.EXPECT().DescribeApplications(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	// 	&elasticbeanstalk.DescribeApplicationsOutput{
+	// 		Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
+	// 	}, nil)
 
 	l := elasticbeanstalkTypes.EnvironmentDescription{
 		ApplicationName: la.ApplicationName,
@@ -55,5 +53,5 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 }
 
 func TestElasticbeanstalkApplications(t *testing.T) {
-	awsTestHelper(t, ElasticbeanstalkApplications(), buildElasticbeanstalkEnvironments, TestOptions{})
+	awsTestHelper(t, ElasticbeanstalkEnvironments(), buildElasticbeanstalkEnvironments, TestOptions{})
 }
