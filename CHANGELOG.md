@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added  `aws_autoscaling_groups` resource [#268](https://github.com/cloudquery/cq-provider-aws/issues/268)
 * Added `aws_ecs_cluster_services` relation of `aws_ecs_clusters`
 * Added `aws_ecs_cluster_container_instances` relation of `aws_ecs_clusters`
+* Added `aws_ecs_task_definitions` resource
   
 ### :spider: Fixed
 * Fixed `aws_ec2_ebs_volumes` pagination during fetch [#279](https://github.com/cloudquery/cq-provider-aws/issues/279)
