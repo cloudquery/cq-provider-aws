@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationElasticbeanstalkEnvironments(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ElasticbeanstalkEnvironments(), []string{"aws_elasticbeanstalk_environments.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
+	awsTestIntegrationHelper(t, resources.ElasticbeanstalkApplications(), []string{"aws_elasticbeanstalk_environments.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: "aws_elasticbeanstalk_environments",
 			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
