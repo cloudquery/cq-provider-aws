@@ -1,6 +1,7 @@
 package resources
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
@@ -13,8 +14,23 @@ import (
 
 func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockElasticbeanstalkClient(ctrl)
-	l := elasticbeanstalkTypes.EnvironmentDescription{}
-	err := faker.FakeData(&l)
+
+	la := elasticbeanstalkTypes.ApplicationDescription{}
+	err := faker.FakeData(&la)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(la)
+
+	m.EXPECT().DescribeApplications(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&elasticbeanstalk.DescribeApplicationsOutput{
+			Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
+		}, nil)
+
+	l := elasticbeanstalkTypes.EnvironmentDescription{
+		ApplicationName: la.ApplicationName,
+	}
+	err = faker.FakeData(&l)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,6 +48,7 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 
 	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&tags, nil)
+
 	return client.Services{
 		ElasticBeanstalk: m,
 	}
