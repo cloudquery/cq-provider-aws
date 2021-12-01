@@ -21,6 +21,7 @@ func Provider() *provider.Provider {
 		ErrorClassifier: client.ErrorClassifier,
 		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
+			"acm.certificates":                      AcmCertificates(),
 			"aws.regions":                           AwsRegions(),
 			"accessanalyzer.analyzers":              AccessAnalyzerAnalyzer(),
 			"apigateway.api_keys":                   ApigatewayAPIKeys(),
@@ -121,6 +122,7 @@ func Provider() *provider.Provider {
 			"sns.subscriptions":                     SnsSubscriptions(),
 			"sns.topics":                            SnsTopics(),
 			"sqs.queues":                            SQSQueues(),
+			"ssm.documents":                         SsmDocuments(),
 			"ssm.instances":                         SsmInstances(),
 			"waf.rule_groups":                       WafRuleGroups(),
 			"waf.rules":                             WafRules(),

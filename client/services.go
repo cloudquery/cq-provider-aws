@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
+	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -47,6 +48,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 )
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_acm.go . ACMClient
+type ACMClient interface {
+	DescribeCertificate(ctx context.Context, params *acm.DescribeCertificateInput, optFns ...func(*acm.Options)) (*acm.DescribeCertificateOutput, error)
+	ListCertificates(ctx context.Context, params *acm.ListCertificatesInput, optFns ...func(*acm.Options)) (*acm.ListCertificatesOutput, error)
+	ListTagsForCertificate(ctx context.Context, params *acm.ListTagsForCertificateInput, optFns ...func(*acm.Options)) (*acm.ListTagsForCertificateOutput, error)
+}
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_autoscaling.go . AutoscalingClient
 type AutoscalingClient interface {
@@ -433,6 +441,7 @@ type WafClient interface {
 	ListRules(ctx context.Context, params *waf.ListRulesInput, optFns ...func(*waf.Options)) (*waf.ListRulesOutput, error)
 	GetRule(ctx context.Context, params *waf.GetRuleInput, optFns ...func(*waf.Options)) (*waf.GetRuleOutput, error)
 	ListTagsForResource(ctx context.Context, params *waf.ListTagsForResourceInput, optFns ...func(*waf.Options)) (*waf.ListTagsForResourceOutput, error)
+	GetLoggingConfiguration(ctx context.Context, params *waf.GetLoggingConfigurationInput, optFns ...func(*waf.Options)) (*waf.GetLoggingConfigurationOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_wafv2.go . WafV2Client
@@ -447,6 +456,7 @@ type WafV2Client interface {
 	ListTagsForResource(ctx context.Context, params *wafv2.ListTagsForResourceInput, optFns ...func(*wafv2.Options)) (*wafv2.ListTagsForResourceOutput, error)
 	GetPermissionPolicy(ctx context.Context, params *wafv2.GetPermissionPolicyInput, optFns ...func(*wafv2.Options)) (*wafv2.GetPermissionPolicyOutput, error)
 	GetWebACLForResource(ctx context.Context, params *wafv2.GetWebACLForResourceInput, optFns ...func(*wafv2.Options)) (*wafv2.GetWebACLForResourceOutput, error)
+	GetLoggingConfiguration(ctx context.Context, params *wafv2.GetLoggingConfigurationInput, optFns ...func(*wafv2.Options)) (*wafv2.GetLoggingConfigurationOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_sqs.go . SQSClient
@@ -465,8 +475,11 @@ type GuardDutyClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_ssm.go . SSMClient
 type SSMClient interface {
+	DescribeDocument(ctx context.Context, params *ssm.DescribeDocumentInput, optFns ...func(*ssm.Options)) (*ssm.DescribeDocumentOutput, error)
+	DescribeDocumentPermission(ctx context.Context, params *ssm.DescribeDocumentPermissionInput, optFns ...func(*ssm.Options)) (*ssm.DescribeDocumentPermissionOutput, error)
 	DescribeInstanceInformation(ctx context.Context, params *ssm.DescribeInstanceInformationInput, optFns ...func(*ssm.Options)) (*ssm.DescribeInstanceInformationOutput, error)
 	ListComplianceItems(ctx context.Context, params *ssm.ListComplianceItemsInput, optFns ...func(*ssm.Options)) (*ssm.ListComplianceItemsOutput, error)
+	ListDocuments(ctx context.Context, params *ssm.ListDocumentsInput, optFns ...func(*ssm.Options)) (*ssm.ListDocumentsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_sagemaker.go . SageMakerClient
