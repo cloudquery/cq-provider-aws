@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
+	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
@@ -96,6 +97,7 @@ const (
 )
 
 type Services struct {
+	ACM                  ACMClient
 	Analyzer             AnalyzerClient
 	Autoscaling          AutoscalingClient
 	Cloudfront           CloudfrontClient
@@ -358,6 +360,7 @@ func initServices(region string, c aws.Config) Services {
 	awsCfg := c.Copy()
 	awsCfg.Region = region
 	return Services{
+		ACM:                  acm.NewFromConfig(awsCfg),
 		Analyzer:             accessanalyzer.NewFromConfig(awsCfg),
 		Apigateway:           apigateway.NewFromConfig(awsCfg),
 		Apigatewayv2:         apigatewayv2.NewFromConfig(awsCfg),
