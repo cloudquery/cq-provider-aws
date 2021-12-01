@@ -164,7 +164,6 @@ func fetchElasticbeanstalkConfigurationSettingOptionSettings(ctx context.Context
 		meta.Logger().Error("parent.Item", "Item", parent.Item)
 		return fmt.Errorf("not types.ConfigurationOptionSetting")
 	}
-	meta.Logger().Error("Output", "option", option)
 	for _, t := range option.OptionSettings {
 		res <- t
 	}
