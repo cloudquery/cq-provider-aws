@@ -137,7 +137,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2/service/s3control v1.14.1
+	github.com/aws/aws-sdk-go v1.17.7
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.16.0
 )
 
