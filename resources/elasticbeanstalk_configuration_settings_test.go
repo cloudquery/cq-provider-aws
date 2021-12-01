@@ -11,7 +11,7 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) client.Services {
+func buildElasticbeanstalkConfigSettings(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockElasticbeanstalkClient(ctrl)
 
 	la := elasticbeanstalkTypes.ApplicationDescription{}
@@ -19,11 +19,6 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	// m.EXPECT().DescribeApplications(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-	// 	&elasticbeanstalk.DescribeApplicationsOutput{
-	// 		Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
-	// 	}, nil)
 
 	l := elasticbeanstalkTypes.EnvironmentDescription{
 		ApplicationName: la.ApplicationName,
@@ -38,20 +33,18 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 			Environments: []elasticbeanstalkTypes.EnvironmentDescription{l},
 		}, nil)
 
-	tags := elasticbeanstalk.ListTagsForResourceOutput{}
-	err = faker.FakeData(&tags)
+	configOutput := elasticbeanstalk.DescribeConfigurationSettingsOutput{}
+	err = faker.FakeData(&configOutput)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&tags, nil)
+	m.EXPECT().DescribeConfigurationSettings(gomock.Any(), gomock.Any(), gomock.Any()).Return(&configOutput, nil)
 
 	return client.Services{
 		ElasticBeanstalk: m,
 	}
 }
 
-func TestElasticbeanstalkEnvironments(t *testing.T) {
-	awsTestHelper(t, ElasticbeanstalkEnvironments(), buildElasticbeanstalkEnvironments, TestOptions{})
+func TestElasticbeanstalkConfigSettings(t *testing.T) {
+	awsTestHelper(t, ElasticbeanstalkConfigurationSettings(), buildElasticbeanstalkConfigSettings, TestOptions{})
 }
