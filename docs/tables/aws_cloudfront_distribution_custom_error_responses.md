@@ -5,7 +5,7 @@ A complex type that controls:  * Whether CloudFront replaces HTTP status codes i
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |distribution_cq_id|uuid|Unique CloudQuery ID of aws_cloudfront_distributions table (FK)|
-|error_code|integer|The HTTP status code for which you want to specify a custom error page and/or a caching duration.  This member is required.|
+|error_code|integer|The HTTP status code for which you want to specify a custom error page and/or a caching duration.|
 |error_caching_min_ttl|bigint|The minimum amount of time, in seconds, that you want CloudFront to cache the HTTP status code specified in ErrorCode|
 |response_code|text|The HTTP status code that you want CloudFront to return to the viewer along with the custom error page|
 |response_page_path|text|The path to the custom error page that you want CloudFront to return to a viewer when your origin returns the HTTP status code specified by ErrorCode, for example, /4xx-errors/403-forbidden.html|

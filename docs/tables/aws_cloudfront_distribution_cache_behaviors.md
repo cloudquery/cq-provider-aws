@@ -6,10 +6,10 @@ A complex type that describes how CloudFront processes requests
 | ------------- | ------------- | -----  |
 |distribution_cq_id|uuid|Unique CloudQuery ID of aws_cloudfront_distributions table (FK)|
 |path_pattern|text|The pattern (for example, images/*.jpg) that specifies which requests to apply the behavior to|
-|target_origin_id|text|The value of ID for the origin that you want CloudFront to route requests to when they match this cache behavior.  This member is required.|
+|target_origin_id|text|The value of ID for the origin that you want CloudFront to route requests to when they match this cache behavior.|
 |viewer_protocol_policy|text|The protocol that viewers can use to access the files in the origin specified by TargetOriginId when a request matches the path pattern in PathPattern|
-|allowed_methods|text[]|A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.  This member is required.|
-|cached_methods|text[]|A complex type that contains the HTTP methods that you want CloudFront to cache responses to.  This member is required.|
+|allowed_methods|text[]|A complex type that contains the HTTP methods that you want CloudFront to process and forward to your origin.|
+|cached_methods|text[]|A complex type that contains the HTTP methods that you want CloudFront to cache responses to.|
 |cache_policy_id|text|The unique identifier of the cache policy that is attached to this cache behavior|
 |compress|boolean|Whether you want CloudFront to automatically compress certain files for this cache behavior|
 |default_ttl|bigint|This field is deprecated|
@@ -24,7 +24,7 @@ A complex type that describes how CloudFront processes requests
 |origin_request_policy_id|text|The unique identifier of the origin request policy that is attached to this cache behavior|
 |realtime_log_config_arn|text|The Amazon Resource Name (ARN) of the real-time log configuration that is attached to this cache behavior|
 |smooth_streaming|boolean|Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify true; if not, specify false|
-|trusted_key_groups_enabled|boolean|This field is true if any of the key groups in the list have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies. If not, this field is false.  This member is required.|
+|trusted_key_groups_enabled|boolean|This field is true if any of the key groups in the list have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies. If not, this field is false.|
 |trusted_key_groups|text[]|A list of key groups identifiers.|
 |trusted_signers_enabled|boolean|This field is true if any of the AWS accounts have public keys that CloudFront can use to verify the signatures of signed URLs and signed cookies|
 |trusted_signers|text[]|A list of AWS account identifiers.|

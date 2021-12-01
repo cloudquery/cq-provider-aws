@@ -15,7 +15,13 @@ func TestIntegrationCloudfrontDistributions(t *testing.T) {
 			ExpectedValues: []providertest.ExpectedValue{{
 				Count: 1,
 				Data: map[string]interface{}{
-					"cache_behavior_target_origin_id": fmt.Sprintf("cf-s3origin%s-%s", res.Prefix, res.Suffix),
+					"cache_behavior_target_origin_id":   fmt.Sprintf("cf-s3origin%s-%s", res.Prefix, res.Suffix),
+					"logging_enabled":                   false,
+					"logging_include_cookies":           false,
+					"in_progress_invalidation_batches":  float64(0),
+					"active_trusted_key_groups_enabled": false,
+					"active_trusted_signers_enabled":    false,
+					"default_root_object":               "index.html",
 				},
 			}},
 			Relations: []*providertest.ResourceIntegrationVerification{

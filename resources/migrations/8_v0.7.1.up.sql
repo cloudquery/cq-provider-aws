@@ -9,11 +9,53 @@ ALTER TABLE IF EXISTS "aws_config_configuration_recorders" ADD COLUMN status_las
 
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" ADD COLUMN logging_configuration text[];
 ALTER TABLE IF EXISTS "aws_waf_web_acls" ADD COLUMN logging_configuration text[];
+
+ALTER TABLE IF EXISTS "aws_config_configuration_recorders"
+    ADD COLUMN status_last_error_code         text,
+    ADD COLUMN status_last_error_message      text,
+    ADD COLUMN status_last_start_time         timestamp WITHOUT TIME ZONE,
+    ADD COLUMN status_last_status             text,
+    ADD COLUMN status_last_status_change_time timestamp WITHOUT TIME ZONE,
+    ADD COLUMN status_last_stop_time          timestamp WITHOUT TIME ZONE,
+    ADD COLUMN status_recording               boolean;
+
+
+ALTER TABLE IF EXISTS "aws_wafv2_web_acls"
+    ADD COLUMN logging_configuration text[];
+ALTER TABLE IF EXISTS "aws_waf_web_acls"
+    ADD COLUMN logging_configuration text[];
+
 --aws_cloudfront_distributions
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     ADD COLUMN "tags" json;
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN "alias_icp_recordals" json;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN caller_reference text;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN logging_bucket text;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN logging_enabled bool;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN logging_include_cookies bool;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN logging_prefix text;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN in_progress_invalidation_batches int;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN active_trusted_key_groups_enabled bool;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN active_trusted_key_groups json;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN active_trusted_signers_enabled bool;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN active_trusted_signers json;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+    ADD COLUMN default_root_object text;
+
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     RENAME COLUMN "aliases_items" TO "aliases";
+
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     RENAME COLUMN "cache_behaviour_target_origin_id" TO "cache_behavior_target_origin_id";
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
@@ -63,6 +105,7 @@ ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     RENAME COLUMN "restrictions_geo_restriction_restriction_type" TO "geo_restriction_type";
 
+
 --aws_cloudfront_distribution_cache_behaviours
 ALTER TABLE IF EXISTS "aws_cloudfront_distribution_cache_behaviours"
     ADD COLUMN "cache_policy_id" TEXT;
@@ -109,3 +152,4 @@ ALTER TABLE IF EXISTS "aws_cache_behaviour_lambda_function_associations"
 --aws_cloudfront_distribution_origin_groups
 ALTER TABLE IF EXISTS "aws_cloudfront_distribution_origin_groups"
     RENAME COLUMN "failover_criteria_status_codes_items" TO "failover_criteria_status_codes";
+

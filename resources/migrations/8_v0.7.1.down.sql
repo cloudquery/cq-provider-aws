@@ -16,6 +16,30 @@ COLUMN "tags";
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
 DROP
 COLUMN "alias_icp_recordals";
+
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN caller_reference;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN logging_bucket;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN logging_enabled;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN logging_include_cookies;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN logging_prefix;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN in_progress_invalidation_batches;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN active_trusted_key_groups_enabled;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN active_trusted_key_groups;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN active_trusted_signers_enabled;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN active_trusted_signers;
+ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
+DROP COLUMN default_root_object;
+
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     RENAME COLUMN "aliases" TO "aliases_items";
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
