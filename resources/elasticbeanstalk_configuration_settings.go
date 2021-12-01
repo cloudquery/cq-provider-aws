@@ -139,11 +139,11 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 		config.NextToken = response.NextToken
 	}
 
-	var configOptionsIn elasticbeanstalk.DescribeConfigurationSettingsInput
-
 	for _, environment := range allEnvs {
-		configOptionsIn.ApplicationName = environment.ApplicationName
-		configOptionsIn.EnvironmentName = environment.EnvironmentName
+		configOptionsIn := elasticbeanstalk.DescribeConfigurationSettingsInput{
+			ApplicationName: environment.ApplicationName,
+			EnvironmentName: environment.EnvironmentName,
+		}
 		output, err := svc.DescribeConfigurationSettings(ctx, &configOptionsIn, func(options *elasticbeanstalk.Options) {
 			options.Region = c.Region
 		})
