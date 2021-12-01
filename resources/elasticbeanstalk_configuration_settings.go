@@ -81,13 +81,13 @@ func ElasticbeanstalkConfigurationSettings() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_elasticbeanstalk_configuration_setting_option_settings",
+				Name:        "aws_elasticbeanstalk_configuration_setting_options",
 				Description: "A specification identifying an individual configuration option along with its current value",
 				Resolver:    fetchElasticbeanstalkConfigurationSettingOptionSettings,
 				Columns: []schema.Column{
 					{
 						Name:        "configuration_setting_cq_id",
-						Description: "Unique CloudQuery ID of aws_elasticbeanstalk_configuration_settings table (FK)",
+						Description: "Unique CloudQuery ID of aws_elasticbeanstalk_configuration_setting_options table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
