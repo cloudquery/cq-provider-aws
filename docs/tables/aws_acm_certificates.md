@@ -35,3 +35,4 @@ Contains metadata about an ACM certificate
 |subject|text|The name of the entity that is associated with the public key contained in the certificate.|
 |subject_alternative_names|text[]|One or more domain names (subject alternative names) included in the certificate|
 |type|text|The source of the certificate|
+|tags|jsonb|The tags that have been applied to the ACM certificate.|

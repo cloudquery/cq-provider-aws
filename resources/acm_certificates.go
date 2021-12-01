@@ -193,6 +193,12 @@ func AcmCertificates() *schema.Table {
 				Description: "The source of the certificate",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "tags",
+				Description: "The tags that have been applied to the ACM certificate.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveACMCertificateTags,
+			},
 		},
 	}
 }
@@ -251,4 +257,22 @@ func resolveACMCertificateJSONField(getter func(*types.CertificateDetail) interf
 		}
 		return resource.Set(c.Name, b)
 	}
+}
+
+func resolveACMCertificateTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cert, ok := resource.Item.(*types.CertificateDetail)
+	if !ok {
+		return fmt.Errorf("not a %T instance: %T", c, resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().ACM
+	out, err := svc.ListTagsForCertificate(ctx, &acm.ListTagsForCertificateInput{CertificateArn: cert.CertificateArn})
+	if err != nil {
+		return err
+	}
+	tags := make(map[string]interface{}, len(out.Tags))
+	for _, t := range out.Tags {
+		tags[aws.ToString(t.Key)] = aws.ToString(t.Value)
+	}
+	return resource.Set(c.Name, tags)
 }

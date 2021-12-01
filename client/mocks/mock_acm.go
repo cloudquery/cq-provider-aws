@@ -74,3 +74,23 @@ func (mr *MockACMClientMockRecorder) ListCertificates(arg0, arg1 interface{}, ar
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCertificates", reflect.TypeOf((*MockACMClient)(nil).ListCertificates), varargs...)
 }
+
+// ListTagsForCertificate mocks base method.
+func (m *MockACMClient) ListTagsForCertificate(arg0 context.Context, arg1 *acm.ListTagsForCertificateInput, arg2 ...func(*acm.Options)) (*acm.ListTagsForCertificateOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTagsForCertificate", varargs...)
+	ret0, _ := ret[0].(*acm.ListTagsForCertificateOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTagsForCertificate indicates an expected call of ListTagsForCertificate.
+func (mr *MockACMClientMockRecorder) ListTagsForCertificate(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForCertificate", reflect.TypeOf((*MockACMClient)(nil).ListTagsForCertificate), varargs...)
+}

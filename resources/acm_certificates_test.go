@@ -3,6 +3,7 @@ package resources
 import (
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/acm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -38,6 +39,18 @@ func buildACMCertificates(t *testing.T, ctrl *gomock.Controller) client.Services
 		gomock.Any(),
 	).Return(
 		&acm.DescribeCertificateOutput{Certificate: &cert},
+		nil,
+	)
+
+	mock.EXPECT().ListTagsForCertificate(
+		gomock.Any(),
+		&acm.ListTagsForCertificateInput{CertificateArn: cert.CertificateArn},
+	).Return(
+		&acm.ListTagsForCertificateOutput{
+			Tags: []types.Tag{
+				{Key: aws.String("key"), Value: aws.String("value")},
+			},
+		},
 		nil,
 	)
 	return client.Services{ACM: mock}
