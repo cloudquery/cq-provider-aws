@@ -20,11 +20,6 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 		t.Fatal(err)
 	}
 
-	// m.EXPECT().DescribeApplications(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-	// 	&elasticbeanstalk.DescribeApplicationsOutput{
-	// 		Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
-	// 	}, nil)
-
 	l := elasticbeanstalkTypes.EnvironmentDescription{
 		ApplicationName: la.ApplicationName,
 	}

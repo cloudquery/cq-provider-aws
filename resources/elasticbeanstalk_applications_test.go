@@ -25,28 +25,6 @@ func buildElasticbeanstalkApplications(t *testing.T, ctrl *gomock.Controller) cl
 			Applications: []elasticbeanstalkTypes.ApplicationDescription{la},
 		}, nil)
 
-	// l := elasticbeanstalkTypes.EnvironmentDescription{
-	// 	ApplicationName: la.ApplicationName,
-	// }
-	// err = faker.FakeData(&l)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-
-	// m.EXPECT().DescribeEnvironments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-	// 	&elasticbeanstalk.DescribeEnvironmentsOutput{
-	// 		Environments: []elasticbeanstalkTypes.EnvironmentDescription{l},
-	// 	}, nil)
-
-	// tags := elasticbeanstalk.ListTagsForResourceOutput{}
-	// err = faker.FakeData(&tags)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-
-	// m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-	// 	&tags, nil)
-
 	return client.Services{
 		ElasticBeanstalk: m,
 	}

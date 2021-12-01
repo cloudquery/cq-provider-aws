@@ -162,7 +162,7 @@ func fetchElasticbeanstalkConfigurationSettingOptionSettings(ctx context.Context
 	option, ok := parent.Item.(types.ConfigurationSettingsDescription)
 	if !ok {
 		meta.Logger().Error("parent.Item", "Item", parent.Item)
-		return fmt.Errorf("not types.ConfigurationOptionSetting")
+		return fmt.Errorf("not %T", option)
 	}
 	for _, t := range option.OptionSettings {
 		res <- t
