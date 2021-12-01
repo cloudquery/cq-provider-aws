@@ -34,9 +34,10 @@ func EcsTaskDefinitions() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveEcsTask_definitionTags,
+				Name:        "tags",
+				Description: "The metadata that you apply to the service to help you categorize and organize them",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveEcsTaskDefinitionTags,
 			},
 			{
 				Name:        "compatibilities",
@@ -122,6 +123,12 @@ func EcsTaskDefinitions() *schema.Table {
 				Name:        "registered_by",
 				Description: "The principal that registered the task definition.",
 				Type:        schema.TypeString,
+			},
+			{
+				Name:        "requires_attributes",
+				Description: "The container instance attributes required by your task",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveEcsTaskDefinitionsRequiresAttributes,
 			},
 			{
 				Name:        "requires_compatibilities",
@@ -460,39 +467,6 @@ func EcsTaskDefinitions() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_ecs_task_definition_requires_attributes",
-				Description: "An attribute is a name-value pair associated with an Amazon ECS object. Attributes enable you to extend the Amazon ECS data model by adding custom metadata to your resources",
-				Resolver:    fetchEcsTaskDefinitionRequiresAttributes,
-				Columns: []schema.Column{
-					{
-						Name:        "task_definition_cq_id",
-						Description: "Unique CloudQuery ID of aws_ecs_task_definitions table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "name",
-						Description: "The name of the attribute",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "target_id",
-						Description: "The ID of the target",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "target_type",
-						Description: "The type of the target with which to attach the attribute",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "value",
-						Description: "The value of the attribute",
-						Type:        schema.TypeString,
-					},
-				},
-			},
-			{
 				Name:        "aws_ecs_task_definition_volumes",
 				Description: "A data volume used in a task definition",
 				Resolver:    fetchEcsTaskDefinitionVolumes,
@@ -648,30 +622,6 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
-func resolveEcsTask_definitionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
-
-	region := meta.(*client.Client).Region
-	svc := meta.(*client.Client).Services().ECS
-
-	tags, err := svc.ListTagsForResource(ctx, &ecs.ListTagsForResourceInput{
-		ResourceArn: r.TaskDefinitionArn,
-	}, func(options *ecs.Options) {
-		options.Region = region
-	})
-	if err != nil {
-		return err
-	}
-
-	j := map[string]interface{}{}
-	for _, a := range tags.Tags {
-		j[*a.Key] = *a.Value
-	}
-	return resource.Set(c.Name, j)
-}
 func resolveEcsTaskDefinitionsInferenceAccelerators(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(types.TaskDefinition)
 	if !ok {
@@ -707,6 +657,17 @@ func resolveEcsTaskDefinitionsProxyConfigurationProperties(ctx context.Context, 
 		j[*p.Name] = *p.Value
 	}
 	return resource.Set(c.Name, j)
+}
+func resolveEcsTaskDefinitionsRequiresAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(types.TaskDefinition)
+	if !ok {
+		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
+	}
+	data, err := json.Marshal(r.RequiresAttributes)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, data)
 }
 func fetchEcsTaskDefinitionContainerDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.TaskDefinition)
@@ -895,15 +856,6 @@ func resolveEcsTaskDefinitionContainerDefinitionsVolumesFrom(ctx context.Context
 	}
 	return resource.Set(c.Name, j)
 }
-func fetchEcsTaskDefinitionRequiresAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-
-	r, ok := parent.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", parent.Item)
-	}
-	res <- r.RequiresAttributes
-	return nil
-}
 func fetchEcsTaskDefinitionVolumes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.TaskDefinition)
 	if !ok {
@@ -911,4 +863,29 @@ func fetchEcsTaskDefinitionVolumes(ctx context.Context, meta schema.ClientMeta, 
 	}
 	res <- r.Volumes
 	return nil
+}
+
+func resolveEcsTaskDefinitionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r, ok := resource.Item.(types.TaskDefinition)
+	if !ok {
+		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
+	}
+
+	region := meta.(*client.Client).Region
+	svc := meta.(*client.Client).Services().ECS
+
+	tags, err := svc.ListTagsForResource(ctx, &ecs.ListTagsForResourceInput{
+		ResourceArn: r.TaskDefinitionArn,
+	}, func(options *ecs.Options) {
+		options.Region = region
+	})
+	if err != nil {
+		return err
+	}
+
+	j := map[string]interface{}{}
+	for _, a := range tags.Tags {
+		j[*a.Key] = *a.Value
+	}
+	return resource.Set(c.Name, j)
 }

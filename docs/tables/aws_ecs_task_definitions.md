@@ -6,7 +6,7 @@ The details of a task definition which describes the container and volume defini
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|tags|jsonb||
+|tags|jsonb|The metadata that you apply to the service to help you categorize and organize them|
 |compatibilities|text[]|The task launch types the task definition validated against during task definition registration|
 |cpu|text|The number of cpu units used by the task|
 |deregistered_at|timestamp without time zone|The Unix timestamp for when the task definition was deregistered.|
@@ -23,6 +23,7 @@ The details of a task definition which describes the container and volume defini
 |proxy_configuration_type|text|The proxy type|
 |registered_at|timestamp without time zone|The Unix timestamp for when the task definition was registered.|
 |registered_by|text|The principal that registered the task definition.|
+|requires_attributes|jsonb|The container instance attributes required by your task|
 |requires_compatibilities|text[]|The task launch types the task definition was validated against|
 |revision|integer|The revision of the task in a particular family|
 |status|text|The status of the task definition.|
