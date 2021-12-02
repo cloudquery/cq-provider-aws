@@ -174,8 +174,103 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
+				Name:        "aws_elasticbeanstalk_configuration_settings",
+				Description: "Describes the settings for a configuration set.",
+				Resolver:    fetchElasticbeanstalkConfigurationSettings,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_name", "date_created"}},
+				Columns: []schema.Column{
+					{
+						Name:        "environment_cq_id",
+						Description: "Unique CloudQuery ID of aws_elasticbeanstalk_environments table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "application_name",
+						Description: "The name of the application associated with this configuration set.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "date_created",
+						Description: "The date (in UTC time) when this configuration set was created.",
+						Type:        schema.TypeTimestamp,
+					},
+					{
+						Name:        "date_updated",
+						Description: "The date (in UTC time) when this configuration set was last modified.",
+						Type:        schema.TypeTimestamp,
+					},
+					{
+						Name:        "deployment_status",
+						Description: "If this configuration set is associated with an environment, the DeploymentStatus parameter indicates the deployment status of this configuration set:  * null: This configuration is not associated with a running environment.  * pending: This is a draft configuration that is not deployed to the associated environment but is in the process of deploying.  * deployed: This is the configuration that is currently deployed to the associated running environment.  * failed: This is a draft configuration that failed to successfully deploy.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "description",
+						Description: "Describes this configuration set.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "environment_name",
+						Description: "If not null, the name of the environment for this configuration set.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "platform_arn",
+						Description: "The ARN of the platform version.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "solution_stack_name",
+						Description: "The name of the solution stack this configuration set uses.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "template_name",
+						Description: "If not null, the name of the configuration template for this configuration set.",
+						Type:        schema.TypeString,
+					},
+				},
+				Relations: []*schema.Table{
+					{
+						Name:        "aws_elasticbeanstalk_configuration_setting_options",
+						Description: "A specification identifying an individual configuration option along with its current value",
+						Resolver:    fetchElasticbeanstalkConfigurationSettingOptionSettings,
+						Columns: []schema.Column{
+							{
+								Name:        "configuration_setting_cq_id",
+								Description: "Unique CloudQuery ID of aws_elasticbeanstalk_configuration_setting_options table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "namespace",
+								Description: "A unique namespace that identifies the option's associated AWS resource.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "option_name",
+								Description: "The name of the configuration option.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "resource_name",
+								Description: "A unique resource name for the option setting",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "value",
+								Description: "The current value for the configuration option.",
+								Type:        schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+			{
 				Name:        "aws_elasticbeanstalk_configuration_options",
 				Description: "Describes the possible values for a configuration option.",
+				Resolver:    fetchElasticbeanstalkConfigurationOptions,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_arn", "name", "namespace"}},
 				Columns: []schema.Column{
 					{
@@ -184,22 +279,34 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
-
 					{
 						Name:        "application_arn",
 						Description: "The arn of the associated application.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("ApplicationArn"),
 					}, {
+						Name:        "name",
+						Description: "The name of the configuration option.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("Name"),
+					},
+					{
+						Name:        "namespace",
+						Description: "A unique namespace identifying the option's associated AWS resource.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("Namespace"),
+					},
+					{
 						Name:        "date_created",
 						Description: "The date when the application was created.",
 						Type:        schema.TypeTimestamp,
+						Resolver:    schema.PathResolver("DateCreated"),
 					},
 					{
 						Name: "change_severity",
-						Description: `An indication of which action is required if the value for this configuration option changes:  
-						* NoInterruption : There is no interruption to the environment or application availability.  
-						* RestartEnvironment : The environment is entirely restarted, all AWS resources are deleted and recreated, and the environment is unavailable during the process.  
+						Description: `An indication of which action is required if the value for this configuration option changes:
+						* NoInterruption : There is no interruption to the environment or application availability.
+						* RestartEnvironment : The environment is entirely restarted, all AWS resources are deleted and recreated, and the environment is unavailable during the process.
 						* RestartApplicationServer : The environment is available the entire time`,
 						Type: schema.TypeString,
 					},
@@ -222,16 +329,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 						Name:        "min_value",
 						Description: "If specified, the configuration option must be a numeric value greater than this value.",
 						Type:        schema.TypeInt,
-					},
-					{
-						Name:        "name",
-						Description: "The name of the configuration option.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "namespace",
-						Description: "A unique namespace identifying the option's associated AWS resource.",
-						Type:        schema.TypeString,
 					},
 					{
 						Name:        "regex_label",
@@ -262,7 +359,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 					},
 				},
 			},
-
 			{
 				Name:        "aws_elasticbeanstalk_environment_links",
 				Description: "A link to another environment, defined in the environment's manifest",
@@ -376,6 +472,10 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 	}
 
 	for _, option := range output.Options {
+		o := ConfigOptions{
+			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID), *p.DateCreated,
+		}
+		fmt.Printf("%s, %s\n", *o.Name, *o.Namespace)
 		res <- ConfigOptions{
 			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID), *p.DateCreated,
 		}
@@ -388,4 +488,45 @@ type ConfigOptions struct {
 	types.ConfigurationOptionDescription
 	ApplicationArn string
 	DateCreated    time.Time
+}
+
+func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	p, ok := parent.Item.(types.EnvironmentDescription)
+	if !ok {
+		return fmt.Errorf("expected types.EnvironmentDescription but got %T", parent.Item)
+	}
+	c := meta.(*client.Client)
+	svc := c.Services().ElasticBeanstalk
+
+	configOptionsIn := elasticbeanstalk.DescribeConfigurationSettingsInput{
+		ApplicationName: p.ApplicationName,
+		EnvironmentName: p.EnvironmentName,
+	}
+	output, err := svc.DescribeConfigurationSettings(ctx, &configOptionsIn, func(options *elasticbeanstalk.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	for _, option := range output.ConfigurationSettings {
+		fmt.Printf("%+v, %+v\n", option, parent.Id())
+		res <- option
+	}
+
+	return nil
+}
+
+func fetchElasticbeanstalkConfigurationSettingOptionSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	option, ok := parent.Item.(types.ConfigurationSettingsDescription)
+	if !ok {
+		meta.Logger().Error("parent.Item", "Item", parent.Item)
+		return fmt.Errorf("not %T", option)
+	}
+	for _, t := range option.OptionSettings {
+		fmt.Printf("%+v, %+v\n", t, parent.Id())
+		res <- t
+	}
+
+	return nil
 }
