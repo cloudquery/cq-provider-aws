@@ -877,7 +877,7 @@ func resolveEc2InstanceNetworkInterfacesIpv4Prefixes(ctx context.Context, meta s
 	if !ok {
 		return fmt.Errorf("not ec2 instance network interface")
 	}
-	var ips []string
+	ips := make([]string, 0, len(instanceNetworkInterface.Ipv4Prefixes))
 	for _, p := range instanceNetworkInterface.Ipv4Prefixes {
 		ips = append(ips, *p.Ipv4Prefix)
 	}
@@ -888,7 +888,7 @@ func resolveEc2InstanceNetworkInterfacesIpv6Prefixes(ctx context.Context, meta s
 	if !ok {
 		return fmt.Errorf("not ec2 instance network interface")
 	}
-	var ips []string
+	ips := make([]string, 0, len(instanceNetworkInterface.Ipv6Prefixes))
 	for _, p := range instanceNetworkInterface.Ipv6Prefixes {
 		ips = append(ips, *p.Ipv6Prefix)
 	}
