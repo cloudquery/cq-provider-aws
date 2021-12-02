@@ -14,7 +14,7 @@ cq-provider-aws
 *.exe
 *.log
 .cq_reattach
-.cq/telemetry-random-id
+.cq/*
 # Local .terraform directories
 **/.terraform/*
 
