@@ -26,6 +26,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
+	"github.com/aws/aws-sdk-go-v2/service/dax"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -51,7 +52,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	s3control "github.com/aws/aws-sdk-go-v2/service/s3control"
+	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
@@ -107,6 +108,7 @@ type Services struct {
 	CloudwatchLogs       CloudwatchLogsClient
 	CognitoIdentityPools CognitoIdentityPoolsClient
 	CognitoUserPools     CognitoUserPoolsClient
+	DAX                  DAXClient
 	Directconnect        DirectconnectClient
 	DynamoDB             DynamoDBClient
 	DMS                  DatabasemigrationserviceClient
@@ -374,6 +376,7 @@ func initServices(region string, c aws.Config) Services {
 		CognitoIdentityPools: cognitoidentity.NewFromConfig(awsCfg),
 		CognitoUserPools:     cognitoidentityprovider.NewFromConfig(awsCfg),
 		ConfigService:        configservice.NewFromConfig(awsCfg),
+		DAX:                  dax.NewFromConfig(awsCfg),
 		Directconnect:        directconnect.NewFromConfig(awsCfg),
 		DMS:                  databasemigrationservice.NewFromConfig(awsCfg),
 		DynamoDB:             dynamodb.NewFromConfig(awsCfg),

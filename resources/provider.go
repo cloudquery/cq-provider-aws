@@ -50,6 +50,7 @@ func Provider() *provider.Provider {
 			"directconnect.lags":                    DirectconnectLags(),
 			"directconnect.virtual_gateways":        DirectconnectVirtualGateways(),
 			"directconnect.virtual_interfaces":      DirectconnectVirtualInterfaces(),
+			"dax.clusters":                          DaxClusters(),
 			"dms.replication_instances":             DmsReplicationInstances(),
 			"dynamodb.tables":                       DynamodbTables(),
 			"ec2.byoip_cidrs":                       Ec2ByoipCidrs(),
