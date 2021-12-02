@@ -4,8 +4,7 @@ Describes the settings for a configuration set.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|account_id|text|The AWS Account ID of the resource.|
-|region|text|The AWS Region of the resource.|
+|environment_cq_id|uuid|Unique CloudQuery ID of aws_elasticbeanstalk_environments table (FK)|
 |application_name|text|The name of the application associated with this configuration set.|
 |date_created|timestamp without time zone|The date (in UTC time) when this configuration set was created.|
 |date_updated|timestamp without time zone|The date (in UTC time) when this configuration set was last modified.|
