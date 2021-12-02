@@ -32,6 +32,7 @@ ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     ADD COLUMN "tags" json;
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     ADD COLUMN "alias_icp_recordals" json;
+DROP TABLE IF EXISTS aws_cloudfront_distribution_alias_icp_recordals;
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
     ADD COLUMN caller_reference text;
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"

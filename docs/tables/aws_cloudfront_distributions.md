@@ -35,7 +35,7 @@ A summary of the information about a CloudFront distribution.
 |aliases|text[]|A complex type that contains the CNAME aliases, if any, that you want to associate with this distribution.|
 |default_root_object|text|The object that you want CloudFront to request from your origin (for example, index.html) when a viewer requests the root URL for your distribution (http://www.example.com) instead of an object in your distribution (http://www.example.com/product-description.html)|
 |http_version|text|(Optional) Specify the maximum HTTP version that you want viewers to use to communicate with CloudFront|
-|ip_v6_enabled|boolean|If you want CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution, specify true|
+|ipv6_enabled|boolean|If you want CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution, specify true|
 |logging_bucket|text|The Amazon S3 bucket to store the access logs in, for example, myawslogbucket.s3.amazonaws.com.|
 |logging_enabled|boolean|Specifies whether you want CloudFront to save access logs to an Amazon S3 bucket|
 |logging_include_cookies|boolean|Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies|

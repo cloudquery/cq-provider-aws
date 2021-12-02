@@ -207,7 +207,7 @@ func CloudfrontDistributions() *schema.Table {
 				Resolver:    schema.PathResolver("DistributionConfig.HttpVersion"),
 			},
 			{
-				Name:        "ip_v6_enabled",
+				Name:        "ipv6_enabled",
 				Description: "If you want CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution, specify true",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("DistributionConfig.IsIPV6Enabled"),
