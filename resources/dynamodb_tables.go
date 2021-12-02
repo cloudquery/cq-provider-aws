@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -27,6 +28,11 @@ func DynamodbTables() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveDynamodbTableTags,
 			},
 			{
 				Name:        "archival_summary",
@@ -438,7 +444,29 @@ func fetchDynamodbTables(ctx context.Context, meta schema.ClientMeta, parent *sc
 
 	return nil
 }
+func resolveDynamodbTableTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	table, ok := resource.Item.(*types.TableDescription)
+	if !ok {
+		return fmt.Errorf("expected *types.TableDescription but got %T", resource.Item)
+	}
 
+	cl := meta.(*client.Client)
+	svc := cl.Services().DynamoDB
+	response, err := svc.ListTagsOfResource(ctx, &dynamodb.ListTagsOfResourceInput{
+		ResourceArn: table.TableArn,
+	}, func(options *dynamodb.Options) {
+		options.Region = cl.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	tags := make(map[string]interface{})
+	for _, t := range response.Tags {
+		tags[*t.Key] = t.Value
+	}
+	return resource.Set(c.Name, tags)
+}
 func resolveDynamodbTableArchivalSummary(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	if r.ArchivalSummary == nil {
@@ -450,32 +478,26 @@ func resolveDynamodbTableArchivalSummary(ctx context.Context, meta schema.Client
 		"reason":     r.ArchivalSummary.ArchivalReason,
 	})
 }
-
 func resolveDynamodbTableAttributeDefinitions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	return resource.Set(c.Name, r.AttributeDefinitions)
 }
-
 func resolveDynamodbTableBillingModeSummary(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	return resource.Set(c.Name, r.BillingModeSummary)
 }
-
 func resolveDynamodbTableKeySchema(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	return resource.Set(c.Name, r.KeySchema)
 }
-
 func resolveDynamodbTableRestoreSummary(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	return resource.Set(c.Name, r.RestoreSummary)
 }
-
 func resolveDynamodbTableStreamSpecification(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
 	return resource.Set(c.Name, r.StreamSpecification)
 }
-
 func fetchDynamodbTableGlobalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p := parent.Item.(*types.TableDescription)
 	for i := range p.GlobalSecondaryIndexes {
@@ -483,12 +505,10 @@ func fetchDynamodbTableGlobalSecondaryIndexes(ctx context.Context, meta schema.C
 	}
 	return nil
 }
-
 func resolveDynamodbTableGlobalSecondaryIndexKeySchema(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.GlobalSecondaryIndexDescription)
 	return resource.Set(c.Name, r.KeySchema)
 }
-
 func fetchDynamodbTableLocalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p := parent.Item.(*types.TableDescription)
 	for i := range p.LocalSecondaryIndexes {
@@ -496,12 +516,10 @@ func fetchDynamodbTableLocalSecondaryIndexes(ctx context.Context, meta schema.Cl
 	}
 	return nil
 }
-
 func resolveDynamodbTableLocalSecondaryIndexKeySchema(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.LocalSecondaryIndexDescription)
 	return resource.Set(c.Name, r.KeySchema)
 }
-
 func fetchDynamodbTableReplicas(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	p := parent.Item.(*types.TableDescription)
 	for i := range p.Replicas {
@@ -509,7 +527,6 @@ func fetchDynamodbTableReplicas(ctx context.Context, meta schema.ClientMeta, par
 	}
 	return nil
 }
-
 func resolveDynamodbTableReplicaGlobalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ReplicaDescription)
 	return resource.Set(c.Name, r.GlobalSecondaryIndexes)

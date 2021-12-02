@@ -161,6 +161,7 @@ type ConfigServiceClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_dax.go . DAXClient
 type DAXClient interface {
 	DescribeClusters(ctx context.Context, params *dax.DescribeClustersInput, optFns ...func(*dax.Options)) (*dax.DescribeClustersOutput, error)
+	ListTags(ctx context.Context, params *dax.ListTagsInput, optFns ...func(*dax.Options)) (*dax.ListTagsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_directconnect.go . DirectconnectClient
@@ -178,6 +179,7 @@ type DirectconnectClient interface {
 type DynamoDBClient interface {
 	ListTables(ctx context.Context, params *dynamodb.ListTablesInput, optFns ...func(*dynamodb.Options)) (*dynamodb.ListTablesOutput, error)
 	DescribeTable(ctx context.Context, params *dynamodb.DescribeTableInput, optFns ...func(*dynamodb.Options)) (*dynamodb.DescribeTableOutput, error)
+	ListTagsOfResource(ctx context.Context, params *dynamodb.ListTagsOfResourceInput, optFns ...func(*dynamodb.Options)) (*dynamodb.ListTagsOfResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_databasemigrationservice.go . DatabasemigrationserviceClient

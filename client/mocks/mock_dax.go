@@ -54,3 +54,23 @@ func (mr *MockDAXClientMockRecorder) DescribeClusters(arg0, arg1 interface{}, ar
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeClusters", reflect.TypeOf((*MockDAXClient)(nil).DescribeClusters), varargs...)
 }
+
+// ListTags mocks base method.
+func (m *MockDAXClient) ListTags(arg0 context.Context, arg1 *dax.ListTagsInput, arg2 ...func(*dax.Options)) (*dax.ListTagsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTags", varargs...)
+	ret0, _ := ret[0].(*dax.ListTagsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTags indicates an expected call of ListTags.
+func (mr *MockDAXClientMockRecorder) ListTags(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTags", reflect.TypeOf((*MockDAXClient)(nil).ListTags), varargs...)
+}

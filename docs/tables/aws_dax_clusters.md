@@ -6,6 +6,7 @@ Contains all of the attributes of a specific DAX cluster.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb||
 |active_nodes|integer|The number of nodes in the cluster that are active (i.e., capable of serving requests).|
 |arn|text|The Amazon Resource Name (ARN) that uniquely identifies the cluster.|
 |cluster_discovery_endpoint_address|text|The DNS hostname of the endpoint.|

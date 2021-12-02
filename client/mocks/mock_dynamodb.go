@@ -74,3 +74,23 @@ func (mr *MockDynamoDBClientMockRecorder) ListTables(arg0, arg1 interface{}, arg
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTables", reflect.TypeOf((*MockDynamoDBClient)(nil).ListTables), varargs...)
 }
+
+// ListTagsOfResource mocks base method.
+func (m *MockDynamoDBClient) ListTagsOfResource(arg0 context.Context, arg1 *dynamodb.ListTagsOfResourceInput, arg2 ...func(*dynamodb.Options)) (*dynamodb.ListTagsOfResourceOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTagsOfResource", varargs...)
+	ret0, _ := ret[0].(*dynamodb.ListTagsOfResourceOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTagsOfResource indicates an expected call of ListTagsOfResource.
+func (mr *MockDynamoDBClientMockRecorder) ListTagsOfResource(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsOfResource", reflect.TypeOf((*MockDynamoDBClient)(nil).ListTagsOfResource), varargs...)
+}

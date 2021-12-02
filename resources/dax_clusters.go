@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dax"
@@ -27,6 +28,11 @@ func DaxClusters() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveDaxClusterTags,
 			},
 			{
 				Name:        "active_nodes",
@@ -215,7 +221,7 @@ func DaxClusters() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
-func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
+func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().DAX
 
@@ -240,13 +246,34 @@ func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, _ *schema.Res
 
 	return nil
 }
+func resolveDaxClusterTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cluster, ok := resource.Item.(types.Cluster)
+	if !ok {
+		return fmt.Errorf("expected types.Cluster but got %T", resource.Item)
+	}
 
-func resolveDaxClusterSecurityGroups(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	svc := cl.Services().DAX
+	response, err := svc.ListTags(ctx, &dax.ListTagsInput{
+		ResourceName: cluster.ClusterName,
+	}, func(options *dax.Options) {
+		options.Region = cl.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	tags := make(map[string]interface{})
+	for _, t := range response.Tags {
+		tags[*t.Key] = t.Value
+	}
+	return resource.Set(c.Name, tags)
+}
+func resolveDaxClusterSecurityGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Cluster)
 	return resource.Set(c.Name, r.SecurityGroups)
 }
-
-func fetchDaxClusterNodes(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchDaxClusterNodes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r := parent.Item.(types.Cluster)
 	for i := range r.Nodes {
 		res <- r.Nodes[i]
