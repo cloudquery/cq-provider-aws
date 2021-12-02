@@ -27,6 +27,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
@@ -375,6 +376,7 @@ func initServices(region string, c aws.Config) Services {
 		ConfigService:        configservice.NewFromConfig(awsCfg),
 		Directconnect:        directconnect.NewFromConfig(awsCfg),
 		DMS:                  databasemigrationservice.NewFromConfig(awsCfg),
+		DynamoDB:             dynamodb.NewFromConfig(awsCfg),
 		EC2:                  ec2.NewFromConfig(awsCfg),
 		ECR:                  ecr.NewFromConfig(awsCfg),
 		ECS:                  ecs.NewFromConfig(awsCfg),
