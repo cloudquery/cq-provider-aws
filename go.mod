@@ -136,10 +136,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-require (
-	github.com/aws/aws-sdk-go v1.17.7
-	github.com/aws/aws-sdk-go-v2/service/ssm v1.16.0
-)
+require github.com/aws/aws-sdk-go-v2/service/ssm v1.16.0
 
 require (
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.0.0 // indirect
