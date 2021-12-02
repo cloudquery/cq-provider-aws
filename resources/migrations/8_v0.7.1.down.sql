@@ -9,6 +9,8 @@ ALTER TABLE IF EXISTS "aws_config_configuration_recorders" DROP COLUMN status_la
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" DROP COLUMN logging_configuration;
 ALTER TABLE IF EXISTS "aws_waf_web_acls" DROP COLUMN logging_configuration;
 
+ALTER TABLE IF EXISTS "aws_redshift_clusters" DROP COLUMN logging_status;
+
 --aws_cloudfront_distributions
 ALTER TABLE IF EXISTS "aws_cloudfront_distributions"
 DROP
