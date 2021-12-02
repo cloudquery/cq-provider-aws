@@ -6,6 +6,7 @@ Describes the settings for a configuration set.
 | ------------- | ------------- | -----  |
 |environment_cq_id|uuid|Unique CloudQuery ID of aws_elasticbeanstalk_environments table (FK)|
 |application_name|text|The name of the application associated with this configuration set.|
+|application_arn|text|The arn of the associated application.|
 |date_created|timestamp without time zone|The date (in UTC time) when this configuration set was created.|
 |date_updated|timestamp without time zone|The date (in UTC time) when this configuration set was last modified.|
 |deployment_status|text|If this configuration set is associated with an environment, the DeploymentStatus parameter indicates the deployment status of this configuration set:  * null: This configuration is not associated with a running environment.  * pending: This is a draft configuration that is not deployed to the associated environment but is in the process of deploying.  * deployed: This is the configuration that is currently deployed to the associated running environment.  * failed: This is a draft configuration that failed to successfully deploy.|
