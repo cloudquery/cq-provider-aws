@@ -55,6 +55,26 @@ func (mr *MockDynamoDBClientMockRecorder) DescribeTable(arg0, arg1 interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeTable", reflect.TypeOf((*MockDynamoDBClient)(nil).DescribeTable), varargs...)
 }
 
+// DescribeTableReplicaAutoScaling mocks base method.
+func (m *MockDynamoDBClient) DescribeTableReplicaAutoScaling(arg0 context.Context, arg1 *dynamodb.DescribeTableReplicaAutoScalingInput, arg2 ...func(*dynamodb.Options)) (*dynamodb.DescribeTableReplicaAutoScalingOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeTableReplicaAutoScaling", varargs...)
+	ret0, _ := ret[0].(*dynamodb.DescribeTableReplicaAutoScalingOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeTableReplicaAutoScaling indicates an expected call of DescribeTableReplicaAutoScaling.
+func (mr *MockDynamoDBClientMockRecorder) DescribeTableReplicaAutoScaling(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeTableReplicaAutoScaling", reflect.TypeOf((*MockDynamoDBClient)(nil).DescribeTableReplicaAutoScaling), varargs...)
+}
+
 // ListTables mocks base method.
 func (m *MockDynamoDBClient) ListTables(arg0 context.Context, arg1 *dynamodb.ListTablesInput, arg2 ...func(*dynamodb.Options)) (*dynamodb.ListTablesOutput, error) {
 	m.ctrl.T.Helper()

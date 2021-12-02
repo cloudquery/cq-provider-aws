@@ -42,6 +42,21 @@ func buildDynamodbTablesMock(t *testing.T, ctrl *gomock.Controller) client.Servi
 		nil,
 	)
 
+	repOutput := &dynamodb.DescribeTableReplicaAutoScalingOutput{
+		TableAutoScalingDescription: &types.TableAutoScalingDescription{
+			TableName:   &tableName,
+			TableStatus: types.TableStatusActive,
+		},
+	}
+	if err := faker.FakeData(repOutput.TableAutoScalingDescription.Replicas); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeTableReplicaAutoScaling(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		repOutput,
+		nil,
+	)
+
 	tags := &dynamodb.ListTagsOfResourceOutput{}
 	if err := faker.FakeData(&tags); err != nil {
 		t.Fatal(err)

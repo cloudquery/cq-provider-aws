@@ -406,6 +406,78 @@ func DynamodbTables() *schema.Table {
 					},
 				},
 			},
+			{
+				Name:        "aws_dynamodb_table_replica_auto_scalings",
+				Description: "Represents the auto scaling settings of the replica.",
+				Resolver:    fetchDynamodbTableReplicaAutoScalings,
+				Columns: []schema.Column{
+					{
+						Name:        "table_cq_id",
+						Description: "Unique CloudQuery ID of aws_dynamodb_tables table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "region_name",
+						Description: "The Region where the replica exists.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "replica_provisioned_read_capacity_auto_scaling_settings",
+						Description: "Represents the auto scaling settings for a global table or global secondary index.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveDynamodbTableReplicaAutoScalingReplicaProvisionedReadCapacityAutoScalingSettings,
+					},
+					{
+						Name:        "replica_provisioned_write_capacity_auto_scaling_settings",
+						Description: "Represents the auto scaling settings for a global table or global secondary index.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveDynamodbTableReplicaAutoScalingReplicaProvisionedWriteCapacityAutoScalingSettings,
+					},
+					{
+						Name:        "replica_status",
+						Description: "The current state of the replica:  * CREATING - The replica is being created.  * UPDATING - The replica is being updated.  * DELETING - The replica is being deleted.  * ACTIVE - The replica is ready for use.",
+						Type:        schema.TypeString,
+					},
+				},
+				Relations: []*schema.Table{
+					{
+						Name:        "aws_dynamodb_table_replica_auto_scaling_replica_auto_scaling_global_secondary_indexes",
+						Description: "Represents the auto scaling configuration for a replica global secondary index.",
+						Resolver:    fetchDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexes,
+						Columns: []schema.Column{
+							{
+								Name:        "table_replica_auto_scaling_cq_id",
+								Description: "Unique CloudQuery ID of aws_dynamodb_table_replica_auto_scalings table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "index_name",
+								Description: "The name of the global secondary index.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "index_status",
+								Description: "The current state of the replica global secondary index:  * CREATING - The index is being created.  * UPDATING - The index is being updated.  * DELETING - The index is being deleted.  * ACTIVE - The index is ready for use.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "provisioned_read_capacity_auto_scaling_settings",
+								Description: "Represents the auto scaling settings for a global table or global secondary index.",
+								Type:        schema.TypeJSON,
+								Resolver:    resolveDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexProvisionedReadCapacityAutoScalingSettings,
+							},
+							{
+								Name:        "provisioned_write_capacity_auto_scaling_settings",
+								Description: "Represents the auto scaling settings for a global table or global secondary index.",
+								Type:        schema.TypeJSON,
+								Resolver:    resolveDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexProvisionedWriteCapacityAutoScalingSettings,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -530,4 +602,76 @@ func fetchDynamodbTableReplicas(ctx context.Context, meta schema.ClientMeta, par
 func resolveDynamodbTableReplicaGlobalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ReplicaDescription)
 	return resource.Set(c.Name, r.GlobalSecondaryIndexes)
+}
+func fetchDynamodbTableReplicaAutoScalings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	par, ok := parent.Item.(*types.TableDescription)
+	if !ok {
+		return fmt.Errorf("expected *types.TableDescription but got %T", parent.Item)
+	}
+
+	c := meta.(*client.Client)
+	svc := c.Services().DynamoDB
+
+	output, err := svc.DescribeTableReplicaAutoScaling(ctx, &dynamodb.DescribeTableReplicaAutoScalingInput{
+		TableName: par.TableName,
+	}, func(o *dynamodb.Options) {
+		o.Region = c.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	for i := range output.TableAutoScalingDescription.Replicas {
+		res <- output.TableAutoScalingDescription.Replicas[i]
+	}
+	return nil
+}
+func resolveDynamodbTableReplicaAutoScalingReplicaProvisionedReadCapacityAutoScalingSettings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ReplicaAutoScalingDescription)
+	if r.ReplicaProvisionedReadCapacityAutoScalingSettings == nil {
+		return nil
+	}
+	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ReplicaProvisionedReadCapacityAutoScalingSettings))
+}
+func resolveDynamodbTableReplicaAutoScalingReplicaProvisionedWriteCapacityAutoScalingSettings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ReplicaAutoScalingDescription)
+	if r.ReplicaProvisionedWriteCapacityAutoScalingSettings == nil {
+		return nil
+	}
+	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ReplicaProvisionedWriteCapacityAutoScalingSettings))
+}
+func fetchDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	p := parent.Item.(*types.ReplicaAutoScalingDescription)
+	for i := range p.GlobalSecondaryIndexes {
+		res <- p.GlobalSecondaryIndexes[i]
+	}
+	return nil
+}
+func resolveDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexProvisionedReadCapacityAutoScalingSettings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ReplicaGlobalSecondaryIndexAutoScalingDescription)
+	if r.ProvisionedReadCapacityAutoScalingSettings == nil {
+		return nil
+	}
+	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ProvisionedReadCapacityAutoScalingSettings))
+}
+func resolveDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexProvisionedWriteCapacityAutoScalingSettings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ReplicaGlobalSecondaryIndexAutoScalingDescription)
+	if r.ProvisionedWriteCapacityAutoScalingSettings == nil {
+		return nil
+	}
+	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ProvisionedWriteCapacityAutoScalingSettings))
+}
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
+func marshalAutoScalingSettingsDescription(d *types.AutoScalingSettingsDescription) map[string]interface{} {
+	return map[string]interface{}{
+		"auto_scaling_disabled": d.AutoScalingDisabled,
+		"role_arn":              d.AutoScalingRoleArn,
+		"scaling_policies":      d.ScalingPolicies,
+		"minimum_units":         d.MinimumUnits,
+		"maximum_units":         d.MaximumUnits,
+	}
 }
