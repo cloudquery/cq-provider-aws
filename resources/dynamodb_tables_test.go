@@ -48,7 +48,7 @@ func buildDynamodbTablesMock(t *testing.T, ctrl *gomock.Controller) client.Servi
 			TableStatus: types.TableStatusActive,
 		},
 	}
-	if err := faker.FakeData(repOutput.TableAutoScalingDescription.Replicas); err != nil {
+	if err := faker.FakeData(&repOutput.TableAutoScalingDescription.Replicas); err != nil {
 		t.Fatal(err)
 	}
 

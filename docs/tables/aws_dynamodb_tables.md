@@ -6,7 +6,7 @@ Represents the properties of a table.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|tags|jsonb||
+|tags|jsonb|The tags associated with the table.|
 |archival_summary|jsonb|Contains information about the table archive.|
 |attribute_definitions|jsonb|An array of AttributeDefinition objects|
 |billing_mode_summary|jsonb|Contains the details for the read/write capacity mode.|

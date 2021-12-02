@@ -13,9 +13,12 @@ import (
 
 func DynamodbTables() *schema.Table {
 	return &schema.Table{
-		Name:        "aws_dynamodb_tables",
-		Description: "Represents the properties of a table.",
-		Resolver:    fetchDynamodbTables,
+		Name:         "aws_dynamodb_tables",
+		Description:  "Represents the properties of a table.",
+		Resolver:     fetchDynamodbTables,
+		Multiplex:    client.AccountRegionMultiplex,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -30,9 +33,10 @@ func DynamodbTables() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveDynamodbTableTags,
+				Name:        "tags",
+				Description: "The tags associated with the table.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveDynamodbTableTags,
 			},
 			{
 				Name:        "archival_summary",
@@ -641,7 +645,7 @@ func resolveDynamodbTableReplicaAutoScalingReplicaProvisionedWriteCapacityAutoSc
 	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ReplicaProvisionedWriteCapacityAutoScalingSettings))
 }
 func fetchDynamodbTableReplicaAutoScalingReplicaAutoScalingGlobalSecondaryIndexes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	p := parent.Item.(*types.ReplicaAutoScalingDescription)
+	p := parent.Item.(types.ReplicaAutoScalingDescription)
 	for i := range p.GlobalSecondaryIndexes {
 		res <- p.GlobalSecondaryIndexes[i]
 	}

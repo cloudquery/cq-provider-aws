@@ -13,9 +13,12 @@ import (
 
 func DaxClusters() *schema.Table {
 	return &schema.Table{
-		Name:        "aws_dax_clusters",
-		Description: "Contains all of the attributes of a specific DAX cluster.",
-		Resolver:    fetchDaxClusters,
+		Name:         "aws_dax_clusters",
+		Description:  "Contains all of the attributes of a specific DAX cluster.",
+		Resolver:     fetchDaxClusters,
+		Multiplex:    client.AccountRegionMultiplex,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -30,9 +33,10 @@ func DaxClusters() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: resolveDaxClusterTags,
+				Name:        "tags",
+				Description: "The tags associated with the cluster.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveDaxClusterTags,
 			},
 			{
 				Name:        "active_nodes",
