@@ -2,9 +2,11 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -81,6 +83,12 @@ func RdsEventSubscriptions() *schema.Table {
 				Description: "The time the RDS event notification subscription was created.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "tags",
+				Description: "List of tags",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveRDSEventSubscriptionTags,
+			},
 		},
 	}
 }
@@ -106,4 +114,24 @@ func fetchRdsEventSubscriptions(ctx context.Context, meta schema.ClientMeta, par
 		input.Marker = out.Marker
 	}
 	return nil
+}
+
+func resolveRDSEventSubscriptionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	s, ok := resource.Item.(types.EventSubscription)
+	if !ok {
+		return fmt.Errorf("not a %T: %T", s, resource.Item)
+	}
+	cl := meta.(*client.Client)
+	svc := cl.Services().RDS
+	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: s.EventSubscriptionArn}, func(o *rds.Options) {
+		o.Region = cl.Region
+	})
+	if err != nil {
+		return err
+	}
+	tags := make(map[string]string, len(out.TagList))
+	for _, t := range out.TagList {
+		tags[aws.ToString(t.Key)] = aws.ToString(t.Value)
+	}
+	return resource.Set(c.Name, tags)
 }

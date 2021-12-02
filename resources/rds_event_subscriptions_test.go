@@ -3,6 +3,7 @@ package resources
 import (
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -19,6 +20,17 @@ func buildRDSEventSubscriptions(t *testing.T, ctrl *gomock.Controller) client.Se
 	}
 	mock.EXPECT().DescribeEventSubscriptions(gomock.Any(), &rds.DescribeEventSubscriptionsInput{}, gomock.Any()).Return(
 		&rds.DescribeEventSubscriptionsOutput{EventSubscriptionsList: []types.EventSubscription{s}},
+		nil,
+	)
+
+	mock.EXPECT().ListTagsForResource(
+		gomock.Any(),
+		&rds.ListTagsForResourceInput{ResourceName: s.EventSubscriptionArn},
+		gomock.Any(),
+	).Return(
+		&rds.ListTagsForResourceOutput{
+			TagList: []types.Tag{{Key: aws.String("key"), Value: aws.String("value")}},
+		},
 		nil,
 	)
 	return client.Services{RDS: mock}

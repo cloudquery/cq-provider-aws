@@ -16,3 +16,4 @@ Contains the results of a successful invocation of the DescribeEventSubscription
 |source_type|text|The source type for the RDS event notification subscription.|
 |status|text|The status of the RDS event notification subscription|
 |subscription_creation_time|text|The time the RDS event notification subscription was created.|
+|tags|jsonb|List of tags|
