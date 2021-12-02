@@ -77,7 +77,6 @@ func Provider() *provider.Provider {
 			"eks.clusters":                          EksClusters(),
 			"elasticbeanstalk.applications":         ElasticbeanstalkApplications(),
 			"elasticbeanstalk.environments":         ElasticbeanstalkEnvironments(),
-			"elasticbeanstalk.config_options":       ElasticbeanstalkConfigurationOptions(),
 			"elasticbeanstalk.config_settings":      ElasticbeanstalkConfigurationSettings(),
 			"elasticsearch.domains":                 ElasticsearchDomains(),
 			"elbv1.load_balancers":                  Elbv1LoadBalancers(),

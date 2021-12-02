@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
@@ -173,6 +174,96 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
+				Name:        "aws_elasticbeanstalk_configuration_options",
+				Description: "Describes the possible values for a configuration option.",
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_arn", "name", "namespace"}},
+				Columns: []schema.Column{
+					{
+						Name:        "environment_cq_id",
+						Description: "Unique CloudQuery ID of aws_elasticbeanstalk_environments table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+
+					{
+						Name:        "application_arn",
+						Description: "The arn of the associated application.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("ApplicationArn"),
+					}, {
+						Name:        "date_created",
+						Description: "The date when the application was created.",
+						Type:        schema.TypeTimestamp,
+					},
+					{
+						Name: "change_severity",
+						Description: `An indication of which action is required if the value for this configuration option changes:  
+						* NoInterruption : There is no interruption to the environment or application availability.  
+						* RestartEnvironment : The environment is entirely restarted, all AWS resources are deleted and recreated, and the environment is unavailable during the process.  
+						* RestartApplicationServer : The environment is available the entire time`,
+						Type: schema.TypeString,
+					},
+					{
+						Name:        "default_value",
+						Description: "The default value for this configuration option.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "max_length",
+						Description: "If specified, the configuration option must be a string value no longer than this value.",
+						Type:        schema.TypeInt,
+					},
+					{
+						Name:        "max_value",
+						Description: "If specified, the configuration option must be a numeric value less than this value.",
+						Type:        schema.TypeInt,
+					},
+					{
+						Name:        "min_value",
+						Description: "If specified, the configuration option must be a numeric value greater than this value.",
+						Type:        schema.TypeInt,
+					},
+					{
+						Name:        "name",
+						Description: "The name of the configuration option.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "namespace",
+						Description: "A unique namespace identifying the option's associated AWS resource.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "regex_label",
+						Description: "A unique name representing this regular expression.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("Regex.Label"),
+					},
+					{
+						Name:        "regex_pattern",
+						Description: "The regular expression pattern that a string configuration option value with this restriction must match.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("Regex.Pattern"),
+					},
+					{
+						Name:        "user_defined",
+						Description: "An indication of whether the user defined this configuration option:  * true : This configuration option was defined by the user",
+						Type:        schema.TypeBool,
+					},
+					{
+						Name:        "value_options",
+						Description: "If specified, values for the configuration option are selected from this list.",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "value_type",
+						Description: "An indication of which type of values this option has and whether it is allowable to select one or more than one of the possible values:  * Scalar : Values for this option are a single selection from the possible values, or an unformatted string, or numeric value governed by the MIN/MAX/Regex constraints.  * List : Values for this option are multiple selections from the possible values.  * Boolean : Values for this option are either true or false .  * Json : Values for this option are a JSON representation of a ConfigDocument.",
+						Type:        schema.TypeString,
+					},
+				},
+			},
+
+			{
 				Name:        "aws_elasticbeanstalk_environment_links",
 				Description: "A link to another environment, defined in the environment's manifest",
 				Resolver:    fetchElasticbeanstalkEnvironmentLinks,
@@ -264,4 +355,37 @@ func fetchElasticbeanstalkEnvironmentLinks(ctx context.Context, meta schema.Clie
 	}
 	res <- p.EnvironmentLinks
 	return nil
+}
+
+func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	p, ok := parent.Item.(types.EnvironmentDescription)
+	if !ok {
+		return fmt.Errorf("expected types.EnvironmentDescription but got %T", parent.Item)
+	}
+	c := meta.(*client.Client)
+	svc := c.Services().ElasticBeanstalk
+	configOptionsIn := elasticbeanstalk.DescribeConfigurationOptionsInput{
+		ApplicationName: p.ApplicationName,
+		EnvironmentName: p.EnvironmentName,
+	}
+	output, err := svc.DescribeConfigurationOptions(ctx, &configOptionsIn, func(options *elasticbeanstalk.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	for _, option := range output.Options {
+		res <- ConfigOptions{
+			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID), *p.DateCreated,
+		}
+	}
+
+	return nil
+}
+
+type ConfigOptions struct {
+	types.ConfigurationOptionDescription
+	ApplicationArn string
+	DateCreated    time.Time
 }
