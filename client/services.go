@@ -158,7 +158,7 @@ type ConfigServiceClient interface {
 	configservice.DescribeConformancePacksAPIClient
 }
 
-//go:generate mockgen -package=mocks -destination=./mocks/mock_dax.go . DAX
+//go:generate mockgen -package=mocks -destination=./mocks/mock_dax.go . DAXClient
 type DAXClient interface {
 	DescribeClusters(ctx context.Context, params *dax.DescribeClustersInput, optFns ...func(*dax.Options)) (*dax.DescribeClustersOutput, error)
 }
@@ -174,7 +174,7 @@ type DirectconnectClient interface {
 	DescribeVirtualInterfaces(ctx context.Context, params *directconnect.DescribeVirtualInterfacesInput, optFns ...func(*directconnect.Options)) (*directconnect.DescribeVirtualInterfacesOutput, error)
 }
 
-//go:generate mockgen -package=mocks -destination=./mocks/mock_dynamodb.go . DynamoDB
+//go:generate mockgen -package=mocks -destination=./mocks/mock_dynamodb.go . DynamoDBClient
 type DynamoDBClient interface {
 	ListTables(ctx context.Context, params *dynamodb.ListTablesInput, optFns ...func(*dynamodb.Options)) (*dynamodb.ListTablesOutput, error)
 	DescribeTable(ctx context.Context, params *dynamodb.DescribeTableInput, optFns ...func(*dynamodb.Options)) (*dynamodb.DescribeTableOutput, error)
