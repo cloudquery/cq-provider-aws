@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
@@ -177,7 +176,7 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:        "aws_elasticbeanstalk_configuration_settings",
 				Description: "Describes the settings for a configuration set.",
 				Resolver:    fetchElasticbeanstalkConfigurationSettings,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_name", "date_created"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "environment_cq_id",
@@ -189,6 +188,12 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 						Name:        "application_name",
 						Description: "The name of the application associated with this configuration set.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "application_arn",
+						Description: "The arn of the associated application.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("ApplicationArn"),
 					},
 					{
 						Name:        "date_created",
@@ -295,12 +300,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 						Description: "A unique namespace identifying the option's associated AWS resource.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Namespace"),
-					},
-					{
-						Name:        "date_created",
-						Description: "The date when the application was created.",
-						Type:        schema.TypeTimestamp,
-						Resolver:    schema.PathResolver("DateCreated"),
 					},
 					{
 						Name: "change_severity",
@@ -472,12 +471,8 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 	}
 
 	for _, option := range output.Options {
-		o := ConfigOptions{
-			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID), *p.DateCreated,
-		}
-		fmt.Printf("%s, %s\n", *o.Name, *o.Namespace)
 		res <- ConfigOptions{
-			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID), *p.DateCreated,
+			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID),
 		}
 	}
 
@@ -487,7 +482,6 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 type ConfigOptions struct {
 	types.ConfigurationOptionDescription
 	ApplicationArn string
-	DateCreated    time.Time
 }
 
 func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
@@ -510,21 +504,26 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 	}
 
 	for _, option := range output.ConfigurationSettings {
-		fmt.Printf("%+v, %+v\n", option, parent.Id())
-		res <- option
+		res <- ConfigSettings{
+			option, client.GenerateResourceARN("elasticbeanstalk", "application", *p.ApplicationName, c.Region, c.AccountID),
+		}
 	}
 
 	return nil
 }
 
+type ConfigSettings struct {
+	types.ConfigurationSettingsDescription
+	ApplicationArn string
+}
+
 func fetchElasticbeanstalkConfigurationSettingOptionSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	option, ok := parent.Item.(types.ConfigurationSettingsDescription)
+	option, ok := parent.Item.(ConfigSettings)
 	if !ok {
 		meta.Logger().Error("parent.Item", "Item", parent.Item)
 		return fmt.Errorf("not %T", option)
 	}
 	for _, t := range option.OptionSettings {
-		fmt.Printf("%+v, %+v\n", t, parent.Id())
 		res <- t
 	}
 
