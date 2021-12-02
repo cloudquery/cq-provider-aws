@@ -51,6 +51,7 @@ func Provider() *provider.Provider {
 			"directconnect.virtual_gateways":        DirectconnectVirtualGateways(),
 			"directconnect.virtual_interfaces":      DirectconnectVirtualInterfaces(),
 			"dms.replication_instances":             DmsReplicationInstances(),
+			"dynamodb.tables":                       DynamodbTables(),
 			"ec2.byoip_cidrs":                       Ec2ByoipCidrs(),
 			"ec2.customer_gateways":                 Ec2CustomerGateways(),
 			"ec2.ebs_volumes":                       Ec2EbsVolumes(),

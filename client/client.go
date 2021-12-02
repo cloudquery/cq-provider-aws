@@ -107,6 +107,7 @@ type Services struct {
 	CognitoIdentityPools CognitoIdentityPoolsClient
 	CognitoUserPools     CognitoUserPoolsClient
 	Directconnect        DirectconnectClient
+	DynamoDB             DynamoDBClient
 	DMS                  DatabasemigrationserviceClient
 	ECR                  EcrClient
 	ECS                  EcsClient
