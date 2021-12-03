@@ -161,13 +161,13 @@ func DynamodbTables() *schema.Table {
 				Resolver:    schema.PathResolver("TableArn"),
 			},
 			{
-				Name:        "table_class_summary_last_update_date_time",
+				Name:        "table_class_last_update",
 				Description: "The date and time at which the table class was last updated.",
 				Type:        schema.TypeTimestamp,
 				Resolver:    schema.PathResolver("TableClassSummary.LastUpdateDateTime"),
 			},
 			{
-				Name:        "table_class_summary_table_class",
+				Name:        "table_class",
 				Description: "The table class of the specified table",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("TableClassSummary.TableClass"),
@@ -185,14 +185,16 @@ func DynamodbTables() *schema.Table {
 				Resolver:    schema.PathResolver("TableName"),
 			},
 			{
-				Name:        "table_size_bytes",
+				Name:        "size_bytes",
 				Description: "The total size of the specified table, in bytes",
 				Type:        schema.TypeBigInt,
+				Resolver:    schema.PathResolver("TableSizeBytes"),
 			},
 			{
-				Name:        "table_status",
+				Name:        "status",
 				Description: "The current state of the table:  * CREATING - The table is being created.  * UPDATING - The table is being updated.  * DELETING - The table is being deleted.  * ACTIVE - The table is ready for use.  * INACCESSIBLE_ENCRYPTION_CREDENTIALS - The KMS key used to encrypt the table in inaccessible",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("TableStatus"),
 			},
 		},
 		Relations: []*schema.Table{

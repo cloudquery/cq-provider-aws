@@ -28,9 +28,9 @@ Information about a DynamoDB table.
 |sse_status|text|Represents the current state of server-side encryption|
 |stream_specification|jsonb|The current DynamoDB Streams configuration for the table.|
 |arn|text|The Amazon Resource Name (ARN) that uniquely identifies the table.|
-|table_class_summary_last_update_date_time|timestamp without time zone|The date and time at which the table class was last updated.|
-|table_class_summary_table_class|text|The table class of the specified table|
+|table_class_last_update|timestamp without time zone|The date and time at which the table class was last updated.|
+|table_class|text|The table class of the specified table|
 |id|text|Unique identifier for the table for which the backup was created.|
 |name|text|The name of the table.|
-|table_size_bytes|bigint|The total size of the specified table, in bytes|
-|table_status|text|The current state of the table:  * CREATING - The table is being created.  * UPDATING - The table is being updated.  * DELETING - The table is being deleted.  * ACTIVE - The table is ready for use.  * INACCESSIBLE_ENCRYPTION_CREDENTIALS - The KMS key used to encrypt the table in inaccessible|
+|size_bytes|bigint|The total size of the specified table, in bytes|
+|status|text|The current state of the table:  * CREATING - The table is being created.  * UPDATING - The table is being updated.  * DELETING - The table is being deleted.  * ACTIVE - The table is ready for use.  * INACCESSIBLE_ENCRYPTION_CREDENTIALS - The KMS key used to encrypt the table in inaccessible|
