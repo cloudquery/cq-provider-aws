@@ -3,14 +3,14 @@ export CQ_REATTACH_PROVIDERS=.cq_reattach
 
 # install the latest version of CQ
 install-cq:
-	@echo Go to https://docs.cloudquery.io/install-instructions and do the thing there please
+	@echo Go to https://docs.cloudquery.io/install-instructions and follow install instructions for your specific machine
 
 install-cq-mac:
 	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Darwin_x86_64 -o cloudquery
 	chmod +x ./cloudquery
 
-install-cq-mac:
-	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Darwin_x86_64 -o cloudquery
+install-cq-linux:
+	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Linux_x86_64 -o cloudquery
 	chmod +x ./cloudquery
 
 
