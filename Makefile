@@ -3,15 +3,10 @@ export CQ_REATTACH_PROVIDERS=.cq_reattach
 
 # install the latest version of CQ
 install-cq:
-	@echo Go to https://docs.cloudquery.io/docs/getting-started and follow install instructions for your specific machine
-
-install-cq-mac:
-	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Darwin_x86_64 -o cloudquery
-	chmod +x ./cloudquery
-
-install-cq-linux:
-	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Linux_x86_64 -o cloudquery
-	chmod +x ./cloudquery
+	@if [[ "$(OS)" != "Darwin" && "$(OS)" != "Linux" && "$(OS)" != "Windows" ]]; then echo "\n Invalid OS set. Valid Options are Darwin, Linux and Windows. Example invocation is:\n make OS=Linux ARCH=arm64 install-cq \n For more information go to  https://docs.cloudquery.io/docs/getting-started \n"; exit 1; fi
+	@if [[ "$(ARCH)" != "x86_64" && "$(ARCH)" != "arm64" ]]; then echo "\n Invalid ARCH set. Valid options are x86_64 and arm64. Example invocation is:\n make OS=Linux ARCH=arm64 install-cq \n For more information go to  https://docs.cloudquery.io/docs/getting-started \n"; exit 1; fi
+	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_${OS}_${ARCH} -o cloudquery
+	chmod a+x cloudquery
 
 
 # build the cq aws provider
