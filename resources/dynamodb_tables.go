@@ -562,15 +562,14 @@ func resolveDynamodbTableArchivalSummary(ctx context.Context, meta schema.Client
 }
 func resolveDynamodbTableAttributeDefinitions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
-	val := make([]map[string]interface{}, len(r.AttributeDefinitions))
+	val := make(map[string]interface{}, len(r.AttributeDefinitions))
 	for i := range r.AttributeDefinitions {
-		val[i] = map[string]interface{}{
+		val[aws.ToString(r.AttributeDefinitions[i].AttributeName)] = map[string]interface{}{
 			"type": r.AttributeDefinitions[i].AttributeType,
 			"name": r.AttributeDefinitions[i].AttributeName,
 		}
 	}
-	b, _ := json.Marshal(val)
-	return resource.Set(c.Name, b)
+	return resource.Set(c.Name, val)
 }
 func resolveDynamodbTableBillingModeSummary(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.TableDescription)
@@ -643,15 +642,14 @@ func resolveDynamodbTableReplicaGlobalSecondaryIndexes(ctx context.Context, meta
 		return nil
 	}
 
-	val := make([]map[string]interface{}, len(r.GlobalSecondaryIndexes))
+	val := make(map[string]interface{}, len(r.GlobalSecondaryIndexes))
 	for i := range r.GlobalSecondaryIndexes {
-		val[i] = map[string]interface{}{
+		val[aws.ToString(r.GlobalSecondaryIndexes[i].IndexName)] = map[string]interface{}{
 			"name":                            r.GlobalSecondaryIndexes[i].IndexName,
 			"provisioned_throughput_override": r.GlobalSecondaryIndexes[i].ProvisionedThroughputOverride,
 		}
 	}
-	b, _ := json.Marshal(val)
-	return resource.Set(c.Name, b)
+	return resource.Set(c.Name, val)
 }
 func fetchDynamodbTableReplicaAutoScalings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	par, ok := parent.Item.(*types.TableDescription)
@@ -682,10 +680,10 @@ func resolveDynamodbTableReplicaAutoScalingGlobalSecondaryIndexes(ctx context.Co
 		return nil
 	}
 
-	val := make([]simplifiedGlobalSecondaryIndex, len(r.GlobalSecondaryIndexes))
+	val := make(map[string]simplifiedGlobalSecondaryIndex, len(r.GlobalSecondaryIndexes))
 	for i := range r.GlobalSecondaryIndexes {
 		d := r.GlobalSecondaryIndexes[i]
-		val[i] = simplifiedGlobalSecondaryIndex{
+		val[aws.ToString(d.IndexName)] = simplifiedGlobalSecondaryIndex{
 			Name:          d.IndexName,
 			Status:        d.IndexStatus,
 			ReadCapacity:  marshalAutoScalingSettingsDescription(d.ProvisionedReadCapacityAutoScalingSettings),
@@ -693,8 +691,7 @@ func resolveDynamodbTableReplicaAutoScalingGlobalSecondaryIndexes(ctx context.Co
 		}
 	}
 
-	b, _ := json.Marshal(val)
-	return resource.Set(c.Name, b)
+	return resource.Set(c.Name, val)
 }
 func resolveDynamodbTableReplicaAutoScalingReadCapacity(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ReplicaAutoScalingDescription)
