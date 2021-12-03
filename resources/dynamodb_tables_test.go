@@ -57,6 +57,18 @@ func buildDynamodbTablesMock(t *testing.T, ctrl *gomock.Controller) client.Servi
 		nil,
 	)
 
+	cbOutput := &dynamodb.DescribeContinuousBackupsOutput{
+		ContinuousBackupsDescription: &types.ContinuousBackupsDescription{},
+	}
+	if err := faker.FakeData(&cbOutput.ContinuousBackupsDescription); err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().DescribeContinuousBackups(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		cbOutput,
+		nil,
+	)
+
 	tags := &dynamodb.ListTagsOfResourceOutput{}
 	if err := faker.FakeData(&tags); err != nil {
 		t.Fatal(err)

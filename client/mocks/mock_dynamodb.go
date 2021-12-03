@@ -35,6 +35,26 @@ func (m *MockDynamoDBClient) EXPECT() *MockDynamoDBClientMockRecorder {
 	return m.recorder
 }
 
+// DescribeContinuousBackups mocks base method.
+func (m *MockDynamoDBClient) DescribeContinuousBackups(arg0 context.Context, arg1 *dynamodb.DescribeContinuousBackupsInput, arg2 ...func(*dynamodb.Options)) (*dynamodb.DescribeContinuousBackupsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeContinuousBackups", varargs...)
+	ret0, _ := ret[0].(*dynamodb.DescribeContinuousBackupsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeContinuousBackups indicates an expected call of DescribeContinuousBackups.
+func (mr *MockDynamoDBClientMockRecorder) DescribeContinuousBackups(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeContinuousBackups", reflect.TypeOf((*MockDynamoDBClient)(nil).DescribeContinuousBackups), varargs...)
+}
+
 // DescribeTable mocks base method.
 func (m *MockDynamoDBClient) DescribeTable(arg0 context.Context, arg1 *dynamodb.DescribeTableInput, arg2 ...func(*dynamodb.Options)) (*dynamodb.DescribeTableOutput, error) {
 	m.ctrl.T.Helper()

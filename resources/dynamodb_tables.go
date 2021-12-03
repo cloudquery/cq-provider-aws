@@ -452,6 +452,42 @@ func DynamodbTables() *schema.Table {
 					},
 				},
 			},
+			{
+				Name:        "aws_dynamodb_table_continuous_backups",
+				Description: "Represents the continuous backups and point in time recovery settings on the table.",
+				Resolver:    fetchDynamodbTableContinuousBackups,
+				Columns: []schema.Column{
+					{
+						Name:        "table_cq_id",
+						Description: "Unique CloudQuery ID of aws_dynamodb_tables table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "continuous_backups_status",
+						Description: "ContinuousBackupsStatus can be one of the following states: ENABLED, DISABLED  This member is required.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "earliest_restorable_date_time",
+						Description: "Specifies the earliest point in time you can restore your table to",
+						Type:        schema.TypeTimestamp,
+						Resolver:    schema.PathResolver("PointInTimeRecoveryDescription.EarliestRestorableDateTime"),
+					},
+					{
+						Name:        "latest_restorable_date_time",
+						Description: "LatestRestorableDateTime is typically 5 minutes before the current time.",
+						Type:        schema.TypeTimestamp,
+						Resolver:    schema.PathResolver("PointInTimeRecoveryDescription.LatestRestorableDateTime"),
+					},
+					{
+						Name:        "point_in_time_recovery_status",
+						Description: "The current state of point in time recovery:  * ENABLING - Point in time recovery is being enabled.  * ENABLED - Point in time recovery is enabled.  * DISABLED - Point in time recovery is disabled.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("PointInTimeRecoveryDescription.PointInTimeRecoveryStatus"),
+					},
+				},
+			},
 		},
 	}
 }
@@ -673,6 +709,27 @@ func resolveDynamodbTableReplicaAutoScalingWriteCapacity(ctx context.Context, me
 		return nil
 	}
 	return resource.Set(c.Name, marshalAutoScalingSettingsDescription(r.ReplicaProvisionedWriteCapacityAutoScalingSettings))
+}
+func fetchDynamodbTableContinuousBackups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	par, ok := parent.Item.(*types.TableDescription)
+	if !ok {
+		return fmt.Errorf("expected *types.TableDescription but got %T", parent.Item)
+	}
+
+	c := meta.(*client.Client)
+	svc := c.Services().DynamoDB
+
+	output, err := svc.DescribeContinuousBackups(ctx, &dynamodb.DescribeContinuousBackupsInput{
+		TableName: par.TableName,
+	}, func(o *dynamodb.Options) {
+		o.Region = c.Region
+	})
+	if err != nil {
+		return err
+	}
+
+	res <- output.ContinuousBackupsDescription
+	return nil
 }
 
 // ====================================================================================================================
