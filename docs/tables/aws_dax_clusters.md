@@ -1,6 +1,6 @@
 
 # Table: aws_dax_clusters
-Contains all of the attributes of a specific DAX cluster.
+Information about a DAX cluster.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |

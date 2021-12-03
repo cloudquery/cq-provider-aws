@@ -14,7 +14,7 @@ import (
 func DaxClusters() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_dax_clusters",
-		Description:  "Contains all of the attributes of a specific DAX cluster.",
+		Description:  "Information about a DAX cluster.",
 		Resolver:     fetchDaxClusters,
 		Multiplex:    client.AccountRegionMultiplex,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -275,7 +275,14 @@ func resolveDaxClusterTags(ctx context.Context, meta schema.ClientMeta, resource
 }
 func resolveDaxClusterSecurityGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Cluster)
-	return resource.Set(c.Name, r.SecurityGroups)
+	val := make(map[string]interface{}, len(r.SecurityGroups))
+	for i := range r.SecurityGroups {
+		val[aws.ToString(r.SecurityGroups[i].SecurityGroupIdentifier)] = map[string]interface{}{
+			"identifier": r.SecurityGroups[i].SecurityGroupIdentifier,
+			"status":     r.SecurityGroups[i].Status,
+		}
+	}
+	return resource.Set(c.Name, val)
 }
 func fetchDaxClusterNodes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r := parent.Item.(types.Cluster)

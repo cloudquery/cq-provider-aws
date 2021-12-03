@@ -1,6 +1,6 @@
 
 # Table: aws_dynamodb_tables
-Represents the properties of a table.
+Information about a DynamoDB table.
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |

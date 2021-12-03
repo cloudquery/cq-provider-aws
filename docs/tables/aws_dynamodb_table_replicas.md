@@ -13,5 +13,5 @@ Contains the details of the replica.
 |replica_status|text|The current state of the replica:  * CREATING - The replica is being created.  * UPDATING - The replica is being updated.  * DELETING - The replica is being deleted.  * ACTIVE - The replica is ready for use.  * REGION_DISABLED - The replica is inaccessible because the Amazon Web Services Region has been disabled|
 |replica_status_description|text|Detailed information about the replica status.|
 |replica_status_percent_progress|text|Specifies the progress of a Create, Update, or Delete action on the replica as a percentage.|
-|replica_table_class_summary_last_update_date_time|timestamp without time zone|The date and time at which the table class was last updated.|
-|replica_table_class_summary_table_class|text|The table class of the specified table|
+|summary_last_update_date_time|timestamp without time zone|The date and time at which the table class was last updated.|
+|summary_table_class|text|The table class of the specified table|
