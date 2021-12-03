@@ -4,10 +4,13 @@ All notable changes to this provider will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unreleased]
+* Added `aws_ecs_task_definitions` resource
 
 ## [Unreleased]
 ### :rocket: Added
 * Added `aws_ssm_documents` resource [#307](https://github.com/cloudquery/cq-provider-aws/pull/307)
+* Added `aws_ec2_instances` columns: `state_transition_reason_time`, `boot_mode`, `metadata_options_http_protocol_ipv6`, `ipv4_prefixes`, `ipv6_prefixes`
 
 ## [v0.7.0] - 2021-11-29
 ###### SDK Version: 0.5.2
