@@ -8,6 +8,7 @@ type Account struct {
 }
 
 type Config struct {
+	Namespaces []string  `hcl:"namespaces,optional"`
 	Regions    []string  `hcl:"regions,optional"`
 	Accounts   []Account `hcl:"accounts,block"`
 	AWSDebug   bool      `hcl:"aws_debug,optional"`

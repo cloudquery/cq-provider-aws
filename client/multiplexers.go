@@ -21,3 +21,16 @@ func AccountRegionMultiplex(meta schema.ClientMeta) []schema.ClientMeta {
 	}
 	return l
 }
+
+func AccountRegionNamespaceMultiplex(meta schema.ClientMeta) []schema.ClientMeta {
+	var l = make([]schema.ClientMeta, 0)
+	client := meta.(*Client)
+	for accountID := range client.ServicesManager.services {
+		for _, region := range client.regions {
+			for _, ns := range client.namespaces {
+				l = append(l, client.withAccountIDRegionAndNamespace(accountID, region, ns))
+			}
+		}
+	}
+	return l
+}
