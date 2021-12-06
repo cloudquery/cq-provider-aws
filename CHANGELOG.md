@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 💥 Breaking Changes
 * Renamed columns of `aws_cloudfront_distributions` behaviour -> behavior [#207](https://github.com/cloudquery/cq-provider-aws/pull/207).
+* Table `aws_emr_clusters` is dropped and recreated in this version.
 
 ### :rocket: Added
 * Added `aws_ecs_task_definitions` resource [#317](https://github.com/cloudquery/cq-provider-aws/pull/317)
@@ -20,8 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added `aws_acm_certificates` [#313](https://github.com/cloudquery/cq-provider-aws/pull/313)
 * Added `logging_status` to `aws_redshift_clusters` & `aws_redshift_cluster_parameters` relation table [#319](https://github.com/cloudquery/cq-provider-aws/pull/319)
 * Added support for AWS SecretManager secrets [#312](https://github.com/cloudquery/cq-provider-aws/pull/321)
-* Added support for Elasticbeanstalk Applications [#316](https://github.com/cloudquery/cq-provider-aws/pull/316)
-* Added support for RDS event subscriptions [#322](https://github.com/cloudquery/cq-provider-aws/pull/322)
+* Added support for Elasticbeanstalk Applications `aws_elasticbeanstalk_applications` [#316](https://github.com/cloudquery/cq-provider-aws/pull/316)
+* Added support for RDS event subscriptions `aws_rds_event_subscriptions` [#322](https://github.com/cloudquery/cq-provider-aws/pull/322)
+* Added full info for EMR clusters [#318](https://github.com/cloudquery/cq-provider-aws/pull/318)
 * Added lacking columns to `aws_cloudfront_distributions` [#207](https://github.com/cloudquery/cq-provider-aws/pull/207)
 * Added makefile for easy execution of cq-provider-aws [#330](https://github.com/cloudquery/cq-provider-aws/pull/330)
 
