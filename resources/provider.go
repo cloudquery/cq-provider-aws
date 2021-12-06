@@ -101,6 +101,8 @@ func Provider() *provider.Provider {
 			"lambda.layers":                         LambdaLayers(),
 			"mq.brokers":                            MqBrokers(),
 			"organizations.accounts":                OrganizationsAccounts(),
+			"rds.cluster_parameter_groups":          RdsClusterParameterGroups(),
+			"rds.db_parameter_groups":               RdsDbParameterGroups(),
 			"rds.event_subscriptions":               RdsEventSubscriptions(),
 			"rds.certificates":                      RdsCertificates(),
 			"rds.clusters":                          RdsClusters(),
