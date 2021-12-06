@@ -659,6 +659,11 @@ func fetchDynamodbTableReplicaAutoScalings(ctx context.Context, meta schema.Clie
 		return fmt.Errorf("expected *types.TableDescription but got %T", parent.Item)
 	}
 
+	if aws.ToString(par.GlobalTableVersion) == "" {
+		// "This operation only applies to Version 2019.11.21 of global tables"
+		return nil
+	}
+
 	c := meta.(*client.Client)
 	svc := c.Services().DynamoDB
 
