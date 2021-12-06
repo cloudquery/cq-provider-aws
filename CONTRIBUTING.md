@@ -34,7 +34,7 @@ This project and everyone participating in it is governed by the [Cloudquery Cod
 
 CloudQuery has a pluggable architecture and is using the go-plugin to load, run, and communicate between providers via gRPC. To develop a new provider for CloudQuery, you don’t need to understand the inner workings of go-plugin as those are abstracted away via the [provider-sdk](#provider-sdk).
 
-![architecure overview](https://docs.cloudquery.io/assets/images/cloudquery-architecture-02b1d1162883cd02510db2cb75c29d27.png)
+![architecture overview](https://docs.cloudquery.io/assets/images/cloudquery-architecture-02b1d1162883cd02510db2cb75c29d27.png)
 
 ### Break down of responsibilities And Repositories:
 
