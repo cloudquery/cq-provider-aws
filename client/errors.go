@@ -4,13 +4,21 @@ import (
 	"errors"
 	"fmt"
 
+	organizationstypes "github.com/aws/aws-sdk-go-v2/service/organizations/types"
 	"github.com/aws/smithy-go"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema/diag"
 )
 
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []diag.Diagnostic {
 	client := meta.(*Client)
+	var ade *organizationstypes.AccessDeniedException
+	if errors.As(err, &ade) {
+		return []diag.Diagnostic{
+			diag.FromError(err, diag.IGNORE, diag.ACCESS, resourceName, parseSummaryMessage(client.accounts, err, ade), "Missing permissions or account might not be root/organizational unit."),
+		}
+	}
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {

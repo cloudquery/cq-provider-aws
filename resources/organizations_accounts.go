@@ -5,7 +5,9 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
+
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -75,7 +77,6 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, par
 	for {
 		response, err := svc.ListAccounts(ctx, &input)
 		if err != nil {
-			meta.Logger().Warn("missing permissions or account might not be root/organizational unit", "account", c.AccountID)
 			return err
 		}
 		res <- response.Accounts
