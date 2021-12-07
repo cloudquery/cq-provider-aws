@@ -103,6 +103,7 @@ func Provider() *provider.Provider {
 			"organizations.accounts":                OrganizationsAccounts(),
 			"rds.cluster_parameter_groups":          RdsClusterParameterGroups(),
 			"rds.db_parameter_groups":               RdsDbParameterGroups(),
+			"rds.db_security_groups":                RdsDbSecurityGroups(),
 			"rds.event_subscriptions":               RdsEventSubscriptions(),
 			"rds.certificates":                      RdsCertificates(),
 			"rds.clusters":                          RdsClusters(),
