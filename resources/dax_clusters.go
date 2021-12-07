@@ -230,6 +230,7 @@ func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 	svc := c.Services().DAX
 
 	// DAX is only available in the following regions.
+	// TODO: Automate with https://github.com/cloudquery/cq-provider-aws/issues/263
 	if _, ok := map[string]struct{}{
 		"ap-northeast-1": {},
 		"ap-southeast-1": {},
@@ -259,9 +260,7 @@ func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			return err
 		}
 
-		for i := range output.Clusters {
-			res <- output.Clusters[i]
-		}
+		res <- output.Clusters
 
 		if aws.ToString(output.NextToken) == "" {
 			break

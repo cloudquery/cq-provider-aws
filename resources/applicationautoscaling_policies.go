@@ -115,9 +115,7 @@ func fetchApplicationautoscalingPolicies(ctx context.Context, meta schema.Client
 			return err
 		}
 
-		for i := range output.ScalingPolicies {
-			res <- output.ScalingPolicies[i]
-		}
+		res <- output.ScalingPolicies
 
 		if aws.ToString(output.NextToken) == "" {
 			break
