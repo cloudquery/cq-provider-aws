@@ -107,22 +107,23 @@ make build
 ```
 
 
-Running locally:
+Running Providerlocally:
+1. Clone repository to local machine
 
-1. Start a local database:
+2. [Optional] Start a local database:
     ```bash
     make pg-start
     ```
-2. Configure the `config.hcl`
+3. [Optional] Configure the `config.hcl`
     ```bash
     make os=Linux arch=arm64 install 
     ./cloudquery init aws
     ```
-3. Start the provider in a different tab/session
+4. Start the provider in a different tab/session
     ```bash
     make run
     ```
-4. Execute Cloudquery Fetch using the locally built provider
+5. Execute Cloudquery Fetch using the locally built provider
     ```bash
     make fetch
     ```
