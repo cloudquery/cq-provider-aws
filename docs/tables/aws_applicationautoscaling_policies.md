@@ -10,7 +10,7 @@ Information about a scaling policy to use with Application Auto Scaling
 |creation_time|timestamp without time zone|The Unix timestamp for when the scaling policy was created.  This member is required.|
 |arn|text|The Amazon Resource Name (ARN) of the scaling policy.  This member is required.|
 |name|text|The name of the scaling policy.  This member is required.|
-|policy_type|text|The scaling policy type.  This member is required.|
+|type|text|The scaling policy type.  This member is required.|
 |resource_id|text|The identifier of the resource associated with the scaling policy|
 |scalable_dimension|text|The scalable dimension|
 |service_namespace|text|The namespace of the Amazon Web Services service that provides the resource, or a custom-resource.  This member is required.|

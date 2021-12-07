@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling/types"
@@ -56,9 +55,10 @@ func ApplicationautoscalingPolicies() *schema.Table {
 				Resolver:    schema.PathResolver("PolicyName"),
 			},
 			{
-				Name:        "policy_type",
+				Name:        "type",
 				Description: "The scaling policy type.  This member is required.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("PolicyType"),
 			},
 			{
 				Name:        "resource_id",
