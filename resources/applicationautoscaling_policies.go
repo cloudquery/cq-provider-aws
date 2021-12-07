@@ -105,7 +105,7 @@ func fetchApplicationautoscalingPolicies(ctx context.Context, meta schema.Client
 	svc := c.Services().ApplicationAutoscaling
 
 	config := applicationautoscaling.DescribeScalingPoliciesInput{
-		ServiceNamespace: types.ServiceNamespace(c.Namespace),
+		ServiceNamespace: types.ServiceNamespace(c.AutoscalingNamespace),
 	}
 	for {
 		output, err := svc.DescribeScalingPolicies(ctx, &config, func(o *applicationautoscaling.Options) {

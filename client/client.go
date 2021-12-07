@@ -93,10 +93,6 @@ var allRegions = []string{
 	"sa-east-1",
 }
 
-var allNamespaces = []string{
-	"comprehend", "rds", "sagemaker", "appstream", "elasticmapreduce", "dynamodb", "lambda", "ecs", "cassandra", "ec2", "neptune", "kafka", "custom-resource", "elasticache",
-}
-
 const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to configure provider for account %s. AWS Error: %w"
@@ -181,16 +177,15 @@ type Client struct {
 	// config directly.
 	accounts        []Account
 	regions         []string
-	namespaces      []string // this is only used in applicationautoscaling
 	logLevel        *string
 	maxRetries      int
 	maxBackoff      int
 	ServicesManager ServicesManager
 	logger          hclog.Logger
 	// this is set by table clientList
-	AccountID string
-	Region    string
-	Namespace string
+	AccountID            string
+	Region               string
+	AutoscalingNamespace string
 }
 
 // S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
@@ -211,15 +206,14 @@ func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, o
 	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
 }
 
-func NewAwsClient(logger hclog.Logger, accounts []Account, regions, namespaces []string) Client {
+func NewAwsClient(logger hclog.Logger, accounts []Account, regions []string) Client {
 	return Client{
 		ServicesManager: ServicesManager{
 			services: ServicesAccountRegionMap{},
 		},
-		logger:     logger,
-		accounts:   accounts,
-		regions:    regions,
-		namespaces: namespaces,
+		logger:   logger,
+		accounts: accounts,
+		regions:  regions,
 	}
 }
 func (c *Client) Logger() hclog.Logger {
@@ -232,64 +226,57 @@ func (c *Client) Services() *Services {
 
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
-		accounts:        c.accounts,
-		regions:         c.regions,
-		namespaces:      c.namespaces,
-		logLevel:        c.logLevel,
-		maxRetries:      c.maxRetries,
-		maxBackoff:      c.maxBackoff,
-		ServicesManager: c.ServicesManager,
-		logger:          c.logger.With("account_id", obfuscateAccountId(accountID)),
-		AccountID:       accountID,
-		Region:          c.Region,
-		Namespace:       c.Namespace,
+		accounts:             c.accounts,
+		regions:              c.regions,
+		logLevel:             c.logLevel,
+		maxRetries:           c.maxRetries,
+		maxBackoff:           c.maxBackoff,
+		ServicesManager:      c.ServicesManager,
+		logger:               c.logger.With("account_id", obfuscateAccountId(accountID)),
+		AccountID:            accountID,
+		Region:               c.Region,
+		AutoscalingNamespace: c.AutoscalingNamespace,
 	}
 }
 
 func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 	return &Client{
-		accounts:        c.accounts,
-		regions:         c.regions,
-		namespaces:      c.namespaces,
-		logLevel:        c.logLevel,
-		maxRetries:      c.maxRetries,
-		maxBackoff:      c.maxBackoff,
-		ServicesManager: c.ServicesManager,
-		logger:          c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region),
-		AccountID:       accountID,
-		Region:          region,
-		Namespace:       c.Namespace,
+		accounts:             c.accounts,
+		regions:              c.regions,
+		logLevel:             c.logLevel,
+		maxRetries:           c.maxRetries,
+		maxBackoff:           c.maxBackoff,
+		ServicesManager:      c.ServicesManager,
+		logger:               c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region),
+		AccountID:            accountID,
+		Region:               region,
+		AutoscalingNamespace: c.AutoscalingNamespace,
 	}
 }
 
 func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace string) *Client {
 	return &Client{
-		accounts:        c.accounts,
-		regions:         c.regions,
-		namespaces:      c.namespaces,
-		logLevel:        c.logLevel,
-		maxRetries:      c.maxRetries,
-		maxBackoff:      c.maxBackoff,
-		ServicesManager: c.ServicesManager,
-		logger:          c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region, "Namespace", namespace),
-		AccountID:       accountID,
-		Region:          region,
-		Namespace:       namespace,
+		accounts:             c.accounts,
+		regions:              c.regions,
+		logLevel:             c.logLevel,
+		maxRetries:           c.maxRetries,
+		maxBackoff:           c.maxBackoff,
+		ServicesManager:      c.ServicesManager,
+		logger:               c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region, "AutoscalingNamespace", namespace),
+		AccountID:            accountID,
+		Region:               region,
+		AutoscalingNamespace: namespace,
 	}
 }
 
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions, awsConfig.Namespaces)
+	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
 
 	if len(client.regions) == 0 {
 		client.regions = allRegions
 		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
-	}
-
-	if len(client.namespaces) == 0 {
-		client.namespaces = allNamespaces
 	}
 
 	if len(awsConfig.Accounts) == 0 {
