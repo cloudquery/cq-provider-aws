@@ -12,12 +12,6 @@ import (
 
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []diag.Diagnostic {
 	client := meta.(*Client)
-	var ee *diag.ExecutionError
-	if errors.As(err, &ee) {
-		return []diag.Diagnostic{
-			ee,
-		}
-	}
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
