@@ -28,6 +28,12 @@ The following is a set of guidelines for contributing to this repository.
 
 This project and everyone participating in it is governed by the [Cloudquery Code of Conduct](https://github.com/cloudquery/cloudquery/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [INSERT EMAIL HERE](mailto:INSERT EMAIL HERE).
 
+
+## I don't want to read this whole thing I just have a question!!!
+
+> **Note:** Please don't file an issue to ask a question. You'll get faster results by reaching out to the community on our [discord channel](https://cloudquery.io/discord)
+
+
 ## What should I know before I get Started
 
 ### Cloudquery Architecture
