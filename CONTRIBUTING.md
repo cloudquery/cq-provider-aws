@@ -21,7 +21,6 @@ The following is a set of guidelines for contributing to this repository.
   * [Reporting Bugs](#reporting-bugs)
   * [Suggesting Enhancements](#suggesting-enhancements)
   * [Your First Code Contribution](#your-first-code-contribution)
-  * [Pull Requests](#pull-requests)
 
 
 ## Code of Conduct
