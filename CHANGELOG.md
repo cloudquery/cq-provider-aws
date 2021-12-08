@@ -9,17 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ###### SDK Version: 0.5.3
 
 ### :rocket: Added
-* Added `aws_lambda_runtimes` [#338](https://github.com/cloudquery/cq-provider-aws/pull/338)
-* Added DAX and DynamoDB tables [#324](https://github.com/cloudquery/cq-provider-aws/pull/324)
-  - `aws_dynamodb_tables`
-  - `aws_dax_clusters`
-  - `aws_applicationautoscaling_policies`
+* Added `aws_lambda_runtimes` [#338](https://github.com/cloudquery/cq-provider-aws/pull/338).
+* Added DAX and DynamoDB tables [#324](https://github.com/cloudquery/cq-provider-aws/pull/324).
+* Renamed `aws_directconnect_gateways` table columns [#300](https://github.com/cloudquery/cq-provider-aws/pull/300).
+    - `aws_dynamodb_tables`.
+    - `aws_dax_clusters`.
+    - `aws_applicationautoscaling_policies`.
 
 ### :gear: Changed
 * renamed in aws cloudfront `aws_cloudfront_distribution_default_cache_behavior_lambda_functions` -> `aws_cloudfront_distribution_default_cache_behavior_functions` [#336](https://github.com/cloudquery/cq-provider-aws/pull/336).
 
 ### :spider: Fixed
-* Fixed call to ListAccounts in non-org user [#337](https://github.com/cloudquery/cq-provider-aws/pull/337)
+* Fixed call to ListAccounts in non-org user [#337](https://github.com/cloudquery/cq-provider-aws/pull/337).
 
 ## [v0.8.0] - 2021-12-06
 ###### SDK Version: 0.5.3
