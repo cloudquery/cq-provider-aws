@@ -13,9 +13,9 @@ The following is a set of guidelines for contributing to this repository.
 [I don't want to read this whole thing, I just have a question!!!](#i-dont-want-to-read-this-whole-thing-i-just-have-a-question)
 
 [What should I know before I get started?](#what-should-i-know-before-i-get-started)
-  * [Core](#cloudquery-architecture)
-  * [SDK](#provider-sdk)
-  * [Provider](#specific-providers)
+  * [Core](#cq-core)
+  * [SDK](#cq-provider-sdk)
+  * [Provider](#cq=provider)
 
 [How Can I Contribute?](#how-can-i-contribute)
   * [Reporting Bugs](#reporting-bugs)
