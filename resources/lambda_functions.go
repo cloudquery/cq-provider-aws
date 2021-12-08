@@ -916,6 +916,19 @@ func LambdaFunctions() *schema.Table {
 					},
 				},
 			},
+			{
+				Name:        "aws_lambda_runtimes",
+				Description: "All known values for Runtime",
+				Resolver:    fetchLambdaRuntimes,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"name"}},
+				Columns: []schema.Column{
+					{
+						Name:        "name",
+						Description: "Runtime name",
+						Type:        schema.TypeString,
+					},
+				},
+			},
 		},
 	}
 }
@@ -1209,6 +1222,15 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 	}
 	return nil
 }
+func fetchLambdaRuntimes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+	for _, runtime := range types.RuntimeProvidedal2.Values() {
+		res <- &RuntimeWrapper{
+			Name: string(runtime),
+		}
+	}
+
+	return nil
+}
 func resolveLambdaFunctionEventSourceMappingAccessConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p, ok := resource.Item.(types.EventSourceMappingConfiguration)
 	if !ok {
@@ -1219,4 +1241,8 @@ func resolveLambdaFunctionEventSourceMappingAccessConfigurations(ctx context.Con
 		return err
 	}
 	return resource.Set(c.Name, data)
+}
+
+type RuntimeWrapper struct {
+	Name string
 }
