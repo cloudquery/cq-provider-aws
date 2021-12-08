@@ -81,7 +81,7 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, par
 		response, err := svc.ListAccounts(ctx, &input)
 		var ade *types.AccessDeniedException
 		if errors.As(err, &ade) {
-			return diag.FromError(err, diag.IGNORE, diag.ACCESS, OrganizationsAccounts().Name, client.ParseSummaryMessage(c.Accounts, err, ade), "Missing permissions or account might not be root/organizational unit."),
+			return diag.FromError(err, diag.IGNORE, diag.ACCESS, OrganizationsAccounts().Name, client.ParseSummaryMessage(c.Accounts, err, ade), "Missing permissions or account might not be root/organizational unit.")
 		}
 		if err != nil {
 			return err
