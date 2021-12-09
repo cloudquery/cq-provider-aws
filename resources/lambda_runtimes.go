@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
