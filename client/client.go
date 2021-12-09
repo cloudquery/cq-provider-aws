@@ -358,7 +358,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				o.Region = defaultRegion
 				if len(awsConfig.Regions) > 0 {
 					o.Region = awsConfig.Regions[0]
-				} 
+				}
 			})
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
