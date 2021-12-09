@@ -229,7 +229,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 		return err
 	}
 
-	processTrailsBundle := func(trails []types.Trail) error {
+	processTrailsBundle := func(trails []types.Trail, region string) error {
 		input := cloudtrail.ListTagsInput{
 			ResourceIdList: make([]string, 0, len(trails)),
 		}
@@ -237,7 +237,9 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 			input.ResourceIdList = append(input.ResourceIdList, *h.TrailARN)
 		}
 		for {
-			response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {})
+			response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
+				options.Region = region
+			})
 			if err != nil {
 				return err
 			}
@@ -245,17 +247,11 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 				break
 			}
 			for _, tr := range trails {
-				tags := getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList)
-				if len(tags) == 0 {
-					continue
-				}
-
 				wrapper := CloudTrailWrapper{
 					Trail: tr,
-					Tags:  make(map[string]interface{}, len(tags)),
+					Tags:  make(map[string]interface{}),
 				}
-
-				for _, t := range tags {
+				for _, t := range getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList) {
 					wrapper.Tags[*t.Key] = t.Value
 				}
 				res <- wrapper
@@ -269,16 +265,23 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 		return nil
 	}
 
-	for i := 0; i < len(response.TrailList); i += 20 {
-		end := i + 10
+	// since api returns all the cloudtrails despite region we aggregate trails by region to get tags.
+	aggregatedTrails, err := aggregateCloudTrails(response.TrailList)
+	if err != nil {
+		return err
+	}
+	for region, trails := range aggregatedTrails {
+		for i := 0; i < len(trails); i += 20 {
+			end := i + 20
 
-		if end > len(response.TrailList) {
-			end = len(response.TrailList)
-		}
-		trails := response.TrailList[i:end]
-		err := processTrailsBundle(trails)
-		if err != nil {
-			return err
+			if end > len(trails) {
+				end = len(trails)
+			}
+			t := trails[i:end]
+			err := processTrailsBundle(t, region)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -378,6 +381,17 @@ func getCloudTrailTagsByResourceID(id string, set []types.ResourceTag) []types.T
 		}
 	}
 	return nil
+}
+
+func aggregateCloudTrails(trails []types.Trail) (map[string][]types.Trail, error) {
+	resp := make(map[string][]types.Trail)
+	for _, t := range trails {
+		if t.HomeRegion == nil {
+			return nil, fmt.Errorf("got cloudtrail with HomeRegion == nil")
+		}
+		resp[*t.HomeRegion] = append(resp[*t.HomeRegion], t)
+	}
+	return resp, nil
 }
 
 type CloudTrailWrapper struct {

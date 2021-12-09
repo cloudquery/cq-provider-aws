@@ -992,7 +992,9 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		}
 	}
 
-	if resource.Get("code_image_uri") != nil {
+	//skip getting CodeSigningConfig since containerized lambda functions does not support this feature
+	lambdaType := resource.Get("code_repository_type").(*string)
+	if *lambdaType == "ECR" {
 		return nil
 	}
 
