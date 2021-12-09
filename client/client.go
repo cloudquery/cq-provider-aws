@@ -355,11 +355,10 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		res, err := ec2.NewFromConfig(awsCfg).DescribeRegions(ctx,
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
+				o.Region = defaultRegion
 				if len(awsConfig.Regions) > 0 {
 					o.Region = awsConfig.Regions[0]
-				} else {
-					o.Region = defaultRegion
-				}
+				} 
 			})
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
