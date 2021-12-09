@@ -5,10 +5,11 @@ import (
 	"testing"
 
 	"github.com/Masterminds/squirrel"
-
 	"github.com/cloudquery/cq-provider-aws/resources"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 )
+
+//
 
 func TestIntegrationLambdaFunctions(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.LambdaFunctions(), nil, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
