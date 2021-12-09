@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -143,12 +142,11 @@ func RdsDbParameterGroups() *schema.Table {
 func fetchRdsDbParameterGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	optsFn := func(o *rds.Options) {
-		o.Region = cl.Region
-	}
 	var input rds.DescribeDBParameterGroupsInput
 	for {
-		output, err := svc.DescribeDBParameterGroups(ctx, &input, optsFn)
+		output, err := svc.DescribeDBParameterGroups(ctx, &input, func(o *rds.Options) {
+			o.Region = cl.Region
+		})
 		if err != nil {
 			return err
 		}
@@ -164,16 +162,15 @@ func fetchRdsDbParameterGroups(ctx context.Context, meta schema.ClientMeta, pare
 func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	optsFn := func(o *rds.Options) {
-		o.Region = cl.Region
-	}
 	g, ok := parent.Item.(types.DBParameterGroup)
 	if !ok {
-		return fmt.Errorf("not a %T: %T", g, parent.Item)
+		return unexpectedResourceType(g, parent.Item)
 	}
 	input := rds.DescribeDBParametersInput{DBParameterGroupName: g.DBParameterGroupName}
 	for {
-		output, err := svc.DescribeDBParameters(ctx, &input, optsFn)
+		output, err := svc.DescribeDBParameters(ctx, &input, func(o *rds.Options) {
+			o.Region = cl.Region
+		})
 		if err != nil {
 			return err
 		}
@@ -189,7 +186,7 @@ func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.Clien
 func resolveRdsDbParameterGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	g, ok := resource.Item.(types.DBParameterGroup)
 	if !ok {
-		return fmt.Errorf("not a %T: %T", g, resource.Item)
+		return unexpectedResourceType(g, resource.Item)
 	}
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS

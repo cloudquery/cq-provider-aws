@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -143,12 +142,11 @@ func RdsClusterParameterGroups() *schema.Table {
 func fetchRdsClusterParameterGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	optsFn := func(o *rds.Options) {
-		o.Region = cl.Region
-	}
 	var input rds.DescribeDBClusterParameterGroupsInput
 	for {
-		output, err := svc.DescribeDBClusterParameterGroups(ctx, &input, optsFn)
+		output, err := svc.DescribeDBClusterParameterGroups(ctx, &input, func(o *rds.Options) {
+			o.Region = cl.Region
+		})
 		if err != nil {
 			return err
 		}
@@ -164,16 +162,15 @@ func fetchRdsClusterParameterGroups(ctx context.Context, meta schema.ClientMeta,
 func fetchRdsClusterParameterGroupDbParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	optsFn := func(o *rds.Options) {
-		o.Region = cl.Region
-	}
 	g, ok := parent.Item.(types.DBClusterParameterGroup)
 	if !ok {
-		return fmt.Errorf("not a %T: %T", g, parent.Item)
+		return unexpectedResourceType(g, parent.Item)
 	}
 	input := rds.DescribeDBClusterParametersInput{DBClusterParameterGroupName: g.DBClusterParameterGroupName}
 	for {
-		output, err := svc.DescribeDBClusterParameters(ctx, &input, optsFn)
+		output, err := svc.DescribeDBClusterParameters(ctx, &input, func(o *rds.Options) {
+			o.Region = cl.Region
+		})
 		if err != nil {
 			return err
 		}
@@ -189,7 +186,7 @@ func fetchRdsClusterParameterGroupDbParameters(ctx context.Context, meta schema.
 func resolveRdsClusterParameterGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	g, ok := resource.Item.(types.DBClusterParameterGroup)
 	if !ok {
-		return fmt.Errorf("not a %T: %T", g, resource.Item)
+		return unexpectedResourceType(g, resource.Item)
 	}
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS

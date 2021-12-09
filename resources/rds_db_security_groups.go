@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -90,12 +89,11 @@ func RdsDbSecurityGroups() *schema.Table {
 func fetchRdsDbSecurityGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	optsFn := func(o *rds.Options) {
-		o.Region = cl.Region
-	}
 	var input rds.DescribeDBSecurityGroupsInput
 	for {
-		output, err := svc.DescribeDBSecurityGroups(ctx, &input, optsFn)
+		output, err := svc.DescribeDBSecurityGroups(ctx, &input, func(o *rds.Options) {
+			o.Region = cl.Region
+		})
 		if err != nil {
 			return err
 		}
@@ -112,7 +110,7 @@ func resolveRdsDbSecurityGroupJSONField(getter func(g types.DBSecurityGroup) int
 	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 		g, ok := resource.Item.(types.DBSecurityGroup)
 		if !ok {
-			return fmt.Errorf("not a %T: %T", g, resource.Item)
+			return unexpectedResourceType(g, resource.Item)
 		}
 		b, err := json.Marshal(getter(g))
 		if err != nil {
@@ -125,7 +123,7 @@ func resolveRdsDbSecurityGroupJSONField(getter func(g types.DBSecurityGroup) int
 func resolveRdsDbSecurityGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	g, ok := resource.Item.(types.DBSecurityGroup)
 	if !ok {
-		return fmt.Errorf("not a %T: %T", g, resource.Item)
+		return unexpectedResourceType(g, resource.Item)
 	}
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
