@@ -96,6 +96,16 @@ var allRegions = []string{
 	"sa-east-1",
 }
 
+var envVarsToCheck = []string{
+	"AWS_PROFILE",
+	"AWS_ACCESS_KEY_ID",
+	"AWS_SECRET_ACCESS_KEY",
+	"AWS_CONFIG_FILE",
+	"AWS_ROLE_ARN",
+	"AWS_SESSION_TOKEN",
+	"AWS_SHARED_CREDENTIALS_FILE",
+}
+
 const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
@@ -490,19 +500,9 @@ func obfuscateAccountId(accountId string) string {
 
 //checkEnvVariables checks which aws environment variables are set
 func checkEnvVariables() string {
-	vars := []string{
-		"AWS_PROFILE",
-		"AWS_ACCESS_KEY_ID",
-		"AWS_SECRET_ACCESS_KEY",
-		"AWS_CONFIG_FILE",
-		"AWS_ROLE_ARN",
-		"AWS_SESSION_TOKEN",
-		"AWS_SHARED_CREDENTIALS_FILE",
-	}
 	var result []string
-	for _, v := range vars {
-		_, present := os.LookupEnv(v)
-		if present {
+	for _, v := range envVarsToCheck {
+		if _, present := os.LookupEnv(v); present {
 			result = append(result, v)
 		}
 	}
