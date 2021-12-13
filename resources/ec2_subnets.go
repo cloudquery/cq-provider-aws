@@ -121,41 +121,6 @@ func Ec2Subnets() *schema.Table {
 				Name:        "aws_ec2_subnet_ipv6_cidr_block_association_set",
 				Description: "Describes an IPv6 CIDR block associated with a subnet.",
 				Resolver:    fetchEc2SubnetIpv6CidrBlockAssociationSets,
-				Columns: []schema.Column{
-					{
-						Name:        "subnet_cq_id",
-						Description: "Unique CloudQuery ID of aws_ec2_subnets table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "association_id",
-						Description: "The association ID for the CIDR block.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "ipv6_cidr_block",
-						Description: "The IPv6 CIDR block.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "ipv6_cidr_block_state",
-						Description: "The state of a CIDR block.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("Ipv6CidrBlockState.State"),
-					},
-					{
-						Name:        "ipv6_cidr_block_state_status_message",
-						Description: "A message about the status of the CIDR block, if applicable.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("Ipv6CidrBlockState.StatusMessage"),
-					},
-				},
-			},
-			{
-				Name:        "aws_ec2_subnet_ipv6_cidr_block_association_sets",
-				Description: "Describes an IPv6 CIDR block associated with a subnet.",
-				Resolver:    fetchEc2SubnetIpv6CidrBlockAssociationSets,
 				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"subnet_cq_id", "ipv6_cidr_block"}},
 				Columns: []schema.Column{
 					{
