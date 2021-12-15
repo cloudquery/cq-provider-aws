@@ -48,7 +48,7 @@ provider "aws" {
 }
 ```
 
-By default, cloudquery will fetch all configuration from **all** resources in **all** regions in the **default** account. You can change this behaviour with the following arguments:
+By default, CloudQuery will fetch all configuration from **all** resources in **all** regions in the **default** account. You can change this behavior with the following arguments:
 
 ### Arguments
 
