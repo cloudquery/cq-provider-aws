@@ -1,0 +1,19 @@
+name: deploy-tf
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy-tf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ASSUME_ROLE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ASSUME_ROLE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
