@@ -7,7 +7,7 @@ Thank you very much for your contributions!
 Relates OR Closes #0000
 
 Output from acceptance testing:
-More information about running the tests (here)[../docs/contributing/e2e_tests.md]
+More information about running the tests [here](../docs/contributing/e2e_tests.md)
 <!--
 Replace TestAccXXX with a pattern that matches the tests affected by this PR.
 
