@@ -35,8 +35,10 @@ pg-connect:
 # you can pass in a specific test to run by specifying the testName:
 # make testName=TestIntegrationElasticbeanstal e2e-test
 e2e-test:
-	INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=0 TF_VAR_SUFFIX=integration go test -timeout 30s -v -run ^$(testName)$$  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+		INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=0 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)$$  github.com/cloudquery/cq-provider-aws/resources/integration_tests
 
+e2e-test-with-apply:
+		INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=1 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)$$  github.com/cloudquery/cq-provider-aws/resources/integration_tests
 # Generate mocks for mock/unit testing 
 create-mocks:
 	go install github.com/golang/mock/mockgen
