@@ -33,12 +33,23 @@ pg-connect:
 
 # Run an integration test
 # you can pass in a specific test to run by specifying the testName:
-# make testName=TestIntegrationElasticbeanstal e2e-test
+# make testName=TestIntegrationElasticbeanstal$ e2e-test
 e2e-test:
-		INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=0 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)$$  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+	@if [[ "$(testName)" == "" ]]; then echo "\n testName must be set \n"; exit 1; fi
+	INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=0 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+
+
+e2e-test-read-only:
+	@if [[ "$(testName)" == "" ]]; then echo "\n testName must be set \n"; exit 1; fi
+	@if [[ "$(TF_VAR_PREFIX)" == "" ]]; then echo "\n TF_VAR_PREFIX must be set \n"; exit 1; fi
+	@if [[ "$(TF_VAR_SUFFIX)" == "" ]]; then echo "\n TF_VAR_SUFFIX must be set \n"; exit 1; fi
+	# INTEGRATION_TESTS=1TF_APPLY_RESOURCES=0 go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
 
 e2e-test-with-apply:
-		INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=1 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)$$  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+	@if [[ "$(testName)" == "" ]]; then echo "\n testName must be set \n"; exit 1; fi
+	# INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=1 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+
+
 # Generate mocks for mock/unit testing 
 create-mocks:
 	go install github.com/golang/mock/mockgen
