@@ -43,11 +43,11 @@ e2e-test-read-only:
 	@if [[ "$(testName)" == "" ]]; then echo "\n testName must be set \n"; exit 1; fi
 	@if [[ "$(TF_VAR_PREFIX)" == "" ]]; then echo "\n TF_VAR_PREFIX must be set \n"; exit 1; fi
 	@if [[ "$(TF_VAR_SUFFIX)" == "" ]]; then echo "\n TF_VAR_SUFFIX must be set \n"; exit 1; fi
-	# INTEGRATION_TESTS=1TF_APPLY_RESOURCES=0 go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+	INTEGRATION_TESTS=1TF_APPLY_RESOURCES=0 go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
 
 e2e-test-with-apply:
 	@if [[ "$(testName)" == "" ]]; then echo "\n testName must be set \n"; exit 1; fi
-	# INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=1 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
+	INTEGRATION_TESTS=1 TF_VAR_PREFIX=cq-testing TF_APPLY_RESOURCES=1 TF_VAR_SUFFIX=integration go test -timeout 180m -v -run ^$(testName)  github.com/cloudquery/cq-provider-aws/resources/integration_tests
 
 
 # Generate mocks for mock/unit testing 
