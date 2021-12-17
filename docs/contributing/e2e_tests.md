@@ -23,7 +23,14 @@ make testName=^TestIntegrationCognito$ e2e-test-with-apply
 ```
 
 
+### Running Read Only Tests
 
 
+If you have another way of deploying the terraform defined in the `resources/integration_tests/infra` directory you can do that and then run the tests against the deployed resources like this:
 
-## Running Read Only Tests
+
+``` bash
+export TF_VAR_PREFIX=WhatEverValueYouSpecified
+export TF_VAR_SUFFIX=WhatEverValueYouSpecified
+make testName=^TestIntegrationCognito$ e2e-test-with-apply
+```
