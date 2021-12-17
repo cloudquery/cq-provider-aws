@@ -9,6 +9,7 @@ import (
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 	"github.com/golang/mock/gomock"
 	"github.com/hashicorp/go-hclog"
+	"github.com/stretchr/testify/assert"
 )
 
 type TestOptions struct {
@@ -37,4 +38,26 @@ func awsTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *
 		},
 		SkipEmptyJsonB: options.SkipEmptyJsonB,
 	})
+}
+
+func TestTableNames(t *testing.T) {
+	t.Parallel()
+	for _, res := range Provider().ResourceMap {
+		res := res
+		t.Run(res.Name, func(t *testing.T) {
+			testTableNames(t, res)
+		})
+	}
+}
+
+func testTableNames(t *testing.T, table *schema.Table) {
+	assert.NotEmpty(t, table.Name)
+	assert.LessOrEqualf(t, len(table.Name), 63, "Table name too long") // maximum allowed identifier length is 63 bytes https://www.postgresql.org/docs/13/limits.html
+
+	for _, res := range table.Relations {
+		res := res
+		t.Run(res.Name, func(t *testing.T) {
+			testTableNames(t, res)
+		})
+	}
 }
