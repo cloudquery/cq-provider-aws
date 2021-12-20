@@ -11,7 +11,7 @@
 
 ## Running Tests
 
-All of the tests in the `resources/integration_tests` directory use a wrapper to dynamically call terraform in order to provision resources at test time and then tear down the resources when the testing is complete. You do not have to deploy the entire infrastructure suite in order to run the tests, you can pick and choose exactly which tests you want to run
+All of the tests in the `resources/integration_tests` directory use a wrapper to dynamically call terraform in order to provision resources at test time. You do not have to deploy the entire infrastructure suite in order to run the tests, you can pick and choose exactly which tests you want to run
 
 Using the Makefile in the root of the repository is the simplest way to start running your tests locally. 
 
