@@ -152,7 +152,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 
 		// get more details about the secret
 		for _, n := range response.SecretList {
-
+			secretEntry := n
 			cfg := secretsmanager.DescribeSecretInput{
 				SecretId: n.ARN,
 			}
@@ -164,7 +164,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 			}
 
 			secret := WrappedSecret{
-				SecretListEntry:   n,
+				SecretListEntry:   secretEntry,
 				ReplicationStatus: response.ReplicationStatus,
 				RotationRules:     response.RotationRules,
 			}
