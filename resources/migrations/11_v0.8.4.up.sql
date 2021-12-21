@@ -6,13 +6,13 @@ ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permissions" ADD COLUMN "permis
 
 
 
-ALTER TABLE public.aws_ec2_security_group_ip_permission_ip_ranges DROP CONSTRAINT aws_ec2_security_group_ip_permission_ip_ranges_pkey
+ALTER TABLE public.aws_ec2_security_group_ip_permission_ip_ranges DROP CONSTRAINT aws_ec2_security_group_ip_permission_ip_ranges_pk
 
 
 ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permission_ip_ranges" RENAME COLUMN "cidr_ip" TO "cidr";
 
 
-ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permission_ip_ranges" ADD COLUMN "cidr_type" string;
+ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permission_ip_ranges" ADD COLUMN "cidr_type" text;
 
 
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permission_ipv6_ranges;
