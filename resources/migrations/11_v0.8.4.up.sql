@@ -2,11 +2,10 @@ ALTER TABLE IF EXISTS "aws_sagemaker_model_containers"
     RENAME COLUMN "image_config_repository_auth_config_repository_credentials_provider_arn" TO "image_config_repository_auth_config_repo_creds_provider_arn";
 
 
-ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permissions" ADD COLUMN "permission_type" string;
+ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permissions" ADD COLUMN "permission_type" text;
 
 
-
-ALTER TABLE public.aws_ec2_security_group_ip_permission_ip_ranges DROP CONSTRAINT aws_ec2_security_group_ip_permission_ip_ranges_pk
+ALTER TABLE IF EXISTS public.aws_ec2_security_group_ip_permission_ip_ranges DROP CONSTRAINT aws_ec2_security_group_ip_permission_ip_ranges_pk;
 
 
 ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permission_ip_ranges" RENAME COLUMN "cidr_ip" TO "cidr";
