@@ -16,8 +16,8 @@ ALTER TABLE IF EXISTS "aws_ec2_security_group_ip_permission_ip_ranges" ADD COLUM
 
 
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permission_ipv6_ranges;
-DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egresses;
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egress_ip_ranges;
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egress_ipv6_ranges;
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egress_prefix_list_ids;
 DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egress_user_group_pairs;
+DROP TABLE IF EXISTS public.aws_ec2_security_group_ip_permissions_egresses;
