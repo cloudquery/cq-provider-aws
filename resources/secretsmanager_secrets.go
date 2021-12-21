@@ -164,7 +164,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 			}
 
 			secret := WrappedSecret{
-				SecretListEntry:   &n,
+				SecretListEntry:   n,
 				ReplicationStatus: response.ReplicationStatus,
 				RotationRules:     response.RotationRules,
 			}
@@ -241,7 +241,7 @@ func resolveSecretsmanagerSecretsTags(_ context.Context, _ schema.ClientMeta, re
 }
 
 type WrappedSecret struct {
-	*types.SecretListEntry
+	types.SecretListEntry
 	RotationRules     *types.RotationRulesType
 	ReplicationStatus []types.ReplicationStatusType
 }
