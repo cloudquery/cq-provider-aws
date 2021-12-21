@@ -97,6 +97,10 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "to_port",
 						Description: "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code.",
 						Type:        schema.TypeInt,
+					}, {
+						Name:        "permission_type",
+						Description: "egress or ingress",
+						Type:        schema.TypeString,
 					},
 				},
 				Relations: []*schema.Table{
@@ -113,37 +117,17 @@ func Ec2SecurityGroups() *schema.Table {
 								Resolver:    schema.ParentIdResolver,
 							},
 							{
-								Name:        "cidr_ip",
-								Description: "The IPv4 CIDR range.",
+								Name:        "cidr",
+								Description: "The CIDR range.",
 								Type:        schema.TypeString,
 							},
 							{
 								Name:        "description",
 								Description: "A description for the security group rule that references this IPv4 address range.",
 								Type:        schema.TypeString,
-							},
-						},
-					},
-					{
-						Name:        "aws_ec2_security_group_ip_permission_ipv6_ranges",
-						Description: "[EC2-VPC only] Describes an IPv6 range.",
-						Resolver:    fetchEc2SecurityGroupIpPermissionIpv6Ranges,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr_ipv6"}},
-						Columns: []schema.Column{
-							{
-								Name:        "security_group_ip_permission_cq_id",
-								Description: "Unique CloudQuery ID of aws_ec2_security_group_ip_permissions table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "cidr_ipv6",
-								Description: "The IPv6 CIDR range.",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "description",
-								Description: "A description for the security group rule that references this IPv6 address range.",
+							}, {
+								Name:        "cidr_type",
+								Description: "IP Type: ipv4, or ipv6",
 								Type:        schema.TypeString,
 							},
 						},
@@ -406,7 +390,20 @@ func fetchEc2SecurityGroupIpPermissions(ctx context.Context, meta schema.ClientM
 	if !ok {
 		return fmt.Errorf("not ec2 security group")
 	}
-	res <- securityGroup.IpPermissions
+	type ipPermission struct {
+		types.IpPermission
+		permissionType string
+	}
+
+	ipRanges := make([]ipPermission, len(securityGroup.IpPermissionsEgress)+len(securityGroup.IpPermissions))
+	for i, ip := range securityGroup.IpPermissionsEgress {
+		ipRanges[i] = ipPermission{ip, "egress"}
+	}
+	lenEgressRules := len(securityGroup.IpPermissionsEgress)
+	for i, ip := range securityGroup.IpPermissions {
+		ipRanges[i+lenEgressRules] = ipPermission{ip, "ingress"}
+	}
+	res <- ipRanges
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
@@ -414,15 +411,22 @@ func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.
 	if !ok {
 		return fmt.Errorf("not ec2 security group ip permission")
 	}
-	res <- securityGroupIpPermission.IpRanges
-	return nil
-}
-func fetchEc2SecurityGroupIpPermissionIpv6Ranges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	securityGroupIpPermission, ok := parent.Item.(types.IpPermission)
-	if !ok {
-		return fmt.Errorf("not ec2 security group ip permission")
+
+	type customIpRange struct {
+		cidr        string
+		description string
+		cidr_type   string
 	}
-	res <- securityGroupIpPermission.Ipv6Ranges
+
+	ipRanges := make([]customIpRange, len(securityGroupIpPermission.IpRanges)+len(securityGroupIpPermission.Ipv6Ranges))
+	for i, ip := range securityGroupIpPermission.IpRanges {
+		ipRanges[i] = customIpRange{*ip.CidrIp, *ip.Description, "ipv4"}
+	}
+	lenIpV4 := len(securityGroupIpPermission.IpRanges)
+	for i, ip := range securityGroupIpPermission.Ipv6Ranges {
+		ipRanges[i+lenIpV4] = customIpRange{*ip.CidrIpv6, *ip.Description, "ipv6"}
+	}
+	res <- ipRanges
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionPrefixListIds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
