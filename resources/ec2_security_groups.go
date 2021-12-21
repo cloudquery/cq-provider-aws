@@ -106,7 +106,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_ec2_security_group_ip_permission_ip_ranges",
-						Description: "Describes an IPv4 range.",
+						Description: "Details of a cidr range associated with a security group rule",
 						Resolver:    fetchEc2SecurityGroupIpPermissionIpRanges,
 						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr"}},
 						Columns: []schema.Column{
@@ -123,7 +123,7 @@ func Ec2SecurityGroups() *schema.Table {
 							},
 							{
 								Name:        "description",
-								Description: "A description for the security group rule that references this IPv4 address range.",
+								Description: "A description for the security group rule that references this address range.",
 								Type:        schema.TypeString,
 							}, {
 								Name:        "cidr_type",
