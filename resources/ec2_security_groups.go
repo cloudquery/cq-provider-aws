@@ -108,7 +108,6 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_ip_ranges",
 						Description: "Details of a cidr range associated with a security group rule",
 						Resolver:    fetchEc2SecurityGroupIpPermissionIpRanges,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"security_group_ip_permission_cq_id", "cidr"}},
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -260,7 +259,6 @@ func getString(s *string) string {
 	if s != nil {
 		return *s
 	}
-
 	return ""
 }
 
@@ -319,5 +317,5 @@ func resolveSGArn(_ context.Context, meta schema.ClientMeta, resource *schema.Re
 
 type ipPermission struct {
 	types.IpPermission
-	permissionType string
+	PermissionType string
 }
