@@ -152,6 +152,9 @@ func TestIntegrationEc2SecurityGroups(t *testing.T) {
 	awsTestIntegrationHelper(t, resources.Ec2SecurityGroups(), []string{"aws_ec2_vpc.tf", "aws_vpc.tf"}, func(res *providertest.ResourceIntegrationTestData) providertest.ResourceIntegrationVerification {
 		return providertest.ResourceIntegrationVerification{
 			Name: resources.Ec2SecurityGroups().Name,
+			Filter: func(sq squirrel.SelectBuilder, res *providertest.ResourceIntegrationTestData) squirrel.SelectBuilder {
+				return sq.Where(squirrel.Eq{"group_name": fmt.Sprintf("ec2-sg-%s%s", res.Prefix, res.Suffix)})
+			},
 			ExpectedValues: []providertest.ExpectedValue{
 				{
 					Count: 1,
@@ -160,6 +163,42 @@ func TestIntegrationEc2SecurityGroups(t *testing.T) {
 						"tags": map[string]interface{}{
 							"Type":   "integration_test",
 							"TestId": res.Suffix,
+						},
+					},
+				},
+			},
+			Relations: []*providertest.ResourceIntegrationVerification{
+				{
+					Name:           "aws_ec2_security_group_ip_permissions",
+					ForeignKeyName: "security_group_cq_id",
+					ExpectedValues: []providertest.ExpectedValue{{
+						Count: 1,
+						Data: map[string]interface{}{
+							"ip_protocol":     "-1",
+							"from_port":       nil,
+							"to_port":         nil,
+							"permission_type": "egress",
+						},
+					}},
+					Relations: []*providertest.ResourceIntegrationVerification{
+						{
+							Name:           "aws_ec2_security_group_ip_permission_ip_ranges",
+							ForeignKeyName: "security_group_ip_permission_cq_id",
+							ExpectedValues: []providertest.ExpectedValue{{
+								Count: 1,
+								Data: map[string]interface{}{
+									"cidr":        "0.0.0.0/0",
+									"cidr_type":   "ipv4",
+									"description": "",
+								},
+							}, {
+								Count: 1,
+								Data: map[string]interface{}{
+									"cidr":        "::/0",
+									"cidr_type":   "ipv6",
+									"description": "",
+								},
+							}},
 						},
 					},
 				},
