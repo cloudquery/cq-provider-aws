@@ -74,7 +74,6 @@ func OrganizationsAccounts() *schema.Table {
 // ====================================================================================================================
 func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
-	log := meta.Logger()
 	svc := c.Services().Organizations
 	var input organizations.ListAccountsInput
 	for {
@@ -86,7 +85,7 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, par
 				// This is going to happen most probably due to account not being the root organizational account
 				// so it's better to ignore it completly as it happens basically on every account
 				// otherwise it screws up with dev experiance and with our tests
-				log.Warn("account is most probably not the root organization account https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListAccounts.html")
+				meta.Logger().Warn("account is probably not the root organization account https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListAccounts.html")
 				return nil
 			}
 		}
