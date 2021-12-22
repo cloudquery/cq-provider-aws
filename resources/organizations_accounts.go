@@ -11,7 +11,6 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema/diag"
 )
 
 func OrganizationsAccounts() *schema.Table {
@@ -75,6 +74,7 @@ func OrganizationsAccounts() *schema.Table {
 // ====================================================================================================================
 func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
+	log := meta.Logger()
 	svc := c.Services().Organizations
 	var input organizations.ListAccountsInput
 	for {
@@ -83,7 +83,11 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, par
 		if errors.As(err, &ae) {
 			switch ae.ErrorCode() {
 			case "AWSOrganizationsNotInUseException", "AccessDeniedException":
-				return diag.FromError(err, diag.IGNORE, diag.ACCESS, OrganizationsAccounts().Name, client.ParseSummaryMessage(c.Accounts, err, ae), "Missing permissions or account might not be root/organizational unit.")
+				// This is going to happen most proabbly due to account not being the root organizational account
+				// so it's better to ignore it completly as it happens basically on every account
+				// otherwise it screws up with dev experiance and with our tests
+				log.Warn("account is most probabbly not the root organization account https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListAccounts.html")
+				return nil
 			}
 		}
 		if err != nil {
