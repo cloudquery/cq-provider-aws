@@ -696,7 +696,9 @@ func makeIDBuilder(expr string, table *schema.Table) func([]map[string]interface
 			last = &r
 		}
 		var sb strings.Builder
-		t.Execute(&sb, last)
+		if err := t.Execute(&sb, last); err != nil {
+			panic(err)
+		}
 		return sb.String()
 	}
 }
