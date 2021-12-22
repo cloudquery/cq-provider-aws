@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -255,13 +256,6 @@ func fetchEc2SecurityGroupIpPermissions(ctx context.Context, meta schema.ClientM
 	return nil
 }
 
-func getString(s *string) string {
-	if s != nil {
-		return *s
-	}
-	return ""
-}
-
 func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 
 	securityGroupIpPermission, ok := parent.Item.(ipPermission)
@@ -279,11 +273,11 @@ func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.
 
 	ipRanges := make([]customIpRange, 0, capacity)
 	for _, ip := range securityGroupIpPermission.IpRanges {
-		ipRanges = append(ipRanges, customIpRange{getString(ip.CidrIp), getString(ip.Description), "ipv4"})
+		ipRanges = append(ipRanges, customIpRange{aws.ToString(ip.CidrIp), aws.ToString(ip.Description), "ipv4"})
 	}
 
 	for _, ip := range securityGroupIpPermission.Ipv6Ranges {
-		ipRanges = append(ipRanges, customIpRange{getString(ip.CidrIpv6), getString(ip.Description), "ipv6"})
+		ipRanges = append(ipRanges, customIpRange{aws.ToString(ip.CidrIpv6), aws.ToString(ip.Description), "ipv6"})
 	}
 
 	res <- ipRanges
