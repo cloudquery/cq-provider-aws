@@ -41,7 +41,7 @@ jobs:
           test "$(git status -s ./docs/tables | wc -l)" -eq 0
 
 
-  enpoints:
+  endpoints:
     name: aws endpoints verification
     runs-on: ubuntu-latest
     steps:
@@ -52,10 +52,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
-      - name: remove old endpoints file
-        run: |
-          rm -f ./client/data/partition_service_region.json
-      - name: generate partition_service_region file
+      - name: regenerate partition_service_region file
         run: |
           go run ./tools/endpoints/main.go
       - name: Fail if file is changed

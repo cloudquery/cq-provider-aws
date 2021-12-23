@@ -15,7 +15,7 @@ import (
 
 const (
 	PartitionServiceRegionFile = "data/partition_service_region.json"
-	defualtPartition           = "aws"
+	defaultPartition           = "aws"
 )
 
 var (
@@ -77,7 +77,7 @@ func isSupportedServiceForRegion(service string, region string) bool {
 		return false
 	}
 
-	currentPartition := supportedServiceRegion.Partitions[defualtPartition]
+	currentPartition := supportedServiceRegion.Partitions[defaultPartition]
 
 	if currentPartition.Services[service] == nil {
 		return false
