@@ -18,10 +18,7 @@ type supportedServicesData struct {
 	Partitions []struct {
 		PartitionId   string `json:"partition"`
 		PartitionName string `json:"partitionName"`
-		Regions       map[string]struct {
-			Description string `json:"description"`
-		} `json:"regions"`
-		Services map[string]struct {
+		Services      map[string]struct {
 			Endpoints map[string]struct {
 				Deprecated bool `json:"endpoints" default:"false"`
 			} `json:"endpoints"`
@@ -52,18 +49,12 @@ func getPartitionRegionServiceData() (*client.SupportedServiceRegionsData, error
 
 	awsPartitions := make(map[string]client.AwsPartition)
 	for _, p := range data.Partitions {
-
-		var regions []string
-		for r := range p.Regions {
-			regions = append(regions, r)
-		}
-
 		services := make(map[string]*client.AwsService)
 		for sk, s := range p.Services {
-			var endpoints []string
+			endpoints := make(map[string]*map[string]interface{})
 			for ek, e := range s.Endpoints {
 				if !e.Deprecated {
-					endpoints = append(endpoints, ek)
+					endpoints[ek] = &map[string]interface{}{}
 				}
 			}
 			services[sk] = &client.AwsService{
@@ -74,7 +65,6 @@ func getPartitionRegionServiceData() (*client.SupportedServiceRegionsData, error
 		awsPartitions[p.PartitionId] = client.AwsPartition{
 			Id:       p.PartitionId,
 			Name:     p.PartitionName,
-			Regions:  regions,
 			Services: services,
 		}
 	}

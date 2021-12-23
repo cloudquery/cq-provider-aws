@@ -29,13 +29,12 @@ var (
 var GroupNameRegex = regexp.MustCompile("arn:aws:logs:[a-z0-9-]+:[0-9]+:log-group:([a-zA-Z0-9-/]+):")
 
 type AwsService struct {
-	Regions []string `json:"regions"`
+	Regions map[string]*map[string]interface{} `json:"regions"`
 }
 
 type AwsPartition struct {
 	Id       string                 `json:"partition"`
 	Name     string                 `json:"partitionName"`
-	Regions  []string               `json:"regions"`
 	Services map[string]*AwsService `json:"services"`
 }
 
@@ -83,13 +82,11 @@ func isSupportedServiceForRegion(service string, region string) bool {
 		return false
 	}
 
-	for _, r := range currentPartition.Services[service].Regions {
-		if r == region {
-			return true
-		}
+	if currentPartition.Services[service].Regions[region] == nil {
+		return false
 	}
 
-	return false
+	return true
 }
 
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
