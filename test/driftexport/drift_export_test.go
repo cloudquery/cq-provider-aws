@@ -610,6 +610,7 @@ func loadTable(ctx context.Context, conn *pgxpool.Conn, table *schema.Table, res
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	for rows.Next() {
 		var row record
 		if err := rows.Scan(&row.data); err != nil {
@@ -667,10 +668,11 @@ func makeIDBuilders(resourceMap map[string]*schema.Table) map[string]func([]map[
 }
 
 func makeIDBuilder(expr string, table *schema.Table) func([]map[string]interface{}) string {
+	ignored := ignoredColumns(table)
 	if expr == "" {
 		keys := make([]string, 0, len(table.Options.PrimaryKeys))
 		for _, k := range table.Options.PrimaryKeys {
-			if k != "account_id" && k != "region" && k != "cq_id" && !strings.HasSuffix(k, "_cq_id") {
+			if _, ok := ignored[k]; !ok {
 				keys = append(keys, k)
 			}
 		}
@@ -730,4 +732,21 @@ func exportRecords(all map[string][]record, idBuilder map[string]func([]map[stri
 		}
 	}
 	return known
+}
+
+func ignoredColumns(t *schema.Table) map[string]struct{} {
+	ignored := make(map[string]struct{})
+	for _, c := range t.Columns {
+		m := c.Meta()
+		if m == nil || m.Resolver == nil {
+			continue
+		}
+		switch m.Resolver.Name {
+		case "schema.ParentIdResolver",
+			"github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount",
+			"github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion":
+			ignored[c.Name] = struct{}{}
+		}
+	}
+	return ignored
 }
