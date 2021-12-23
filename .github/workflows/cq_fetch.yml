@@ -4,7 +4,9 @@ on:
   schedule:
     - cron: '0 1 * * *' # Run every night on 01:00am UTC
   workflow_dispatch:
-
+  push:
+    branches:
+      - master
 jobs:
   nightly_fetch:
     if: github.event_name != 'schedule' || (github.event_name == 'schedule' && github.repository == 'cloudquery/cq-provider-aws')
@@ -12,7 +14,7 @@ jobs:
       matrix:
         dbversion: [ "postgres:latest" ]
         go: [ "1.17" ]
-        platform: [ ubuntu-latest ] # can not run in macOS and widnowsOS
+        platform: [ ubuntu-latest ] # can not run in macOS and windowsOS
     runs-on: ${{ matrix.platform }}
     services:
       postgres:
@@ -92,7 +94,7 @@ jobs:
       matrix:
         dbversion: [ "postgres:latest" ]
         go: [ "1.17" ]
-        platform: [ ubuntu-latest ] # can not run in macOS and widnowsOS
+        platform: [ ubuntu-latest ] # can not run in macOS and windowsOS
     runs-on: ${{ matrix.platform }}
     services:
       postgres:

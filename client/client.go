@@ -108,7 +108,7 @@ var envVarsToCheck = []string{
 
 const (
 	defaultRegion              = "us-east-1"
-	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
+	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws en	v variables: %s"
 	defaultVar                 = "default"
 )
 
@@ -467,7 +467,9 @@ func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
 func filterDisabledRegions(regions []string, enabledRegions []types.Region) []string {
 	regionsMap := map[string]bool{}
 	for _, r := range enabledRegions {
-		regionsMap[*r.RegionName] = true
+		if r.RegionName != nil && r.OptInStatus != nil && *r.OptInStatus != "not-opted-in" {
+			regionsMap[*r.RegionName] = true
+		}
 	}
 
 	var filteredRegions []string
