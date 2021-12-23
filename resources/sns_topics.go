@@ -17,7 +17,7 @@ func SnsTopics() *schema.Table {
 		Name:                 "aws_sns_topics",
 		Description:          "AWS SNS topic",
 		Resolver:             fetchSnsTopics,
-		Multiplex:            client.AccountRegionMultiplex,
+		Multiplex:            client.ServiceAccountRegionMultiplexer("sns"),
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: resolveTopicAttributes,
@@ -84,6 +84,11 @@ func SnsTopics() *schema.Table {
 				Name:        "content_based_deduplication",
 				Description: "Enables content-based deduplication for FIFO topics.",
 				Type:        schema.TypeBool,
+			},
+			{
+				Name:        "kms_master_key_id",
+				Description: "The ID of an AWS managed customer master key (CMK) for Amazon SNS or a custom CMK",
+				Type:        schema.TypeString,
 			},
 			{
 				Name:        "arn",
@@ -169,6 +174,11 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 	}
 	if p, ok := output.Attributes["EffectiveDeliveryPolicy"]; ok && p != "" {
 		if err := resource.Set("effective_delivery_policy", p); err != nil {
+			return err
+		}
+	}
+	if p, ok := output.Attributes["KmsMasterKeyId"]; ok && p != "" {
+		if err := resource.Set("kms_master_key_id", p); err != nil {
 			return err
 		}
 	}

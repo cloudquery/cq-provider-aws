@@ -17,7 +17,7 @@ func AccessAnalyzerAnalyzer() *schema.Table {
 		Name:         "aws_access_analyzer_analyzers",
 		Description:  "Contains information about the analyzer.",
 		Resolver:     fetchAccessAnalyzerAnalyzers,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("access-analyzer"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -166,7 +166,6 @@ func AccessAnalyzerAnalyzer() *schema.Table {
 						Name:        "aws_access_analyzer_analyzer_finding_sources",
 						Description: "The source of the finding.",
 						Resolver:    fetchAccessAnalyzerAnalyzerFindingSources,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"analyzer_finding_cq_id", "type", "detail_access_point_arn"}},
 						Columns: []schema.Column{
 							{
 								Name:        "analyzer_finding_cq_id",

@@ -16,6 +16,7 @@ func buildEcsClusterMock(t *testing.T, ctrl *gomock.Controller) client.Services 
 	services := client.Services{
 		ECS: m,
 	}
+	faker.SetIgnoreInterface(true)
 	c := ecsTypes.Cluster{}
 	err := faker.FakeData(&c)
 	if err != nil {
@@ -29,6 +30,37 @@ func buildEcsClusterMock(t *testing.T, ctrl *gomock.Controller) client.Services 
 		ClusterArns: []string{"randomClusteArn"},
 	}
 	m.EXPECT().ListClusters(gomock.Any(), gomock.Any(), gomock.Any()).Return(ecsListOutput, nil)
+	var tags ecs.ListTagsForResourceOutput
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	servicesList := ecs.ListServicesOutput{
+		ServiceArns: []string{"test"},
+	}
+	m.EXPECT().ListServices(gomock.Any(), gomock.Any(), gomock.Any()).Return(&servicesList, nil)
+
+	svcs := ecs.DescribeServicesOutput{}
+	err = faker.FakeData(&svcs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeServices(gomock.Any(), gomock.Any(), gomock.Any()).Return(&svcs, nil)
+
+	instancesList := ecs.ListContainerInstancesOutput{
+		ContainerInstanceArns: []string{"test"},
+	}
+	m.EXPECT().ListContainerInstances(gomock.Any(), gomock.Any(), gomock.Any()).Return(&instancesList, nil)
+
+	instances := ecs.DescribeContainerInstancesOutput{}
+	err = faker.FakeData(&instances)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeContainerInstances(gomock.Any(), gomock.Any(), gomock.Any()).Return(&instances, nil)
+
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tags, nil)
 	return services
 }
 

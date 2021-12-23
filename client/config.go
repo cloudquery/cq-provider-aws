@@ -2,6 +2,7 @@ package client
 
 type Account struct {
 	ID         string `hcl:",label"`
+	AccountID  string `hcl:"account_id,optional"`
 	RoleARN    string `hcl:"role_arn,optional"`
 	ExternalID string `hcl:"external_id,optional"`
 }
@@ -10,16 +11,18 @@ type Config struct {
 	Regions    []string  `hcl:"regions,optional"`
 	Accounts   []Account `hcl:"accounts,block"`
 	AWSDebug   bool      `hcl:"aws_debug,optional"`
-	MaxRetries int       `hcl:"max_retries,optional" default:"5"`
-	MaxBackoff int       `hcl:"max_backoff,optional" default:"30"`
+	MaxRetries int       `hcl:"max_retries,optional" default:"10"`
+	MaxBackoff int       `hcl:"max_backoff,optional" default:"90"`
 }
 
 func (c Config) Example() string {
 	return `configuration {
 	// Optional. if you want to assume role to multiple account and fetch data from them
-    //accounts "<YOUR ID>" {
+    //accounts "<YOUR ACCOUNT ID>" {
 	// Optional. Role ARN we want to assume when accessing this account
 	// role_arn = <YOUR_ROLE_ARN>
+	// Optional. Account ID we want to assume when accessing this account - override the block label
+	// account_id = <YOUR ACCOUNT ID>
 	// }
 	// Optional. by default assumes all regions
 	// regions = ["us-east-1", "us-west-2"]

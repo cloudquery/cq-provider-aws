@@ -2,10 +2,14 @@ package resources
 
 import (
 	"context"
+	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
+	"github.com/aws/smithy-go"
+
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -74,8 +78,18 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, par
 	var input organizations.ListAccountsInput
 	for {
 		response, err := svc.ListAccounts(ctx, &input)
+		var ae smithy.APIError
+		if errors.As(err, &ae) {
+			switch ae.ErrorCode() {
+			case "AWSOrganizationsNotInUseException", "AccessDeniedException":
+				// This is going to happen most probably due to account not being the root organizational account
+				// so it's better to ignore it completly as it happens basically on every account
+				// otherwise it screws up with dev experience and with our tests
+				meta.Logger().Warn("account is probably not the root organization account https://docs.aws.amazon.com/organizations/latest/APIReference/API_ListAccounts.html")
+				return nil
+			}
+		}
 		if err != nil {
-			meta.Logger().Warn("missing permissions or account might not be root/organizational unit", "account", c.AccountID)
 			return err
 		}
 		res <- response.Accounts

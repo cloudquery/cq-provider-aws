@@ -2,8 +2,10 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
+	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -11,9 +13,9 @@ import (
 func ElasticsearchDomains() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_elasticsearch_domains",
-		Description:  "The current status of an Elasticsearch domain. ",
+		Description:  "The current status of an Elasticsearch domain.",
 		Resolver:     fetchElasticsearchDomains,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("es"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
@@ -31,6 +33,11 @@ func ElasticsearchDomains() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveElasticsearchDomainTags,
+			},
+			{
 				Name:        "arn",
 				Description: "The Amazon resource name (ARN) of an Elasticsearch domain",
 				Type:        schema.TypeString,
@@ -38,7 +45,7 @@ func ElasticsearchDomains() *schema.Table {
 			},
 			{
 				Name:        "id",
-				Description: "The unique identifier for the specified Elasticsearch domain.",
+				Description: "The unique identifier for the specified Elasticsearch domain.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DomainId"),
 			},
@@ -420,4 +427,28 @@ func fetchElasticsearchDomains(ctx context.Context, meta schema.ClientMeta, pare
 		res <- domainOutput.DomainStatus
 	}
 	return nil
+}
+func resolveElasticsearchDomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	region := meta.(*client.Client).Region
+	svc := meta.(*client.Client).Services().ElasticSearch
+	domain, ok := resource.Item.(*types.ElasticsearchDomainStatus)
+	if !ok {
+		return fmt.Errorf("expected to have *types.ElasticsearchDomainStatus but got %T", resource.Item)
+	}
+	tagsOutput, err := svc.ListTags(ctx, &elasticsearchservice.ListTagsInput{
+		ARN: domain.ARN,
+	}, func(o *elasticsearchservice.Options) {
+		o.Region = region
+	})
+	if err != nil {
+		return err
+	}
+	if len(tagsOutput.TagList) == 0 {
+		return nil
+	}
+	tags := make(map[string]*string)
+	for _, s := range tagsOutput.TagList {
+		tags[*s.Key] = s.Value
+	}
+	return resource.Set(c.Name, tags)
 }

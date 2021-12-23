@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -18,7 +19,7 @@ func Wafv2RuleGroups() *schema.Table {
 		Name:         "aws_wafv2_rule_groups",
 		Description:  "A rule group defines a collection of rules to inspect and control web requests that you can use in a WebACL",
 		Resolver:     fetchWafv2RuleGroups,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("waf-regional"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
@@ -208,6 +209,11 @@ func resolveWafv2ruleGroupPolicy(ctx context.Context, meta schema.ClientMeta, re
 		options.Region = cl.Region
 	})
 	if err != nil {
+		// we may get WAFNonexistentItemException error until SetPermissionPolicy is called on a rule group
+		var e *types.WAFNonexistentItemException
+		if errors.As(err, &e) {
+			return resource.Set(c.Name, "null")
+		}
 		return err
 	}
 

@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -14,7 +15,7 @@ func Ec2CustomerGateways() *schema.Table {
 		Name:         "aws_ec2_customer_gateways",
 		Description:  "Describes a customer gateway.",
 		Resolver:     fetchEc2CustomerGateways,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
@@ -109,6 +110,9 @@ func resolveEc2customerGatewayTags(ctx context.Context, meta schema.ClientMeta, 
 
 func resolveCustomerGatewayArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	cg := resource.Item.(types.CustomerGateway)
+	cg, ok := resource.Item.(types.CustomerGateway)
+	if !ok {
+		return fmt.Errorf("not ec2 customer-gateway")
+	}
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "customer-gateway", *cg.CustomerGatewayId, cl.Region, cl.AccountID))
 }

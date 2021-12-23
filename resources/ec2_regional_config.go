@@ -13,7 +13,7 @@ func Ec2RegionalConfig() *schema.Table {
 		Name:         "aws_ec2_regional_config",
 		Description:  "Ec2 Regional Config defines common default configuration for ec2 service",
 		Resolver:     fetchEc2RegionalConfig,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
@@ -61,7 +61,10 @@ func fetchEc2RegionalConfig(ctx context.Context, meta schema.ClientMeta, _ *sche
 	if err != nil {
 		return err
 	}
-	regionalConfig.EbsEncryptionEnabledByDefault = ebsResp.EbsEncryptionByDefault
+
+	if ebsResp.EbsEncryptionByDefault != nil {
+		regionalConfig.EbsEncryptionEnabledByDefault = *ebsResp.EbsEncryptionByDefault
+	}
 	res <- regionalConfig
 	return nil
 }

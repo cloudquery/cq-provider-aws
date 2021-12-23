@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -16,9 +17,9 @@ func WafWebAcls() *schema.Table {
 		Name:         "aws_waf_web_acls",
 		Description:  "This is AWS WAF Classic documentation",
 		Resolver:     fetchWafWebAcls,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
@@ -31,12 +32,6 @@ func WafWebAcls() *schema.Table {
 				Name:     "tags",
 				Type:     schema.TypeJSON,
 				Resolver: resolveWafWebACLTags,
-			},
-			{
-				Name:        "region",
-				Description: "The AWS Region of the resource.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
 			},
 			{
 				Name:        "default_action_type",
@@ -65,6 +60,12 @@ func WafWebAcls() *schema.Table {
 				Description: "Tha Amazon Resource Name (ARN) of the web ACL.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("WebACLArn"),
+			},
+			{
+				Name:        "logging_configuration",
+				Description: "The LoggingConfiguration for the specified web ACL.",
+				Type:        schema.TypeStringArray,
+				Resolver:    resolveWafWebACLRuleLoggingConfiguration,
 			},
 		},
 		Relations: []*schema.Table{
@@ -122,7 +123,7 @@ func WafWebAcls() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
-func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan interface{}) error {
 	c := meta.(*client.Client)
 	service := c.Services().Waf
 	config := waf.ListWebACLsInput{}
@@ -158,13 +159,13 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 	}
 
 	// Resolve tags for resource
-	client := meta.(*client.Client)
-	service := client.Services().Waf
+	awsClient := meta.(*client.Client)
+	service := awsClient.Services().Waf
 	outputTags := make(map[string]*string)
 	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: webACL.WebACLArn}
 	for {
 		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *waf.Options) {
-			options.Region = client.Region
+			options.Region = awsClient.Region
 		})
 		if err != nil {
 			return err
@@ -197,4 +198,29 @@ func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMe
 		excludedRules[i] = aws.ToString(rule.ExcludedRules[i].RuleId)
 	}
 	return resource.Set(c.Name, excludedRules)
+}
+func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	rule, ok := resource.Item.(*types.WebACL)
+	if !ok {
+		return fmt.Errorf("not an WebACL instance")
+	}
+
+	cl := meta.(*client.Client)
+	svc := cl.Services().Waf
+	cfg := waf.GetLoggingConfigurationInput{
+		ResourceArn: rule.WebACLArn,
+	}
+	output, err := svc.GetLoggingConfiguration(ctx, &cfg, func(options *waf.Options) {
+		options.Region = cl.Region
+	})
+	if err != nil {
+		var exc *types.WAFNonexistentItemException
+		if errors.As(err, &exc) {
+			if exc.ErrorCode() == "WAFNonexistentItemException" {
+				return nil
+			}
+		}
+		return err
+	}
+	return resource.Set(c.Name, output.LoggingConfiguration.LogDestinationConfigs)
 }

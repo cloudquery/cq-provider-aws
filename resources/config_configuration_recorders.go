@@ -2,12 +2,15 @@ package resources
 
 import (
 	"context"
-
-	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
+	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
-	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func ConfigConfigurationRecorders() *schema.Table {
@@ -15,7 +18,7 @@ func ConfigConfigurationRecorders() *schema.Table {
 		Name:         "aws_config_configuration_recorders",
 		Description:  "An object that represents the recording of configuration changes of an AWS resource.",
 		Resolver:     fetchConfigConfigurationRecorders,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("config"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -67,6 +70,41 @@ func ConfigConfigurationRecorders() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("RoleARN"),
 			},
+			{
+				Name:        "status_last_error_code",
+				Description: "The error code indicating that the recording failed.",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "status_last_error_message",
+				Description: "The message indicating that the recording failed due to an error.",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "status_last_start_time",
+				Description: "The time the recorder was last started.",
+				Type:        schema.TypeTimestamp,
+			},
+			{
+				Name:        "status_last_status",
+				Description: "The last (previous) status of the recorder.",
+				Type:        schema.TypeString,
+			},
+			{
+				Name:        "status_last_status_change_time",
+				Description: "The time when the status was last changed.",
+				Type:        schema.TypeTimestamp,
+			},
+			{
+				Name:        "status_last_stop_time",
+				Description: "The time the recorder was last stopped.",
+				Type:        schema.TypeTimestamp,
+			},
+			{
+				Name:        "status_recording",
+				Description: "Specifies whether or not the recorder is currently recording.",
+				Type:        schema.TypeBool,
+			},
 		},
 	}
 }
@@ -82,12 +120,57 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	if err != nil {
 		return err
 	}
-	res <- resp.ConfigurationRecorders
+	if len(resp.ConfigurationRecorders) == 0 {
+		return nil
+	}
+	names := make([]string, len(resp.ConfigurationRecorders))
+	for i, configurationRecorder := range resp.ConfigurationRecorders {
+		names[i] = *configurationRecorder.Name
+	}
+	status, err := c.Services().ConfigService.DescribeConfigurationRecorderStatus(ctx, &configservice.DescribeConfigurationRecorderStatusInput{
+		ConfigurationRecorderNames: names,
+	})
+	if err != nil {
+		return err
+	}
+	for _, configurationRecorder := range resp.ConfigurationRecorders {
+		var configurationRecorderStatus types.ConfigurationRecorderStatus
+		for _, s := range status.ConfigurationRecordersStatus {
+			if s.Name == configurationRecorder.Name {
+				configurationRecorderStatus = s
+				break
+			}
+		}
+		res <- configurationRecorderWrapper{
+			ConfigurationRecorder:      configurationRecorder,
+			StatusLastErrorCode:        configurationRecorderStatus.LastErrorCode,
+			StatusLastErrorMessage:     configurationRecorderStatus.LastErrorMessage,
+			StatusLastStartTime:        configurationRecorderStatus.LastStartTime,
+			StatusLastStatus:           configurationRecorderStatus.LastStatus,
+			StatusLastStatusChangeTime: configurationRecorderStatus.LastStatusChangeTime,
+			StatusLastStopTime:         configurationRecorderStatus.LastStopTime,
+			StatusRecording:            configurationRecorderStatus.Recording,
+		}
+	}
 	return nil
 }
 
 func generateConfigRecorderArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	cfg := resource.Item.(types.ConfigurationRecorder)
+	cfg, ok := resource.Item.(configurationRecorderWrapper)
+	if !ok {
+		return fmt.Errorf("not config config recorder")
+	}
 	return resource.Set(c.Name, client.GenerateResourceARN("config", "config-recorder", *cfg.Name, cl.Region, cl.AccountID))
+}
+
+type configurationRecorderWrapper struct {
+	types.ConfigurationRecorder
+	StatusLastErrorCode        *string
+	StatusLastErrorMessage     *string
+	StatusLastStartTime        *time.Time
+	StatusLastStatus           types.RecorderStatus
+	StatusLastStatusChangeTime *time.Time
+	StatusLastStopTime         *time.Time
+	StatusRecording            bool
 }

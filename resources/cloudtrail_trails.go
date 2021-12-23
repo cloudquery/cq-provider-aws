@@ -2,7 +2,9 @@ package resources
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -14,9 +16,9 @@ func CloudtrailTrails() *schema.Table {
 		Name:                 "aws_cloudtrail_trails",
 		Description:          "The settings for a trail.",
 		Resolver:             fetchCloudtrailTrails,
-		Multiplex:            client.AccountRegionMultiplex,
+		Multiplex:            client.AccountMultiplex,
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		DeleteFilter:         client.DeleteAccountFilter,
 		PostResourceResolver: postCloudtrailTrailResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
@@ -27,10 +29,9 @@ func CloudtrailTrails() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name:        "region",
-				Description: "The AWS Region of the resource.",
-				Type:        schema.TypeString,
-				Resolver:    client.ResolveAWSRegion,
+				Name:        "tags",
+				Type:        schema.TypeJSON,
+				Description: "Any tags assigned to the resource",
 			},
 			{
 				Name:     "cloudwatch_logs_log_group_name",
@@ -39,7 +40,7 @@ func CloudtrailTrails() *schema.Table {
 			},
 			{
 				Name:        "is_logging",
-				Description: " Whether the CloudTrail is currently logging AWS API calls.",
+				Description: "Whether the CloudTrail is currently logging AWS API calls.",
 				Type:        schema.TypeBool,
 			},
 			{
@@ -113,13 +114,14 @@ func CloudtrailTrails() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "home_region",
+				Name:        "region",
 				Description: "The region in which the trail was created.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("HomeRegion"),
 			},
 			{
 				Name:        "include_global_service_events",
-				Description: "Set to True to include AWS API calls from AWS global services such as IAM.",
+				Description: "Set to True to include AWS API calls from AWS global services such as IAM. Otherwise, False.",
 				Type:        schema.TypeBool,
 			},
 			{
@@ -134,7 +136,7 @@ func CloudtrailTrails() *schema.Table {
 			},
 			{
 				Name:        "kms_key_id",
-				Description: "Specifies the KMS key ID that encrypts the logs delivered by CloudTrail.",
+				Description: "Specifies the KMS key ID that encrypts the logs delivered by CloudTrail",
 				Type:        schema.TypeString,
 			},
 			{
@@ -144,33 +146,33 @@ func CloudtrailTrails() *schema.Table {
 			},
 			{
 				Name:        "name",
-				Description: "Name of the trail set by calling CreateTrail.",
+				Description: "Name of the trail set by calling CreateTrail",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "s3_bucket_name",
-				Description: "Name of the Amazon S3 bucket into which CloudTrail delivers your trail files.",
+				Description: "Name of the Amazon S3 bucket into which CloudTrail delivers your trail files. See Amazon S3 Bucket Naming Requirements (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create_trail_naming_policy.html).",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "s3_key_prefix",
-				Description: "Specifies the Amazon S3 key prefix that comes after the name of the bucket you have designated for log file delivery.",
+				Description: "Specifies the Amazon S3 key prefix that comes after the name of the bucket you have designated for log file delivery",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "sns_topic_arn",
-				Description: "Specifies the ARN of the Amazon SNS topic that CloudTrail uses to send notifications when log files are delivered.",
+				Description: "Specifies the ARN of the Amazon SNS topic that CloudTrail uses to send notifications when log files are delivered",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("SnsTopicARN"),
 			},
 			{
 				Name:        "sns_topic_name",
-				Description: "This field is no longer in use.",
+				Description: "This field is no longer in use",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "arn",
-				Description: "Specifies the ARN of the trail.",
+				Description: "Specifies the ARN of the trail",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("TrailARN"),
 			},
@@ -178,7 +180,7 @@ func CloudtrailTrails() *schema.Table {
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_cloudtrail_trail_event_selectors",
-				Description: "Use event selectors to further specify the management and data event settings for your trail.",
+				Description: "Use event selectors to further specify the management and data event settings for your trail",
 				Resolver:    fetchCloudtrailTrailEventSelectors,
 				Columns: []schema.Column{
 					{
@@ -189,23 +191,23 @@ func CloudtrailTrails() *schema.Table {
 					},
 					{
 						Name:        "trail_arn",
-						Description: "Specifies the ARN of the trail.",
+						Description: "Specifies the ARN of the trail",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentPathResolver("TrailARN"),
 					},
 					{
 						Name:        "exclude_management_event_sources",
-						Description: "An optional list of service event sources from which you do not want management events to be logged on your trail.",
+						Description: "An optional list of service event sources from which you do not want management events to be logged on your trail",
 						Type:        schema.TypeStringArray,
 					},
 					{
 						Name:        "include_management_events",
-						Description: "Specify if you want your event selector to include management events for your trail.",
+						Description: "Specify if you want your event selector to include management events for your trail",
 						Type:        schema.TypeBool,
 					},
 					{
 						Name:        "read_write_type",
-						Description: "Specify if you want your trail to log read-only events, write-only events, or all.",
+						Description: "Specify if you want your trail to log read-only events, write-only events, or all",
 						Type:        schema.TypeString,
 					},
 				},
@@ -226,16 +228,75 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	if err != nil {
 		return err
 	}
-	res <- response.TrailList
+
+	processTrailsBundle := func(trails []types.Trail, region string) error {
+		input := cloudtrail.ListTagsInput{
+			ResourceIdList: make([]string, 0, len(trails)),
+		}
+		for _, h := range trails {
+			input.ResourceIdList = append(input.ResourceIdList, *h.TrailARN)
+		}
+		for {
+			response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
+				options.Region = region
+			})
+			if err != nil {
+				return err
+			}
+			if len(response.ResourceTagList) == 0 {
+				break
+			}
+			for _, tr := range trails {
+				wrapper := CloudTrailWrapper{
+					Trail: tr,
+					Tags:  make(map[string]interface{}),
+				}
+				for _, t := range getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList) {
+					wrapper.Tags[*t.Key] = t.Value
+				}
+				res <- wrapper
+			}
+
+			if aws.ToString(response.NextToken) == "" {
+				break
+			}
+			input.NextToken = response.NextToken
+		}
+		return nil
+	}
+
+	// since api returns all the cloudtrails despite region we aggregate trails by region to get tags.
+	aggregatedTrails, err := aggregateCloudTrails(response.TrailList)
+	if err != nil {
+		return err
+	}
+	for region, trails := range aggregatedTrails {
+		for i := 0; i < len(trails); i += 20 {
+			end := i + 20
+
+			if end > len(trails) {
+				end = len(trails)
+			}
+			t := trails[i:end]
+			err := processTrailsBundle(t, region)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
-	r := resource.Item.(types.Trail)
+	r, ok := resource.Item.(CloudTrailWrapper)
+	if !ok {
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
+	}
 	response, err := svc.GetTrailStatus(ctx,
 		&cloudtrail.GetTrailStatusInput{Name: r.TrailARN}, func(o *cloudtrail.Options) {
-			o.Region = c.Region
+			o.Region = *r.HomeRegion
 		})
 	if err != nil {
 		return err
@@ -275,14 +336,18 @@ func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, re
 	}
 	return nil
 }
+
 func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	groupName := ""
 	log := meta.(*client.Client).Logger()
-	trail := resource.Item.(types.Trail)
-	if trail.CloudWatchLogsLogGroupArn != nil {
-		matches := client.GroupNameRegex.FindStringSubmatch(*trail.CloudWatchLogsLogGroupArn)
+	r, ok := resource.Item.(CloudTrailWrapper)
+	if !ok {
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
+	}
+	if r.CloudWatchLogsLogGroupArn != nil {
+		matches := client.GroupNameRegex.FindStringSubmatch(*r.CloudWatchLogsLogGroupArn)
 		if len(matches) < 2 {
-			log.Warn("CloudWatchLogsLogGroupARN doesn't fit standard regex", "arn", *trail.CloudWatchLogsLogGroupArn)
+			log.Warn("CloudWatchLogsLogGroupARN doesn't fit standard regex", "arn", *r.CloudWatchLogsLogGroupArn)
 		} else {
 			groupName = matches[1]
 		}
@@ -293,15 +358,43 @@ func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta 
 	return resource.Set("cloudwatch_logs_log_group_name", groupName)
 }
 func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	r := parent.Item.(types.Trail)
+	r, ok := parent.Item.(CloudTrailWrapper)
+	if !ok {
+		return fmt.Errorf("expected CloudTrailWrapper but got %T", parent.Item)
+	}
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
 	response, err := svc.GetEventSelectors(ctx, &cloudtrail.GetEventSelectorsInput{TrailName: r.TrailARN}, func(options *cloudtrail.Options) {
-		options.Region = c.Region
+		options.Region = *r.HomeRegion
 	})
 	if err != nil {
 		return err
 	}
 	res <- response.EventSelectors
 	return nil
+}
+
+func getCloudTrailTagsByResourceID(id string, set []types.ResourceTag) []types.Tag {
+	for _, s := range set {
+		if *s.ResourceId == id {
+			return s.TagsList
+		}
+	}
+	return nil
+}
+
+func aggregateCloudTrails(trails []types.Trail) (map[string][]types.Trail, error) {
+	resp := make(map[string][]types.Trail)
+	for _, t := range trails {
+		if t.HomeRegion == nil {
+			return nil, fmt.Errorf("got cloudtrail with HomeRegion == nil")
+		}
+		resp[*t.HomeRegion] = append(resp[*t.HomeRegion], t)
+	}
+	return resp, nil
+}
+
+type CloudTrailWrapper struct {
+	types.Trail
+	Tags map[string]interface{}
 }

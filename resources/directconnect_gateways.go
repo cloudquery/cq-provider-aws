@@ -11,13 +11,12 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-// todo implement tags
 func DirectconnectGateways() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_directconnect_gateways",
 		Description:  "Information about a Direct Connect gateway, which enables you to connect virtual interfaces and virtual private gateway or transit gateways.",
 		Resolver:     fetchDirectconnectGateways,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("directconnect"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
@@ -40,19 +39,22 @@ func DirectconnectGateways() *schema.Table {
 				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "direct_connect_gateway_id",
+				Name:        "id",
 				Description: "The ID of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayId"),
 			},
 			{
-				Name:        "direct_connect_gateway_name",
+				Name:        "name",
 				Description: "The name of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayName"),
 			},
 			{
-				Name:        "direct_connect_gateway_state",
+				Name:        "state",
 				Description: "The state of the Direct Connect gateway.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DirectConnectGatewayState"),
 			},
 			{
 				Name:        "owner_account",
@@ -64,28 +66,22 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The error message if the state of an object failed to advance.",
 				Type:        schema.TypeString,
 			},
-			{
-				Name:        "id",
-				Description: "The ID of the Direct Connect gateway.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("DirectConnectGatewayId"),
-			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_directconnect_gateway_associations",
 				Description: "Information about the association between an Direct Connect Gateway and either a Virtual Private Gateway, or Transit Gateway",
 				Resolver:    fetchDirectconnectGatewayAssociations,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"directconnect_gateway_cq_id", "association_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"gateway_cq_id", "association_id"}},
 				Columns: []schema.Column{
 					{
-						Name:        "directconnect_gateway_cq_id",
+						Name:        "gateway_cq_id",
 						Description: "Unique CloudQuery ID of aws_directconnect_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:        "directconnect_gateway_id",
+						Name:        "gateway_id",
 						Description: "The ID of the Direct Connect gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
@@ -164,10 +160,16 @@ func DirectconnectGateways() *schema.Table {
 				Resolver:    fetchDirectconnectGatewayAttachments,
 				Columns: []schema.Column{
 					{
-						Name:        "directconnect_gateway_id",
+						Name:        "gateway_cq_id",
 						Description: "Unique CloudQuery ID of aws_directconnect_gateways table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "gateway_id",
+						Description: "The ID of the Direct Connect gateway.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "attachment_state",
