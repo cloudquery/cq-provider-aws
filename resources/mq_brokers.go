@@ -15,7 +15,7 @@ func MqBrokers() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_mq_brokers",
 		Resolver:     fetchMqBrokers,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("mq"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "broker_id"}},
