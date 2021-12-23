@@ -26,7 +26,7 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.17
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
@@ -39,3 +39,25 @@ jobs:
       - name: Fail if docs are changed
         run: |
           test "$(git status -s ./docs/tables | wc -l)" -eq 0
+
+
+  enpoints:
+    name: aws endpoints verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.17
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: remove old endpoints file
+        run: |
+          rm -f ./client/data/partition_service_region.json
+      - name: generate partition_service_region file
+        run: |
+          go run ./tools/endpoints/main.go
+      - name: Fail if file is changed
+        run: |
+          test "$(git status -s ./client/data/partition_service_region.json | wc -l)" -eq 0

@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cloudquery/cq-provider-aws/client"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 const (
@@ -22,7 +23,7 @@ type supportedServicesData struct {
 		} `json:"regions"`
 		Services map[string]struct {
 			Endpoints map[string]struct {
-				Deprecated bool `json:"endpoints,default=false"`
+				Deprecated bool `json:"endpoints" default:"false"`
 			} `json:"endpoints"`
 		} `json:"services"`
 	} `json:"partitions"`

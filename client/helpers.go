@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws/arn"
-	"github.com/aws/smithy-go"
 	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
+	"github.com/aws/smithy-go"
 )
 
 const (
