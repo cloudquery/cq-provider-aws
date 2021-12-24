@@ -14,8 +14,8 @@ func Ec2ByoipCidrs() *schema.Table {
 		Name:         "aws_ec2_byoip_cidrs",
 		Description:  "Information about an address range that is provisioned for use with your AWS resources through bring your own IP addresses (BYOIP).",
 		Resolver:     fetchEc2ByoipCidrs,
-		Multiplex:    client.AccountRegionMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError:  client.IgnoreWithInvalidAction,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "cidr"}},
 		Columns: []schema.Column{
@@ -60,9 +60,23 @@ func Ec2ByoipCidrs() *schema.Table {
 // ====================================================================================================================
 func fetchEc2ByoipCidrs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	config := ec2.DescribeByoipCidrsInput{
-		MaxResults: 100,
+		MaxResults: aws.Int32(100),
 	}
+
 	c := meta.(*client.Client)
+	// DescribeByoipCidrs does not work in next regions, so we ignore them.
+	if _, ok := map[string]struct{}{
+		"ap-northeast-2": {},
+		"af-south-1":     {},
+		"cn-north-1":     {},
+		"cn-northwest-1": {},
+		"eu-west-3":      {},
+		"eu-south-1":     {},
+		"eu-north-1":     {},
+		"me-south-1":     {},
+	}[c.Region]; ok {
+		return nil
+	}
 	svc := c.Services().EC2
 	for {
 		response, err := svc.DescribeByoipCidrs(ctx, &config, func(options *ec2.Options) {

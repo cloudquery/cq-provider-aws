@@ -14,7 +14,7 @@ func ApigatewayAPIKeys() *schema.Table {
 		Name:         "aws_apigateway_api_keys",
 		Description:  "A resource that can be distributed to callers for executing Method resources that require an API key.",
 		Resolver:     fetchApigatewayApiKeys,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("apigateway"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
@@ -90,7 +90,9 @@ func ApigatewayAPIKeys() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchApigatewayApiKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var config apigateway.GetApiKeysInput
+	config := apigateway.GetApiKeysInput{
+		IncludeValues: aws.Bool(true),
+	}
 	c := meta.(*client.Client)
 	svc := c.Services().Apigateway
 	for {
