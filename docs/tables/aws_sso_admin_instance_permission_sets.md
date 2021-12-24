@@ -6,6 +6,8 @@ An entity that contains IAM policies.
 | ------------- | ------------- | -----  |
 |instance_cq_id|uuid|Unique CloudQuery ID of aws_sso_admin_instances table (FK)|
 |inline_policy|jsonb||
+|tags|jsonb|tags of the instance|
+|managed_policies|jsonb||
 |created_date|timestamp without time zone|The date that the permission set was created.|
 |description|text|The description of the PermissionSet.|
 |name|text|The name of the permission set.|

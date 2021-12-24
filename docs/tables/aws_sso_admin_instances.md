@@ -6,6 +6,5 @@ Provides information about the SSO instance.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|tags|jsonb|tags of the instance|
 |identity_store_id|text|The identifier of the identity store that is connected to the SSO instance.|
 |arn|text|The ARN of the SSO instance under which the operation will be executed|
