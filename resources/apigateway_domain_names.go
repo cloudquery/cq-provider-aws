@@ -11,6 +11,8 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+const domainNameIDPart = "domainnames"
+
 func ApigatewayDomainNames() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_apigateway_domain_names",
@@ -32,6 +34,18 @@ func ApigatewayDomainNames() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.DomainName)
+					if !ok {
+						return nil, unexpectedResourceType(r, resource.Item)
+					}
+					return []string{domainNameIDPart, *r.DomainName}, nil
+				}),
 			},
 			{
 				Name:        "certificate_arn",
@@ -145,6 +159,22 @@ func ApigatewayDomainNames() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_apigateway_domain_names table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r, ok := resource.Item.(types.BasePathMapping)
+							if !ok {
+								return nil, unexpectedResourceType(r, resource.Item)
+							}
+							p, ok := resource.Parent.Item.(types.DomainName)
+							if !ok {
+								return nil, unexpectedResourceType(p, resource.Parent.Item)
+							}
+							return []string{domainNameIDPart, *p.DomainName, "basepathmappings", *r.BasePath}, nil
+						}),
 					},
 					{
 						Name:        "domain_name",

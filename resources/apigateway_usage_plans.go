@@ -11,6 +11,8 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+const usagePlanIDPart = "usageplans"
+
 func ApigatewayUsagePlans() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_apigateway_usage_plans",
@@ -32,6 +34,18 @@ func ApigatewayUsagePlans() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.UsagePlan)
+					if !ok {
+						return nil, unexpectedResourceType(r, resource.Item)
+					}
+					return []string{usagePlanIDPart, *r.Id}, nil
+				}),
 			},
 			{
 				Name:        "description",
@@ -143,6 +157,22 @@ func ApigatewayUsagePlans() *schema.Table {
 						Description: "The identifier of a UsagePlan resource.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r, ok := resource.Item.(types.UsagePlanKey)
+							if !ok {
+								return nil, unexpectedResourceType(r, resource.Item)
+							}
+							p, ok := resource.Parent.Item.(types.UsagePlan)
+							if !ok {
+								return nil, unexpectedResourceType(p, resource.Parent.Item)
+							}
+							return []string{usagePlanIDPart, *p.Id, "keys", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "id",
