@@ -15,8 +15,9 @@ import (
 func IotSecurityProfiles() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iot_security_profiles",
+		Description:  "A security profile defines a set of expected behaviors for devices in your account and specifies the actions to take when an anomaly is detected",
 		Resolver:     fetchIotSecurityProfiles,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -36,7 +37,7 @@ func IotSecurityProfiles() *schema.Table {
 			{
 				Name:     "targets",
 				Type:     schema.TypeStringArray,
-				Resolver: resolveIotSecurityProfileTargets,
+				Resolver: ResolveIotSecurityProfileTargets,
 			},
 			{
 				Name:        "additional_metrics_to_retain",
@@ -154,13 +155,13 @@ func IotSecurityProfiles() *schema.Table {
 						Resolver:    schema.PathResolver("Criteria.DurationSeconds"),
 					},
 					{
-						Name:        "criteria_ml_detection_config_confidence_level",
+						Name:        "criteria__ml_detection_config_confidence_level",
 						Description: "The sensitivity of anomalous behavior evaluation",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Criteria.MlDetectionConfig.ConfidenceLevel"),
 					},
 					{
-						Name:        "criteria_statistical_threshold_statistic",
+						Name:        "criteria__statistical_threshold_statistic",
 						Description: "The percentile that resolves to a threshold value by which compliance with a behavior is determined",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Criteria.StatisticalThreshold.Statistic"),
@@ -169,7 +170,7 @@ func IotSecurityProfiles() *schema.Table {
 						Name:        "criteria_value",
 						Description: "The value to be compared with the metric.",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveIotSecurityProfileBehaviorCriteriaValue,
+						Resolver:    resolveIotSecurityProfileBehaviorsCriteriaValue,
 					},
 					{
 						Name:        "metric",
@@ -202,6 +203,7 @@ func IotSecurityProfiles() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
@@ -234,7 +236,7 @@ func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, paren
 	}
 	return nil
 }
-func resolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeSecurityProfileOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", resource.Item)
@@ -289,7 +291,7 @@ func fetchIotSecurityProfileBehaviors(ctx context.Context, meta schema.ClientMet
 	res <- i.Behaviors
 	return nil
 }
-func resolveIotSecurityProfileBehaviorCriteriaValue(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveIotSecurityProfileBehaviorsCriteriaValue(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(types.Behavior)
 	if !ok {
 		return fmt.Errorf("expected types.Behavior but got %T", resource.Item)

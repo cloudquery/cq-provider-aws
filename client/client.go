@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-
 	"github.com/aws/smithy-go/logging"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -17,7 +16,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 	"github.com/aws/aws-sdk-go-v2/service/acm"
-	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
@@ -48,6 +46,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
@@ -164,7 +163,7 @@ type Services struct {
 	WafV2                  WafV2Client
 	Codebuild              CodebuildClient
 	GuardDuty              GuardDutyClient
-	IOT                  IOTClient
+	IOT                    IOTClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -455,7 +454,7 @@ func initServices(region string, c aws.Config) Services {
 		Waf:                    waf.NewFromConfig(awsCfg),
 		WafV2:                  wafv2.NewFromConfig(awsCfg),
 		Codebuild:              codebuild.NewFromConfig(awsCfg),
-		IOT:                  iot.NewFromConfig(awsCfg),
+		IOT:                    iot.NewFromConfig(awsCfg),
 	}
 }
 

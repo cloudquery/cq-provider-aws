@@ -13,8 +13,9 @@ import (
 func IotBillingGroups() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iot_billing_groups",
+		Description:  "Billing groups are groups of things created for billing purposes that collect billable information for the things",
 		Resolver:     fetchIotBillingGroups,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -35,12 +36,12 @@ func IotBillingGroups() *schema.Table {
 				Name:        "things_in_group",
 				Description: "Lists the things in the specified group",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveIotBillingGroupThingsInGroup,
+				Resolver:    ResolveIotBillingGroupThingsInGroup,
 			},
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveIotBillingGroupTags,
+				Resolver: ResolveIotBillingGroupTags,
 			},
 			{
 				Name:        "arn",
@@ -55,9 +56,10 @@ func IotBillingGroups() *schema.Table {
 				Resolver:    schema.PathResolver("BillingGroupId"),
 			},
 			{
-				Name:     "creation_date",
-				Type:     schema.TypeTimestamp,
-				Resolver: schema.PathResolver("BillingGroupMetadata.CreationDate"),
+				Name:        "creation_date",
+				Description: "The date the billing group was created.",
+				Type:        schema.TypeTimestamp,
+				Resolver:    schema.PathResolver("BillingGroupMetadata.CreationDate"),
 			},
 			{
 				Name:        "name",
@@ -66,9 +68,10 @@ func IotBillingGroups() *schema.Table {
 				Resolver:    schema.PathResolver("BillingGroupName"),
 			},
 			{
-				Name:     "description",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("BillingGroupProperties.BillingGroupDescription"),
+				Name:        "description",
+				Description: "The description of the billing group.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("BillingGroupProperties.BillingGroupDescription"),
 			},
 			{
 				Name:        "version",
@@ -82,6 +85,7 @@ func IotBillingGroups() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var input iot.ListBillingGroupsInput
 	c := meta.(*client.Client)
@@ -113,7 +117,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 	}
 	return nil
 }
-func resolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeBillingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
@@ -142,7 +146,7 @@ func resolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 	}
 	return resource.Set(c.Name, things)
 }
-func resolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeBillingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)

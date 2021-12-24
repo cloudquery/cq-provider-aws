@@ -16,7 +16,7 @@ func IotCertificates() *schema.Table {
 		Name:         "aws_iot_certificates",
 		Description:  "Describes a certificate.",
 		Resolver:     fetchIotCertificates,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -36,7 +36,7 @@ func IotCertificates() *schema.Table {
 			{
 				Name:     "policies",
 				Type:     schema.TypeStringArray,
-				Resolver: resolveIotCertificatePolicies,
+				Resolver: ResolveIotCertificatePolicies,
 			},
 			{
 				Name:        "ca_certificate_id",
@@ -89,12 +89,12 @@ func IotCertificates() *schema.Table {
 			},
 			{
 				Name:        "owned_by",
-				Description: "The ID of the AWS account that owns the certificate.",
+				Description: "The ID of the Amazon Web Services account that owns the certificate.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "previous_owned_by",
-				Description: "The ID of the AWS account of the previous owner of the certificate.",
+				Description: "The ID of the Amazon Web Services account of the previous owner of the certificate.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -151,6 +151,7 @@ func IotCertificates() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
@@ -183,7 +184,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 	}
 	return nil
 }
-func resolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*types.CertificateDescription)
 	if !ok {
 		return fmt.Errorf("expected *types.CertificateDescription but got %T", resource.Item)

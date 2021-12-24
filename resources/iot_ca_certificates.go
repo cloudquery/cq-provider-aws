@@ -16,7 +16,7 @@ func IotCaCertificates() *schema.Table {
 		Name:         "aws_iot_ca_certificates",
 		Description:  "Describes a CA certificate.",
 		Resolver:     fetchIotCaCertificates,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -36,7 +36,7 @@ func IotCaCertificates() *schema.Table {
 			{
 				Name:     "certificates",
 				Type:     schema.TypeStringArray,
-				Resolver: resolveIotCaCertificateCertificates,
+				Resolver: ResolveIotCaCertificateCertificates,
 			},
 			{
 				Name:        "auto_registration_status",
@@ -110,6 +110,7 @@ func IotCaCertificates() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var input iot.ListCACertificatesInput
 	c := meta.(*client.Client)
@@ -140,7 +141,7 @@ func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
-func resolveIotCaCertificateCertificates(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotCaCertificateCertificates(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*types.CACertificateDescription)
 	if !ok {
 		return fmt.Errorf("expected types.CACertificateDescription but got %T", resource.Item)

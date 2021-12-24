@@ -14,8 +14,9 @@ import (
 func IotThingGroups() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iot_thing_groups",
+		Description:  "Groups allow you to manage several things at once by categorizing them into groups",
 		Resolver:     fetchIotThingGroups,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -36,17 +37,17 @@ func IotThingGroups() *schema.Table {
 				Name:        "things_in_group",
 				Description: "Lists the things in the specified group",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveIotThingGroupThingsInGroup,
+				Resolver:    ResolveIotThingGroupThingsInGroup,
 			},
 			{
 				Name:     "policies",
 				Type:     schema.TypeStringArray,
-				Resolver: resolveIotThingGroupPolicies,
+				Resolver: ResolveIotThingGroupPolicies,
 			},
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveIotThingGroupTags,
+				Resolver: ResolveIotThingGroupTags,
 			},
 			{
 				Name:        "index_name",
@@ -81,19 +82,22 @@ func IotThingGroups() *schema.Table {
 				Resolver:    schema.PathResolver("ThingGroupId"),
 			},
 			{
-				Name:     "creation_date",
-				Type:     schema.TypeTimestamp,
-				Resolver: schema.PathResolver("ThingGroupMetadata.CreationDate"),
+				Name:        "creation_date",
+				Description: "The UNIX timestamp of when the thing group was created.",
+				Type:        schema.TypeTimestamp,
+				Resolver:    schema.PathResolver("ThingGroupMetadata.CreationDate"),
 			},
 			{
-				Name:     "parent_group_name",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("ThingGroupMetadata.ParentGroupName"),
+				Name:        "parent_group_name",
+				Description: "The parent thing group name.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ThingGroupMetadata.ParentGroupName"),
 			},
 			{
-				Name:     "root_to_parent_thing_groups",
-				Type:     schema.TypeJSON,
-				Resolver: resolveIotThingGroupRootToParentThingGroups,
+				Name:        "root_to_parent_thing_groups",
+				Description: "The root parent thing group.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveIotThingGroupsRootToParentThingGroups,
 			},
 			{
 				Name:        "name",
@@ -102,19 +106,22 @@ func IotThingGroups() *schema.Table {
 				Resolver:    schema.PathResolver("ThingGroupName"),
 			},
 			{
-				Name:     "attribute_payload_attributes",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("ThingGroupProperties.AttributePayload.Attributes"),
+				Name:        "attribute_payload_attributes",
+				Description: "A JSON string containing up to three key-value pair in JSON format",
+				Type:        schema.TypeJSON,
+				Resolver:    schema.PathResolver("ThingGroupProperties.AttributePayload.Attributes"),
 			},
 			{
-				Name:     "attribute_payload_merge",
-				Type:     schema.TypeBool,
-				Resolver: schema.PathResolver("ThingGroupProperties.AttributePayload.Merge"),
+				Name:        "attribute_payload_merge",
+				Description: "Specifies whether the list of attributes provided in the AttributePayload is merged with the attributes stored in the registry, instead of overwriting them. To remove an attribute, call UpdateThing with an empty attribute value",
+				Type:        schema.TypeBool,
+				Resolver:    schema.PathResolver("ThingGroupProperties.AttributePayload.Merge"),
 			},
 			{
-				Name:     "thing_group_description",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("ThingGroupProperties.ThingGroupDescription"),
+				Name:        "thing_group_description",
+				Description: "The thing group description.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ThingGroupProperties.ThingGroupDescription"),
 			},
 			{
 				Name:        "version",
@@ -128,6 +135,7 @@ func IotThingGroups() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var input iot.ListThingGroupsInput
 	c := meta.(*client.Client)
@@ -159,7 +167,7 @@ func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *sc
 	}
 	return nil
 }
-func resolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
@@ -188,7 +196,7 @@ func resolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 	}
 	return resource.Set(c.Name, things)
 }
-func resolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
@@ -219,7 +227,7 @@ func resolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, r
 	}
 	return resource.Set(c.Name, policies)
 }
-func resolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)
@@ -249,7 +257,7 @@ func resolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resou
 	}
 	return resource.Set(c.Name, tags)
 }
-func resolveIotThingGroupRootToParentThingGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveIotThingGroupsRootToParentThingGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(*iot.DescribeThingGroupOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeThingGroupOutput but got %T", resource.Item)

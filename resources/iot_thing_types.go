@@ -16,7 +16,7 @@ func IotThingTypes() *schema.Table {
 		Name:         "aws_iot_thing_types",
 		Description:  "The definition of the thing type, including thing type name and description.",
 		Resolver:     fetchIotThingTypes,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -36,7 +36,7 @@ func IotThingTypes() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveIotThingTypeTags,
+				Resolver: ResolveIotThingTypeTags,
 			},
 			{
 				Name:        "arn",
@@ -87,6 +87,7 @@ func IotThingTypes() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var input iot.ListThingTypesInput
 	c := meta.(*client.Client)
@@ -109,7 +110,7 @@ func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *sch
 	}
 	return nil
 }
-func resolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i, ok := resource.Item.(types.ThingTypeDefinition)
 	if !ok {
 		return fmt.Errorf("expected types.ThingTypeDefinition but got %T", resource.Item)

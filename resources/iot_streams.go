@@ -16,7 +16,7 @@ func IotStreams() *schema.Table {
 		Name:         "aws_iot_streams",
 		Description:  "Information about a stream.",
 		Resolver:     fetchIotStreams,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
@@ -50,7 +50,7 @@ func IotStreams() *schema.Table {
 			},
 			{
 				Name:        "role_arn",
-				Description: "An IAM role AWS IoT assumes to access your S3 files.",
+				Description: "An IAM role IoT assumes to access your S3 files.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -116,6 +116,7 @@ func IotStreams() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var input iot.ListStreamsInput
 	c := meta.(*client.Client)

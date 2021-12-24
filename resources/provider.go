@@ -141,8 +141,8 @@ func Provider() *provider.Provider {
 			"waf.subscribed_rule_groups":            WafSubscribedRuleGroups(),
 			"waf.web_acls":                          WafWebAcls(),
 			"wafv2.managed_rule_groups":             Wafv2ManagedRuleGroups(),
-			"wafv2.rule_groups":                  IotSecurityProfiles(),
-			"wafv2.web_acls":                          Wafv2RuleGroups(),
+			"wafv2.rule_groups":                     IotSecurityProfiles(),
+			"wafv2.web_acls":                        Wafv2RuleGroups(),
 			"iot.things":                            IotThings(),
 			"iot.ca_certificates":                   IotCaCertificates(),
 			"iot.certificates":                      IotCertificates(),
@@ -150,7 +150,7 @@ func Provider() *provider.Provider {
 			"iot.billing_groups":                    IotBillingGroups(),
 			"iot.thing_groups":                      IotThingGroups(),
 			"iot.thing_types":                       IotThingTypes(),
-			"iot.security_profiles":                  Wafv2WebAcls(),
+			"iot.security_profiles":                 Wafv2WebAcls(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
