@@ -12,8 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ssoadmin"
-	"github.com/aws/aws-sdk-go-v2/service/identitystore"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
@@ -48,6 +46,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/identitystore"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
@@ -63,6 +62,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssoadmin"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
@@ -164,8 +164,8 @@ type Services struct {
 	WafV2                  WafV2Client
 	Codebuild              CodebuildClient
 	GuardDuty              GuardDutyClient
-	IdentityStore        IdentityStoreClient
-	SSOAdmin             SSOAdminClient
+	IdentityStore          IdentityStoreClient
+	SSOAdmin               SSOAdminClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -456,8 +456,8 @@ func initServices(region string, c aws.Config) Services {
 		Waf:                    waf.NewFromConfig(awsCfg),
 		WafV2:                  wafv2.NewFromConfig(awsCfg),
 		Codebuild:              codebuild.NewFromConfig(awsCfg),
-		IdentityStore:        identitystore.NewFromConfig(awsCfg),
-		SSOAdmin:             ssoadmin.NewFromConfig(awsCfg),
+		IdentityStore:          identitystore.NewFromConfig(awsCfg),
+		SSOAdmin:               ssoadmin.NewFromConfig(awsCfg),
 	}
 }
 

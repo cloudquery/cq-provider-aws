@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/identitystore"
 	"github.com/aws/aws-sdk-go-v2/service/ssoadmin"
@@ -17,10 +16,9 @@ func SsoAdminInstances() *schema.Table {
 		Name:         "aws_sso_admin_instances",
 		Description:  "Provides information about the SSO instance.",
 		Resolver:     fetchSsoAdminInstances,
-		Multiplex:    client.AccountRegionMultiplex,
+		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -110,7 +108,13 @@ func SsoAdminInstances() *schema.Table {
 					{
 						Name:     "inline_policy",
 						Type:     schema.TypeJSON,
-						Resolver: resolveSsoAdminInstancePermissionSetInlinePolicy,
+						Resolver: ResolveSsoAdminInstancePermissionSetInlinePolicy,
+					},
+					{
+						Name:        "tags",
+						Description: "tags of the instance",
+						Type:        schema.TypeJSON,
+						Resolver:    ResolveSsoAdminInstancePermissionSetTags,
 					},
 					{
 						Name:        "created_date",
@@ -142,12 +146,6 @@ func SsoAdminInstances() *schema.Table {
 						Name:        "session_duration",
 						Description: "The length of time that the application user sessions are valid for in the ISO-8601 standard.",
 						Type:        schema.TypeString,
-					},
-					{
-						Name:        "tags",
-						Description: "tags of the permission set",
-						Type:        schema.TypeJSON,
-						Resolver:    resolveSsoPermissionSetTags,
 					},
 				},
 				Relations: []*schema.Table{
@@ -193,6 +191,7 @@ func SsoAdminInstances() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchSsoAdminInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	var config ssoadmin.ListInstancesInput
 	c := meta.(*client.Client)
@@ -212,43 +211,6 @@ func fetchSsoAdminInstances(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
-func resolveSsoPermissionSetTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ps, ok := resource.Item.(types.PermissionSet)
-	if !ok {
-		return fmt.Errorf("expected to have types.PermissionSet but got %T", resource.Item)
-	}
-	im, ok := resource.Parent.Item.(types.InstanceMetadata)
-	if !ok {
-		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Parent.Item)
-	}
-
-	awsClient := meta.(*client.Client)
-	svc := awsClient.Services().SSOAdmin
-	config := ssoadmin.ListTagsForResourceInput{
-		InstanceArn: im.InstanceArn,
-		ResourceArn: ps.PermissionSetArn,
-	}
-	tags := make(map[string]string)
-	for {
-		response, err := svc.ListTagsForResource(ctx, &config, func(o *ssoadmin.Options) {
-			o.Region = awsClient.Region
-		})
-		if err != nil {
-			return err
-		}
-
-		for _, t := range response.Tags {
-			tags[*t.Key] = *t.Value
-		}
-
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		config.NextToken = response.NextToken
-	}
-	return resource.Set(c.Name, tags)
-}
-
 func fetchSsoAdminInstanceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	r, ok := parent.Item.(types.InstanceMetadata)
 	if !ok {
@@ -341,7 +303,7 @@ func fetchSsoAdminInstancePermissionSets(ctx context.Context, meta schema.Client
 	}
 	return nil
 }
-func resolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ps, ok := resource.Item.(types.PermissionSet)
 	if !ok {
 		return fmt.Errorf("expected to have types.PermissionSet but got %T", resource.Item)
@@ -364,6 +326,42 @@ func resolveSsoAdminInstancePermissionSetInlinePolicy(ctx context.Context, meta 
 		return err
 	}
 	return resource.Set(c.Name, response.InlinePolicy)
+}
+func ResolveSsoAdminInstancePermissionSetTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	ps, ok := resource.Item.(types.PermissionSet)
+	if !ok {
+		return fmt.Errorf("expected to have types.PermissionSet but got %T", resource.Item)
+	}
+	im, ok := resource.Parent.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Parent.Item)
+	}
+
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
+	config := ssoadmin.ListTagsForResourceInput{
+		InstanceArn: im.InstanceArn,
+		ResourceArn: ps.PermissionSetArn,
+	}
+	tags := make(map[string]string)
+	for {
+		response, err := svc.ListTagsForResource(ctx, &config, func(o *ssoadmin.Options) {
+			o.Region = awsClient.Region
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, t := range response.Tags {
+			tags[*t.Key] = *t.Value
+		}
+
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		config.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, tags)
 }
 func fetchSsoAdminInstancePermissionSetAccountAssignments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	ps, ok := parent.Item.(types.PermissionSet)

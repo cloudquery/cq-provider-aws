@@ -226,6 +226,8 @@ github.com/aws/aws-sdk-go-v2/service/guardduty v1.7.1 h1:uzPWcFlbXbZRPZXtGIZHMfk
 github.com/aws/aws-sdk-go-v2/service/guardduty v1.7.1/go.mod h1:Qi8iJ8THhntgnht2Fx9KZfXQNwG5ApeKheK1+2C1Zgw=
 github.com/aws/aws-sdk-go-v2/service/iam v1.3.0 h1:V95YLxbxLGlTcFR0KMMSZEaudIxYCAhycSGcO7/Favs=
 github.com/aws/aws-sdk-go-v2/service/iam v1.3.0/go.mod h1:gPUYT7MBEb30j9eAsJ17LN9KbXtD1uqKOOKesCC4tjc=
+github.com/aws/aws-sdk-go-v2/service/identitystore v1.10.0 h1:bd6L0K+p1HqAzccGDeGf46SvEO/QP5jck+V2OswdHlo=
+github.com/aws/aws-sdk-go-v2/service/identitystore v1.10.0/go.mod h1:WFW5mPJVp4wrfQEhh4PeEmHgRLIXiV5I4I+BzuFFvqQ=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.0.4/go.mod h1:BCfU3Uo2fhKcMZFp9zU5QQGQxqWCOYmZ/27Dju3S/do=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.1.0/go.mod h1:zdjOOy0ojUn3iNELo6ycIHSMCp4xUbycSHfb8PnbbyM=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.5.0 h1:lPLbw4Gn59uoKqvOfSnkJr54XWk5Ak1NK20ZEiSWb3U=
@@ -277,6 +279,8 @@ github.com/aws/aws-sdk-go-v2/service/ssm v1.16.0/go.mod h1:0CzdxtFRsppljClOL0+1h
 github.com/aws/aws-sdk-go-v2/service/sso v1.1.5/go.mod h1:bpGz0tidC4y39sZkQSkpO/J0tzWCMXHbw6FZ0j1GkWM=
 github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 h1:alpXc5UG7al7QnttHe/9hfvUfitV8r3w0onPpPkGzi0=
 github.com/aws/aws-sdk-go-v2/service/sso v1.2.1/go.mod h1:VimPFPltQ/920i1X0Sb0VJBROLIHkDg2MNP10D46OGs=
+github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.10.0 h1:unefiVQf/4s880M9kF35dAxo5qmo48Z37x+So/AXKoM=
+github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.10.0/go.mod h1:Tg8y7KPrLHvDNLkPSJa73vIKByPGKVJgrbLMSlDY86c=
 github.com/aws/aws-sdk-go-v2/service/sts v1.2.2/go.mod h1:ssRzzJ2RZOVuKj2Vx1YE7ypfil/BIlgmQnCSW4DistU=
 github.com/aws/aws-sdk-go-v2/service/sts v1.4.1 h1:9Z00tExoaLutWVDmY6LyvIAcKjHetkbdmpRt4JN/FN0=
 github.com/aws/aws-sdk-go-v2/service/sts v1.4.1/go.mod h1:G9osDWA52WQ38BDcj65VY1cNmcAQXAXTsE8IWH8j81w=

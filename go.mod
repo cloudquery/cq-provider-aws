@@ -76,12 +76,14 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.0.2 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.14.1
+	github.com/aws/aws-sdk-go-v2/service/identitystore v1.10.0
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.5.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.3.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.5.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/route53domains v1.6.0
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssoadmin v1.10.0
 	github.com/creasty/defaults v1.5.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/doug-martin/goqu/v9 v9.17.0 // indirect

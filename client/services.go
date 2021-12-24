@@ -546,3 +546,19 @@ type SecretsManagerClient interface {
 	DescribeSecret(ctx context.Context, params *secretsmanager.DescribeSecretInput, optFns ...func(*secretsmanager.Options)) (*secretsmanager.DescribeSecretOutput, error)
 	GetResourcePolicy(ctx context.Context, params *secretsmanager.GetResourcePolicyInput, optFns ...func(*secretsmanager.Options)) (*secretsmanager.GetResourcePolicyOutput, error)
 }
+
+//go:generate mockgen -package=mocks -destination=./mocks/identity_store.go . IdentityStoreClient
+type IdentityStoreClient interface {
+	ListUsers(ctx context.Context, params *identitystore.ListUsersInput, optFns ...func(*identitystore.Options)) (*identitystore.ListUsersOutput, error)
+	ListGroups(ctx context.Context, params *identitystore.ListGroupsInput, optFns ...func(*identitystore.Options)) (*identitystore.ListGroupsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/ssoadmin.go . SSOAdminClient
+type SSOAdminClient interface {
+	ListInstances(ctx context.Context, params *ssoadmin.ListInstancesInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListInstancesOutput, error)
+	ListTagsForResource(ctx context.Context, params *ssoadmin.ListTagsForResourceInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListTagsForResourceOutput, error)
+	ListPermissionSets(ctx context.Context, params *ssoadmin.ListPermissionSetsInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListPermissionSetsOutput, error)
+	ListAccountAssignments(ctx context.Context, params *ssoadmin.ListAccountAssignmentsInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListAccountAssignmentsOutput, error)
+	DescribePermissionSet(ctx context.Context, params *ssoadmin.DescribePermissionSetInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.DescribePermissionSetOutput, error)
+	GetInlinePolicyForPermissionSet(ctx context.Context, params *ssoadmin.GetInlinePolicyForPermissionSetInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.GetInlinePolicyForPermissionSetOutput, error)
+}
