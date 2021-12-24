@@ -41,12 +41,15 @@ func awsTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *
 }
 
 func TestMultiplexerPKMatch(t *testing.T) {
+	t.Parallel()
 	for res, table := range Provider().ResourceMap {
 		if table.Multiplex == nil {
 			continue
 		}
 
+		table := table
 		t.Run(res, func(t *testing.T) {
+			t.Parallel()
 			cfgRegions := []string{"us-east-1", "eu-west-1"}
 
 			c := client.NewAwsClient(logging.New(&hclog.LoggerOptions{
@@ -78,6 +81,10 @@ func TestMultiplexerPKMatch(t *testing.T) {
 			// Multiple accounts OR regions confirmed
 
 			for _, c := range table.PrimaryKeys() {
+				if c == "arn" { // ARN satisfies both account_id and region
+					delete(requiredPKs, "account_id")
+					delete(requiredPKs, "region")
+				}
 				delete(requiredPKs, c)
 			}
 
