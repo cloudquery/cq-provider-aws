@@ -561,4 +561,5 @@ type SSOAdminClient interface {
 	ListAccountAssignments(ctx context.Context, params *ssoadmin.ListAccountAssignmentsInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListAccountAssignmentsOutput, error)
 	DescribePermissionSet(ctx context.Context, params *ssoadmin.DescribePermissionSetInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.DescribePermissionSetOutput, error)
 	GetInlinePolicyForPermissionSet(ctx context.Context, params *ssoadmin.GetInlinePolicyForPermissionSetInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.GetInlinePolicyForPermissionSetOutput, error)
+	ListManagedPoliciesInPermissionSet(ctx context.Context, params *ssoadmin.ListManagedPoliciesInPermissionSetInput, optFns ...func(*ssoadmin.Options)) (*ssoadmin.ListManagedPoliciesInPermissionSetOutput, error)
 }

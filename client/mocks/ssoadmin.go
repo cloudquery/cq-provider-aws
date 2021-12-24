@@ -115,6 +115,26 @@ func (mr *MockSSOAdminClientMockRecorder) ListInstances(arg0, arg1 interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInstances", reflect.TypeOf((*MockSSOAdminClient)(nil).ListInstances), varargs...)
 }
 
+// ListManagedPoliciesInPermissionSet mocks base method.
+func (m *MockSSOAdminClient) ListManagedPoliciesInPermissionSet(arg0 context.Context, arg1 *ssoadmin.ListManagedPoliciesInPermissionSetInput, arg2 ...func(*ssoadmin.Options)) (*ssoadmin.ListManagedPoliciesInPermissionSetOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListManagedPoliciesInPermissionSet", varargs...)
+	ret0, _ := ret[0].(*ssoadmin.ListManagedPoliciesInPermissionSetOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListManagedPoliciesInPermissionSet indicates an expected call of ListManagedPoliciesInPermissionSet.
+func (mr *MockSSOAdminClientMockRecorder) ListManagedPoliciesInPermissionSet(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListManagedPoliciesInPermissionSet", reflect.TypeOf((*MockSSOAdminClient)(nil).ListManagedPoliciesInPermissionSet), varargs...)
+}
+
 // ListPermissionSets mocks base method.
 func (m *MockSSOAdminClient) ListPermissionSets(arg0 context.Context, arg1 *ssoadmin.ListPermissionSetsInput, arg2 ...func(*ssoadmin.Options)) (*ssoadmin.ListPermissionSetsOutput, error) {
 	m.ctrl.T.Helper()

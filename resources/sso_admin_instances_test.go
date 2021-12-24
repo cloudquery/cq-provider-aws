@@ -50,6 +50,13 @@ func buildSsoAdminInstances(t *testing.T, ctrl *gomock.Controller) client.Servic
 	aa.NextToken = nil
 	sso.EXPECT().ListAccountAssignments(gomock.Any(), gomock.Any(), gomock.Any()).Return(&aa, nil)
 
+	mp := ssoadmin.ListManagedPoliciesInPermissionSetOutput{}
+	if err := faker.FakeData(&mp); err != nil {
+		t.Fatal(err)
+	}
+	mp.NextToken = nil
+	sso.EXPECT().ListManagedPoliciesInPermissionSet(gomock.Any(), gomock.Any(), gomock.Any()).Return(&mp, nil)
+
 	policy := "{\"hello\":1}"
 	sso.EXPECT().GetInlinePolicyForPermissionSet(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ssoadmin.GetInlinePolicyForPermissionSetOutput{
 		InlinePolicy: &policy,

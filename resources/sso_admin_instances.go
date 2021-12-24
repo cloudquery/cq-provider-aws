@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/identitystore"
 	"github.com/aws/aws-sdk-go-v2/service/ssoadmin"
@@ -115,6 +116,11 @@ func SsoAdminInstances() *schema.Table {
 						Description: "tags of the instance",
 						Type:        schema.TypeJSON,
 						Resolver:    ResolveSsoAdminInstancePermissionSetTags,
+					},
+					{
+						Name:     "managed_policies",
+						Type:     schema.TypeJSON,
+						Resolver: ResolveSsoAdminInstancePermissionSetManagedPolicies,
 					},
 					{
 						Name:        "created_date",
@@ -362,6 +368,40 @@ func ResolveSsoAdminInstancePermissionSetTags(ctx context.Context, meta schema.C
 		config.NextToken = response.NextToken
 	}
 	return resource.Set(c.Name, tags)
+}
+func ResolveSsoAdminInstancePermissionSetManagedPolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	ps, ok := resource.Item.(types.PermissionSet)
+	if !ok {
+		return fmt.Errorf("expected to have types.PermissionSet but got %T", resource.Item)
+	}
+	im, ok := resource.Parent.Item.(types.InstanceMetadata)
+	if !ok {
+		return fmt.Errorf("expected to have types.InstanceMetadata but got %T", resource.Parent.Item)
+	}
+	awsClient := meta.(*client.Client)
+	svc := awsClient.Services().SSOAdmin
+
+	config := ssoadmin.ListManagedPoliciesInPermissionSetInput{
+		PermissionSetArn: ps.PermissionSetArn,
+		InstanceArn:      im.InstanceArn,
+	}
+	policies := map[string]interface{}{}
+	for {
+		response, err := svc.ListManagedPoliciesInPermissionSet(ctx, &config, func(o *ssoadmin.Options) {
+			o.Region = awsClient.Region
+		})
+		if err != nil {
+			return err
+		}
+		for _, m := range response.AttachedManagedPolicies {
+			policies[*m.Name] = *m.Arn
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		config.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, policies)
 }
 func fetchSsoAdminInstancePermissionSetAccountAssignments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	ps, ok := parent.Item.(types.PermissionSet)
