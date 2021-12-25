@@ -1,7 +1,7 @@
 resource "aws_vpc" "aws_vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "vpc${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-integration-test"
   }
   enable_dns_hostnames = true
 }
@@ -11,7 +11,7 @@ resource "aws_subnet" "aws_vpc_subnet" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1e"
   tags = {
-    Name = "vpc-subnet${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-subnet-integration-test"
   }
 }
 
@@ -20,7 +20,7 @@ resource "aws_subnet" "aws_vpc_subnet2" {
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1f"
   tags = {
-    Name = "vpc-subnet2${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-subnet2-integration-test"
   }
 }
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "aws_vpc_subnet3" {
   cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-1a"
   tags = {
-    Name = "vpc-subnet3${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-subnet-integration-test"
   }
 }
 
@@ -37,7 +37,7 @@ resource "aws_route_table" "aws_vpc_rt" {
   vpc_id = aws_vpc.aws_vpc.id
 
   tags = {
-    Name = "vpc-routetable${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-routetable-integration-test"
   }
 }
 

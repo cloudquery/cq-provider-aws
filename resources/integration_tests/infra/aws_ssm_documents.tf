@@ -1,5 +1,5 @@
 resource "aws_ssm_document" "ssm_document" {
-  name          = "${var.test_prefix}doc${var.test_suffix}"
+  name          = "docs"
   document_type = "Command"
 
   content = <<DOC
@@ -23,6 +23,6 @@ resource "aws_ssm_document" "ssm_document" {
 DOC
 
   tags = {
-    Name = "${var.test_prefix}doc${var.test_suffix}"
+    Name = "docs"
   }
 }

@@ -1,5 +1,5 @@
 resource "aws_iam_role" "sagemaker_notebook_instance_iam_role" {
-  name = "sagemaker-notebook-instance-iam-role-${var.test_prefix}${var.test_suffix}"
+  name = "sagemaker-notebook-instance-iam-role-"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -20,11 +20,11 @@ EOF
 }
 
 resource "aws_sagemaker_notebook_instance" "sagemaker_notebook_instance" {
-  name          = "sagemaker-${var.test_prefix}${var.test_suffix}"
+  name          = "sagemaker-"
   role_arn      = aws_iam_role.sagemaker_notebook_instance_iam_role.arn
   instance_type = "ml.t2.medium"
 
   tags = {
-    Name = "sagemaker-${var.test_prefix}${var.test_suffix}"
+    Name = "sagemaker-"
   }
 }

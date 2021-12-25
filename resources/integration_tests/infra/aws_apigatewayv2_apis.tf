@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "v2_api_1" {
-  name                       = "apigwv2-api-${var.test_prefix}${var.test_suffix}"
+  name                       = "apigwv2-api-"
   protocol_type              = "WEBSOCKET"
   route_selection_expression = "$request.body.action"
 }
@@ -31,7 +31,7 @@ EOF
 
 resource "aws_apigatewayv2_stage" "v2_stage_1" {
   api_id = aws_apigatewayv2_api.v2_api_1.id
-  name   = "apigwv2-stage-${var.test_prefix}${var.test_suffix}"
+  name   = "apigwv2-stage-"
 }
 
 resource "aws_apigatewayv2_route" "v2_route_1" {
@@ -49,7 +49,7 @@ resource "aws_apigatewayv2_route_response" "v2_route_response" {
 
 resource "aws_apigatewayv2_deployment" "v2_deployment_1" {
   api_id      = aws_apigatewayv2_route.v2_route_1.api_id
-  description = "apigwv2-dep-${var.test_prefix}${var.test_suffix}"
+  description = "apigwv2-dep-"
 
   lifecycle {
     create_before_destroy = true
@@ -62,11 +62,11 @@ resource "aws_apigatewayv2_authorizer" "v2_authorizer_1" {
   authorizer_uri  = aws_lambda_function.lambda_func.invoke_arn
   identity_sources = [
   "route.request.header.Auth"]
-  name = "apigwv2-authorizer-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv2-authorizer-"
 }
 
 resource "aws_iam_role" "v2_iam_role_1" {
-  name = "apigwv2-role-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv2-role-"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -87,7 +87,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "v2_role_policy" {
-  name = "apigwv2-policy-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv2-policy-"
   role = aws_iam_role.v2_iam_role_1.id
 
   policy = <<EOF
@@ -105,7 +105,7 @@ EOF
 }
 
 resource "aws_iam_role" "v2_iam_role_2" {
-  name = "apigwv2-assume-role${var.test_prefix}${var.test_suffix}"
+  name = "apigwv2-assume-role"
 
   assume_role_policy = <<EOF
 {

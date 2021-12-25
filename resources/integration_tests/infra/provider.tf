@@ -3,7 +3,6 @@ provider "aws" {
 
   default_tags {
     tags = {
-      TestId = var.test_suffix
       Type   = "integration_test"
     }
   }

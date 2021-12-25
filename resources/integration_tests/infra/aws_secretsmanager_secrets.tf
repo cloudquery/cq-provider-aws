@@ -1,7 +1,7 @@
 resource "aws_secretsmanager_secret" "secretsmanager_secret" {
-  name = "secretsmanager-secret-${var.test_prefix}${var.test_suffix}"
+  name = "secretsmanager-secret-"
   tags = {
-    Name = "secretsmanager-secret-${var.test_prefix}${var.test_suffix}"
+    Name = "secretsmanager-secret-"
   }
 }
 
@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "secretsmanager_secret_iam_policy" {
 }
 
 resource "aws_iam_role" "secretsmanager_secret_iam_role" {
-  name               = "secretsmanager-secret-iam-role-${var.test_prefix}${var.test_suffix}"
+  name               = "secretsmanager-secret-iam-role-"
   assume_role_policy = data.aws_iam_policy_document.secretsmanager_secret_iam_policy.json
 }
 
@@ -31,7 +31,7 @@ resource "aws_lambda_permission" "secretsmanager_secret_lambda_permission" {
 resource "aws_lambda_function" "secretsmanager_secret_rotation_function" {
   filename         = data.archive_file.rotation_lambda_func_zip_inline.output_path
   source_code_hash = data.archive_file.rotation_lambda_func_zip_inline.output_base64sha256
-  function_name    = "secretsmanager-secret-rotation-function-${var.test_prefix}${var.test_suffix}"
+  function_name    = "secretsmanager-secret-rotation-function-"
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.9"
   timeout          = 30

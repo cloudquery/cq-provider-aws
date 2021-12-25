@@ -20,7 +20,7 @@ resource "aws_launch_configuration" "aws_lc" {
   instance_type = "t2.nano"
 
   ebs_block_device {
-    device_name = "ebs_block-${var.test_prefix}${var.test_suffix}"
+    device_name = "ebs_block-"
     volume_type = "standard"
     volume_size = 5
   }

@@ -19,7 +19,7 @@ resource "aws_api_gateway_rest_api" "rest_api_example_1" {
     }
   })
 
-  name = "apigwv1-api-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv1-api-integration-test"
 
   endpoint_configuration {
     types = [
@@ -33,7 +33,7 @@ resource "aws_api_gateway_deployment" "deployment_example_1" {
   variables = {
     test : "test"
   }
-  description = "apigwv1-dep-${var.test_prefix}${var.test_suffix}"
+  description = "apigwv1-dep-integration-test"
 
   triggers = {
     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.rest_api_example_1.body))
@@ -47,7 +47,7 @@ resource "aws_api_gateway_deployment" "deployment_example_1" {
 resource "aws_api_gateway_stage" "stage_1" {
   deployment_id = aws_api_gateway_deployment.deployment_example_1.id
   rest_api_id   = aws_api_gateway_rest_api.rest_api_example_1.id
-  stage_name    = "apigwv1-stage-${var.test_prefix}${var.test_suffix}"
+  stage_name    = "apigwv1-stage-"
   tags = {
     "hello" = "world"
   }
@@ -56,7 +56,7 @@ resource "aws_api_gateway_stage" "stage_1" {
 resource "aws_api_gateway_stage" "stage_2" {
   deployment_id = aws_api_gateway_deployment.deployment_example_1.id
   rest_api_id   = aws_api_gateway_rest_api.rest_api_example_1.id
-  stage_name    = "apigwv1-stage2-${var.test_prefix}${var.test_suffix}"
+  stage_name    = "apigwv1-stage2-"
   tags = {
     "hello" = "world1"
   }
@@ -99,7 +99,7 @@ EOF
 }
 
 resource "aws_api_gateway_authorizer" "gateway_authorizer_1" {
-  name                             = "apigwv1-authorizer-${var.test_prefix}${var.test_suffix}"
+  name                             = "apigwv1-authorizer-"
   rest_api_id                      = aws_api_gateway_rest_api.rest_api_example_1.id
   authorizer_uri                   = aws_lambda_function.lambda_func.invoke_arn
   authorizer_credentials           = aws_iam_role.invocation_role.arn
@@ -108,7 +108,7 @@ resource "aws_api_gateway_authorizer" "gateway_authorizer_1" {
 }
 
 resource "aws_iam_role" "invocation_role" {
-  name = "apigwv1-api-invocation-role-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv1-api-invocation-role-"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -129,7 +129,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "invocation_policy" {
-  name = "apigwv1-api-invocation-policy-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv1-api-invocation-policy-"
   role = aws_iam_role.invocation_role.id
 
   policy = <<EOF
@@ -147,7 +147,7 @@ EOF
 }
 
 resource "aws_iam_role" "lambda" {
-  name = "apigwv1-api-assume-role-${var.test_prefix}${var.test_suffix}"
+  name = "apigwv1-api-assume-role-"
 
   assume_role_policy = <<EOF
 {
@@ -180,7 +180,7 @@ EOF
 }
 
 resource "aws_api_gateway_request_validator" "request_validator_1" {
-  name                        = "apigwv1-req-validation-${var.test_prefix}${var.test_suffix}"
+  name                        = "apigwv1-req-validation-"
   rest_api_id                 = aws_api_gateway_rest_api.rest_api_example_1.id
   validate_request_body       = true
   validate_request_parameters = true

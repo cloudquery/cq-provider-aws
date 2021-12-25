@@ -16,7 +16,7 @@ resource "aws_vpc_peering_connection" "aws_ec2_vpc_peering_connections" {
 resource "aws_vpc" "aws_ec2_vpc_peering_vpc" {
   cidr_block = "10.1.0.0/16"
   tags = {
-    Name = "vpc-peering-${var.test_prefix}-${var.test_suffix}"
+    Name = "vpc-peering-int-test"
   }
   enable_dns_hostnames = true
 }
@@ -31,12 +31,12 @@ resource "aws_vpc_endpoint" "aws_ec2_vpc_endpoint" {
 }
 
 resource "aws_ec2_transit_gateway" "aws_ec2_vpc_endpoint_tg" {
-  description = "description ${var.test_prefix}-${var.test_suffix}"
+  description = "aws_ec2_transit_gateway-integration-test"
 }
 
 
 resource "aws_security_group" "aws_ec2_vpc_security_group" {
-  name   = "ec2-sg-${var.test_prefix}${var.test_suffix}"
+  name   = "ec2-sg-integration-test"
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
@@ -88,7 +88,7 @@ resource "aws_network_acl" "aws_ec2_vpc_network_acl" {
   ]
 
   tags = {
-    Name = "ec2-acl-${var.test_prefix}-${var.test_suffix}"
+    Name = "ec2-acl-integration-test"
   }
 }
 
@@ -105,7 +105,6 @@ resource "aws_nat_gateway" "aws_ec2_vpc_nat_gateway" {
   allocation_id = aws_eip.aws_ec2_vpc_eip.id
   subnet_id = aws_subnet.aws_vpc_subnet.id
   tags = {
-    Name = "ec2-nat-${var.test_prefix}-${var.test_suffix}"
+    Name = "ec2-nat-integration-test"
   }
 }
-

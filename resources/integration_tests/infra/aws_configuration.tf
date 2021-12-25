@@ -1,5 +1,5 @@
 resource "aws_config_conformance_pack" "aws_config_cp" {
-  name = "config-cp-${var.test_prefix}-${var.test_suffix}"
+  name = "config-cp-"
 
   input_parameter {
     parameter_name  = "AccessKeysRotatedParameterMaxAccessKeyAge"
@@ -24,12 +24,12 @@ EOT
 }
 
 resource "aws_config_configuration_recorder" "aws_config_cr" {
-  name     = "config-cr-${var.test_prefix}-${var.test_suffix}"
+  name     = "config-cr-"
   role_arn = aws_iam_role.aws_config_ir.arn
 }
 
 resource "aws_iam_role" "aws_config_ir" {
-  name = "config-role-${var.test_prefix}-${var.test_suffix}"
+  name = "config-role-"
 
   assume_role_policy = <<POLICY
 {

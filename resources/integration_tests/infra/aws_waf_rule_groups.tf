@@ -1,5 +1,5 @@
 resource "aws_waf_rule_group" "waf_rule_group_1" {
-  name        = "waf-rg-${var.test_prefix}${var.test_suffix}"
+  name        = "waf-rg-"
   metric_name = "wafrulegroup1"
 
   activated_rule {

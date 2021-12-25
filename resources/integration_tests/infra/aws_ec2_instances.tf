@@ -45,12 +45,12 @@ resource "aws_instance" "aws_ec2_instances_ec2_instance" {
   }
 
   tags = {
-    "Name" = "ec2_instance${var.test_suffix}"
+    "Name" = "ec2_instance_integration_test"
   }
 }
 
 resource "aws_iam_role" "aws_ec2_instances_ec2_iam_role" {
-  name = "ec2_iam_role_${var.test_prefix}${var.test_suffix}"
+  name = "ec2_iam_role_integration_test"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -70,30 +70,15 @@ resource "aws_iam_role" "aws_ec2_instances_ec2_iam_role" {
 }
 
 resource "aws_iam_instance_profile" "aws_ec2_instances_ec2-instance-profile" {
-  name = "ec2_instance_profile_${var.test_prefix}${var.test_suffix}"
+  name = "ec2_instance_profile_integration_test"
   path = "/"
   role = aws_iam_role.aws_ec2_instances_ec2_iam_role.id
 }
 
-data "template_file" "aws_ec2_instances_user_data" {
-  template = <<EOF
-#!/bin/bash
 
-# Update all packages
-
-sudo yum update -y
-sudo yum install -y ecs-init
-sudo service docker start
-sudo start ecs
-
-#Adding cluster name in ecs config
-echo ECS_CLUSTER=openapi-devl-cluster >> /etc/ecs/ecs.config
-cat /etc/ecs/ecs.config | grep "ECS_CLUSTER"
-EOF
-}
 
 resource "aws_security_group" "aws_ec2_instances_security_group" {
-  name = "aws_ec2_instances_sg_${var.test_prefix}${var.test_suffix}"
+  name = "aws_ec2_instances_sg_integration_test"
 
   vpc_id = aws_vpc.aws_vpc.id
 
@@ -114,3 +99,21 @@ resource "aws_security_group" "aws_ec2_instances_security_group" {
   }
 }
 
+
+
+data "template_file" "aws_ec2_instances_user_data" {
+  template = <<EOF
+#!/bin/bash
+
+# Update all packages
+
+sudo yum update -y
+sudo yum install -y ecs-init
+sudo service docker start
+sudo start ecs
+
+#Adding cluster name in ecs config
+echo ECS_CLUSTER=openapi-devl-cluster >> /etc/ecs/ecs.config
+cat /etc/ecs/ecs.config | grep "ECS_CLUSTER"
+EOF
+}

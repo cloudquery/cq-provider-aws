@@ -1,5 +1,5 @@
 resource "aws_wafv2_web_acl" "wafv2_web_acl_1" {
-  name        = "wafv2-web-acl-${var.test_prefix}${var.test_suffix}"
+  name        = "wafv2-web-acl-integration-test"
   description = "Example of a managed rule."
   scope       = "REGIONAL"
 

@@ -3,7 +3,7 @@ resource "aws_waf_web_acl" "waf_web_acl_1" {
     aws_waf_ipset.waf_ipset_1,
     aws_waf_rule.waf_rule_1,
   ]
-  name        = "waf-web-acl-${var.test_prefix}${var.test_suffix}"
+  name        = "waf-web-acl-"
   metric_name = "wafwebacl1"
 
   default_action {

@@ -1,10 +1,10 @@
 resource "aws_s3_bucket" "codebuild_s3" {
-  bucket = "codebuild${var.test_prefix}${var.test_suffix}"
+  bucket = "codebuild"
   acl    = "private"
 }
 
 resource "aws_iam_role" "codebuild_role" {
-  name = "codbuildrole-${var.test_prefix}${var.test_suffix}"
+  name = "codbuildrole-"
 
   assume_role_policy = <<EOF
 {
@@ -87,7 +87,7 @@ POLICY
 }
 
 resource "aws_codebuild_project" "codebuild_project" {
-  name          = "project-${var.test_prefix}${var.test_suffix}"
+  name          = "project-"
   description   = "test_codebuild_project"
   build_timeout = "5"
   service_role  = aws_iam_role.codebuild_role.arn
@@ -183,7 +183,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 }
 
 resource "aws_efs_file_system" "codebuild_efs" {
-  creation_token = "efs${var.test_prefix}${var.test_suffix}"
+  creation_token = "efs"
 
   tags = {
     Name = "MyProduct"

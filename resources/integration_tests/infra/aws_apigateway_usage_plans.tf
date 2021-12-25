@@ -1,5 +1,5 @@
 resource "aws_api_gateway_usage_plan" "api_gateway_usage_plan_1" {
-  name         = "apigw-up-${var.test_prefix}${var.test_suffix}"
+  name         = "apigw-up-"
   description  = "my description"
   product_code = "MYCODE"
 

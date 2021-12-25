@@ -1,5 +1,5 @@
 resource "aws_placement_group" "autoscaling_groups" {
-  name     = "ag-${var.test_prefix}${var.test_suffix}"
+  name     = "ag-"
   strategy = "cluster"
 }
 
@@ -32,7 +32,7 @@ resource "aws_launch_template" "autoscaling_groups_lt" {
 }
 
 resource "aws_autoscaling_group" "autoscaling_group" {
-  name                  = "ag-${var.test_prefix}${var.test_suffix}"
+  name                  = "ag-"
   capacity_rebalance    = true
   desired_capacity      = 1
   max_size              = 1
@@ -132,7 +132,7 @@ resource "aws_sns_topic" "autoscaling_group_hook_sns" {
 }
 
 resource "aws_autoscaling_lifecycle_hook" "autoscaling_group_hook" {
-  name                   = "foobar${var.test_prefix}${var.test_suffix}"
+  name                   = "foobar"
   default_result         = "CONTINUE"
   heartbeat_timeout      = 2000
   autoscaling_group_name = aws_autoscaling_group.autoscaling_group.name
@@ -150,7 +150,7 @@ resource "aws_sqs_queue" "autoscaling_group_sqs" {
 }
 
 resource "aws_iam_role" "autoscaling_group_lifecycle_role" {
-  name = "ag_role_${var.test_prefix}${var.test_suffix}"
+  name = "ag_role_"
 
   assume_role_policy = jsonencode({
     Version   = "2008-10-17"
@@ -169,7 +169,7 @@ resource "aws_iam_role" "autoscaling_group_lifecycle_role" {
   })
 
   inline_policy {
-    name = "inline-${var.test_prefix}${var.test_suffix}"
+    name = "inline-"
 
     policy = jsonencode({
       Version = "2012-10-17"
