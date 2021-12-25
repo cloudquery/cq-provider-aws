@@ -22,6 +22,7 @@ cq-provider-aws
 *.tfstate
 *.tfstate.*
 .swp
+tflog
 
 __debug_bin
 #test directories
