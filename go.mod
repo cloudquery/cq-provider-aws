@@ -67,6 +67,10 @@ require (
 	github.com/stretchr/testify v1.7.0
 )
 
+require github.com/sergi/go-diff v1.2.0 // indirect
+
+replace github.com/cloudquery/cq-provider-sdk => /Users/ep/cq-provider-sdk
+
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect

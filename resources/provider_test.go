@@ -16,22 +16,29 @@ type TestOptions struct {
 }
 
 func awsTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) client.Services, options TestOptions) {
+	t.Helper()
 	ctrl := gomock.NewController(t)
 
-	cfg := client.Config{
-		Regions:    []string{"us-east-1"},
-		Accounts:   []client.Account{{ID: "testAccount", RoleARN: ""}},
-		AWSDebug:   false,
-		MaxRetries: 3,
-		MaxBackoff: 60,
+	cfg := `
+		regions = ["us-east-1"]
+		accounts "testAccount" {
+			role_arn = ""
+		}
+		aws_debug = false
+		max_retries = 3
+		max_backoff = 60
+	`
+	accounts := []client.Account{
+		{ID: "testAccount"},
 	}
+
 	providertest.TestResource(t, Provider, providertest.ResourceTestData{
 		Table:  table,
 		Config: cfg,
 		Configure: func(logger hclog.Logger, i interface{}) (schema.ClientMeta, error) {
 			c := client.NewAwsClient(logging.New(&hclog.LoggerOptions{
 				Level: hclog.Warn,
-			}), cfg.Accounts, []string{"us-east-1"})
+			}), accounts, []string{"us-east-1"})
 			c.ServicesManager.InitServicesForAccountAndRegion("testAccount", "us-east-1", builder(t, ctrl))
 			return &c, nil
 		},
