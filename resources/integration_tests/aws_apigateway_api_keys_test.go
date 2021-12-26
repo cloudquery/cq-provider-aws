@@ -9,5 +9,5 @@ import (
 )
 
 func TestIntegrationApigatewayAPIKeys(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ApigatewayAPIKeys())
+	awsTestIntegrationHelper(t, resources.ApigatewayAPIKeys(), "./snapshots/apigateway")
 }

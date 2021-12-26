@@ -1,0 +1,29 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:sagemaker:us-east-1:704956590351:model/sagemaker-model-cq-testingintegration",
+		"cq_id": "[unstable_column]",
+		"creation_time": "2021-11-25T10:08:16.62",
+		"enable_network_isolation": false,
+		"execution_role_arn": "arn:aws:iam::704956590351:role/terraform-20211125100807261500000003",
+		"inference_execution_config": null,
+		"meta": "[unstable_column]",
+		"name": "sagemaker-model-cq-testingintegration",
+		"primary_container": {
+			"ContainerHostname": null,
+			"Environment": {},
+			"Image": "382416733822.dkr.ecr.us-east-1.amazonaws.com/kmeans:1",
+			"ImageConfig": null,
+			"Mode": "SingleModel",
+			"ModelDataUrl": null,
+			"ModelPackageName": null,
+			"MultiModelConfig": null
+		},
+		"region": "us-east-1",
+		"tags": {
+			"Name": "sagemaker-model-cq-testingintegration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

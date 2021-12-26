@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationRdsDBSnapshots(t *testing.T) {
-	table := resources.RdsDbSnapshots()
-	awsTestIntegrationHelper(t, table)
+	awsTestIntegrationHelper(t, resources.RdsDbSnapshots(),
+		"./snapshots/rds")
 }

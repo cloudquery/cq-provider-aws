@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationElasticbeanstalkApplications(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ElasticbeanstalkApplications())
+	awsTestIntegrationHelper(t, resources.ElasticbeanstalkApplications(),
+		"./snapshots/elasticbeanstalk")
 }

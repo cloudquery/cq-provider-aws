@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEfsFilesystems(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EfsFilesystems())
+	awsTestIntegrationHelper(t, resources.EfsFilesystems(),
+		"./snapshots/efs")
 }

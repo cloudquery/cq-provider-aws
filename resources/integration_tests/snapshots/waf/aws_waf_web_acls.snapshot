@@ -1,0 +1,19 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:waf::704956590351:webacl/4eb7a344-0d10-4538-85f8-9a3c3036c80b",
+		"cq_id": "[unstable_column]",
+		"default_action_type": "ALLOW",
+		"id": "4eb7a344-0d10-4538-85f8-9a3c3036c80b",
+		"logging_configuration": [
+			"arn:aws:firehose:us-east-1:704956590351:deliverystream/aws-waf-logs-kinesis-firehose-cq-testingintegration"
+		],
+		"meta": "[unstable_column]",
+		"metric_name": "wafwebacl1",
+		"name": "waf-web-acl-cq-testingintegration",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

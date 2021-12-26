@@ -1,0 +1,160 @@
+[
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-0d1e93dcdb7809d93",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpc-integration-test",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-068a1e629b024acfe",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpcawsecstaskdefinitions-windowsfifl5fe",
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-0f8dad89d11a531ed",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpcawselbv1loadbalancers-windowsfifl5fe",
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-07e633d9d11e2e7e1",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpccq-testing-integration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-081ab029a8c3a3daf",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpccq-testing-yevgeny-integration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.0.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-008c58a803f5386eb",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpcyev-yev",
+			"TestId": "yev",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.10.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-02bd89c3120b29ce7",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"CloudQuery": "cloudquery",
+			"Name": "cloudquery"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "10.1.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-0c6efc8ffb69a208e",
+		"instance_tenancy": "default",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Name": "vpc-peering-cq-testing-integration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"cidr_block": "172.31.0.0/16",
+		"cq_id": "[unstable_column]",
+		"dhcp_options_id": "dopt-949284ee",
+		"id": "vpc-7b80f506",
+		"instance_tenancy": "default",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"state": "available",
+		"tags": {
+			"Type": "andrii-test"
+		}
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationDmsReplicationInstances(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.DmsReplicationInstances())
+	awsTestIntegrationHelper(t, resources.DmsReplicationInstances(),
+		"./snapshots/dms")
 }

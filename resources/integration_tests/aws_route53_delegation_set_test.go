@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationRoute53DelegationSet(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53ReusableDelegationSets())
+	awsTestIntegrationHelper(t, resources.Route53ReusableDelegationSets(),
+		"./snapshots/route53")
 }

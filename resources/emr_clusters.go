@@ -199,9 +199,10 @@ func EmrClusters() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "normalized_instance_hours",
-				Description: "An approximation of the cost of the cluster, represented in m1.small/hours",
-				Type:        schema.TypeInt,
+				Name:             "normalized_instance_hours",
+				Description:      "An approximation of the cost of the cluster, represented in m1.small/hours",
+				Type:             schema.TypeInt,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "outpost_arn",

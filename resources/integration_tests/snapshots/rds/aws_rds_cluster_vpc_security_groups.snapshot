@@ -1,0 +1,16 @@
+[
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"status": "active",
+		"vpc_security_group_id": "sg-0ef374760a4e84c30"
+	},
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"status": "active",
+		"vpc_security_group_id": "sg-6273857d"
+	}
+]

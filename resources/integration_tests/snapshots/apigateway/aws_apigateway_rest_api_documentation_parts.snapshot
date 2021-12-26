@@ -1,0 +1,28 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"id": "9uzkxa",
+		"location_method": "GET",
+		"location_name": null,
+		"location_path": "/example",
+		"location_status_code": null,
+		"location_type": "METHOD",
+		"meta": "[unstable_column]",
+		"properties": "{\"description\":\"Example description\"}",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "cq6utv",
+		"location_method": "GET",
+		"location_name": null,
+		"location_path": "/example",
+		"location_status_code": null,
+		"location_type": "METHOD",
+		"meta": "[unstable_column]",
+		"properties": "{\"description\":\"Example description\"}",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e"
+	}
+]

@@ -1,0 +1,43 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:es:mytest",
+		"cq_id": "[unstable_column]",
+		"cust_subscription_id": "mytest",
+		"customer_aws_id": "704956590351",
+		"enabled": true,
+		"event_categories_list": null,
+		"meta": "[unstable_column]",
+		"region": "us-east-1",
+		"sns_topic_arn": "arn:aws:sns:us-east-1:704956590351:sns-test2-cq-testing-integration",
+		"source_ids_list": null,
+		"source_type": "db-instance",
+		"status": "active",
+		"subscription_creation_time": "2021-12-07 08:21:23.921",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:es:rds-event-sub-cq-testing-integration",
+		"cq_id": "[unstable_column]",
+		"cust_subscription_id": "rds-event-sub-cq-testing-integration",
+		"customer_aws_id": "704956590351",
+		"enabled": true,
+		"event_categories_list": [
+			"failure"
+		],
+		"meta": "[unstable_column]",
+		"region": "us-east-1",
+		"sns_topic_arn": "arn:aws:sns:us-east-1:704956590351:sns-test2-cq-testing-integration",
+		"source_ids_list": [
+			"terraform-20210830063757285100000004"
+		],
+		"source_type": "db-instance",
+		"status": "active",
+		"subscription_creation_time": "2021-12-03 09:34:41.637",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

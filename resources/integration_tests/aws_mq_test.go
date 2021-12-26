@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationMQBrokers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.MqBrokers())
+	awsTestIntegrationHelper(t, resources.MqBrokers(),
+		"./snapshots/mq")
 }

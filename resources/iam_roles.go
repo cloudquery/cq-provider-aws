@@ -62,10 +62,11 @@ func IamRoles() *schema.Table {
 				Resolver:    schema.PathResolver("RoleName"),
 			},
 			{
-				Name:        "assume_role_policy_document",
-				Description: "The policy that grants an entity permission to assume the role. ",
-				Type:        schema.TypeJSON,
-				Resolver:    resolveIamRoleAssumeRolePolicyDocument,
+				Name:             "assume_role_policy_document",
+				Description:      "The policy that grants an entity permission to assume the role. ",
+				Type:             schema.TypeJSON,
+				Resolver:         resolveIamRoleAssumeRolePolicyDocument,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "description",

@@ -1,0 +1,548 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "ACCESS_DENIED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "API_CONFIGURATION_ERROR",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "AUTHORIZER_CONFIGURATION_ERROR",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "AUTHORIZER_FAILURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "BAD_REQUEST_BODY",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "400"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "BAD_REQUEST_PARAMETERS",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "400"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "DEFAULT_4XX",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "DEFAULT_5XX",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "EXPIRED_TOKEN",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INTEGRATION_FAILURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "504"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INTEGRATION_TIMEOUT",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "504"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INVALID_API_KEY",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INVALID_SIGNATURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "MISSING_AUTHENTICATION_TOKEN",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "QUOTA_EXCEEDED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "429"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "REQUEST_TOO_LARGE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "413"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "RESOURCE_NOT_FOUND",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "404"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "THROTTLED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "429"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "UNAUTHORIZED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "401"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "UNSUPPORTED_MEDIA_TYPE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "415"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "WAF_FILTERED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "ACCESS_DENIED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "API_CONFIGURATION_ERROR",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "AUTHORIZER_CONFIGURATION_ERROR",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "AUTHORIZER_FAILURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "500"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "BAD_REQUEST_BODY",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "400"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "BAD_REQUEST_PARAMETERS",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "400"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "DEFAULT_4XX",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "DEFAULT_5XX",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "EXPIRED_TOKEN",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INTEGRATION_FAILURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "504"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INTEGRATION_TIMEOUT",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "504"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INVALID_API_KEY",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "INVALID_SIGNATURE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "MISSING_AUTHENTICATION_TOKEN",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "QUOTA_EXCEEDED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "429"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "REQUEST_TOO_LARGE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "413"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "RESOURCE_NOT_FOUND",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "404"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "THROTTLED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "429"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "UNAUTHORIZED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "401"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "UNSUPPORTED_MEDIA_TYPE",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "415"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"default_response": true,
+		"meta": "[unstable_column]",
+		"response_parameters": {},
+		"response_templates": {
+			"application/json": "{\"message\":$context.error.messageString}"
+		},
+		"response_type": "WAF_FILTERED",
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e",
+		"status_code": "403"
+	}
+]

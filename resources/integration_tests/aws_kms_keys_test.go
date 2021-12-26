@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationKmsKeys(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.KmsKeys())
+	awsTestIntegrationHelper(t, resources.KmsKeys(),
+		"./snapshots/kms")
 }

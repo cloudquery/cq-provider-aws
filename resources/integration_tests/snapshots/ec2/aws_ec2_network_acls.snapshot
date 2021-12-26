@@ -1,0 +1,130 @@
+[
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-091a9355196373474",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {
+			"Name": "ec2-acl-cq-testing-integration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"vpc_id": "vpc-07e633d9d11e2e7e1"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-095306e1ecb374e79",
+		"is_default": false,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {
+			"Name": "test",
+			"type": "andrii test"
+		},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-000a4b7c8616dc765",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-068a1e629b024acfe"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-01f4e095cdc07e0aa",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-0c6efc8ffb69a208e"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-03491519b5e2dfead",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-008c58a803f5386eb"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-05a6b05091c3a207a",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-0f8dad89d11a531ed"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-05bd644bc60c8b1f3",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-0d1e93dcdb7809d93"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-0986f93bc9092da01",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-07e633d9d11e2e7e1"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-0befa86b33461c173",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-0c936afc9fb8234f1",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-081ab029a8c3a3daf"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"id": "acl-ee78a492",
+		"is_default": true,
+		"meta": "[unstable_column]",
+		"owner_id": "704956590351",
+		"region": "us-east-1",
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	}
+]

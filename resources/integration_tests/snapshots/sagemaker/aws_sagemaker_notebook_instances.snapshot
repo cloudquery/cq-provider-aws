@@ -1,0 +1,30 @@
+[
+	{
+		"accelerator_types": null,
+		"account_id": "704956590351",
+		"additional_code_repositories": null,
+		"arn": "arn:aws:sagemaker:us-east-1:704956590351:notebook-instance/sagemaker-cq-testingintegration",
+		"cq_id": "[unstable_column]",
+		"creation_time": "2021-11-25T10:08:08.403",
+		"default_code_repository": null,
+		"direct_internet_access": true,
+		"instance_type": "ml.t2.medium",
+		"kms_key_id": null,
+		"last_modified_time": "2021-11-25T10:12:10.773",
+		"meta": "[unstable_column]",
+		"name": "sagemaker-cq-testingintegration",
+		"network_interface_id": null,
+		"notebook_instance_lifecycle_config_name": null,
+		"notebook_instance_status": "InService",
+		"region": "us-east-1",
+		"security_groups": [],
+		"subnet_id": null,
+		"tags": {
+			"Name": "sagemaker-cq-testingintegration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"url": "sagemaker-cq-testingintegration-ttqw.notebook.us-east-1.sagemaker.aws",
+		"volume_size_in_gb": 5
+	}
+]

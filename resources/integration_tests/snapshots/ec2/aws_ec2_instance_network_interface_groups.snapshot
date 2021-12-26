@@ -1,0 +1,98 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-08398f752964ebc21",
+		"group_name": "ecs_clusters_sgcq-testingintegration",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-049545536ace55df8"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0617f043c90fb5375",
+		"group_name": "default",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-05498f2b2cacbdeba"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0643266cf7bd544e6",
+		"group_name": "aws_emr_clusters_security_groupcq-testingintegration",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-08db55618b013570d"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-064d7b615654f1c1b",
+		"group_name": "default",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-08e3b5b27ec12baac"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0d624a1e35d2d967f",
+		"group_name": "aws_ec2_instances_sg_yevyev",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-08e60d20950a67362"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-01c60028bb1ffec3a",
+		"group_name": "launch-wizard-1",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0a34ad3e5417b4ac3"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0502bc9aecc0e8eed",
+		"group_name": "ecs_clusters_sgawsecstaskdefinitionswindowsfifl5fe",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0aaaa633095608c1d"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0643266cf7bd544e6",
+		"group_name": "aws_emr_clusters_security_groupcq-testingintegration",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0ae4ac3c94458a003"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-064d7b615654f1c1b",
+		"group_name": "default",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0c0fee95cc2b4ace9"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-054df6834b9ef13e7",
+		"group_name": "aws_ec2_instances_sg_cq-testingintegration",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0c60602297ed6b6b9"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-00cf52d3a67f662bf",
+		"group_name": "awseb-e-q4qzkupk6m-stack-AWSEBSecurityGroup-V21BLVX1GFNB",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0d1f34f84910491a3"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0ea01d0cc14b5da9d",
+		"group_name": "launch-wizard-2",
+		"instance_network_interface_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_interface_id": "eni-0f62afb89d5693d81"
+	}
+]

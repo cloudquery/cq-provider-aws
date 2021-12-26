@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCloudfrontDistributions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudfrontDistributions())
+	awsTestIntegrationHelper(t, resources.CloudfrontDistributions(),
+		"./snapshots/cloudfront")
 }

@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationAutoscalingGroups(t *testing.T) {
-	resource := resources.AutoscalingGroups()
-	awsTestIntegrationHelper(t, resource)
+	awsTestIntegrationHelper(t, resources.AutoscalingGroups(),
+		"./snapshots/autoscaling")
 }

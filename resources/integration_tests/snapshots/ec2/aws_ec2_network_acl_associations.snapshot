@@ -1,0 +1,149 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-000409fcc395f12c5",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-037c6863f3fa24a48"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0184873272257355e",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-093a4e9724cb75272"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-03066becb927a177b",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-07b45f7d3717634d2"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0345e50f28eb0c017",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0f9d7bf877cd37207"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-03f335234108d37a8",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-03c7694a342537cd9"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0489f1d3ce0cbf717",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0707fed3178b4cca4"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-05c6c55bc1e07ba95",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0634edda60d785663"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-09b033db05c594b46",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-042725b7604b96442"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0a0f99453be43e259",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-01a53445effe826fd"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0a5737204d325e04f",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0daed11b3990030c4"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0bdd11e13f37e6a63",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-04cad364dc10b21f2"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0c611442a13bde435",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0e32b239c3e8aabcb"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0e9f7af1cba5dd936",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0555e7716c394b126"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0f8271a7a05e11a7a",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-0a3d75ef4b9734c89"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-0fc6613399bebe3a5",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-09cb99b3c184136e1"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e04f5ac5",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-c06a78ce"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e14f5ac4",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-39402c08"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e34f5ac6",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-d6ccebf7"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e44f5ac1",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-3d2b735b"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e64f5ac3",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-cc406593"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"network_acl_association_id": "aclassoc-e74f5ac2",
+		"network_acl_cq_id": "[unstable_column]",
+		"subnet_id": "subnet-c1f41c8d"
+	}
+]

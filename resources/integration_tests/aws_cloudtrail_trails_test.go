@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCloudtrailTrails(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudtrailTrails())
+	awsTestIntegrationHelper(t, resources.CloudtrailTrails(),
+		"./snapshots/cloudtrail")
 }

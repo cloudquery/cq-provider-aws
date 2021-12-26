@@ -1,0 +1,42 @@
+[
+	{
+		"connection_attempts": 3,
+		"connection_timeout": 10,
+		"cq_id": "[unstable_column]",
+		"custom_headers": {},
+		"custom_origin_config_http_port": null,
+		"custom_origin_config_https_port": null,
+		"custom_origin_config_keepalive_timeout": null,
+		"custom_origin_config_protocol_policy": "",
+		"custom_origin_config_read_timeout": null,
+		"custom_origin_config_ssl_protocols": null,
+		"distribution_cq_id": "[unstable_column]",
+		"domain_name": "cf-buc-cq-testing-integration.s3.amazonaws.com",
+		"id": "cf-s3origincq-testing-integration",
+		"meta": "[unstable_column]",
+		"origin_path": "",
+		"origin_shield_enabled": false,
+		"origin_shield_region": null,
+		"s3_origin_config_origin_access_identity": "origin-access-identity/cloudfront/E31Z8ZIBWLJMAB"
+	},
+	{
+		"connection_attempts": 3,
+		"connection_timeout": 10,
+		"cq_id": "[unstable_column]",
+		"custom_headers": {},
+		"custom_origin_config_http_port": null,
+		"custom_origin_config_https_port": null,
+		"custom_origin_config_keepalive_timeout": null,
+		"custom_origin_config_protocol_policy": "",
+		"custom_origin_config_read_timeout": null,
+		"custom_origin_config_ssl_protocols": null,
+		"distribution_cq_id": "[unstable_column]",
+		"domain_name": "testbucket123sdfjhasldkfahsldkj.s3.us-east-1.amazonaws.com",
+		"id": "testbucket123sdfjhasldkfahsldkj.s3.us-east-1.amazonaws.com",
+		"meta": "[unstable_column]",
+		"origin_path": "",
+		"origin_shield_enabled": false,
+		"origin_shield_region": null,
+		"s3_origin_config_origin_access_identity": ""
+	}
+]

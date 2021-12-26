@@ -1,0 +1,124 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"id": "98em73uv0c",
+		"meta": "[unstable_column]",
+		"parent_id": null,
+		"path": "/",
+		"path_part": null,
+		"resource_methods": null,
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "g85gg0",
+		"meta": "[unstable_column]",
+		"parent_id": "98em73uv0c",
+		"path": "/path1",
+		"path_part": "path1",
+		"resource_methods": {
+			"GET": {
+				"ApiKeyRequired": null,
+				"AuthorizationScopes": null,
+				"AuthorizationType": null,
+				"AuthorizerId": null,
+				"HttpMethod": null,
+				"MethodIntegration": null,
+				"MethodResponses": null,
+				"OperationName": null,
+				"RequestModels": null,
+				"RequestParameters": null,
+				"RequestValidatorId": null
+			}
+		},
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "sy8mdj",
+		"meta": "[unstable_column]",
+		"parent_id": "98em73uv0c",
+		"path": "/gateway_resource_1",
+		"path_part": "gateway_resource_1",
+		"resource_methods": {
+			"GET": {
+				"ApiKeyRequired": null,
+				"AuthorizationScopes": null,
+				"AuthorizationType": null,
+				"AuthorizerId": null,
+				"HttpMethod": null,
+				"MethodIntegration": null,
+				"MethodResponses": null,
+				"OperationName": null,
+				"RequestModels": null,
+				"RequestParameters": null,
+				"RequestValidatorId": null
+			}
+		},
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "agy60myla6"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "4dlree",
+		"meta": "[unstable_column]",
+		"parent_id": "m89w88xkvd",
+		"path": "/gateway_resource_1",
+		"path_part": "gateway_resource_1",
+		"resource_methods": {
+			"GET": {
+				"ApiKeyRequired": null,
+				"AuthorizationScopes": null,
+				"AuthorizationType": null,
+				"AuthorizerId": null,
+				"HttpMethod": null,
+				"MethodIntegration": null,
+				"MethodResponses": null,
+				"OperationName": null,
+				"RequestModels": null,
+				"RequestParameters": null,
+				"RequestValidatorId": null
+			}
+		},
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "m89w88xkvd",
+		"meta": "[unstable_column]",
+		"parent_id": null,
+		"path": "/",
+		"path_part": null,
+		"resource_methods": null,
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"id": "peifgz",
+		"meta": "[unstable_column]",
+		"parent_id": "m89w88xkvd",
+		"path": "/path1",
+		"path_part": "path1",
+		"resource_methods": {
+			"GET": {
+				"ApiKeyRequired": null,
+				"AuthorizationScopes": null,
+				"AuthorizationType": null,
+				"AuthorizerId": null,
+				"HttpMethod": null,
+				"MethodIntegration": null,
+				"MethodResponses": null,
+				"OperationName": null,
+				"RequestModels": null,
+				"RequestParameters": null,
+				"RequestValidatorId": null
+			}
+		},
+		"rest_api_cq_id": "[unstable_column]",
+		"rest_api_id": "lts45y3n6e"
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationIamRoles(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamRoles())
+	awsTestIntegrationHelper(t, resources.IamRoles(),
+		"./snapshots/iam")
 }

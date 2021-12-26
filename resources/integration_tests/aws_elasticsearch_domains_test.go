@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationElasticsearchDomains(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ElasticsearchDomains())
+	awsTestIntegrationHelper(t, resources.ElasticsearchDomains(),
+		"./snapshots/elasticsearch")
 }

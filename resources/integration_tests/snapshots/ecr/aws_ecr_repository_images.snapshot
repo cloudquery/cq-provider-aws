@@ -1,0 +1,48 @@
+[
+	{
+		"account_id": "704956590351",
+		"artifact_media_type": "application/vnd.docker.container.image.v1+json",
+		"cq_id": "[unstable_column]",
+		"image_digest": "sha256:bc7915dd2b83fef9eebd16b27a356b57c07256a51b2d091257d5eda58c21834f",
+		"image_manifest_media_type": "application/vnd.docker.distribution.manifest.v2+json",
+		"image_pushed_at": "2021-12-20T21:44:37",
+		"image_scan_findings_summary_finding_severity_counts": null,
+		"image_scan_findings_summary_image_scan_completed_at": null,
+		"image_scan_findings_summary_vulnerability_source_updated_at": null,
+		"image_scan_status": "",
+		"image_scan_status_description": null,
+		"image_size_in_bytes": 12705530,
+		"image_tags": [
+			"latest"
+		],
+		"meta": "[unstable_column]",
+		"region": "us-east-1",
+		"registry_id": "704956590351",
+		"repository_cq_id": "[unstable_column]",
+		"repository_name": "cloudquery"
+	},
+	{
+		"account_id": "704956590351",
+		"artifact_media_type": "application/vnd.docker.container.image.v1+json",
+		"cq_id": "[unstable_column]",
+		"image_digest": "sha256:e9b8f8cfcf876e4fe17abc29ea3554c012be7e7e8693d43ed2d8efdeaa62edbe",
+		"image_manifest_media_type": "application/vnd.docker.distribution.manifest.v2+json",
+		"image_pushed_at": "2021-10-28T15:27:50",
+		"image_scan_findings_summary_finding_severity_counts": {
+			"MEDIUM": 1
+		},
+		"image_scan_findings_summary_image_scan_completed_at": "2021-10-28T15:27:58",
+		"image_scan_findings_summary_vulnerability_source_updated_at": "2021-10-28T08:11:31",
+		"image_scan_status": "COMPLETE",
+		"image_scan_status_description": "The scan was completed successfully.",
+		"image_size_in_bytes": 148659261,
+		"image_tags": [
+			"latest"
+		],
+		"meta": "[unstable_column]",
+		"region": "us-east-1",
+		"registry_id": "704956590351",
+		"repository_cq_id": "[unstable_column]",
+		"repository_name": "bar"
+	}
+]

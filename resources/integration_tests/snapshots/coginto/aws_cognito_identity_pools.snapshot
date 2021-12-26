@@ -1,0 +1,22 @@
+[
+	{
+		"account_id": "704956590351",
+		"allow_classic_flow": false,
+		"allow_unauthenticated_identities": false,
+		"cq_id": "[unstable_column]",
+		"developer_provider_name": null,
+		"id": "us-east-1:d3b6eb8c-5603-4e9b-955b-1ca8b40c0fc0",
+		"identity_pool_name": "cognito_identity_poolcq-testing-integration",
+		"identity_pool_tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"meta": "[unstable_column]",
+		"open_id_connect_provider_arns": null,
+		"region": "us-east-1",
+		"saml_provider_arns": [
+			"arn:aws:iam::704956590351:saml-provider/saml_id_poolcq-testingintegration"
+		],
+		"supported_login_providers": null
+	}
+]

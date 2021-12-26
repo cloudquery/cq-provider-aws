@@ -1,0 +1,14 @@
+[
+	{
+		"api_integration_cq_id": "[unstable_column]",
+		"content_handling_strategy": "",
+		"cq_id": "[unstable_column]",
+		"integration_id": "5ep0yl5",
+		"integration_response_id": "y3povj4",
+		"integration_response_key": "/200/",
+		"meta": "[unstable_column]",
+		"response_parameters": null,
+		"response_templates": null,
+		"template_selection_expression": null
+	}
+]

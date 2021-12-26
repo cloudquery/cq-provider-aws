@@ -165,9 +165,10 @@ func RdsClusters() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "earliest_restorable_time",
-				Description: "The earliest time to which a database can be restored with point-in-time restore.",
-				Type:        schema.TypeTimestamp,
+				Name:             "earliest_restorable_time",
+				Description:      "The earliest time to which a database can be restored with point-in-time restore.",
+				Type:             schema.TypeTimestamp,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "enabled_cloudwatch_logs_exports",
@@ -226,9 +227,10 @@ func RdsClusters() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "latest_restorable_time",
-				Description: "Specifies the latest time to which a database can be restored with point-in-time restore.",
-				Type:        schema.TypeTimestamp,
+				Name:             "latest_restorable_time",
+				Description:      "Specifies the latest time to which a database can be restored with point-in-time restore.",
+				Type:             schema.TypeTimestamp,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "master_username",

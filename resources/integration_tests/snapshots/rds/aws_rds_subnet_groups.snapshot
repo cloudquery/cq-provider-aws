@@ -1,0 +1,35 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:subgrp:cloudquery-rds",
+		"cq_id": "[unstable_column]",
+		"description": "For Aurora cluster cloudquery-rds",
+		"meta": "[unstable_column]",
+		"name": "cloudquery-rds",
+		"region": "us-east-1",
+		"status": "Complete",
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:subgrp:default",
+		"cq_id": "[unstable_column]",
+		"description": "default",
+		"meta": "[unstable_column]",
+		"name": "default",
+		"region": "us-east-1",
+		"status": "Complete",
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:subgrp:rds_db_subnetcq-testingintegration",
+		"cq_id": "[unstable_column]",
+		"description": "Managed by Terraform",
+		"meta": "[unstable_column]",
+		"name": "rds_db_subnetcq-testingintegration",
+		"region": "us-east-1",
+		"status": "Complete",
+		"vpc_id": "vpc-07e633d9d11e2e7e1"
+	}
+]

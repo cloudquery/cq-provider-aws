@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationEmrBlockPublicAccessConfigs(t *testing.T) {
-	table := resources.EmrBlockPublicAccessConfigs()
-	awsTestIntegrationHelper(t, table)
+	awsTestIntegrationHelper(t, resources.EmrBlockPublicAccessConfigs(),
+		"./snapshots/emr")
 }

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationIamSAMLIdentityProviders(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamSamlIdentityProviders())
+	awsTestIntegrationHelper(t, resources.IamSamlIdentityProviders(),
+		"./snapshots/iam")
 }

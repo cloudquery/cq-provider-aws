@@ -1,0 +1,23 @@
+[
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"group_cq_id": "[unstable_column]",
+		"group_id": "AGPA2IIVP5EH4ICTALD5S",
+		"group_name": "aws_iam_groupcq-testingintegration",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"ec2:Describe*"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "aws_iam_group_policycq-testingintegration"
+	}
+]

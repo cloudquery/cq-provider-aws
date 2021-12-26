@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationRoute53HealthChecks(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53HealthChecks())
+	awsTestIntegrationHelper(t, resources.Route53HealthChecks(),
+		"./snapshots/route53")
 }

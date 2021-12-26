@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationGuarddutyDetectors(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.GuarddutyDetectors())
+	awsTestIntegrationHelper(t, resources.GuarddutyDetectors(),
+		"./snapshots/guardduty")
 }

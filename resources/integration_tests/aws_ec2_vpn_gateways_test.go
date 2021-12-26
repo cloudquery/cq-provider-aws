@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEc2VpnGateways(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Ec2VpnGateways())
+	awsTestIntegrationHelper(t, resources.Ec2VpnGateways(),
+		"./snapshots/ec2")
 }

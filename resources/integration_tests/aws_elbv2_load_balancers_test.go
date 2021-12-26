@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationElbv2LoadBalancers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv2LoadBalancers())
+	awsTestIntegrationHelper(t, resources.Elbv2LoadBalancers(),
+		"./snapshots/elbv2")
 }

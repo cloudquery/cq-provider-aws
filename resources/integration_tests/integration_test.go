@@ -22,17 +22,18 @@ func firstN(s string, n int) string {
 	return s
 }
 
-func awsTestIntegrationHelper(t *testing.T, table *schema.Table, resourceFiles []string) {
-
+func awsTestIntegrationHelper(t *testing.T, table *schema.Table, snapshotDirPath string) {
+	t.Helper()
 	cfg := `
 	regions = ["us-east-1"]
 	aws_debug = false
 	`
 
-	providertest.IntegrationTest(t, resources.Provider, providertest.ResourceIntegrationTestData{
-		Table:        table,
-		Config:       cfg,
-		SnapshotsDir: "./snapshots",
+	providertest.IntegrationTest(t, providertest.ResourceIntegrationTestData{
+		ProviderCreator: resources.Provider,
+		Table:           table,
+		Config:          cfg,
+		SnapshotsDir:    snapshotDirPath,
 	})
 }
 

@@ -40,8 +40,9 @@ func IamUsers() *schema.Table {
 				Resolver: schema.PathResolver("UserId"),
 			},
 			{
-				Name: "password_last_used",
-				Type: schema.TypeTimestamp,
+				Name:             "password_last_used",
+				Type:             schema.TypeTimestamp,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name: "arn",
@@ -162,16 +163,18 @@ func IamUsers() *schema.Table {
 						Type: schema.TypeString,
 					},
 					{
-						Name: "last_used",
-						Type: schema.TypeTimestamp,
+						Name:             "last_used",
+						Type:             schema.TypeTimestamp,
+						IgnoreInIntTests: true,
 					},
 					{
 						Name: "last_rotated",
 						Type: schema.TypeTimestamp,
 					},
 					{
-						Name: "last_used_service_name",
-						Type: schema.TypeString,
+						Name:             "last_used_service_name",
+						Type:             schema.TypeString,
+						IgnoreInIntTests: true,
 					},
 				},
 			},

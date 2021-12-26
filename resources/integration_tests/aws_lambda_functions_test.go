@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationLambdaFunctions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.LambdaFunctions())
+	awsTestIntegrationHelper(t, resources.LambdaFunctions(),
+		"./snapshots/lambda")
 }

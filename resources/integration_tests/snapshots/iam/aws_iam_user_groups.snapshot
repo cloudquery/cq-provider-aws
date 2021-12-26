@@ -1,0 +1,24 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"create_date": "2021-08-10T09:40:06",
+		"group_arn": "arn:aws:iam::704956590351:group/test_group",
+		"group_id": "AGPA2IIVP5EHQYTPYGGB7",
+		"group_name": "test_group",
+		"meta": "[unstable_column]",
+		"path": "/",
+		"user_cq_id": "[unstable_column]",
+		"user_id": "AIDA2IIVP5EH3TOA722AM"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"create_date": "2021-08-30T06:37:33",
+		"group_arn": "arn:aws:iam::704956590351:group/users/aws_iam_groupcq-testingintegration",
+		"group_id": "AGPA2IIVP5EH4ICTALD5S",
+		"group_name": "aws_iam_groupcq-testingintegration",
+		"meta": "[unstable_column]",
+		"path": "/users/",
+		"user_cq_id": "[unstable_column]",
+		"user_id": "AIDA2IIVP5EHUQU6CCQ75"
+	}
+]

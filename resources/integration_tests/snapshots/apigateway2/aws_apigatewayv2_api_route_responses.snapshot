@@ -1,0 +1,13 @@
+[
+	{
+		"api_route_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"model_selection_expression": null,
+		"response_models": null,
+		"response_parameters": null,
+		"route_id": "1klbg8k",
+		"route_response_id": "1cwz8g",
+		"route_response_key": "$default"
+	}
+]

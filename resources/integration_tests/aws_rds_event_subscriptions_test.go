@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationRdsEventSubscriptions(t *testing.T) {
-	table := resources.RdsEventSubscriptions()
-	awsTestIntegrationHelper(t, table)
+	awsTestIntegrationHelper(t, resources.RdsEventSubscriptions(),
+		"./snapshots/rds")
 }

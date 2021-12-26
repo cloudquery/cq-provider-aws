@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEmrClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EmrClusters())
+	awsTestIntegrationHelper(t, resources.EmrClusters(),
+		"./snapshots/emr")
 }

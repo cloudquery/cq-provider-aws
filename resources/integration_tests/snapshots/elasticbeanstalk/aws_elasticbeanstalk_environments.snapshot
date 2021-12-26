@@ -1,0 +1,40 @@
+[
+	{
+		"abortable_operation_in_progress": false,
+		"account_id": "704956590351",
+		"application_name": "beanstalk-ea-integration",
+		"arn": "arn:aws:elasticbeanstalk:us-east-1:704956590351:environment/beanstalk-ea-integration/beanstalk-ee-integration",
+		"cname": "beanstalk-ee-integration.eba-gpcd3wap.us-east-1.elasticbeanstalk.com",
+		"cq_id": "[unstable_column]",
+		"date_created": "2021-08-30T06:41:06.742",
+		"date_updated": "2021-12-09T08:49:29.144",
+		"description": null,
+		"endpoint_url": "awseb-AWSEB-1Y07H683587FY-430767842.us-east-1.elb.amazonaws.com",
+		"health": "Green",
+		"health_status": "Ok",
+		"id": "e-q4qzkupk6m",
+		"listeners": {
+			"Name": "beanstalk-ee-integration",
+			"TestId": "integration",
+			"Type": "integration_test",
+			"elasticbeanstalk:environment-id": "e-q4qzkupk6m",
+			"elasticbeanstalk:environment-name": "beanstalk-ee-integration",
+			"name": "e-integration"
+		},
+		"load_balancer_domain": null,
+		"load_balancer_name": null,
+		"meta": "[unstable_column]",
+		"name": "beanstalk-ee-integration",
+		"operations_role": null,
+		"platform_arn": "arn:aws:elasticbeanstalk:us-east-1::platform/Go 1 running on 64bit Amazon Linux 2/3.3.4",
+		"region": "us-east-1",
+		"solution_stack_name": "64bit Amazon Linux 2 v3.3.4 running Go 1",
+		"status": "Ready",
+		"tags": null,
+		"template_name": null,
+		"tier_name": "WebServer",
+		"tier_type": "Standard",
+		"tier_version": "1.0",
+		"version_label": null
+	}
+]

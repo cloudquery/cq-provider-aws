@@ -1,0 +1,65 @@
+[
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": "All protocols",
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ipv6": "::/64",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	}
+]

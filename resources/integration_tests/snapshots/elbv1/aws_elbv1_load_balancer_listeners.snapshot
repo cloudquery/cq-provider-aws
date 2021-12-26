@@ -1,0 +1,26 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"listener_instance_port": 8000,
+		"listener_instance_protocol": "HTTP",
+		"listener_load_balancer_port": 80,
+		"listener_protocol": "HTTP",
+		"listener_ssl_certificate_id": null,
+		"load_balance_name": "elbv1integration",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_names": []
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"listener_instance_port": 8000,
+		"listener_instance_protocol": "HTTP",
+		"listener_load_balancer_port": 80,
+		"listener_protocol": "HTTP",
+		"listener_ssl_certificate_id": null,
+		"load_balance_name": "elbv1windowsfifl5fe",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_names": []
+	}
+]

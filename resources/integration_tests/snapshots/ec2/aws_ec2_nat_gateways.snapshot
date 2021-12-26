@@ -1,0 +1,49 @@
+[
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"create_time": "2021-12-20T21:44:39",
+		"delete_time": null,
+		"failure_code": null,
+		"failure_message": null,
+		"id": "nat-041f9b0f676425f40",
+		"meta": "[unstable_column]",
+		"provisioned_bandwidth_provision_time": null,
+		"provisioned_bandwidth_provisioned": null,
+		"provisioned_bandwidth_request_time": null,
+		"provisioned_bandwidth_requested": null,
+		"provisioned_bandwidth_status": null,
+		"region": "us-east-1",
+		"state": "available",
+		"subnet_id": "subnet-093a4e9724cb75272",
+		"tags": {
+			"CloudQuery": "cloudquery",
+			"Name": "cloudquery-us-east-1a"
+		},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"create_time": "2021-08-30T06:39:11",
+		"delete_time": null,
+		"failure_code": null,
+		"failure_message": null,
+		"id": "nat-0b54b0de0f8df5cde",
+		"meta": "[unstable_column]",
+		"provisioned_bandwidth_provision_time": null,
+		"provisioned_bandwidth_provisioned": null,
+		"provisioned_bandwidth_request_time": null,
+		"provisioned_bandwidth_requested": null,
+		"provisioned_bandwidth_status": null,
+		"region": "us-east-1",
+		"state": "available",
+		"subnet_id": "subnet-04cad364dc10b21f2",
+		"tags": {
+			"Name": "ec2-nat-cq-testing-integration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"vpc_id": "vpc-07e633d9d11e2e7e1"
+	}
+]

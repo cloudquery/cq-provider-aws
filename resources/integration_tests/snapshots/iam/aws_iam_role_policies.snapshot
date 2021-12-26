@@ -1,0 +1,572 @@
+[
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"s3:Get*",
+						"s3:List*",
+						"s3:PutObject"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:s3:::elasticbeanstalk-*",
+						"arn:aws:s3:::elasticbeanstalk-*/*"
+					],
+					"Sid": "BucketAccess"
+				},
+				{
+					"Action": [
+						"xray:PutTraceSegments",
+						"xray:PutTelemetryRecords",
+						"xray:GetSamplingRules",
+						"xray:GetSamplingTargets",
+						"xray:GetSamplingStatisticSummaries"
+					],
+					"Effect": "Allow",
+					"Resource": "*",
+					"Sid": "XRayAccess"
+				},
+				{
+					"Action": [
+						"logs:PutLogEvents",
+						"logs:CreateLogStream",
+						"logs:DescribeLogStreams",
+						"logs:DescribeLogGroups"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*"
+					],
+					"Sid": "CloudWatchLogsAccess"
+				},
+				{
+					"Action": [
+						"elasticbeanstalk:PutInstanceStatistics"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:elasticbeanstalk:*:*:application/*",
+						"arn:aws:elasticbeanstalk:*:*:environment/*"
+					],
+					"Sid": "ElasticBeanstalkHealthAccess"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "beanstalk-inline-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH2EIS2DRCX",
+		"role_name": "beanstalk-role_cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"cloudwatch:DescribeAlarms",
+						"elasticmapreduce:ListInstanceGroups",
+						"elasticmapreduce:ModifyInstanceGroups",
+						"iam:CreateServiceLinkedRole"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "inline-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH2GEYPMTS7",
+		"role_name": "emr-cluster-autoscaling-role_cq-testing"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"logs:CreateLogGroup",
+						"logs:CreateLogStream",
+						"logs:PutLogEvents"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"*"
+					]
+				},
+				{
+					"Action": [
+						"ec2:CreateNetworkInterface",
+						"ec2:DescribeDhcpOptions",
+						"ec2:DescribeNetworkInterfaces",
+						"ec2:DeleteNetworkInterface",
+						"ec2:DescribeSubnets",
+						"ec2:DescribeSecurityGroups",
+						"ec2:DescribeVpcs"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				},
+				{
+					"Action": [
+						"ec2:CreateNetworkInterfacePermission"
+					],
+					"Condition": {
+						"StringEquals": {
+							"ec2:AuthorizedService": "codebuild.amazonaws.com",
+							"ec2:Subnet": [
+								"arn:aws:ec2:us-east-1:704956590351:subnet/subnet-04cad364dc10b21f2",
+								"arn:aws:ec2:us-east-1:704956590351:subnet/subnet-0e32b239c3e8aabcb"
+							]
+						}
+					},
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:ec2:us-east-1:123456789012:network-interface/*"
+					]
+				},
+				{
+					"Action": [
+						"s3:*"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:s3:::codebuildcq-testingintegration",
+						"arn:aws:s3:::codebuildcq-testingintegration/*"
+					]
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "terraform-20211125100815970300000004",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH4RM6BET4J",
+		"role_name": "codbuildrole-cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": "s3:PutObject",
+					"Effect": "Allow",
+					"Resource": "arn:aws:s3:::ec2-images-logs-cq-testingintegration/*",
+					"Sid": ""
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "s3_logging",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH62QKOOQJ6",
+		"role_name": "ec2-images-role-cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Effect": "Allow",
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:function_awsapigatewayrestapiswindowsfifl5fe"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "apigwv1-api-invocation-policy-awsapigatewayrestapiswindowsfifl5fe",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH66AFUUWHH",
+		"role_name": "apigwv1-api-invocation-role-awsapigatewayrestapiswindowsfifl5fe"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Effect": "Allow",
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:function_cq-testingintegration"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "apigwv1-api-invocation-policy-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EH7ZIXBW36C",
+		"role_name": "apigwv1-api-invocation-role-cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"logs:*",
+						"ec2:CreateNetworkInterface",
+						"ec2:DescribeNetworkInterfaces",
+						"ec2:DeleteNetworkInterface",
+						"ec2:DescribeSubnets",
+						"ec2:DescribeSecurityGroups",
+						"ec2:DescribeDhcpOptions",
+						"ec2:DescribeVpcs",
+						"ec2:CreateNetworkInterfacePermission"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "CodeBuildAccess",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHQ2OCA7HM3",
+		"role_name": "cq-deploy-codebuild-role"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"codebuild:StartBuild"
+					],
+					"Effect": "Allow",
+					"Resource": "arn:aws:codebuild:us-east-2:704956590351:project/cq-deploy-codebuild"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "aws-events-code-build",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHRAPO5XCA3",
+		"role_name": "cq-deploy-cw-events-codebuild-role"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"ec2:AuthorizeSecurityGroupEgress",
+						"ec2:AuthorizeSecurityGroupIngress",
+						"ec2:CancelSpotInstanceRequests",
+						"ec2:CreateFleet",
+						"ec2:CreateLaunchTemplate",
+						"ec2:CreateNetworkInterface",
+						"ec2:CreateSecurityGroup",
+						"ec2:CreateTags",
+						"ec2:DeleteLaunchTemplate",
+						"ec2:DeleteNetworkInterface",
+						"ec2:DeleteSecurityGroup",
+						"ec2:DeleteTags",
+						"ec2:DescribeAvailabilityZones",
+						"ec2:DescribeAccountAttributes",
+						"ec2:DescribeDhcpOptions",
+						"ec2:DescribeImages",
+						"ec2:DescribeInstanceStatus",
+						"ec2:DescribeInstances",
+						"ec2:DescribeKeyPairs",
+						"ec2:DescribeLaunchTemplates",
+						"ec2:DescribeNetworkAcls",
+						"ec2:DescribeNetworkInterfaces",
+						"ec2:DescribePrefixLists",
+						"ec2:DescribeRouteTables",
+						"ec2:DescribeSecurityGroups",
+						"ec2:DescribeSpotInstanceRequests",
+						"ec2:DescribeSpotPriceHistory",
+						"ec2:DescribeSubnets",
+						"ec2:DescribeTags",
+						"ec2:DescribeVpcAttribute",
+						"ec2:DescribeVpcEndpoints",
+						"ec2:DescribeVpcEndpointServices",
+						"ec2:DescribeVpcs",
+						"ec2:DetachNetworkInterface",
+						"ec2:ModifyImageAttribute",
+						"ec2:ModifyInstanceAttribute",
+						"ec2:RequestSpotInstances",
+						"ec2:RevokeSecurityGroupEgress",
+						"ec2:RunInstances",
+						"ec2:TerminateInstances",
+						"ec2:DeleteVolume",
+						"ec2:DescribeVolumeStatus",
+						"ec2:DescribeInstanceAttribute",
+						"ec2:DescribeVolumes",
+						"ec2:DetachVolume",
+						"iam:GetRole",
+						"iam:CreateServiceLinkedRole",
+						"iam:GetRolePolicy",
+						"iam:ListInstanceProfiles",
+						"iam:ListRolePolicies",
+						"iam:PassRole",
+						"s3:CreateBucket",
+						"s3:Get*",
+						"s3:List*",
+						"sdb:BatchPutAttributes",
+						"sdb:Select",
+						"sqs:CreateQueue",
+						"sqs:Delete*",
+						"sqs:GetQueue*",
+						"sqs:PurgeQueue",
+						"sqs:ReceiveMessage",
+						"cloudwatch:PutMetricAlarm",
+						"cloudwatch:DescribeAlarms",
+						"cloudwatch:DeleteAlarms",
+						"application-autoscaling:RegisterScalableTarget",
+						"application-autoscaling:DeregisterScalableTarget",
+						"application-autoscaling:PutScalingPolicy",
+						"application-autoscaling:DeleteScalingPolicy",
+						"application-autoscaling:Describe*"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "inline-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHSEJRQK6FT",
+		"role_name": "emr_clusters_service_role_cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Effect": "Allow",
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:function_cq-testingintegration"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "apigwv2-policy-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHSXM7L4KMI",
+		"role_name": "apigwv2-role-cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"s3:*",
+						"sqs:SendMessage",
+						"sqs:GetQueueUrl",
+						"sns:Publish"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "inline-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHTWCLRWMZG",
+		"role_name": "ag_role_cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"ec2:Describe*"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "aws_iam_role_policyawsiamroleswindowsfifl5fe",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHTXDGFOH3T",
+		"role_name": "awsiamroleswindowsfifl5fe"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"logs:CreateLogGroup",
+						"logs:CreateLogStream",
+						"logs:PutLogEvents"
+					],
+					"Effect": "Allow",
+					"Resource": "arn:aws:logs:*:*:*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "cq-deploy-us-east-2-AWSLambda-CW",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHUEK6EPA6V",
+		"role_name": "cq-deploy-us-east-2-AWSLambdaExecutionRole"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"s3:PutObject",
+						"s3:DeleteObject",
+						"s3:List*"
+					],
+					"Effect": "Allow",
+					"Resource": [
+						"arn:aws:s3:::cq-deploy-cloudqueryresourcesbucket-1pzw31kz1j7zd/*",
+						"arn:aws:s3:::cq-deploy-cloudqueryresourcesbucket-1pzw31kz1j7zd"
+					]
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "cq-deploy-us-east-2-AWSLambda-S3",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHUEK6EPA6V",
+		"role_name": "cq-deploy-us-east-2-AWSLambdaExecutionRole"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": "*",
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "AdministratorAccess",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHV34ECYSU2",
+		"role_name": "OrganizationAccountAccessRole"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"ec2:Describe*"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "aws_iam_role_policycq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHVNTFCBKBY",
+		"role_name": "cq-testingintegration"
+	},
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"policy_document": {
+			"Statement": [
+				{
+					"Action": [
+						"cloudwatch:*",
+						"dynamodb:*",
+						"ec2:Describe*",
+						"elasticmapreduce:Describe*",
+						"elasticmapreduce:ListBootstrapActions",
+						"elasticmapreduce:ListClusters",
+						"elasticmapreduce:ListInstanceGroups",
+						"elasticmapreduce:ListInstances",
+						"elasticmapreduce:ListSteps",
+						"kinesis:CreateStream",
+						"kinesis:DeleteStream",
+						"kinesis:DescribeStream",
+						"kinesis:GetRecords",
+						"kinesis:GetShardIterator",
+						"kinesis:MergeShards",
+						"kinesis:PutRecord",
+						"kinesis:SplitShard",
+						"rds:Describe*",
+						"s3:*",
+						"sdb:*",
+						"sns:*",
+						"sqs:*",
+						"iam:CreateServiceLinkedRole",
+						"glue:CreateDatabase",
+						"glue:UpdateDatabase",
+						"glue:DeleteDatabase",
+						"glue:GetDatabase",
+						"glue:GetDatabases",
+						"glue:CreateTable",
+						"glue:UpdateTable",
+						"glue:DeleteTable",
+						"glue:GetTable",
+						"glue:GetTables",
+						"glue:GetTableVersions",
+						"glue:CreatePartition",
+						"glue:BatchCreatePartition",
+						"glue:UpdatePartition",
+						"glue:DeletePartition",
+						"glue:BatchDeletePartition",
+						"glue:GetPartition",
+						"glue:GetPartitions",
+						"glue:BatchGetPartition",
+						"glue:CreateUserDefinedFunction",
+						"glue:UpdateUserDefinedFunction",
+						"glue:DeleteUserDefinedFunction",
+						"glue:GetUserDefinedFunction",
+						"glue:GetUserDefinedFunctions"
+					],
+					"Effect": "Allow",
+					"Resource": "*"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_name": "inline-cq-testingintegration",
+		"role_cq_id": "[unstable_column]",
+		"role_id": "AROA2IIVP5EHXDJJLV2QZ",
+		"role_name": "emr-cluster-instance-profile-role_cq-testing"
+	}
+]

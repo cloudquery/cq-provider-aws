@@ -1,0 +1,16 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0ef374760a4e84c30",
+		"group_name": "cloudquery-rds-20211220214426327900000006",
+		"meta": "[unstable_column]",
+		"vpc_endpoint_cq_id": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-6273857d",
+		"group_name": "default",
+		"meta": "[unstable_column]",
+		"vpc_endpoint_cq_id": "[unstable_column]"
+	}
+]

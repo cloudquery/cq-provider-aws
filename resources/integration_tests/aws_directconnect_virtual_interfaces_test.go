@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationDirectconnectVirtualInterfaces(t *testing.T) {
-	t.Skipf("resource missing")
-	awsTestIntegrationHelper(t, resources.DirectconnectVirtualInterfaces())
+	awsTestIntegrationHelper(t, resources.DirectconnectVirtualInterfaces(),
+		"./snapshots/directconnect")
 }

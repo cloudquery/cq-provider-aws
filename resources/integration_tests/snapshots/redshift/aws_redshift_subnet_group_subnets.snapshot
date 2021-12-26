@@ -1,0 +1,74 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1a",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-c1f41c8d",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1b",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-cc406593",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1c",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-3d2b735b",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1d",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-d6ccebf7",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1e",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-04cad364dc10b21f2",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1e",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-39402c08",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1f",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-0707fed3178b4cca4",
+		"subnet_status": "Active"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"subnet_availability_zone_name": "us-east-1f",
+		"subnet_availability_zone_supported_platforms": [],
+		"subnet_group_cq_id": "[unstable_column]",
+		"subnet_identifier": "subnet-c06a78ce",
+		"subnet_status": "Active"
+	}
+]

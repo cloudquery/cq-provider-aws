@@ -1,0 +1,40 @@
+[
+	{
+		"api_cq_id": "[unstable_column]",
+		"api_gateway_managed": false,
+		"api_id": "20avn3x6q8",
+		"api_key_required": false,
+		"authorization_scopes": null,
+		"authorization_type": "NONE",
+		"authorizer_id": null,
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"model_selection_expression": null,
+		"operation_name": null,
+		"request_models": null,
+		"request_parameters": null,
+		"route_id": "1klbg8k",
+		"route_key": "GET /example/v1/test",
+		"route_response_selection_expression": null,
+		"target": "integrations/5ep0yl5"
+	},
+	{
+		"api_cq_id": "[unstable_column]",
+		"api_gateway_managed": false,
+		"api_id": "l0xupqexuj",
+		"api_key_required": false,
+		"authorization_scopes": [],
+		"authorization_type": "NONE",
+		"authorizer_id": null,
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"model_selection_expression": null,
+		"operation_name": null,
+		"request_models": null,
+		"request_parameters": {},
+		"route_id": "cnkz8m3",
+		"route_key": "ANY /",
+		"route_response_selection_expression": null,
+		"target": "integrations/a4pcujb"
+	}
+]

@@ -1,0 +1,16 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"option_group_name": "default:aurora-5-6",
+		"status": "in-sync"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"option_group_name": "default:mysql-5-7",
+		"status": "in-sync"
+	}
+]

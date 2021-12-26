@@ -1,0 +1,121 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:ecs:us-east-1:704956590351:task-definition/openapi-task-definition:1",
+		"compatibilities": [
+			"EXTERNAL",
+			"EC2"
+		],
+		"cpu": "1024",
+		"cq_id": "[unstable_column]",
+		"deregistered_at": null,
+		"execution_role_arn": null,
+		"family": "openapi-task-definition",
+		"inference_accelerators": {},
+		"ipc_mode": "",
+		"memory": "2048",
+		"meta": "[unstable_column]",
+		"network_mode": "host",
+		"pid_mode": "",
+		"placement_constraints": {},
+		"proxy_configuration_container_name": null,
+		"proxy_configuration_properties": null,
+		"proxy_configuration_type": "",
+		"region": "us-east-1",
+		"registered_at": "2021-11-30T13:06:54.19",
+		"registered_by": "arn:aws:iam::704956590351:user/andrii-cli",
+		"requires_attributes": [
+			{
+				"Name": "com.amazonaws.ecs.capability.logging-driver.awslogs",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			},
+			{
+				"Name": "com.amazonaws.ecs.capability.docker-remote-api.1.19",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			},
+			{
+				"Name": "com.amazonaws.ecs.capability.docker-remote-api.1.18",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			}
+		],
+		"requires_compatibilities": [
+			"EC2"
+		],
+		"revision": 1,
+		"status": "ACTIVE",
+		"tags": {
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test",
+			"name": "td-awsecstaskdefinitionswindowsfifl5fe"
+		},
+		"task_role_arn": null
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:ecs:us-east-1:704956590351:task-definition/openapi-task-definition:2",
+		"compatibilities": [
+			"EC2"
+		],
+		"cpu": "1024",
+		"cq_id": "[unstable_column]",
+		"deregistered_at": null,
+		"execution_role_arn": null,
+		"family": "openapi-task-definition",
+		"inference_accelerators": {},
+		"ipc_mode": "",
+		"memory": "2048",
+		"meta": "[unstable_column]",
+		"network_mode": "awsvpc",
+		"pid_mode": "",
+		"placement_constraints": {},
+		"proxy_configuration_container_name": null,
+		"proxy_configuration_properties": null,
+		"proxy_configuration_type": "",
+		"region": "us-east-1",
+		"registered_at": "2021-12-02T17:52:50.188",
+		"registered_by": "arn:aws:iam::704956590351:user/cq_intergration_tester",
+		"requires_attributes": [
+			{
+				"Name": "com.amazonaws.ecs.capability.logging-driver.awslogs",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			},
+			{
+				"Name": "com.amazonaws.ecs.capability.docker-remote-api.1.19",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			},
+			{
+				"Name": "com.amazonaws.ecs.capability.docker-remote-api.1.18",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			},
+			{
+				"Name": "ecs.capability.task-eni",
+				"TargetId": null,
+				"TargetType": "",
+				"Value": null
+			}
+		],
+		"requires_compatibilities": [
+			"EC2"
+		],
+		"revision": 2,
+		"status": "ACTIVE",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test",
+			"name": "td-cq-testingintegration"
+		},
+		"task_role_arn": null
+	}
+]

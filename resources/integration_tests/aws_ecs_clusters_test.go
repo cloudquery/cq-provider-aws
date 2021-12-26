@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEcsClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcsClusters())
+	awsTestIntegrationHelper(t, resources.EcsClusters(),
+		"./snapshots/ecs")
 }

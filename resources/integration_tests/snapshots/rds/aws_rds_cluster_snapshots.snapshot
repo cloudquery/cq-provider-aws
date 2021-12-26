@@ -1,0 +1,461 @@
+[
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:cq-testingsnapintegration",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "cq-testingsnapintegration",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-11-24T16:33:41.831",
+		"snapshot_type": "manual",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:rdsclusterintegration-2021-12-22-07-12",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "rds:rdsclusterintegration-2021-12-22-07-12",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-22T07:12:24.575",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:rdsclusterintegration-2021-12-23-07-13",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "rds:rdsclusterintegration-2021-12-23-07-13",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-23T07:13:15.359",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:rdsclusterintegration-2021-12-24-07-13",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "rds:rdsclusterintegration-2021-12-24-07-13",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-24T07:13:41.59",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:rdsclusterintegration-2021-12-25-07-12",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "rds:rdsclusterintegration-2021-12-25-07-12",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-25T07:12:51.696",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:rdsclusterintegration-2021-12-26-07-12",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-08-30T06:37:39.249",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "rdsclusterintegration",
+		"db_cluster_snapshot_identifier": "rds:rdsclusterintegration-2021-12-26-07-12",
+		"engine": "aurora",
+		"engine_mode": "provisioned",
+		"engine_version": "5.6.mysql_aurora.1.22.5",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": null,
+		"license_model": "aurora",
+		"master_username": "foo",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-26T07:12:54.844",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": false,
+		"tags": {},
+		"vpc_id": "vpc-7b80f506"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-21-05-26",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-21-05-26",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-21T05:26:38.69",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-22-05-34",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-22-05-34",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-22T05:34:30.163",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-23-05-34",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-23-05-34",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-23T05:34:45.569",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-24-05-34",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-24-05-34",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-24T05:34:10.326",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-25-05-34",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-25-05-34",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-25T05:34:40.951",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"allocated_storage": 0,
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-snapshot:rds:cloudquery-rds-2021-12-26-05-34",
+		"attributes": [
+			{
+				"AttributeName": "restore",
+				"AttributeValues": []
+			}
+		],
+		"availability_zones": [
+			"us-east-1a",
+			"us-east-1b",
+			"us-east-1d"
+		],
+		"cluster_create_time": "2021-12-20T21:44:50.624",
+		"cq_id": "[unstable_column]",
+		"db_cluster_identifier": "cloudquery-rds",
+		"db_cluster_snapshot_identifier": "rds:cloudquery-rds-2021-12-26-05-34",
+		"engine": "aurora-postgresql",
+		"engine_mode": "serverless",
+		"engine_version": "10.14",
+		"iam_database_authentication_enabled": false,
+		"kms_key_id": "arn:aws:kms:us-east-1:704956590351:key/7cadc7a8-2c70-491b-af82-87aa9f8d9676",
+		"license_model": "postgresql-license",
+		"master_username": "cloudquery",
+		"meta": "[unstable_column]",
+		"percent_progress": 100,
+		"port": 0,
+		"region": "us-east-1",
+		"snapshot_create_time": "2021-12-26T05:34:41.41",
+		"snapshot_type": "automated",
+		"source_db_cluster_snapshot_arn": null,
+		"status": "available",
+		"storage_encrypted": true,
+		"tags": {},
+		"vpc_id": "vpc-02bd89c3120b29ce7"
+	}
+]

@@ -1,0 +1,38 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-pg:default.aurora5.6",
+		"cq_id": "[unstable_column]",
+		"description": "Default cluster parameter group for aurora5.6",
+		"family": "aurora5.6",
+		"meta": "[unstable_column]",
+		"name": "default.aurora5.6",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-pg:default.aurora-postgresql10",
+		"cq_id": "[unstable_column]",
+		"description": "Default cluster parameter group for aurora-postgresql10",
+		"family": "aurora-postgresql10",
+		"meta": "[unstable_column]",
+		"name": "default.aurora-postgresql10",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:cluster-pg:rds-cluster-pg-cq-testing-integration",
+		"cq_id": "[unstable_column]",
+		"description": "Test RDS cluster parameter group",
+		"family": "aurora-mysql8.0",
+		"meta": "[unstable_column]",
+		"name": "rds-cluster-pg-cq-testing-integration",
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

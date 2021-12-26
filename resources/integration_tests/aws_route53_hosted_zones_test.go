@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationRoute53HostedZones(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53HostedZones())
+	awsTestIntegrationHelper(t, resources.Route53HostedZones(),
+		"./snapshots/route53")
 }

@@ -1,0 +1,11 @@
+[
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"db_cluster_parameter_group_status": "in-sync",
+		"db_instance_identifier": "rdsclusterdbintegration",
+		"is_cluster_writer": true,
+		"meta": "[unstable_column]",
+		"promotion_tier": 0
+	}
+]

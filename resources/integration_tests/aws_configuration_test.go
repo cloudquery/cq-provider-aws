@@ -9,9 +9,11 @@ import (
 )
 
 func TestIntegrationConfigConfigurationRecorders(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ConfigConfigurationRecorders())
+	awsTestIntegrationHelper(t, resources.ConfigConfigurationRecorders(),
+		"./snapshots/configuration")
 }
 
 func TestIntegrationConfigConformancePack(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ConfigConformancePack())
+	awsTestIntegrationHelper(t, resources.ConfigConformancePack(),
+		"./snapshots/config")
 }

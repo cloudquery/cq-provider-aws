@@ -1,0 +1,9 @@
+[
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"parameter_apply_status": "in-sync",
+		"parameter_group_name": "redshift-pg-cq-testingintegration"
+	}
+]

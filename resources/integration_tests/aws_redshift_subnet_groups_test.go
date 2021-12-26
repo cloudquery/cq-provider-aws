@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationRedshiftSubnetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RedshiftSubnetGroups())
+	awsTestIntegrationHelper(t, resources.RedshiftSubnetGroups(),
+		"./snapshots/redshift")
 }

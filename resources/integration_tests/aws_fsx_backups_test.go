@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationFsxBackups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.FsxBackups())
+	awsTestIntegrationHelper(t, resources.FsxBackups(),
+		"./snapshots/fsx")
 }

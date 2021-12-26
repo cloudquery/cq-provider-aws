@@ -1,0 +1,10 @@
+[
+	{
+		"bucket_cq_id": "[unstable_column]",
+		"bucket_key_enabled": false,
+		"cq_id": "[unstable_column]",
+		"kms_master_key_id": null,
+		"meta": "[unstable_column]",
+		"sse_algorithm": "AES256"
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCloudwatchlogsFilters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudwatchlogsFilters())
+	awsTestIntegrationHelper(t, resources.CloudwatchlogsFilters(),
+		"./snapshots/cloudwatchlogs")
 }

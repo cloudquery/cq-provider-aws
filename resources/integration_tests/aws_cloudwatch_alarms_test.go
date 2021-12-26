@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCloudwatchAlarms(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudwatchAlarms())
+	awsTestIntegrationHelper(t, resources.CloudwatchAlarms(),
+		"./snapshots/cloudwatch")
 }

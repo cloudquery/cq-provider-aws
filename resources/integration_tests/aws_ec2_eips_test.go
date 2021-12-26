@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEc2Eips(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Ec2Eips())
+	awsTestIntegrationHelper(t, resources.Ec2Eips(),
+		"./snapshots/ec2")
 }

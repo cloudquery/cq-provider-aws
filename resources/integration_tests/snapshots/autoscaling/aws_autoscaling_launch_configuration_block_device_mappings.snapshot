@@ -1,0 +1,16 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"device_name": "ebs_block-cq-testingintegration",
+		"ebs_delete_on_termination": true,
+		"ebs_encrypted": null,
+		"ebs_iops": null,
+		"ebs_snapshot_id": null,
+		"ebs_volume_size": 5,
+		"ebs_volume_type": "standard",
+		"launch_configuration_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"no_device": null,
+		"virtual_name": null
+	}
+]

@@ -1,0 +1,50 @@
+[
+	{
+		"account_id": "704956590351",
+		"alpn_policy": null,
+		"arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:listener/app/awseb-AWSEB-1Y07H683587FY/5964ebc0ba975554/b62f5b5577034fbd",
+		"cq_id": "[unstable_column]",
+		"load_balancer_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:loadbalancer/app/awseb-AWSEB-1Y07H683587FY/5964ebc0ba975554",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"port": 80,
+		"protocol": "HTTP",
+		"region": "us-east-1",
+		"ssl_policy": null,
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"alpn_policy": null,
+		"arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:listener/app/elbv2-integration/fa66405fb3dca17f/abdaa3d0ad35f322",
+		"cq_id": "[unstable_column]",
+		"load_balancer_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:loadbalancer/app/elbv2-integration/fa66405fb3dca17f",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"port": 80,
+		"protocol": "HTTP",
+		"region": "us-east-1",
+		"ssl_policy": null,
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	},
+	{
+		"account_id": "704956590351",
+		"alpn_policy": null,
+		"arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:listener/app/elbv2-windowsfifl5fe/7cbcbd9a5bf28c64/bd20e3a284a4a896",
+		"cq_id": "[unstable_column]",
+		"load_balancer_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:loadbalancer/app/elbv2-windowsfifl5fe/7cbcbd9a5bf28c64",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"port": 80,
+		"protocol": "HTTP",
+		"region": "us-east-1",
+		"ssl_policy": null,
+		"tags": {
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		}
+	}
+]

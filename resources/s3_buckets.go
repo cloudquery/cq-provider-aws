@@ -53,8 +53,9 @@ func S3Buckets() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name: "policy",
-				Type: schema.TypeJSON,
+				Name:             "policy",
+				Type:             schema.TypeJSON,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name: "tags",

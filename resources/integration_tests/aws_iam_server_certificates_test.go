@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationIamServerCertificates(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamServerCertificates())
+	awsTestIntegrationHelper(t, resources.IamServerCertificates(),
+		"./snapshots/iam")
 }

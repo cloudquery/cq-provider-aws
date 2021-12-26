@@ -1,0 +1,22 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:route53:::hostedzone/Z01771002QS5715YBU6WJ",
+		"caller_reference": "terraform-20210830063744822600000002",
+		"config_comment": "Managed by Terraform",
+		"config_private_zone": false,
+		"cq_id": "[unstable_column]",
+		"delegation_set_id": null,
+		"id": "Z01771002QS5715YBU6WJ",
+		"linked_service_description": null,
+		"linked_service_principal": null,
+		"meta": "[unstable_column]",
+		"name": "dev.cq-testingintegration.com.",
+		"resource_record_set_count": 3,
+		"tags": {
+			"Environment": "dev",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

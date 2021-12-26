@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationSQSQueues(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SQSQueues())
+	awsTestIntegrationHelper(t, resources.SQSQueues(),
+		"./snapshots/sqs")
 }

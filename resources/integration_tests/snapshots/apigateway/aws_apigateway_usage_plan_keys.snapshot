@@ -1,0 +1,12 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"id": "rjl0sk7f5g",
+		"meta": "[unstable_column]",
+		"name": "apigw-key-cq-testing-integration",
+		"type": "API_KEY",
+		"usage_plan_cq_id": "[unstable_column]",
+		"usage_plan_id": "c714l5",
+		"value": "test-key-test-key-test-key-test-key-test-key-test-key"
+	}
+]

@@ -1,0 +1,14 @@
+[
+	{
+		"account_id": "704956590351",
+		"block_public_security_group_rules": true,
+		"classification": null,
+		"configurations": null,
+		"cq_id": "[unstable_column]",
+		"created_by_arn": "",
+		"creation_date_time": "1970-01-01T00:00:00.001",
+		"meta": "[unstable_column]",
+		"properties": null,
+		"region": "us-east-1"
+	}
+]

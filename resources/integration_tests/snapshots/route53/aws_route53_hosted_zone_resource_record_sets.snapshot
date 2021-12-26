@@ -1,0 +1,77 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"dns_name": null,
+		"evaluate_target_health": false,
+		"failover": "",
+		"geo_location_continent_code": null,
+		"geo_location_country_code": null,
+		"geo_location_subdivision_code": null,
+		"health_check_id": null,
+		"hosted_zone_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"multi_value_answer": null,
+		"name": "dev-1.cq-testingintegration.com.dev.cq-testingintegration.com.",
+		"region": "",
+		"resource_records": [
+			"ns-1017.awsdns-63.net",
+			"ns-1384.awsdns-45.org",
+			"ns-207.awsdns-25.com",
+			"ns-1545.awsdns-01.co.uk"
+		],
+		"set_identifier": null,
+		"traffic_policy_instance_id": null,
+		"ttl": 30,
+		"type": "NS",
+		"weight": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"dns_name": null,
+		"evaluate_target_health": false,
+		"failover": "",
+		"geo_location_continent_code": null,
+		"geo_location_country_code": null,
+		"geo_location_subdivision_code": null,
+		"health_check_id": null,
+		"hosted_zone_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"multi_value_answer": null,
+		"name": "dev.cq-testingintegration.com.",
+		"region": "",
+		"resource_records": [
+			"ns-207.awsdns-25.com.",
+			"ns-1545.awsdns-01.co.uk.",
+			"ns-1017.awsdns-63.net.",
+			"ns-1384.awsdns-45.org."
+		],
+		"set_identifier": null,
+		"traffic_policy_instance_id": null,
+		"ttl": 172800,
+		"type": "NS",
+		"weight": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"dns_name": null,
+		"evaluate_target_health": false,
+		"failover": "",
+		"geo_location_continent_code": null,
+		"geo_location_country_code": null,
+		"geo_location_subdivision_code": null,
+		"health_check_id": null,
+		"hosted_zone_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"multi_value_answer": null,
+		"name": "dev.cq-testingintegration.com.",
+		"region": "",
+		"resource_records": [
+			"ns-207.awsdns-25.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+		],
+		"set_identifier": null,
+		"traffic_policy_instance_id": null,
+		"ttl": 900,
+		"type": "SOA",
+		"weight": null
+	}
+]

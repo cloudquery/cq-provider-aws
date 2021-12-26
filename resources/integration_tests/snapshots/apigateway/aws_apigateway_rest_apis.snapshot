@@ -1,0 +1,52 @@
+[
+	{
+		"account_id": "704956590351",
+		"api_key_source": "HEADER",
+		"binary_media_types": null,
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-08-30T14:08:29",
+		"description": null,
+		"disable_execute_api_endpoint": false,
+		"endpoint_configuration_types": [
+			"REGIONAL"
+		],
+		"endpoint_configuration_vpc_endpoint_ids": null,
+		"id": "lts45y3n6e",
+		"meta": "[unstable_column]",
+		"minimum_compression_size": null,
+		"name": "apigwv1-api-cq-testingintegration",
+		"policy": null,
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"version": "1.0",
+		"warnings": null
+	},
+	{
+		"account_id": "704956590351",
+		"api_key_source": "HEADER",
+		"binary_media_types": null,
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-12-09T08:20:37",
+		"description": null,
+		"disable_execute_api_endpoint": false,
+		"endpoint_configuration_types": [
+			"REGIONAL"
+		],
+		"endpoint_configuration_vpc_endpoint_ids": null,
+		"id": "agy60myla6",
+		"meta": "[unstable_column]",
+		"minimum_compression_size": null,
+		"name": "apigwv1-api-awsapigatewayrestapiswindowsfifl5fe",
+		"policy": null,
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		},
+		"version": "1.0",
+		"warnings": null
+	}
+]

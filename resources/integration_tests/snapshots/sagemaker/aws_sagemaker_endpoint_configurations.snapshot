@@ -1,0 +1,18 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:sagemaker:us-east-1:704956590351:endpoint-config/sagemaker-endpoint-configuration-cq-testingintegration",
+		"cq_id": "[unstable_column]",
+		"creation_time": "2021-11-25T10:08:18.369",
+		"data_capture_config": null,
+		"kms_key_id": null,
+		"meta": "[unstable_column]",
+		"name": "sagemaker-endpoint-configuration-cq-testingintegration",
+		"region": "us-east-1",
+		"tags": {
+			"Name": "sagemaker-endpoint-configuration-cq-testingintegration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

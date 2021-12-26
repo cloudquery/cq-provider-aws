@@ -1,0 +1,23 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"listener_default_action_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"target_group_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:targetgroup/awseb-AWSEB-166UG8KARWNK4/a5d50998c5aa819b",
+		"weight": 1
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"listener_default_action_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"target_group_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:targetgroup/elbv2-tg-integration/c39d0a2b5cd1359d",
+		"weight": 1
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"listener_default_action_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"target_group_arn": "arn:aws:elasticloadbalancing:us-east-1:704956590351:targetgroup/elbv2-tg-windowsfifl5fe/42d35b6184f63dd0",
+		"weight": 1
+	}
+]

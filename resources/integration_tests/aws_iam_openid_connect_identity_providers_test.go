@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationIamOpenidConnectIdentityProviders(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamOpenidConnectIdentityProviders())
+	awsTestIntegrationHelper(t, resources.IamOpenidConnectIdentityProviders(),
+		"./snapshots/iam")
 }

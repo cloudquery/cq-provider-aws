@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationDirectconnectLags(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.DirectconnectLags())
+	awsTestIntegrationHelper(t, resources.DirectconnectLags(),
+		"./snapshots/directconnect")
 }

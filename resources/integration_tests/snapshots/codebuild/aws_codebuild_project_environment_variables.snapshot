@@ -1,0 +1,18 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"name": "SOME_KEY1",
+		"project_cq_id": "[unstable_column]",
+		"type": "PLAINTEXT",
+		"value": "SOME_VALUE1"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"name": "SOME_KEY2",
+		"project_cq_id": "[unstable_column]",
+		"type": "PARAMETER_STORE",
+		"value": "SOME_VALUE2"
+	}
+]

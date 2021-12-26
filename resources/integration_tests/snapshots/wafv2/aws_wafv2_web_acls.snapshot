@@ -1,0 +1,35 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:wafv2:us-east-1:704956590351:regional/webacl/wafv2-web-acl-cq-testingintegration/c37a4569-26c0-4466-8d63-b4dee37e3126",
+		"capacity": 701,
+		"cq_id": "[unstable_column]",
+		"custom_response_bodies": null,
+		"default_action": {
+			"Allow": {
+				"CustomRequestHandling": null
+			},
+			"Block": null
+		},
+		"description": "Example of a managed rule.",
+		"id": "c37a4569-26c0-4466-8d63-b4dee37e3126",
+		"label_namespace": "awswaf:704956590351:webacl:wafv2-web-acl-cq-testingintegration:",
+		"logging_configuration": [
+			"arn:aws:firehose:us-east-1:704956590351:deliverystream/aws-waf-logs-kinesis-firehose-cq-testingintegration"
+		],
+		"managed_by_firewall_manager": false,
+		"meta": "[unstable_column]",
+		"name": "wafv2-web-acl-cq-testingintegration",
+		"region": "us-east-1",
+		"resources_for_web_acl": [],
+		"tags": {
+			"Tag1": "Value1",
+			"Tag2": "Value2",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"visibility_config_cloud_watch_metrics_enabled": false,
+		"visibility_config_metric_name": "friendly-metric-name",
+		"visibility_config_sampled_requests_enabled": false
+	}
+]

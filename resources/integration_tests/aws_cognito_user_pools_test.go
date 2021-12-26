@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCognitoUserPools(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CognitoUserPools())
+	awsTestIntegrationHelper(t, resources.CognitoUserPools(),
+		"./snapshots/coginto")
 }

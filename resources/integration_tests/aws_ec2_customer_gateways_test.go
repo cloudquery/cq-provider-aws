@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEc2CustomerGateways(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Ec2CustomerGateways())
+	awsTestIntegrationHelper(t, resources.Ec2CustomerGateways(),
+		"./snapshots/ec2")
 }

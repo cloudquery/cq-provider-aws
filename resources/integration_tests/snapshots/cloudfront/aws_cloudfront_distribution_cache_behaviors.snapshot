@@ -1,0 +1,75 @@
+[
+	{
+		"allowed_methods": [
+			"HEAD",
+			"GET",
+			"OPTIONS"
+		],
+		"cache_policy_id": null,
+		"cached_methods": [
+			"HEAD",
+			"GET"
+		],
+		"compress": true,
+		"cq_id": "[unstable_column]",
+		"default_ttl": 3600,
+		"distribution_cq_id": "[unstable_column]",
+		"field_level_encryption_id": "",
+		"forwarded_values_cookies_forward": "none",
+		"forwarded_values_cookies_whitelisted_names": null,
+		"forwarded_values_headers": null,
+		"forwarded_values_query_string": false,
+		"forwarded_values_query_string_cache_keys": null,
+		"max_ttl": 86400,
+		"meta": "[unstable_column]",
+		"min_ttl": 0,
+		"origin_request_policy_id": null,
+		"path_pattern": "/content/*",
+		"realtime_log_config_arn": null,
+		"smooth_streaming": false,
+		"target_origin_id": "cf-s3origincq-testing-integration",
+		"trusted_key_groups": null,
+		"trusted_key_groups_enabled": false,
+		"trusted_signers": null,
+		"trusted_signers_enabled": false,
+		"viewer_protocol_policy": "redirect-to-https"
+	},
+	{
+		"allowed_methods": [
+			"HEAD",
+			"GET",
+			"OPTIONS"
+		],
+		"cache_policy_id": null,
+		"cached_methods": [
+			"HEAD",
+			"GET",
+			"OPTIONS"
+		],
+		"compress": true,
+		"cq_id": "[unstable_column]",
+		"default_ttl": 86400,
+		"distribution_cq_id": "[unstable_column]",
+		"field_level_encryption_id": "",
+		"forwarded_values_cookies_forward": "none",
+		"forwarded_values_cookies_whitelisted_names": null,
+		"forwarded_values_headers": [
+			"Origin"
+		],
+		"forwarded_values_query_string": false,
+		"forwarded_values_query_string_cache_keys": null,
+		"max_ttl": 31536000,
+		"meta": "[unstable_column]",
+		"min_ttl": 0,
+		"origin_request_policy_id": null,
+		"path_pattern": "/content/immutable/*",
+		"realtime_log_config_arn": null,
+		"smooth_streaming": false,
+		"target_origin_id": "cf-s3origincq-testing-integration",
+		"trusted_key_groups": null,
+		"trusted_key_groups_enabled": false,
+		"trusted_signers": null,
+		"trusted_signers_enabled": false,
+		"viewer_protocol_policy": "redirect-to-https"
+	}
+]

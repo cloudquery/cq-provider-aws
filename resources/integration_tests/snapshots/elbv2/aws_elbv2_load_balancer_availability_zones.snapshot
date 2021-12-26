@@ -1,0 +1,74 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "apigateway-nlb-integration",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0707fed3178b4cca4",
+		"zone_name": "us-east-1f"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "apigateway-nlb-integration",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0e32b239c3e8aabcb",
+		"zone_name": "us-east-1a"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "awseb-AWSEB-1Y07H683587FY",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0707fed3178b4cca4",
+		"zone_name": "us-east-1f"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "awseb-AWSEB-1Y07H683587FY",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0e32b239c3e8aabcb",
+		"zone_name": "us-east-1a"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "elbv2-integration",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-04cad364dc10b21f2",
+		"zone_name": "us-east-1e"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "elbv2-integration",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0707fed3178b4cca4",
+		"zone_name": "us-east-1f"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "elbv2-windowsfifl5fe",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-01a53445effe826fd",
+		"zone_name": "us-east-1f"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"load_balance_name": "elbv2-windowsfifl5fe",
+		"load_balancer_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"outpost_id": null,
+		"subnet_id": "subnet-0daed11b3990030c4",
+		"zone_name": "us-east-1e"
+	}
+]

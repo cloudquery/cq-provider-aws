@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationEcsTaskDefinitions(t *testing.T) {
-	resource := resources.EcsTaskDefinitions()
-	awsTestIntegrationHelper(t, resource)
+	awsTestIntegrationHelper(t, resources.EcsTaskDefinitions(),
+		"./snapshots/ecs")
 }

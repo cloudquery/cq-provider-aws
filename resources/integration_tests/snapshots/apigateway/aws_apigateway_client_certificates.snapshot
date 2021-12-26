@@ -1,0 +1,17 @@
+[
+	{
+		"account_id": "704956590351",
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-08-30T06:37:34",
+		"description": "My client certificate",
+		"expiration_date": "2022-08-30T06:37:34",
+		"id": "fexx5r",
+		"meta": "[unstable_column]",
+		"pem_encoded_certificate": "-----BEGIN CERTIFICATE-----\r\nMIIC6DCCAdCgAwIBAgIIOj2xQAoz9NcwDQYJKoZIhvcNAQELBQAwNDELMAkGA1UE\r\nBhMCVVMxEDAOBgNVBAcTB1NlYXR0bGUxEzARBgNVBAMTCkFwaUdhdGV3YXkwHhcN\r\nMjEwODMwMDYzNzM0WhcNMjIwODMwMDYzNzM0WjA0MQswCQYDVQQGEwJVUzEQMA4G\r\nA1UEBxMHU2VhdHRsZTETMBEGA1UEAxMKQXBpR2F0ZXdheTCCASIwDQYJKoZIhvcN\r\nAQEBBQADggEPADCCAQoCggEBAKRIUuJZ73V+vkoL5V1GprOd83j/wXccDbAX+8TY\r\n7A3vd8sZa+tBFACArg4AvFmkFi5zt8k9F5yZHihz3578bX03J34PxeFefstd+RNY\r\nPxHv2xWKA/tvf4MehLEogGV1xikvHywPJsJ/X/dhOzs+tSlZhCYbKIhA2aPvkadK\r\nhNbUeolJfhQWf5aSeZIEsiF4xb87Zp7XVXOTgobPQGg3qtJXDYP1MblzhOLllFZF\r\npcRcbqzR0CH1hAW8NONktwgPauKMpJC/dh2Xqlm76vUT4GX+IqfM3GVoEzSSKAQe\r\nBNVm66wT+wfhDbZpn9MP52Dczo2mJe0ptJC1p//1wwxMYEMCAwEAATANBgkqhkiG\r\n9w0BAQsFAAOCAQEAUe/KLHWUlJZKrW6SFRuUi26T8rkWeVsOfiQxcJ8ZHX+B9/PX\r\nbWgSm6EPgpGBkWRfyOnu/o7Wh331NVab9BqShIL3OXb31ZdPa1VU6gxDjWcNoGWv\r\n8xlzbvEOLzSSwoWpjT/bqfhFpEJYSpH3mUGwYQ8/vEWE+3pk5+Gxp/SFqQmFftiK\r\nlclghjEH0wl+rLv1TJgu1ZPyzQoyE5tcxmIJr/KZvmrPhuzwljMBqzrnjkIe44/x\r\ni9VpcDrsiblmtKH6Sev6Kqpup27Tx3K2wiRndVFM3XoSxNNgozmnFkjU3QJQG5uN\r\nI38ZshvtOw+ZMxCkn4ojG+kusDuct/PkXgJi7w==\r\n-----END CERTIFICATE-----",
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

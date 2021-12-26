@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationEcrRepositories(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcrRepositories())
+	awsTestIntegrationHelper(t, resources.EcrRepositories(),
+		"./snapshots/ecr")
 }

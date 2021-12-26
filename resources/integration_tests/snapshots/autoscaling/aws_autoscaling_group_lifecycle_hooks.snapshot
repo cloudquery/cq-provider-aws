@@ -1,0 +1,16 @@
+[
+	{
+		"auto_scaling_group_name": "ag-cq-testingintegration",
+		"cq_id": "[unstable_column]",
+		"default_result": "CONTINUE",
+		"global_timeout": 172800,
+		"group_cq_id": "[unstable_column]",
+		"heartbeat_timeout": 2000,
+		"lifecycle_hook_name": "foobarcq-testingintegration",
+		"lifecycle_transition": "autoscaling:EC2_INSTANCE_LAUNCHING",
+		"meta": "[unstable_column]",
+		"notification_metadata": "{\"foo\":\"bar\"}",
+		"notification_target_arn": "arn:aws:sqs:us-east-1:704956590351:ag-queue-integration",
+		"role_arn": "arn:aws:iam::704956590351:role/ag_role_cq-testingintegration"
+	}
+]

@@ -1,0 +1,13 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"creation_time": "2021-08-30T06:37:49",
+		"default_association_route_table": true,
+		"default_propagation_route_table": true,
+		"meta": "[unstable_column]",
+		"state": "available",
+		"tags": {},
+		"transit_gateway_cq_id": "[unstable_column]",
+		"transit_gateway_route_table_id": "tgw-rtb-0492c0619ff713d64"
+	}
+]

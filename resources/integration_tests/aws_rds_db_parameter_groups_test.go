@@ -9,6 +9,5 @@ import (
 )
 
 func TestIntegrationRdsDbParameterGroups(t *testing.T) {
-	table := resources.RdsDbParameterGroups()
-	awsTestIntegrationHelper(t, table)
+	awsTestIntegrationHelper(t, resources.RdsDbParameterGroups(), "./snapshots/rds")
 }

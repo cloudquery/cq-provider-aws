@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationSecretsmanagerSecrets(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SecretsmanagerSecrets())
+	awsTestIntegrationHelper(t, resources.SecretsmanagerSecrets(),
+		"./snapshots/sagemaker")
 }

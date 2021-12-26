@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationCodebuildProjects(t *testing.T) {
-	resource := resources.CodebuildProjects()
-	awsTestIntegrationHelper(t, resource)
+	awsTestIntegrationHelper(t, resources.CodebuildProjects(),
+		"./snapshots/codebuild")
 }

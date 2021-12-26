@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationRdsClusterParameterGroups(t *testing.T) {
-	table := resources.RdsClusterParameterGroups()
-	awsTestIntegrationHelper(t, table)
+	awsTestIntegrationHelper(t, resources.RdsClusterParameterGroups(),
+		"./snapshots/rds")
 }

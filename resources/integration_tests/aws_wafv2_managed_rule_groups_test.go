@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationWAFv2ManagedRuleGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Wafv2ManagedRuleGroups())
+	awsTestIntegrationHelper(t, resources.Wafv2ManagedRuleGroups(),
+		"./snapshots/wafv2")
 }

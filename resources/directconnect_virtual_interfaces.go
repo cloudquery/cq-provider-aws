@@ -106,6 +106,11 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Description: "The routes to be advertised to the AWS network in this Region",
 				Type:        schema.TypeStringArray,
 				Resolver:    resolveDirectconnectVirtualInterfaceRouteFilterPrefixes,
+				// this is currently ignored in integration tests because
+				// AWS is returning the array in random order which make the tests and comparision harder.
+				// we will add a sort/transformer options like here: https://pkg.go.dev/github.com/google/go-cmp@v0.5.6/cmp#example-Option-SortedSlice
+				// but we would like to wait until generics is available as we believe it will be much easier to implement it with it
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "tags",

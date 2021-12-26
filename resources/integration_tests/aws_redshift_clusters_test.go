@@ -9,6 +9,6 @@ import (
 )
 
 func TestIntegrationRedshiftClusters(t *testing.T) {
-	const clusterFKName = "cluster_cq_id"
-	awsTestIntegrationHelper(t, resources.RedshiftClusters())
+	awsTestIntegrationHelper(t, resources.RedshiftClusters(),
+		"./snapshots/redshift")
 }

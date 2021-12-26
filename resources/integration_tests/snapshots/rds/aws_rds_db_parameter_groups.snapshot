@@ -1,0 +1,60 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:pg:default.aurora5.6",
+		"cq_id": "[unstable_column]",
+		"description": "Default parameter group for aurora5.6",
+		"family": "aurora5.6",
+		"meta": "[unstable_column]",
+		"name": "default.aurora5.6",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:pg:default.aurora-postgresql10",
+		"cq_id": "[unstable_column]",
+		"description": "Default parameter group for aurora-postgresql10",
+		"family": "aurora-postgresql10",
+		"meta": "[unstable_column]",
+		"name": "default.aurora-postgresql10",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:pg:default.mysql5.7",
+		"cq_id": "[unstable_column]",
+		"description": "Default parameter group for mysql5.7",
+		"family": "mysql5.7",
+		"meta": "[unstable_column]",
+		"name": "default.mysql5.7",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:pg:default.mysql8.0",
+		"cq_id": "[unstable_column]",
+		"description": "Default parameter group for mysql8.0",
+		"family": "mysql8.0",
+		"meta": "[unstable_column]",
+		"name": "default.mysql8.0",
+		"region": "us-east-1",
+		"tags": {}
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:rds:us-east-1:704956590351:pg:rds-db-pg-cq-testing-integration",
+		"cq_id": "[unstable_column]",
+		"description": "Test RDS DB parameter group",
+		"family": "mysql8.0",
+		"meta": "[unstable_column]",
+		"name": "rds-db-pg-cq-testing-integration",
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		}
+	}
+]

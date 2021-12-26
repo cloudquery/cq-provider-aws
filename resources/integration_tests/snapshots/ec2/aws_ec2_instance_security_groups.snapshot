@@ -1,0 +1,86 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-00cf52d3a67f662bf",
+		"group_name": "awseb-e-q4qzkupk6m-stack-AWSEBSecurityGroup-V21BLVX1GFNB",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-01c60028bb1ffec3a",
+		"group_name": "launch-wizard-1",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0502bc9aecc0e8eed",
+		"group_name": "ecs_clusters_sgawsecstaskdefinitionswindowsfifl5fe",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-054df6834b9ef13e7",
+		"group_name": "aws_ec2_instances_sg_cq-testingintegration",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0617f043c90fb5375",
+		"group_name": "default",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0643266cf7bd544e6",
+		"group_name": "aws_emr_clusters_security_groupcq-testingintegration",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0643266cf7bd544e6",
+		"group_name": "aws_emr_clusters_security_groupcq-testingintegration",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-064d7b615654f1c1b",
+		"group_name": "default",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-064d7b615654f1c1b",
+		"group_name": "default",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-08398f752964ebc21",
+		"group_name": "ecs_clusters_sgcq-testingintegration",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0d624a1e35d2d967f",
+		"group_name": "aws_ec2_instances_sg_yevyev",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"group_id": "sg-0ea01d0cc14b5da9d",
+		"group_name": "launch-wizard-2",
+		"instance_cq_id": "[unstable_column]",
+		"meta": "[unstable_column]"
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationSSMDocuments(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SsmDocuments())
+	awsTestIntegrationHelper(t, resources.SsmDocuments(),
+		"./snapshots/ssm")
 }

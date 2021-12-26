@@ -9,5 +9,7 @@ import (
 )
 
 func TestIntegrationAutoscalingLaunchConfigurations(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.AutoscalingLaunchConfigurations())
+	awsTestIntegrationHelper(t,
+		resources.AutoscalingLaunchConfigurations(),
+		"./snapshots/autoscaling")
 }

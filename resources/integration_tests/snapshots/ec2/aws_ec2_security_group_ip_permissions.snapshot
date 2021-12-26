@@ -1,0 +1,194 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": -1,
+		"ip_protocol": "icmp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": -1
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 0,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 0
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 0,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 65535
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 0,
+		"ip_protocol": "udp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 65535
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 22,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 22
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 22,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 22
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 22,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 22
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 80,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 80
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 80,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 80
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 80,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 80
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 5432,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 5432
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 8443,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 8443
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": 9443,
+		"ip_protocol": "tcp",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": 9443
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	},
+	{
+		"cq_id": "[unstable_column]",
+		"from_port": null,
+		"ip_protocol": "-1",
+		"meta": "[unstable_column]",
+		"security_group_cq_id": "[unstable_column]",
+		"to_port": null
+	}
+]

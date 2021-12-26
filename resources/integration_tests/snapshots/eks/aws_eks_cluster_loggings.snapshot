@@ -1,0 +1,15 @@
+[
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"enabled": false,
+		"meta": "[unstable_column]",
+		"types": [
+			"api",
+			"audit",
+			"authenticator",
+			"controllerManager",
+			"scheduler"
+		]
+	}
+]

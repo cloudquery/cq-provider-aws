@@ -1,0 +1,26 @@
+[
+	{
+		"api_cq_id": "[unstable_column]",
+		"api_id": "20avn3x6q8",
+		"auto_deployed": false,
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-08-30T14:08:33",
+		"deployment_id": "flkjr6",
+		"deployment_status": "DEPLOYED",
+		"deployment_status_message": null,
+		"description": "apigwv2-dep-cq-testingintegration",
+		"meta": "[unstable_column]"
+	},
+	{
+		"api_cq_id": "[unstable_column]",
+		"api_id": "l0xupqexuj",
+		"auto_deployed": true,
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-11-24T21:00:25",
+		"deployment_id": "qk6omx",
+		"deployment_status": "DEPLOYED",
+		"deployment_status_message": null,
+		"description": "Automatic deployment triggered by changes to the Api configuration",
+		"meta": "[unstable_column]"
+	}
+]

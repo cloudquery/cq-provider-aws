@@ -1,0 +1,12 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"identifier": "CODEBUILD_MY_EFS",
+		"location": "fs-0a2fdfc466358e909.efs.us-east-1.amazonaws.com:/path",
+		"meta": "[unstable_column]",
+		"mount_options": "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2",
+		"mount_point": "/path",
+		"project_cq_id": "[unstable_column]",
+		"type": "EFS"
+	}
+]

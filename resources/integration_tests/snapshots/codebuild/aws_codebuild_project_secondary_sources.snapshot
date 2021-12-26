@@ -1,0 +1,19 @@
+[
+	{
+		"auth_resource": null,
+		"auth_type": "",
+		"build_status_config_context": null,
+		"build_status_config_target_url": null,
+		"buildspec": "",
+		"cq_id": "[unstable_column]",
+		"git_clone_depth": null,
+		"git_submodules_config_fetch_submodules": null,
+		"insecure_ssl": false,
+		"location": "codebuildcq-testingintegration/package.zip",
+		"meta": "[unstable_column]",
+		"project_cq_id": "[unstable_column]",
+		"report_build_status": null,
+		"source_identifier": "package",
+		"type": "S3"
+	}
+]

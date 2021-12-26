@@ -1,0 +1,177 @@
+[
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": "All protocols",
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "0.0.0.0/0",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	},
+	{
+		"cidr_ip": "73.69.21.116/32",
+		"cq_id": "[unstable_column]",
+		"description": null,
+		"meta": "[unstable_column]",
+		"security_group_ip_permissions_egress_cq_id": "[unstable_column]"
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationElbv2TargetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv2TargetGroups())
+	awsTestIntegrationHelper(t, resources.Elbv2TargetGroups(),
+		"./snapshots/elbv2")
 }

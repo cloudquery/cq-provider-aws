@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationCloudfrontCachePolicies(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudfrontCachePolicies())
+	awsTestIntegrationHelper(t, resources.CloudfrontCachePolicies(),
+		"./snapshots/cloudfront")
 }

@@ -1,0 +1,396 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:lambda:us-east-1:704956590351:function:secretsmanager-secret-rotation-function-cq-testingintegration",
+		"code_image_uri": null,
+		"code_location": "[unstable_column]",
+		"code_repository_type": "S3",
+		"code_resolved_image_uri": null,
+		"code_sha256": "M4XZU1ZYHMDFflyM9GonMpMqy/m5nGmT1J/03x6pNpg=",
+		"code_signing_allowed_publishers_version_arns": null,
+		"code_signing_config_arn": null,
+		"code_signing_config_id": null,
+		"code_signing_description": null,
+		"code_signing_last_modified": null,
+		"code_signing_policies_untrusted_artifact_on_deployment": null,
+		"code_size": 2083,
+		"concurrency_reserved_concurrent_executions": null,
+		"cq_id": "[unstable_column]",
+		"dead_letter_config_target_arn": null,
+		"description": "",
+		"environment_error_code": null,
+		"environment_error_message": null,
+		"environment_variables": {
+			"SECRETS_MANAGER_ENDPOINT": "https://secretsmanager.us-east-1.amazonaws.com"
+		},
+		"error_code": null,
+		"error_message": null,
+		"handler": "lambda_function.lambda_handler",
+		"image_config_command": null,
+		"image_config_entry_point": null,
+		"image_config_working_directory": null,
+		"kms_key_arn": null,
+		"last_modified": "2021-12-03T09:34:47.000+0000",
+		"last_update_status": "Successful",
+		"last_update_status_reason": null,
+		"last_update_status_reason_code": "",
+		"master_arn": null,
+		"memory_size": 128,
+		"meta": "[unstable_column]",
+		"name": "secretsmanager-secret-rotation-function-cq-testingintegration",
+		"package_type": "Zip",
+		"policy_document": {
+			"Id": "default",
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Effect": "Allow",
+					"Principal": {
+						"Service": "secretsmanager.amazonaws.com"
+					},
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:secretsmanager-secret-rotation-function-cq-testingintegration",
+					"Sid": "AllowExecutionSecretManager"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_revision_id": "0a20a9aa-fc13-45a0-bb99-6acfe8f80d9d",
+		"region": "us-east-1",
+		"revision_id": "0a20a9aa-fc13-45a0-bb99-6acfe8f80d9d",
+		"role": "arn:aws:iam::704956590351:role/secretsmanager-secret-iam-role-cq-testingintegration",
+		"runtime": "python3.9",
+		"signing_job_arn": null,
+		"signing_profile_version_arn": null,
+		"state": "Active",
+		"state_reason": null,
+		"state_reason_code": "",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"timeout": 30,
+		"tracing_config_mode": "PassThrough",
+		"version": "$LATEST",
+		"vpc_config_security_group_ids": null,
+		"vpc_config_subnet_ids": null,
+		"vpc_config_vpc_id": null
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:lambda:us-east-1:704956590351:function:function_awsapigatewayrestapiswindowsfifl5fe",
+		"code_image_uri": null,
+		"code_location": "[unstable_column]",
+		"code_repository_type": "S3",
+		"code_resolved_image_uri": null,
+		"code_sha256": "ODYWNsdyvRP7hJbShqI+T6EclB3A4G+C0csddE5HZmQ=",
+		"code_signing_allowed_publishers_version_arns": null,
+		"code_signing_config_arn": null,
+		"code_signing_config_id": null,
+		"code_signing_description": null,
+		"code_signing_last_modified": null,
+		"code_signing_policies_untrusted_artifact_on_deployment": null,
+		"code_size": 258,
+		"concurrency_reserved_concurrent_executions": null,
+		"cq_id": "[unstable_column]",
+		"dead_letter_config_target_arn": null,
+		"description": "",
+		"environment_error_code": null,
+		"environment_error_message": null,
+		"environment_variables": {
+			"foo": "bar"
+		},
+		"error_code": null,
+		"error_message": null,
+		"handler": "exports.example",
+		"image_config_command": null,
+		"image_config_entry_point": null,
+		"image_config_working_directory": null,
+		"kms_key_arn": null,
+		"last_modified": "2021-12-09T08:20:57.360+0000",
+		"last_update_status": "Successful",
+		"last_update_status_reason": null,
+		"last_update_status_reason_code": "",
+		"master_arn": null,
+		"memory_size": 128,
+		"meta": "[unstable_column]",
+		"name": "function_awsapigatewayrestapiswindowsfifl5fe",
+		"package_type": "Zip",
+		"policy_document": {
+			"Id": "default",
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Condition": {
+						"ArnLike": {
+							"AWS:SourceArn": "arn:aws:sns:us-east-1:704956590351:lambda_func_user-updates-topicawsapigatewayrestapiswindowsfifl5fe"
+						}
+					},
+					"Effect": "Allow",
+					"Principal": {
+						"Service": "sns.amazonaws.com"
+					},
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:function_awsapigatewayrestapiswindowsfifl5fe",
+					"Sid": "AllowExecutionFromSNS"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_revision_id": "0aca656f-5960-43de-830f-4eccfbddd820",
+		"region": "us-east-1",
+		"revision_id": "0aca656f-5960-43de-830f-4eccfbddd820",
+		"role": "arn:aws:iam::704956590351:role/lambda_func_role_awsapigatewayrestapiswindowsfifl5fe",
+		"runtime": "nodejs12.x",
+		"signing_job_arn": null,
+		"signing_profile_version_arn": null,
+		"state": "Active",
+		"state_reason": null,
+		"state_reason_code": "",
+		"tags": {
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		},
+		"timeout": 3,
+		"tracing_config_mode": "PassThrough",
+		"version": "$LATEST",
+		"vpc_config_security_group_ids": null,
+		"vpc_config_subnet_ids": null,
+		"vpc_config_vpc_id": null
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:lambda:us-east-1:704956590351:function:function_cq-testingintegration",
+		"code_image_uri": null,
+		"code_location": "[unstable_column]",
+		"code_repository_type": "S3",
+		"code_resolved_image_uri": null,
+		"code_sha256": "ODYWNsdyvRP7hJbShqI+T6EclB3A4G+C0csddE5HZmQ=",
+		"code_signing_allowed_publishers_version_arns": null,
+		"code_signing_config_arn": null,
+		"code_signing_config_id": null,
+		"code_signing_description": null,
+		"code_signing_last_modified": null,
+		"code_signing_policies_untrusted_artifact_on_deployment": null,
+		"code_size": 258,
+		"concurrency_reserved_concurrent_executions": null,
+		"cq_id": "[unstable_column]",
+		"dead_letter_config_target_arn": null,
+		"description": "",
+		"environment_error_code": null,
+		"environment_error_message": null,
+		"environment_variables": {
+			"foo": "bar"
+		},
+		"error_code": null,
+		"error_message": null,
+		"handler": "exports.example",
+		"image_config_command": null,
+		"image_config_entry_point": null,
+		"image_config_working_directory": null,
+		"kms_key_arn": null,
+		"last_modified": "2021-12-03T09:34:37.000+0000",
+		"last_update_status": "Successful",
+		"last_update_status_reason": null,
+		"last_update_status_reason_code": "",
+		"master_arn": null,
+		"memory_size": 128,
+		"meta": "[unstable_column]",
+		"name": "function_cq-testingintegration",
+		"package_type": "Zip",
+		"policy_document": {
+			"Id": "default",
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Condition": {
+						"ArnLike": {
+							"AWS:SourceArn": "arn:aws:sns:us-east-1:704956590351:lambda_func_user-updates-topiccq-testingintegration"
+						}
+					},
+					"Effect": "Allow",
+					"Principal": {
+						"Service": "sns.amazonaws.com"
+					},
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:function_cq-testingintegration",
+					"Sid": "AllowExecutionFromSNS"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_revision_id": "959e4d8d-3403-4707-9800-61e45b971b43",
+		"region": "us-east-1",
+		"revision_id": "959e4d8d-3403-4707-9800-61e45b971b43",
+		"role": "arn:aws:iam::704956590351:role/lambda_func_role_cq-testingintegration",
+		"runtime": "nodejs12.x",
+		"signing_job_arn": null,
+		"signing_profile_version_arn": null,
+		"state": "Active",
+		"state_reason": null,
+		"state_reason_code": "",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"timeout": 3,
+		"tracing_config_mode": "PassThrough",
+		"version": "$LATEST",
+		"vpc_config_security_group_ids": null,
+		"vpc_config_subnet_ids": null,
+		"vpc_config_vpc_id": null
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:lambda:us-east-1:704956590351:function:cloudquery",
+		"code_image_uri": "704956590351.dkr.ecr.us-east-1.amazonaws.com/cloudquery:latest",
+		"code_location": "[unstable_column]",
+		"code_repository_type": "ECR",
+		"code_resolved_image_uri": "704956590351.dkr.ecr.us-east-1.amazonaws.com/cloudquery@sha256:bc7915dd2b83fef9eebd16b27a356b57c07256a51b2d091257d5eda58c21834f",
+		"code_sha256": "bc7915dd2b83fef9eebd16b27a356b57c07256a51b2d091257d5eda58c21834f",
+		"code_signing_allowed_publishers_version_arns": null,
+		"code_signing_config_arn": null,
+		"code_signing_config_id": null,
+		"code_signing_description": null,
+		"code_signing_last_modified": null,
+		"code_signing_policies_untrusted_artifact_on_deployment": null,
+		"code_size": 0,
+		"concurrency_reserved_concurrent_executions": null,
+		"cq_id": "[unstable_column]",
+		"dead_letter_config_target_arn": null,
+		"description": "Lambda function which runs CloudQuery CLI",
+		"environment_error_code": null,
+		"environment_error_message": null,
+		"environment_variables": null,
+		"error_code": null,
+		"error_message": null,
+		"handler": null,
+		"image_config_command": null,
+		"image_config_entry_point": null,
+		"image_config_working_directory": null,
+		"kms_key_arn": null,
+		"last_modified": "2021-12-20T23:07:36.000+0000",
+		"last_update_status": "Successful",
+		"last_update_status_reason": null,
+		"last_update_status_reason_code": "",
+		"master_arn": null,
+		"memory_size": 1024,
+		"meta": "[unstable_column]",
+		"name": "cloudquery",
+		"package_type": "Image",
+		"policy_document": {
+			"Id": "default",
+			"Statement": [
+				{
+					"Action": "lambda:InvokeFunction",
+					"Condition": {
+						"ArnLike": {
+							"AWS:SourceArn": "arn:aws:events:us-east-1:704956590351:rule/cloudquery-fetch-rule"
+						}
+					},
+					"Effect": "Allow",
+					"Principal": {
+						"Service": "events.amazonaws.com"
+					},
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:cloudquery",
+					"Sid": "AllowExecutionFromEventBridge"
+				},
+				{
+					"Action": "lambda:InvokeFunction",
+					"Condition": {
+						"ArnLike": {
+							"AWS:SourceArn": "arn:aws:events:us-east-1:704956590351:rule/cloudquery-fetch-rule"
+						}
+					},
+					"Effect": "Allow",
+					"Principal": {
+						"Service": "events.amazonaws.com"
+					},
+					"Resource": "arn:aws:lambda:us-east-1:704956590351:function:cloudquery",
+					"Sid": "AWSEvents_cloudquery-fetch-rule_terraform-20211220215225622000000007"
+				}
+			],
+			"Version": "2012-10-17"
+		},
+		"policy_revision_id": "a4354d6a-715a-4190-af91-b4b316efc16b",
+		"region": "us-east-1",
+		"revision_id": "a4354d6a-715a-4190-af91-b4b316efc16b",
+		"role": "arn:aws:iam::704956590351:role/cloudquery",
+		"runtime": "",
+		"signing_job_arn": null,
+		"signing_profile_version_arn": null,
+		"state": "Active",
+		"state_reason": null,
+		"state_reason_code": "",
+		"tags": null,
+		"timeout": 60,
+		"tracing_config_mode": "Active",
+		"version": "$LATEST",
+		"vpc_config_security_group_ids": [
+			"sg-0b62bfb055fd3eb54"
+		],
+		"vpc_config_subnet_ids": [
+			"subnet-042725b7604b96442",
+			"subnet-09cb99b3c184136e1"
+		],
+		"vpc_config_vpc_id": "vpc-02bd89c3120b29ce7"
+	},
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:lambda:us-east-1:704956590351:function:function_contaier_tfandrii",
+		"code_image_uri": "704956590351.dkr.ecr.us-east-1.amazonaws.com/bar:latest",
+		"code_location": "[unstable_column]",
+		"code_repository_type": "ECR",
+		"code_resolved_image_uri": "704956590351.dkr.ecr.us-east-1.amazonaws.com/bar@sha256:e9b8f8cfcf876e4fe17abc29ea3554c012be7e7e8693d43ed2d8efdeaa62edbe",
+		"code_sha256": "e9b8f8cfcf876e4fe17abc29ea3554c012be7e7e8693d43ed2d8efdeaa62edbe",
+		"code_signing_allowed_publishers_version_arns": null,
+		"code_signing_config_arn": null,
+		"code_signing_config_id": null,
+		"code_signing_description": null,
+		"code_signing_last_modified": null,
+		"code_signing_policies_untrusted_artifact_on_deployment": null,
+		"code_size": 0,
+		"concurrency_reserved_concurrent_executions": null,
+		"cq_id": "[unstable_column]",
+		"dead_letter_config_target_arn": null,
+		"description": "",
+		"environment_error_code": null,
+		"environment_error_message": null,
+		"environment_variables": {
+			"BUCKET_NAME": "my-bucket"
+		},
+		"error_code": null,
+		"error_message": null,
+		"handler": null,
+		"image_config_command": null,
+		"image_config_entry_point": null,
+		"image_config_working_directory": null,
+		"kms_key_arn": null,
+		"last_modified": "2021-10-28T15:41:21.003+0000",
+		"last_update_status": "Successful",
+		"last_update_status_reason": null,
+		"last_update_status_reason_code": "",
+		"master_arn": null,
+		"memory_size": 256,
+		"meta": "[unstable_column]",
+		"name": "function_contaier_tfandrii",
+		"package_type": "Image",
+		"policy_document": null,
+		"policy_revision_id": null,
+		"region": "us-east-1",
+		"revision_id": "3839a72d-c2fd-4c55-848f-77eab11e80c6",
+		"role": "arn:aws:iam::704956590351:role/apigatewayv2demo-lambda123",
+		"runtime": "",
+		"signing_job_arn": null,
+		"signing_profile_version_arn": null,
+		"state": "Inactive",
+		"state_reason": "The function is currently idle.",
+		"state_reason_code": "Idle",
+		"tags": {
+			"Type": "andrii-test"
+		},
+		"timeout": 120,
+		"tracing_config_mode": "PassThrough",
+		"version": "$LATEST",
+		"vpc_config_security_group_ids": null,
+		"vpc_config_subnet_ids": null,
+		"vpc_config_vpc_id": null
+	}
+]

@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationS3Buckets(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.S3Buckets())
+	awsTestIntegrationHelper(t, resources.S3Buckets(),
+		"./snapshots/s3")
 }

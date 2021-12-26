@@ -1,0 +1,10 @@
+[
+	{
+		"cq_id": "[unstable_column]",
+		"data_id": "7517254b-acc8-4cac-8663-6c5d65ed1f6a",
+		"meta": "[unstable_column]",
+		"negated": false,
+		"rule_cq_id": "[unstable_column]",
+		"type": "IPMatch"
+	}
+]

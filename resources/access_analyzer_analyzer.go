@@ -60,14 +60,16 @@ func AccessAnalyzerAnalyzer() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "last_resource_analyzed",
-				Description: "The resource that was most recently analyzed by the analyzer.",
-				Type:        schema.TypeString,
+				Name:             "last_resource_analyzed",
+				Description:      "The resource that was most recently analyzed by the analyzer.",
+				Type:             schema.TypeString,
+				IgnoreInIntTests: true,
 			},
 			{
-				Name:        "last_resource_analyzed_at",
-				Description: "The time at which the most recently analyzed resource was analyzed.",
-				Type:        schema.TypeTimestamp,
+				Name:             "last_resource_analyzed_at",
+				Description:      "The time at which the most recently analyzed resource was analyzed.",
+				Type:             schema.TypeTimestamp,
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:        "status_reason_code",

@@ -1,0 +1,104 @@
+[
+	{
+		"account_id": "704956590351",
+		"attributes_access_log_emit_interval": null,
+		"attributes_access_log_enabled": false,
+		"attributes_access_log_s3_bucket_name": null,
+		"attributes_access_log_s3_bucket_prefix": null,
+		"attributes_additional_attributes": {
+			"elb.http.desyncmitigationmode": "defensive"
+		},
+		"attributes_connection_draining_enabled": true,
+		"attributes_connection_draining_timeout": 400,
+		"attributes_connection_settings_idle_timeout": 400,
+		"attributes_cross_zone_load_balancing_enabled": true,
+		"availability_zones": [
+			"us-east-1e"
+		],
+		"canonical_hosted_zone_name": "elbv1integration-1395489822.us-east-1.elb.amazonaws.com",
+		"canonical_hosted_zone_name_id": "Z35SXDOTRQ7X7K",
+		"cq_id": "[unstable_column]",
+		"created_time": "2021-08-30T06:46:19.1",
+		"dns_name": "elbv1integration-1395489822.us-east-1.elb.amazonaws.com",
+		"health_check_healthy_threshold": 2,
+		"health_check_interval": 30,
+		"health_check_target": "HTTP:8000/",
+		"health_check_timeout": 3,
+		"health_check_unhealthy_threshold": 2,
+		"instances": [
+			"i-0534b56120644ea7e"
+		],
+		"meta": "[unstable_column]",
+		"name": "elbv1integration",
+		"other_policies": [
+			"elbv1-policycq-testingintegration"
+		],
+		"region": "us-east-1",
+		"scheme": "internet-facing",
+		"security_groups": [
+			"sg-064d7b615654f1c1b"
+		],
+		"source_security_group_name": "default",
+		"source_security_group_owner_alias": "704956590351",
+		"subnets": [
+			"subnet-04cad364dc10b21f2"
+		],
+		"tags": {
+			"Name": "foobar-terraform-elb",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"vpc_id": "vpc-07e633d9d11e2e7e1"
+	},
+	{
+		"account_id": "704956590351",
+		"attributes_access_log_emit_interval": null,
+		"attributes_access_log_enabled": false,
+		"attributes_access_log_s3_bucket_name": null,
+		"attributes_access_log_s3_bucket_prefix": null,
+		"attributes_additional_attributes": {
+			"elb.http.desyncmitigationmode": "defensive"
+		},
+		"attributes_connection_draining_enabled": true,
+		"attributes_connection_draining_timeout": 400,
+		"attributes_connection_settings_idle_timeout": 400,
+		"attributes_cross_zone_load_balancing_enabled": true,
+		"availability_zones": [
+			"us-east-1e"
+		],
+		"canonical_hosted_zone_name": "elbv1windowsfifl5fe-1158860247.us-east-1.elb.amazonaws.com",
+		"canonical_hosted_zone_name_id": "Z35SXDOTRQ7X7K",
+		"cq_id": "[unstable_column]",
+		"created_time": "2021-12-07T09:20:05.1",
+		"dns_name": "elbv1windowsfifl5fe-1158860247.us-east-1.elb.amazonaws.com",
+		"health_check_healthy_threshold": 2,
+		"health_check_interval": 30,
+		"health_check_target": "HTTP:8000/",
+		"health_check_timeout": 3,
+		"health_check_unhealthy_threshold": 2,
+		"instances": [
+			"i-08aa7293faec4760e"
+		],
+		"meta": "[unstable_column]",
+		"name": "elbv1windowsfifl5fe",
+		"other_policies": [
+			"elbv1-policyawselbv1loadbalancerswindowsfifl5fe"
+		],
+		"region": "us-east-1",
+		"scheme": "internet-facing",
+		"security_groups": [
+			"sg-0617f043c90fb5375"
+		],
+		"source_security_group_name": "default",
+		"source_security_group_owner_alias": "704956590351",
+		"subnets": [
+			"subnet-0f9d7bf877cd37207"
+		],
+		"tags": {
+			"Name": "foobar-terraform-elb",
+			"TestId": "windowsfifl5fe",
+			"Type": "integration_test"
+		},
+		"vpc_id": "vpc-0f8dad89d11a531ed"
+	}
+]

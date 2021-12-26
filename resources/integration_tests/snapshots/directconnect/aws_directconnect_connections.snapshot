@@ -1,0 +1,29 @@
+[
+	{
+		"account_id": "704956590351",
+		"aws_device_v2": null,
+		"bandwidth": "1Gbps",
+		"connection_state": "requested",
+		"cq_id": "[unstable_column]",
+		"encryption_mode": null,
+		"has_logical_redundancy": "unknown",
+		"id": "dxcon-fgu4aaq4",
+		"jumbo_frame_capable": false,
+		"lag_id": null,
+		"loa_issue_time": null,
+		"location": "EqDC2",
+		"mac_sec_capable": false,
+		"meta": "[unstable_column]",
+		"name": "dx-connectioncq-testing-integration",
+		"owner_account": "704956590351",
+		"partner_name": null,
+		"port_encryption_status": null,
+		"provider_name": null,
+		"region": "us-east-1",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"vlan": 0
+	}
+]

@@ -1,0 +1,46 @@
+[
+	{
+		"account_id": "704956590351",
+		"account_ids": null,
+		"account_sharing_info_list": null,
+		"approved_version": null,
+		"arn": "arn:aws:ssm:us-east-1:704956590351:document/cq-testingdocintegration",
+		"attachments_information": null,
+		"author": null,
+		"cq_id": "[unstable_column]",
+		"created_date": "2021-12-02T19:04:37.585",
+		"default_version": "1",
+		"description": "Check ip configuration of a Linux instance.",
+		"display_name": null,
+		"document_format": "JSON",
+		"document_type": "Command",
+		"document_version": "1",
+		"hash": "10d053ba192bd280f1f2d582a07652dfc688d06f3e0f30285b25f79309195fbf",
+		"hash_type": "Sha256",
+		"latest_version": "1",
+		"meta": "[unstable_column]",
+		"name": "cq-testingdocintegration",
+		"owner": "704956590351",
+		"parameters": [],
+		"pending_review_version": null,
+		"platform_types": [
+			"Linux",
+			"MacOS"
+		],
+		"region": "us-east-1",
+		"requires": null,
+		"review_information": null,
+		"review_status": "",
+		"schema_version": "1.2",
+		"sha1": null,
+		"status": "Active",
+		"status_information": null,
+		"tags": {
+			"Name": "cq-testingdocintegration",
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"target_type": null,
+		"version_name": null
+	}
+]

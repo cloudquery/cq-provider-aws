@@ -1,0 +1,33 @@
+[
+	{
+		"account_id": "704956590351",
+		"address_family": "ipv4",
+		"amazon_address": "175.45.176.2/30",
+		"amazon_side_asn": 7224,
+		"asn": 65352,
+		"auth_key": "0xMwtL1aRcD1TsiX7HtjsFhu",
+		"aws_device_v2": "EqDC2-gvlg7sa9dmc5",
+		"connection_id": "dxlag-fgwabpaz",
+		"cq_id": "[unstable_column]",
+		"customer_address": "175.45.176.1/30",
+		"customer_router_config": "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003clogical_connection id=\"dxvif-ffve5ucb\"\u003e\n  \u003cvlan\u003e4094\u003c/vlan\u003e\n  \u003ccustomer_address\u003e175.45.176.1/30\u003c/customer_address\u003e\n  \u003camazon_address\u003e175.45.176.2/30\u003c/amazon_address\u003e\n  \u003cbgp_asn\u003e65352\u003c/bgp_asn\u003e\n  \u003cbgp_auth_key\u003e0xMwtL1aRcD1TsiX7HtjsFhu\u003c/bgp_auth_key\u003e\n  \u003camazon_bgp_asn\u003e7224\u003c/amazon_bgp_asn\u003e\n  \u003cconnection_type\u003epublic\u003c/connection_type\u003e\n\u003c/logical_connection\u003e\n",
+		"direct_connect_gateway_id": "",
+		"id": "dxvif-ffve5ucb",
+		"jumbo_frame_capable": false,
+		"location": "EqDC2",
+		"meta": "[unstable_column]",
+		"mtu": 1500,
+		"owner_account": "704956590351",
+		"region": "us-east-1",
+		"route_filter_prefixes": "[unstable_column]",
+		"tags": {
+			"TestId": "integration",
+			"Type": "integration_test"
+		},
+		"virtual_gateway_id": "",
+		"virtual_interface_name": "fx-pvif-cq-testing-integration",
+		"virtual_interface_state": "verifying",
+		"virtual_interface_type": "public",
+		"vlan": 4094
+	}
+]

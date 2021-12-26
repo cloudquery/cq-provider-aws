@@ -9,5 +9,6 @@ import (
 )
 
 func TestIntegrationSageMakerEndpointConfigurations(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SagemakerEndpointConfigurations())
+	awsTestIntegrationHelper(t, resources.SagemakerEndpointConfigurations(),
+		"./snapshots/sagemaker")
 }

@@ -1,0 +1,13 @@
+[
+	{
+		"account_id": "704956590351",
+		"arn": "arn:aws:sns:us-east-1:704956590351:sns-tests-topic-integration.fifo:5f105673-7561-4882-bd29-c5e8b6e1bcc1",
+		"cq_id": "[unstable_column]",
+		"endpoint": "arn:aws:sqs:us-east-1:704956590351:sns-tests-queueintegration.fifo",
+		"meta": "[unstable_column]",
+		"owner": "704956590351",
+		"protocol": "sqs",
+		"region": "us-east-1",
+		"topic_arn": "arn:aws:sns:us-east-1:704956590351:sns-tests-topic-integration.fifo"
+	}
+]

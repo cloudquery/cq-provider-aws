@@ -1,0 +1,69 @@
+[
+	{
+		"action": null,
+		"cq_id": "[unstable_column]",
+		"labels": [],
+		"meta": "[unstable_column]",
+		"name": "rule-1",
+		"override_action": {
+			"Count": {
+				"CustomRequestHandling": null
+			},
+			"None": null
+		},
+		"priority": 1,
+		"statement": {
+			"AndStatement": null,
+			"ByteMatchStatement": null,
+			"GeoMatchStatement": null,
+			"IPSetReferenceStatement": null,
+			"LabelMatchStatement": null,
+			"ManagedRuleGroupStatement": {
+				"ExcludedRules": [
+					{
+						"Name": "SizeRestrictions_QUERYSTRING"
+					},
+					{
+						"Name": "NoUserAgent_HEADER"
+					}
+				],
+				"Name": "AWSManagedRulesCommonRuleSet",
+				"ScopeDownStatement": {
+					"AndStatement": null,
+					"ByteMatchStatement": null,
+					"GeoMatchStatement": {
+						"CountryCodes": [
+							"US",
+							"NL"
+						],
+						"ForwardedIPConfig": null
+					},
+					"IPSetReferenceStatement": null,
+					"LabelMatchStatement": null,
+					"ManagedRuleGroupStatement": null,
+					"NotStatement": null,
+					"OrStatement": null,
+					"RateBasedStatement": null,
+					"RegexPatternSetReferenceStatement": null,
+					"RuleGroupReferenceStatement": null,
+					"SizeConstraintStatement": null,
+					"SqliMatchStatement": null,
+					"XssMatchStatement": null
+				},
+				"VendorName": "AWS"
+			},
+			"NotStatement": null,
+			"OrStatement": null,
+			"RateBasedStatement": null,
+			"RegexPatternSetReferenceStatement": null,
+			"RuleGroupReferenceStatement": null,
+			"SizeConstraintStatement": null,
+			"SqliMatchStatement": null,
+			"XssMatchStatement": null
+		},
+		"visibility_config_cloud_watch_metrics_enabled": false,
+		"visibility_config_metric_name": "friendly-rule-metric-name",
+		"visibility_config_sampled_requests_enabled": false,
+		"web_acl_cq_id": "[unstable_column]"
+	}
+]

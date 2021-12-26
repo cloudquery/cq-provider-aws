@@ -1,0 +1,10 @@
+[
+	{
+		"cluster_cq_id": "[unstable_column]",
+		"cq_id": "[unstable_column]",
+		"meta": "[unstable_column]",
+		"node_role": "SHARED",
+		"private_ip_address": "172.31.58.63",
+		"public_ip_address": "44.196.113.187"
+	}
+]

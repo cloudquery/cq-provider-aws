@@ -84,9 +84,10 @@ func LambdaFunctions() *schema.Table {
 				Resolver: schema.PathResolver("Code.ImageUri"),
 			},
 			{
-				Name:     "code_location",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Code.Location"),
+				Name:             "code_location",
+				Type:             schema.TypeString,
+				Resolver:         schema.PathResolver("Code.Location"),
+				IgnoreInIntTests: true,
 			},
 			{
 				Name:     "code_repository_type",
