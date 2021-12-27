@@ -41,7 +41,7 @@ func ApigatewayAPIKeys() *schema.Table {
 					if !ok {
 						return nil, unexpectedResourceType(r, resource.Item)
 					}
-					return []string{"apikeys", *r.Id}, nil
+					return []string{"/apikeys", *r.Id}, nil
 				}),
 			},
 			{

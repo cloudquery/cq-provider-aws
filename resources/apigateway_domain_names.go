@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-const domainNameIDPart = "domainnames"
+const domainNameIDPart = "/domainnames"
 
 func ApigatewayDomainNames() *schema.Table {
 	return &schema.Table{

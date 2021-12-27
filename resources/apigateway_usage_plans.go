@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-const usagePlanIDPart = "usageplans"
+const usagePlanIDPart = "/usageplans"
 
 func ApigatewayUsagePlans() *schema.Table {
 	return &schema.Table{

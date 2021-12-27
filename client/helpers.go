@@ -182,7 +182,7 @@ func ResolveARN(service AWSService, resourceID func(resource *schema.Resource) (
 			Service:   string(service),
 			Region:    cl.Region,
 			AccountID: accountID,
-			Resource:  strings.Join(append([]string{""}, idParts...), "/"),
+			Resource:  strings.Join(idParts, "/"),
 		}.String())
 	}
 }

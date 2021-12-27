@@ -41,7 +41,7 @@ func ApigatewayVpcLinks() *schema.Table {
 					if !ok {
 						return nil, unexpectedResourceType(r, resource.Item)
 					}
-					return []string{"vpclinks", *r.Id}, nil
+					return []string{"/vpclinks", *r.Id}, nil
 				}),
 			},
 			{

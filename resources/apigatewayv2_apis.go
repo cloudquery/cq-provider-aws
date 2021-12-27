@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	apiIDPart      = "apis"
+	apiIDPart      = "/apis"
 	apiRouteIDPart = "routes"
 )
 

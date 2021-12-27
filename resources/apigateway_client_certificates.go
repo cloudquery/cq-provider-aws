@@ -41,7 +41,7 @@ func ApigatewayClientCertificates() *schema.Table {
 					if !ok {
 						return nil, unexpectedResourceType(r, resource.Item)
 					}
-					return []string{"clientcertificates", *r.ClientCertificateId}, nil
+					return []string{"/clientcertificates", *r.ClientCertificateId}, nil
 				}),
 			},
 			{

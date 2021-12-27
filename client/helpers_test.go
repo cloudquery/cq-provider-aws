@@ -29,6 +29,17 @@ func TestResolveARN(t *testing.T) {
 				return []string{"restapis", *resource.Item.(types.RestApi).Id}, nil
 			},
 			schema.NewResourceData(&schema.Table{Columns: []schema.Column{{Name: "myarn"}}}, nil, types.RestApi{Id: aws.String("myid")}, nil),
+			"arn:aws:apigateway:region::restapis/myid",
+			false,
+		},
+		{
+			"apigateway",
+			"myarn",
+			ApigatewayService,
+			func(resource *schema.Resource) ([]string, error) {
+				return []string{"", "restapis", *resource.Item.(types.RestApi).Id}, nil
+			},
+			schema.NewResourceData(&schema.Table{Columns: []schema.Column{{Name: "myarn"}}}, nil, types.RestApi{Id: aws.String("myid")}, nil),
 			"arn:aws:apigateway:region::/restapis/myid",
 			false,
 		},

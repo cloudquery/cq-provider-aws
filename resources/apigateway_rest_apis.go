@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-const restApiIDPart = "restapis"
+const restApiIDPart = "/restapis"
 
 func ApigatewayRestApis() *schema.Table {
 	return &schema.Table{
