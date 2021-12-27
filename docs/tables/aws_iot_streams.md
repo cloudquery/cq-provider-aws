@@ -9,7 +9,7 @@ Information about a stream.
 |created_at|timestamp without time zone|The date when the stream was created.|
 |description|text|The description of the stream.|
 |last_updated_at|timestamp without time zone|The date when the stream was last updated.|
-|role_arn|text|An IAM role AWS IoT assumes to access your S3 files.|
+|role_arn|text|An IAM role IoT assumes to access your S3 files.|
 |arn|text|The stream ARN.|
 |id|text|The stream ID.|
 |version|integer|The stream version.|

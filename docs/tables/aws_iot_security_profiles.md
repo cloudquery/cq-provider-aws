@@ -1,6 +1,6 @@
 
 # Table: aws_iot_security_profiles
-
+A security profile defines a set of expected behaviors for devices in your account and specifies the actions to take when an anomaly is detected
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |

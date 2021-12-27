@@ -16,8 +16,8 @@ Describes a certificate.
 |customer_version|integer|The customer version of the certificate.|
 |generation_id|text|The generation ID of the certificate.|
 |last_modified_date|timestamp without time zone|The date and time the certificate was last modified.|
-|owned_by|text|The ID of the AWS account that owns the certificate.|
-|previous_owned_by|text|The ID of the AWS account of the previous owner of the certificate.|
+|owned_by|text|The ID of the Amazon Web Services account that owns the certificate.|
+|previous_owned_by|text|The ID of the Amazon Web Services account of the previous owner of the certificate.|
 |status|text|The status of the certificate.|
 |transfer_data_accept_date|timestamp without time zone|The date the transfer was accepted.|
 |transfer_data_reject_date|timestamp without time zone|The date the transfer was rejected.|

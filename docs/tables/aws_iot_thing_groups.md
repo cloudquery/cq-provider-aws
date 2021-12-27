@@ -1,6 +1,6 @@
 
 # Table: aws_iot_thing_groups
-
+Groups allow you to manage several things at once by categorizing them into groups
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
@@ -15,11 +15,11 @@
 |status|text|The dynamic thing group status.|
 |arn|text|The thing group ARN.|
 |id|text|The thing group ID.|
-|creation_date|timestamp without time zone||
-|parent_group_name|text||
-|root_to_parent_thing_groups|jsonb||
+|creation_date|timestamp without time zone|The UNIX timestamp of when the thing group was created.|
+|parent_group_name|text|The parent thing group name.|
+|root_to_parent_thing_groups|jsonb|The root parent thing group.|
 |name|text|The name of the thing group.|
-|attribute_payload_attributes|jsonb||
-|attribute_payload_merge|boolean||
-|thing_group_description|text||
+|attribute_payload_attributes|jsonb|A JSON string containing up to three key-value pair in JSON format|
+|attribute_payload_merge|boolean|Specifies whether the list of attributes provided in the AttributePayload is merged with the attributes stored in the registry, instead of overwriting them. To remove an attribute, call UpdateThing with an empty attribute value|
+|thing_group_description|text|The thing group description.|
 |version|bigint|The version of the thing group.|

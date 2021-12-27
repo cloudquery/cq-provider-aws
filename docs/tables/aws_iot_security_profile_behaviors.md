@@ -10,8 +10,8 @@ A Device Defender security profile behavior.
 |criteria_consecutive_datapoints_to_alarm|integer|If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs|
 |criteria_consecutive_datapoints_to_clear|integer|If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared|
 |criteria_duration_seconds|integer|Use this to specify the time duration over which the behavior is evaluated, for those criteria that have a time dimension (for example, NUM_MESSAGES_SENT)|
-|criteria_ml_detection_config_confidence_level|text|The sensitivity of anomalous behavior evaluation|
-|criteria_statistical_threshold_statistic|text|The percentile that resolves to a threshold value by which compliance with a behavior is determined|
+|criteria__ml_detection_config_confidence_level|text|The sensitivity of anomalous behavior evaluation|
+|criteria__statistical_threshold_statistic|text|The percentile that resolves to a threshold value by which compliance with a behavior is determined|
 |criteria_value|jsonb|The value to be compared with the metric.|
 |metric|text|What is measured by the behavior.|
 |metric_dimension_dimension_name|text|A unique identifier for the dimension.  This member is required.|
