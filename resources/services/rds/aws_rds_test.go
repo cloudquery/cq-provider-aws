@@ -5,20 +5,20 @@ package rds
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRdsInstances(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RdsInstances(),
+	client.AWSTestHelper(t, RdsInstances(),
 		"./snapshots")
 }
 
 func TestIntegrationRdsSubnetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RdsSubnetGroups(),
+	client.AWSTestHelper(t, RdsSubnetGroups(),
 		"./snapshots")
 }
 
 func TestIntegrationRdsClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RdsClusters(),
+	client.AWSTestHelper(t, RdsClusters(),
 		"./snapshots")
 }

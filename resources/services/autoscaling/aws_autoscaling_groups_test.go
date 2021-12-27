@@ -3,12 +3,11 @@
 package autoscaling
 
 import (
+	"github.com/cloudquery/cq-provider-aws/client"
 	"testing"
-
-	"github.com/cloudquery/cq-provider-aws/resources"
 )
 
 func TestIntegrationAutoscalingGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.AutoscalingGroups(),
-		"./snapshots/autoscaling")
+	client.AWSTestHelper(t, AutoscalingGroups(),
+		"./snapshots")
 }

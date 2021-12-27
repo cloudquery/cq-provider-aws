@@ -5,10 +5,10 @@ package rds
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRdsEventSubscriptions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RdsEventSubscriptions(),
+	client.AWSTestHelper(t, RdsEventSubscriptions(),
 		"./snapshots")
 }

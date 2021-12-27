@@ -5,10 +5,10 @@ package sagemaker
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationSageMakerNotebookInstances(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SagemakerNotebookInstances(),
+	client.AWSTestHelper(t, SagemakerNotebookInstances(),
 		"./snapshots")
 }

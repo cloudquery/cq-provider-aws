@@ -5,10 +5,10 @@ package lambda
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationLambdaFunctions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.LambdaFunctions(),
+	client.AWSTestHelper(t, LambdaFunctions(),
 		"./snapshots")
 }

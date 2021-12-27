@@ -5,10 +5,10 @@ package waf
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationWAFRuleGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.WafRuleGroups(),
+	client.AWSTestHelper(t, WafRuleGroups(),
 		"./snapshots")
 }

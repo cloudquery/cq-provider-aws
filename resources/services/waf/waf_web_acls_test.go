@@ -5,10 +5,10 @@ package waf
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationWAFWebACLs(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.WafWebAcls(),
+	client.AWSTestHelper(t, WafWebAcls(),
 		"./snapshots")
 }

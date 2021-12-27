@@ -5,10 +5,10 @@ package elbv2
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationElbv2TargetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Elbv2TargetGroups(),
+	client.AWSTestHelper(t, Elbv2TargetGroups(),
 		"./snapshots")
 }

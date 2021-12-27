@@ -5,10 +5,10 @@ package ecs
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationEcsClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcsClusters(),
+	client.AWSTestHelper(t, EcsClusters(),
 		"./snapshots")
 }

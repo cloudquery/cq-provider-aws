@@ -5,10 +5,10 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationCloudtrailTrails(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudtrailTrails(),
+	client.AWSTestHelper(t, CloudtrailTrails(),
 		"./snapshots")
 }

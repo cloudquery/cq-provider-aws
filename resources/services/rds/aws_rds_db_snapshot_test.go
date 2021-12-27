@@ -5,10 +5,10 @@ package rds
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRdsDBSnapshots(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RdsDbSnapshots(),
+	client.AWSTestHelper(t, RdsDbSnapshots(),
 		"./snapshots")
 }

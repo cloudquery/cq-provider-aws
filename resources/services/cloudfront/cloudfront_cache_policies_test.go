@@ -5,10 +5,10 @@ package cloudfront
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationCloudfrontCachePolicies(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudfrontCachePolicies(),
+	client.AWSTestHelper(t, CloudfrontCachePolicies(),
 		"./snapshots")
 }

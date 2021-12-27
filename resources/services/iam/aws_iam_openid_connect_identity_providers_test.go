@@ -5,10 +5,10 @@ package iam
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationIamOpenidConnectIdentityProviders(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamOpenidConnectIdentityProviders(),
+	client.AWSTestHelper(t, IamOpenidConnectIdentityProviders(),
 		"./snapshots")
 }

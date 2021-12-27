@@ -5,10 +5,10 @@ package iam
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIamPasswordPolicies(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamPasswordPolicies(),
+	client.AWSTestHelper(t, IamPasswordPolicies(),
 		"./snapshots")
 }

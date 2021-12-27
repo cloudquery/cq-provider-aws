@@ -56,7 +56,7 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	})
 }
 
-func AwsTestIntegrationHelper(t *testing.T, table *schema.Table, snapshotDirPath string) {
+func AWSTestHelper(t *testing.T, table *schema.Table, snapshotDirPath string) {
 	t.Helper()
 	cfg := `
 	regions = ["us-east-1"]

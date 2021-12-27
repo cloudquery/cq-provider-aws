@@ -5,10 +5,10 @@ package wafv2
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationWAFv2RuleGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Wafv2RuleGroups(),
+	client.AWSTestHelper(t, Wafv2RuleGroups(),
 		"./snapshots")
 }

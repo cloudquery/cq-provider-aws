@@ -5,10 +5,10 @@ package apigatewayv2
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationApigatewayv2VpcLinks(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Apigatewayv2VpcLinks(),
+	client.AWSTestHelper(t, Apigatewayv2VpcLinks(),
 		"./snapshots")
 }

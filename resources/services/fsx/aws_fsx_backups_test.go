@@ -5,10 +5,10 @@ package fsx
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationFsxBackups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.FsxBackups(),
+	client.AWSTestHelper(t, FsxBackups(),
 		"./snapshots")
 }

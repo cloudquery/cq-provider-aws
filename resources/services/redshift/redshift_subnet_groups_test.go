@@ -5,10 +5,10 @@ package redshift
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRedshiftSubnetGroups(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.RedshiftSubnetGroups(),
+	client.AWSTestHelper(t, RedshiftSubnetGroups(),
 		"./snapshots")
 }

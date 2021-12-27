@@ -5,10 +5,10 @@ package route53
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRoute53HostedZones(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53HostedZones(),
+	client.AWSTestHelper(t, Route53HostedZones(),
 		"./snapshots")
 }

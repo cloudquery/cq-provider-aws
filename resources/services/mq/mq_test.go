@@ -5,10 +5,10 @@ package mq
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationMQBrokers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.MqBrokers(),
+	client.AWSTestHelper(t, MqBrokers(),
 		"./snapshots")
 }

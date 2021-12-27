@@ -9,5 +9,5 @@ import (
 )
 
 func TestIntegrationApigatewayClientCertificates(t *testing.T) {
-	client.AwsMockTestHelper(t, ApigatewayClientCertificates(), "./snapshots")
+	client.AWSTestHelper(t, ApigatewayClientCertificates(), "./snapshots")
 }

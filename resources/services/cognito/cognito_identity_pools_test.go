@@ -5,10 +5,10 @@ package cognito
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationCognitoIdentityPools(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CognitoIdentityPools(),
-		"./snapshots/coginto")
+	client.AWSTestHelper(t, CognitoIdentityPools(),
+		"./snapshots")
 }

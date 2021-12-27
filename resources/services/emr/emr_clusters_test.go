@@ -5,10 +5,10 @@ package emr
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationEmrClusters(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EmrClusters(),
+	client.AWSTestHelper(t, EmrClusters(),
 		"./snapshots")
 }

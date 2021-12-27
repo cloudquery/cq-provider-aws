@@ -5,10 +5,10 @@ package dms
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationDmsReplicationInstances(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.DmsReplicationInstances(),
+	client.AWSTestHelper(t, DmsReplicationInstances(),
 		"./snapshots")
 }

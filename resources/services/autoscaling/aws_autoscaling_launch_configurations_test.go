@@ -5,11 +5,11 @@ package autoscaling
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationAutoscalingLaunchConfigurations(t *testing.T) {
-	awsTestIntegrationHelper(t,
-		resources.AutoscalingLaunchConfigurations(),
+	client.AWSTestHelper(t,
+		AutoscalingLaunchConfigurations(),
 		"./snapshots")
 }

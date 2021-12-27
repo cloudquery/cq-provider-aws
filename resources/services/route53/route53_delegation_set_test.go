@@ -5,10 +5,10 @@ package route53
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationRoute53DelegationSet(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Route53ReusableDelegationSets(),
+	client.AWSTestHelper(t, Route53ReusableDelegationSets(),
 		"./snapshots")
 }

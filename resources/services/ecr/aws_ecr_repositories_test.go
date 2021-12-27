@@ -5,10 +5,10 @@ package ecr
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationEcrRepositories(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.EcrRepositories(),
+	client.AWSTestHelper(t, EcrRepositories(),
 		"./snapshots")
 }

@@ -5,15 +5,15 @@ package sns
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationSnsSubscriptions(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SnsSubscriptions(),
+	client.AWSTestHelper(t, SnsSubscriptions(),
 		"./snapshots")
 }
 
 func TestIntegrationSnsTopics(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.SnsTopics(),
+	client.AWSTestHelper(t, SnsTopics(),
 		"./snapshots")
 }

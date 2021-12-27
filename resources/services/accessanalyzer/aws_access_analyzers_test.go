@@ -9,5 +9,5 @@ import (
 )
 
 func TestIntegrationAccessAnalyzers(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.AccessAnalyzerAnalyzer(), "./snapshots")
+	client.AWSTestHelper(t, AccessAnalyzerAnalyzer(), "./snapshots")
 }

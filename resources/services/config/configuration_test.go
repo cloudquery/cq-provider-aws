@@ -5,15 +5,15 @@ package config
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationConfigConfigurationRecorders(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ConfigConfigurationRecorders(),
+	client.AWSTestHelper(t, ConfigConfigurationRecorders(),
 		"./snapshots")
 }
 
 func TestIntegrationConfigConformancePack(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ConfigConformancePack(),
+	client.AWSTestHelper(t, ConfigConformancePack(),
 		"./snapshots")
 }

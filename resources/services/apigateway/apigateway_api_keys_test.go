@@ -9,5 +9,5 @@ import (
 )
 
 func TestIntegrationApigatewayAPIKeys(t *testing.T) {
-	client.AwsTestIntegrationHelper(t, ApigatewayAPIKeys(), "./snapshots")
+	client.AWSTestHelper(t, ApigatewayAPIKeys(), "./snapshots")
 }

@@ -5,10 +5,10 @@ package ec2
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationEc2EbsSnapshots(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.Ec2EbsSnapshots(),
+	client.AWSTestHelper(t, Ec2EbsSnapshots(),
 		"./snapshots")
 }

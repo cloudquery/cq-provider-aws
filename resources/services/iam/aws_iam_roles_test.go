@@ -5,10 +5,10 @@ package iam
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationIamRoles(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.IamRoles(),
+	client.AWSTestHelper(t, IamRoles(),
 		"./snapshots")
 }

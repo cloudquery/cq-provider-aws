@@ -3,12 +3,11 @@
 package cognito
 
 import (
+	"github.com/cloudquery/cq-provider-aws/client"
 	"testing"
-
-	"github.com/cloudquery/cq-provider-aws/resources"
 )
 
 func TestIntegrationCognitoUserPools(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CognitoUserPools(),
-		"./snapshots/coginto")
+	client.AWSTestHelper(t, CognitoUserPools(),
+		"./snapshots")
 }

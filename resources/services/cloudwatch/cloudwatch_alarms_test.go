@@ -3,12 +3,11 @@
 package cloudwatch
 
 import (
+	"github.com/cloudquery/cq-provider-aws/client"
 	"testing"
-
-	"github.com/cloudquery/cq-provider-aws/resources"
 )
 
 func TestIntegrationCloudwatchAlarms(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.CloudwatchAlarms(),
+	client.AWSTestHelper(t, CloudwatchAlarms(),
 		"./snapshots")
 }

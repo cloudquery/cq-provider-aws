@@ -5,10 +5,10 @@ package elasticbeanstalk
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-aws/resources"
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 func TestIntegrationElasticbeanstalkEnvironments(t *testing.T) {
-	awsTestIntegrationHelper(t, resources.ElasticbeanstalkEnvironments(),
+	client.AWSTestHelper(t, ElasticbeanstalkEnvironments(),
 		"./snapshots/elasticbeanstalk")
 }
