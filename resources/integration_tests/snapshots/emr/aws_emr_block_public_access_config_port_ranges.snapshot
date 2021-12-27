@@ -1,9 +1,0 @@
-[
-	{
-		"block_public_access_config_cq_id": "[unstable_column]",
-		"cq_id": "[unstable_column]",
-		"max_range": 22,
-		"meta": "[unstable_column]",
-		"min_range": 22
-	}
-]

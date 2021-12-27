@@ -1,0 +1,14 @@
+// +build integration
+
+package directconnect
+
+import (
+	"testing"
+
+	"github.com/cloudquery/cq-provider-aws/resources"
+)
+
+func TestIntegrationDirectconnectVirtualInterfaces(t *testing.T) {
+	awsTestIntegrationHelper(t, resources.DirectconnectVirtualInterfaces(),
+		"./snapshots")
+}
