@@ -1,11 +1,11 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-central-1"
 
   default_tags {
     tags = {
-      Type   = "integration_test"
+      Type   = "cq-provider-aws-test"
     }
   }
 }
 
-data "aws_region" "current" {}
+// data "aws_region" "current" {}

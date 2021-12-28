@@ -1,3 +1,5 @@
+// +build mock
+
 package elbv1
 
 import (

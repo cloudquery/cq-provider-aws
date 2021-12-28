@@ -10,5 +10,5 @@ import (
 
 func TestIntegrationElasticbeanstalkEnvironments(t *testing.T) {
 	client.AWSTestHelper(t, ElasticbeanstalkEnvironments(),
-		"./snapshots/elasticbeanstalk")
+		"./snapshots")
 }

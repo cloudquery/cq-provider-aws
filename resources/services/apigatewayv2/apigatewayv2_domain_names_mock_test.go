@@ -1,3 +1,5 @@
+// +build mock
+
 package apigatewayv2
 
 import (

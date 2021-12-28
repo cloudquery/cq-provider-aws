@@ -41,3 +41,5 @@ resources/integration_tests/infra/tmp/
 ./terraform/.terraform
 ./terraform/.terraform.loch.hcl
 ./terraform/terraform-override.tf
+.env
+./terraform/builds

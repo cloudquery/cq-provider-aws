@@ -463,7 +463,6 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 			log.Debug("Skipping bucket (already deleted)", "bucket", *r.Name)
 			return nil
 		}
-		return err
 	}
 	bucketRegion := "us-east-1"
 	if output != "" {
