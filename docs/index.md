@@ -96,7 +96,7 @@ export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY>
 export AWS_SESSION_TOKEN=<YOUR_SESSION_TOKEN>
 ```
 
-
+<span id="QueryExamples"></span>
 ## Query Examples
 
 ### Find all public facing load balancers
