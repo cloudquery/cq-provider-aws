@@ -1,6 +1,8 @@
 terraform {
-  backend "local" {
-    path = "./terraform.tfstate"
+  backend "s3" {
+    bucket = "cq-provider-aws-tf-state"
+    key    = "tf-state"
+    region = "eu-central-1"
   }
   required_providers {
     aws = {

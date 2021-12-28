@@ -1,5 +1,5 @@
 resource "aws_dx_gateway" "aws_directconnect_virtual_gateways_gateway" {
-  name            = "dx-vg${var.test_prefix}-${var.test_suffix}"
+  name            = "dx-vgtest"
   amazon_side_asn = "64512"
 }
 

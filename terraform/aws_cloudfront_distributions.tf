@@ -1,11 +1,11 @@
 resource "aws_s3_bucket" "aws_cloudfront_distributions_bucket" {
-  bucket        = "cf-buc-${var.test_prefix}-${var.test_suffix}"
+  bucket        = "cf-buc-test"
   force_destroy = true
   acl           = "private"
 }
 
 resource "aws_cloudfront_origin_access_identity" "aws_cloudfront_distributions_access_identity" {
-  comment = "access identity ${var.test_prefix}-${var.test_suffix}"
+  comment = "access identity test"
 }
 
 data "aws_iam_policy_document" "aws_cloudfront_distributions_s3_policy" {
@@ -32,7 +32,7 @@ resource "aws_s3_bucket_policy" "aws_cloudfront_distributions_bucket_policy" {
 resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distribution" {
   origin {
     domain_name = aws_s3_bucket.aws_cloudfront_distributions_bucket.bucket_regional_domain_name
-    origin_id   = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
+    origin_id   = "cf-s3origintest"
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.aws_cloudfront_distributions_access_identity.cloudfront_access_identity_path
@@ -56,7 +56,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
     cached_methods = [
       "GET",
     "HEAD"]
-    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origintest"
 
     forwarded_values {
       query_string = false
@@ -89,7 +89,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
       "GET",
       "HEAD",
     "OPTIONS"]
-    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origintest"
 
     forwarded_values {
       query_string = false
@@ -118,7 +118,7 @@ resource "aws_cloudfront_distribution" "aws_cloudfront_distributions_distributio
     cached_methods = [
       "GET",
     "HEAD"]
-    target_origin_id = "cf-s3origin${var.test_prefix}-${var.test_suffix}"
+    target_origin_id = "cf-s3origintest"
 
     forwarded_values {
       query_string = false

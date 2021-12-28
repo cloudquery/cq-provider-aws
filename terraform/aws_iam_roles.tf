@@ -1,5 +1,5 @@
 resource "aws_iam_role" "role_test" {
-  name = "${var.test_prefix}${var.test_suffix}"
+  name = "test"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -18,7 +18,7 @@ resource "aws_iam_role" "role_test" {
 }
 
 resource "aws_iam_role_policy" "role_policy" {
-  name = "aws_iam_role_policy${var.test_prefix}${var.test_suffix}"
+  name = "aws_iam_role_policytest"
   role = aws_iam_role.role_test.name
 
   policy = <<EOF

@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_vpc_link" "aws_apigatewayv2_vpc_links_link" {
-  name = "apigw-link-${var.test_prefix}-${var.test_suffix}"
+  name = "apigw-link-test"
   security_group_ids = [
   aws_security_group.aws_apigatewayv2_vpc_links_sg.id]
   subnet_ids = [
@@ -8,7 +8,7 @@ resource "aws_apigatewayv2_vpc_link" "aws_apigatewayv2_vpc_links_link" {
 }
 
 resource "aws_security_group" "aws_apigatewayv2_vpc_links_sg" {
-  name   = "apigw-sg-${var.test_prefix}-${var.test_suffix}"
+  name   = "apigw-sg-test"
   vpc_id = aws_vpc.aws_vpc.id
   ingress {
     from_port = 22

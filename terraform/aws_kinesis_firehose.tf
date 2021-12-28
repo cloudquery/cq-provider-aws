@@ -1,5 +1,5 @@
 resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_delivery_stream" {
-  name        = "aws-waf-logs-kinesis-firehose-${var.test_prefix}${var.test_suffix}"
+  name        = "aws-waf-logs-kinesis-firehose-test"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -9,12 +9,12 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_delivery_strea
 }
 
 resource "aws_s3_bucket" "kinesis_firehose_delivery_stream_bucket" {
-  bucket = "kinesis-firehose-bucket-${var.test_prefix}${var.test_suffix}"
+  bucket = "kinesis-firehose-bucket-test"
   acl    = "private"
 }
 
 resource "aws_iam_role" "firehose_delivery_stream_bucket_role" {
-  name = "kinesis-firehose-role-${var.test_prefix}${var.test_suffix}"
+  name = "kinesis-firehose-role-test"
 
   assume_role_policy = <<EOF
 {

@@ -1,7 +1,7 @@
 resource "aws_fsx_backup" "test_fsx_backup" {
   file_system_id = aws_fsx_lustre_file_system.test_fsx.id
   tags = {
-    Name = "fsx-${var.test_prefix}${var.test_suffix}"
+    Name = "fsx-test"
   }
 }
 

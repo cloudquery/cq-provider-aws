@@ -1,5 +1,5 @@
 resource "aws_iam_server_certificate" "iam_server_certificates_cert" {
-  name = "iam_server_certificates_${var.test_prefix}${var.test_suffix}"
+  name = "iam_server_certificates_test"
 
   certificate_body = <<EOF
 -----BEGIN CERTIFICATE-----

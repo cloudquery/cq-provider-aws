@@ -33,3 +33,11 @@ resources/integration_tests/infra/.terraform.lock.hcl
 resources/integration_tests/infra/terraform-override.tf
 resources/integration_tests/infra/tmp/
 **/snapshots/*
+./terraform2/tmp
+./terraform2/.terraform
+./terraform2/.terraform.loch.hcl
+./terraform2/terraform-override.tf
+./terraform/tmp
+./terraform/.terraform
+./terraform/.terraform.loch.hcl
+./terraform/terraform-override.tf

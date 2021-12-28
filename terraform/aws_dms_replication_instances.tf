@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "dms_vpc_role_AmazonDMSVPCManagementRo
 }
 
 resource "aws_security_group" "dms_sg" {
-  name        = "dms-sg-${var.test_prefix}_${var.test_suffix}"
+  name        = "dms-sg-test_test"
   description = "Security group for DMS"
 }
 
@@ -54,14 +54,14 @@ resource "aws_dms_replication_instance" "dms_replication_instance" {
   preferred_maintenance_window = "sun:10:30-sun:14:30"
   publicly_accessible          = false
   replication_instance_class   = "dms.t2.micro"
-  replication_instance_id      = "dms-replication-instance-${var.test_prefix}-${var.test_suffix}"
+  replication_instance_id      = "dms-replication-instance-test"
 
   vpc_security_group_ids = [
     aws_security_group.dms_sg.id
   ]
 
   tags = {
-    Name = "dms-replication-instance-${var.test_prefix}-${var.test_suffix}"
+    Name = "dms-replication-instance-test"
   }
 
   depends_on = [

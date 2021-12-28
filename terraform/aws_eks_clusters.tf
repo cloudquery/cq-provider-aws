@@ -1,5 +1,5 @@
 resource "aws_eks_cluster" "aws_eks_clusters_cluster" {
-  name     = "eks-${var.test_prefix}${var.test_suffix}"
+  name     = "eks-test"
   role_arn = aws_iam_role.aws_eks_clusters_iam_role.arn
 
   vpc_config {
@@ -19,7 +19,7 @@ output "endpoint" {
 }
 
 resource "aws_iam_role" "aws_eks_clusters_iam_role" {
-  name = "eks-role-${var.test_prefix}${var.test_suffix}"
+  name = "eks-role-test"
 
   assume_role_policy = <<POLICY
 {

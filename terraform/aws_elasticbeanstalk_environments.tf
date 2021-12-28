@@ -1,10 +1,10 @@
 resource "aws_elastic_beanstalk_application" "aws_elasticbeanstalk_environments_app" {
-  name        = "beanstalk-ea-${var.test_suffix}"
+  name        = "beanstalk-ea-test"
   description = "tf-test-desc"
 }
 
 resource "aws_elastic_beanstalk_environment" "aws_elasticbeanstalk_environments_env" {
-  name                = substr("beanstalk-ee-${var.test_suffix}", 0, 40)
+  name                = substr("beanstalk-ee-test", 0, 40)
   application         = aws_elastic_beanstalk_application.aws_elasticbeanstalk_environments_app.name
   solution_stack_name = "64bit Amazon Linux 2 v3.3.4 running Go 1"
 
@@ -73,13 +73,13 @@ resource "aws_elastic_beanstalk_environment" "aws_elasticbeanstalk_environments_
   }
 
   tags = {
-    name = substr("e-${var.test_suffix}", 0, 40)
+    name = substr("e-test", 0, 40)
   }
 
 }
 
 resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
-  name = "beanstalk-role_${var.test_prefix}${var.test_suffix}"
+  name = "beanstalk-role_test"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -97,7 +97,7 @@ resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
   })
 
   inline_policy {
-    name = "beanstalk-inline-${var.test_prefix}${var.test_suffix}"
+    name = "beanstalk-inline-test"
 
     policy = jsonencode({
       Version = "2012-10-17"
@@ -157,7 +157,7 @@ resource "aws_iam_role" "aws_elasticbeanstalk_environments_ir" {
 }
 
 resource "aws_iam_instance_profile" "aws_elasticbeanstalk_environments_ip" {
-  name = "beanstalk-ip_${var.test_prefix}${var.test_suffix}"
+  name = "beanstalk-ip_test"
   path = "/"
   role = aws_iam_role.aws_elasticbeanstalk_environments_ir.id
 }

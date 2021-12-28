@@ -8,6 +8,6 @@ resource "aws_guardduty_detector" "MyDetector" {
   }
 
   tags = {
-    Name = "fguardduty-detector-${var.test_prefix}${var.test_suffix}"
+    Name = "fguardduty-detector-test"
   }
 }

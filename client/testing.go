@@ -59,7 +59,6 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 func AWSTestHelper(t *testing.T, table *schema.Table, snapshotDirPath string) {
 	t.Helper()
 	cfg := `
-	regions = ["us-east-1"]
 	aws_debug = false
 	`
 

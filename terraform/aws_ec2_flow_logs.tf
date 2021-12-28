@@ -6,6 +6,6 @@ resource "aws_flow_log" "aws_ec2_flow_logs_fl" {
 }
 
 resource "aws_s3_bucket" "aws_ec2_flow_logs_s3" {
-  bucket        = "ec2-fl-buck${var.test_prefix}${var.test_suffix}"
+  bucket        = "ec2-fl-bucktest"
   force_destroy = true
 }

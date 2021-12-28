@@ -82,7 +82,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
 
 
 resource "aws_autoscaling_policy" "bat" {
-  name                   = "policy-${var.test_prefix}-${var.test_suffix}"
+  name                   = "policy-test"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -107,8 +107,8 @@ resource "aws_autoscaling_notification" "example_notifications" {
 }
 
 resource "aws_sns_topic" "autoscaling_group_hook_sns" {
-  name         = "ag-topic-${var.test_suffix}"
-  display_name = "${var.test_prefix}-${var.test_suffix}"
+  name         = "ag-topic-test"
+  display_name = "test"
 
   delivery_policy = <<EOF
       {
@@ -144,7 +144,7 @@ resource "aws_autoscaling_lifecycle_hook" "autoscaling_group_hook" {
 }
 
 resource "aws_sqs_queue" "autoscaling_group_sqs" {
-  name = "ag-queue-${var.test_suffix}"
+  name = "ag-queue-test"
   #  fifo_queue                  = true
   #  content_based_deduplication = true
 }

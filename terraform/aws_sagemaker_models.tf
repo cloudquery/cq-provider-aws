@@ -1,5 +1,5 @@
 resource "aws_sagemaker_model" "sagemaker_model" {
-  name               = "sagemaker-model-${var.test_prefix}${var.test_suffix}"
+  name               = "sagemaker-model-test"
   execution_role_arn = aws_iam_role.sagemaker_model_iam_role.arn
 
   primary_container {
@@ -7,7 +7,7 @@ resource "aws_sagemaker_model" "sagemaker_model" {
   }
 
   tags = {
-    Name = "sagemaker-model-${var.test_prefix}${var.test_suffix}"
+    Name = "sagemaker-model-test"
   }
 }
 

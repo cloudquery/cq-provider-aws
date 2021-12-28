@@ -1,5 +1,5 @@
 resource "aws_emr_cluster" "aws_emr_clusters_cluster" {
-  name          = "emr-cluster-${var.test_prefix}${var.test_suffix}"
+  name          = "emr-cluster-test"
   release_label = "emr-5.12.0"
   applications = [
   "Spark"]
@@ -124,13 +124,13 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "aws_emr_clusters_instance_profile" {
-  name = "emr-cluster-instance_profile_${var.test_prefix}${var.test_suffix}"
+  name = "emr-cluster-instance_profile_test"
   path = "/"
   role = aws_iam_role.emr_clusters_instance_profile_role.id
 }
 
 resource "aws_iam_role" "emr_clusters_instance_profile_role" {
-  name = "emr-cluster-instance-profile-role_${var.test_prefix}"
+  name = "emr-cluster-instance-profile-role_test"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -148,7 +148,7 @@ resource "aws_iam_role" "emr_clusters_instance_profile_role" {
   })
 
   inline_policy {
-    name = "inline-${var.test_prefix}${var.test_suffix}"
+    name = "inline-test"
 
     policy = jsonencode({
       Version = "2012-10-17"
@@ -213,7 +213,7 @@ resource "aws_iam_role" "emr_clusters_instance_profile_role" {
 }
 
 resource "aws_iam_role" "emr_clusters_autoscaling_role" {
-  name = "emr-cluster-autoscaling-role_${var.test_prefix}"
+  name = "emr-cluster-autoscaling-role_test"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -232,7 +232,7 @@ resource "aws_iam_role" "emr_clusters_autoscaling_role" {
   })
 
   inline_policy {
-    name = "inline-${var.test_prefix}${var.test_suffix}"
+    name = "inline-test"
 
     policy = jsonencode({
       Version = "2012-10-17"
@@ -253,7 +253,7 @@ resource "aws_iam_role" "emr_clusters_autoscaling_role" {
 }
 
 resource "aws_iam_role" "emr_clusters_service_role" {
-  name = "emr_clusters_service_role_${var.test_prefix}${var.test_suffix}"
+  name = "emr_clusters_service_role_test"
 
   assume_role_policy = jsonencode({
     Version = "2008-10-17"
@@ -271,7 +271,7 @@ resource "aws_iam_role" "emr_clusters_service_role" {
   })
 
   inline_policy {
-    name = "inline-${var.test_prefix}${var.test_suffix}"
+    name = "inline-test"
 
     policy = jsonencode({
       Version = "2012-10-17"
@@ -358,12 +358,12 @@ resource "aws_iam_role" "emr_clusters_service_role" {
 }
 
 resource "aws_s3_bucket" "aws_emr_cluster_logs" {
-  bucket        = "emr-cluster-logs${var.test_prefix}${var.test_suffix}"
+  bucket        = "emr-cluster-logstest"
   acl           = "private"
   force_destroy = true
 
   tags = {
-    Name        = "${var.test_prefix}${var.test_suffix}"
+    Name        = "test"
     Environment = "Dev"
   }
 }
@@ -378,7 +378,7 @@ resource "aws_security_group_rule" "aws_emr_cluster_allow_tcp_from_master_to_ser
 }
 
 resource "aws_security_group" "aws_emr_clusters_security_group" {
-  name = "aws_emr_clusters_security_group${var.test_prefix}${var.test_suffix}"
+  name = "aws_emr_clusters_security_grouptest"
 
   vpc_id = aws_vpc.aws_vpc.id
 

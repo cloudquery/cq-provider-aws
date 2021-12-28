@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "iam_policy_policy" {
-  name = "iam_policy_${var.test_prefix}${var.test_suffix}"
+  name = "iam_policy_test"
 
   policy = <<EOF
 {

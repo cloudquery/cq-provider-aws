@@ -1,5 +1,5 @@
 resource "aws_lb" "aws_elbv2_load_balancer" {
-  name = "elbv2-${var.test_suffix}"
+  name = "elbv2-test"
 
   subnets = [aws_subnet.aws_vpc_subnet.id, aws_subnet.aws_vpc_subnet2.id]
 
@@ -9,7 +9,7 @@ resource "aws_lb" "aws_elbv2_load_balancer" {
 }
 
 resource "aws_lb_target_group" "aws_elbv2_lb_target_group" {
-  name        = "elbv2-tg-${var.test_suffix}"
+  name        = "elbv2-tg-test"
   port        = "80"
   protocol    = "HTTP"
   vpc_id      = aws_vpc.aws_vpc.id

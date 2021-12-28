@@ -1,5 +1,5 @@
 resource "aws_iam_user" "iam_user" {
-  name = "user${var.test_prefix}${var.test_suffix}"
+  name = "usertest"
   path = "/system/"
 
   tags = {
@@ -12,7 +12,7 @@ resource "aws_iam_access_key" "iam_user_acc_key" {
 }
 
 resource "aws_iam_user_policy" "user_inline_policy" {
-  name = "user_policy${var.test_prefix}${var.test_suffix}"
+  name = "user_policytest"
   user = aws_iam_user.iam_user.name
 
   policy = <<EOF
@@ -32,7 +32,7 @@ EOF
 }
 
 resource "aws_iam_policy" "user_policy" {
-  name        = "policy${var.test_prefix}${var.test_suffix}"
+  name        = "policytest"
   description = "A test policy"
   policy      = <<EOF
 {
@@ -56,7 +56,7 @@ resource "aws_iam_user_policy_attachment" "user_policy_attach" {
 }
 
 resource "aws_iam_group_membership" "team" {
-  name = "membership${var.test_prefix}${var.test_suffix}"
+  name = "membershiptest"
 
   users = [
     aws_iam_user.iam_user.name,

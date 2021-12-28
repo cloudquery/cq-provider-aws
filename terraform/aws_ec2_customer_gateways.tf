@@ -4,6 +4,6 @@ resource "aws_customer_gateway" "aws_ec2_customer_gateways_gw" {
   type       = "ipsec.1"
 
   tags = {
-    Name = "ec2-cgw-${var.test_prefix}-${var.test_suffix}"
+    Name = "ec2-cgw-test"
   }
 }

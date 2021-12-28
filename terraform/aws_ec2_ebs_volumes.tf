@@ -3,7 +3,7 @@ resource "aws_ebs_volume" "example" {
   size              = 5
 
   tags = {
-    Name = "ec2-ebs-${var.test_prefix}${var.test_suffix}"
+    Name = "ec2-ebs-test"
   }
 }
 

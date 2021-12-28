@@ -27,18 +27,18 @@ resource "aws_instance" "elbv1-instance-1" {
   }
 
   tags = {
-    Name = "elbv1-instance-1${var.test_suffix}"
+    Name = "elbv1-instance-1test"
   }
 }
 
 resource "aws_s3_bucket" "elbv1-bucket" {
-  bucket        = "elbv1-bucket${var.test_prefix}${var.test_suffix}"
+  bucket        = "elbv1-buckettest"
   acl           = "private"
   force_destroy = true
 }
 
 resource "aws_elb" "elbv1-loadbalancer" {
-  name = "elbv1${var.test_suffix}"
+  name = "elbv1test"
 
   listener {
     instance_port     = 8000
@@ -73,7 +73,7 @@ resource "aws_elb" "elbv1-loadbalancer" {
 
 resource "aws_load_balancer_policy" "elbv1-policy-ssl" {
   load_balancer_name = aws_elb.elbv1-loadbalancer.name
-  policy_name        = "elbv1-policy${var.test_prefix}${var.test_suffix}"
+  policy_name        = "elbv1-policytest"
   policy_type_name   = "SSLNegotiationPolicyType"
 
   policy_attribute {

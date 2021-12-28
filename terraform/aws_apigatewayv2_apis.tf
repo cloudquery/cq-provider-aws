@@ -15,7 +15,7 @@ resource "aws_apigatewayv2_integration" "v2_integration_1" {
 resource "aws_apigatewayv2_model" "v2_model_1" {
   api_id       = aws_apigatewayv2_api.v2_api_1.id
   content_type = "application/json"
-  name         = "apigwv2model${var.test_suffix}"
+  name         = "apigwv2modeltest"
 
   schema = <<EOF
 {

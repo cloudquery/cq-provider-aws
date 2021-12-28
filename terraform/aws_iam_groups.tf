@@ -1,10 +1,10 @@
 resource "aws_iam_group" "group_developers" {
-  name = "aws_iam_group${var.test_prefix}${var.test_suffix}"
+  name = "aws_iam_grouptest"
   path = "/users/"
 }
 
 resource "aws_iam_group_policy" "group_policy" {
-  name  = "aws_iam_group_policy${var.test_prefix}${var.test_suffix}"
+  name  = "aws_iam_group_policytest"
   group = aws_iam_group.group_developers.name
 
   policy = <<EOF

@@ -64,7 +64,7 @@ EOF
 }
 
 resource "aws_cognito_identity_pool" "main" {
-  identity_pool_name               = "cognito_identity_pool${var.test_prefix}-${var.test_suffix}"
+  identity_pool_name               = "cognito_identity_pooltest"
   allow_unauthenticated_identities = false
   allow_classic_flow               = false
 

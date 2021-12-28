@@ -20,7 +20,7 @@ resource "time_sleep" "aws_directconnect_virtual_interfaces_wait_for_id" {
 resource "aws_dx_public_virtual_interface" "aws_directconnect_virtual_interfaces_interface" {
   connection_id = time_sleep.aws_directconnect_virtual_interfaces_wait_for_id.triggers["id"]
 
-  name           = "fx-pvif-${var.test_prefix}-${var.test_suffix}"
+  name           = "fx-pvif-test"
   vlan           = 4094
   address_family = "ipv4"
   bgp_asn        = 65352

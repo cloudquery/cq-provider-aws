@@ -1,10 +1,10 @@
 resource "aws_s3_bucket" "aws_cloudtrail_trails_bucket" {
-  bucket        = "cloudtrail-buc-${var.test_prefix}-${var.test_suffix}"
+  bucket        = "cq-provider-aws-cloudtrail"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "aws_cloudtrail_trails_target_bucket" {
-  bucket        = "cloudtrail-target-buc-${var.test_prefix}-${var.test_suffix}"
+  bucket        = "cq-provider-aws-cloudtrail-target"
   force_destroy = true
 
   versioning {
@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "aws_cloudtrail_trails_target_bucket" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:GetBucketAcl",
-            "Resource": "arn:aws:s3:::cloudtrail-target-buc-${var.test_prefix}-${var.test_suffix}"
+            "Resource": "arn:aws:s3:::cq-provider-aws-cloudtrail-target"
         },
         {
             "Sid": "AWSCloudTrailWrite",
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "aws_cloudtrail_trails_target_bucket" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::cloudtrail-target-buc-${var.test_prefix}-${var.test_suffix}/*",
+            "Resource": "arn:aws:s3:::cq-provider-aws-cloudtrail-target/*",
             "Condition": {
                 "StringEquals": {
                     "s3:x-amz-acl": "bucket-owner-full-control"
@@ -45,19 +45,16 @@ resource "aws_s3_bucket" "aws_cloudtrail_trails_target_bucket" {
               "Service": "glue.amazonaws.com"
             },
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::cloudtrail-target-buc-${var.test_prefix}-${var.test_suffix}/*"
+            "Resource": "arn:aws:s3:::cq-provider-aws-cloudtrail-target/*"
         }
     ]
 }
 POLICY
 
-  tags = {
-    "test" : "test"
-  }
 }
 
 resource "aws_cloudtrail" "aws_cloudtrail_trails_trail" {
-  name                          = "cloudtrail-${var.test_prefix}-${var.test_suffix}"
+  name                          = "cloudtrail-test"
   s3_bucket_name                = aws_s3_bucket.aws_cloudtrail_trails_target_bucket.id
   s3_key_prefix                 = "cloudtrail"
   include_global_service_events = true

@@ -1,5 +1,5 @@
 resource "aws_cloudfront_cache_policy" "aws_cloudfront_cache_policies_policy" {
-  name        = "cache_policy${var.test_prefix}-${var.test_suffix}"
+  name        = "cache_policytest"
   comment     = "test comment"
   default_ttl = 50
   max_ttl     = 100

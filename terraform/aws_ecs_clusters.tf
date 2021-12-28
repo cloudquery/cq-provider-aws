@@ -1,5 +1,5 @@
 resource "aws_iam_role" "aws_ecs_clusters_ec2_iam_role" {
-  name = "ec2_ec2_iam_role_${var.test_prefix}${var.test_suffix}"
+  name = "ec2_ec2_iam_role_test"
 
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
@@ -17,13 +17,13 @@ resource "aws_iam_role" "aws_ecs_clusters_ec2_iam_role" {
 }
 
 resource "aws_iam_instance_profile" "aws_ecs_clusters_ec2-instance-profile" {
-  name = "ecs_ec2_instance_profile_${var.test_prefix}${var.test_suffix}"
+  name = "ecs_ec2_instance_profile_test"
   path = "/"
   role = aws_iam_role.aws_ecs_clusters_ec2_iam_role.id
 }
 
 resource "aws_security_group" "aws_ecs_clusters_security_group" {
-  name = "ecs_clusters_sg${var.test_prefix}${var.test_suffix}"
+  name = "ecs_clusters_sgtest"
 
   vpc_id = aws_vpc.aws_vpc.id
 
@@ -75,7 +75,7 @@ resource "aws_instance" "aws_ecs_clusters_ec2_instance" {
   }
 
   tags = {
-    "Name" = "ecs_ec2_instance${var.test_suffix}"
+    "Name" = "ecs_ec2_instancetest"
   }
 }
 
@@ -116,7 +116,7 @@ data "aws_iam_policy_document" "aws_ecs_clusters_ecs-instance-policy" {
 }
 
 resource "aws_iam_role" "aws_ecs_clusters_ecs-instance-role" {
-  name               = "ecs-instance-role_${var.test_prefix}${var.test_suffix}"
+  name               = "ecs-instance-role_test"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.aws_ecs_clusters_ecs-instance-policy.json
 }
@@ -127,7 +127,7 @@ resource "aws_iam_role_policy_attachment" "aws_ecs_clusters_ecs-instance-role-at
 }
 
 resource "aws_iam_instance_profile" "aws_ecs_clusters_instance-profile" {
-  name = "ecs-instance-profile_${var.test_prefix}${var.test_suffix}"
+  name = "ecs-instance-profile_test"
   path = "/"
   role = aws_iam_role.aws_ecs_clusters_ecs-instance-role.id
 }
@@ -147,7 +147,7 @@ data "aws_iam_policy_document" "aws_ecs_clusters_service-policy" {
 }
 
 resource "aws_iam_role" "aws_ecs_clusters_service-role" {
-  name               = "ecs_service_role_${var.test_prefix}${var.test_suffix}"
+  name               = "ecs_service_role_test"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.aws_ecs_clusters_service-policy.json
 }
@@ -158,13 +158,13 @@ resource "aws_iam_role_policy_attachment" "aws_ecs_clusters_service-role-attachm
 }
 
 resource "aws_ecs_cluster" "aws_ecs_clusters_cluster" {
-  name = "ecs_cluster_${var.test_prefix}${var.test_suffix}"
+  name = "ecs_cluster_test"
   setting {
     name  = "containerInsights"
     value = "enabled"
   }
   tags = {
-    name  = "ecs_cluster_${var.test_prefix}${var.test_suffix}"
+    name  = "ecs_cluster_test"
     stage = "test"
   }
 }
@@ -226,7 +226,7 @@ resource "aws_ecs_task_definition" "aws_ecs_clusters_task_definition" {
   ]
   # TASK running role
   tags                     = {
-    "name" = "td-${var.test_prefix}${var.test_suffix}"
+    "name" = "td-test"
   }
 }
 
@@ -238,7 +238,7 @@ resource "aws_ecs_service" "aws_ecs_clusters_service" {
   cluster         = aws_ecs_cluster.aws_ecs_clusters_cluster.id
   desired_count   = 1
   launch_type     = "EC2"
-  name            = "ecs_service_${var.test_prefix}${var.test_suffix}"
+  name            = "ecs_service_test"
   task_definition = "${aws_ecs_task_definition.aws_ecs_clusters_task_definition.family}:${max(aws_ecs_task_definition.aws_ecs_clusters_task_definition.revision, data.aws_ecs_task_definition.aws_ecs_clusters_task_definition.revision)}"
 
 
@@ -264,7 +264,7 @@ resource "aws_ecs_service" "aws_ecs_clusters_service" {
 
 // TODO - move to separate file
 resource "aws_cloudwatch_log_group" "aws_ecs_clusters_log_group" {
-  name = "ecs_clusters_log_group_${var.test_prefix}${var.test_suffix}"
+  name = "ecs_clusters_log_group_test"
   tags = {
     Environment = "production"
   }

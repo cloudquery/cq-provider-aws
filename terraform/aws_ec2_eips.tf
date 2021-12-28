@@ -3,6 +3,6 @@ resource "aws_eip" "elastic_ip" {
   vpc      = true
 
   tags = {
-    Name = "elastic-ip-${var.test_prefix}${var.test_suffix}"
+    Name = "elastic-ip-test"
   }
 }

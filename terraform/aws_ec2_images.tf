@@ -13,7 +13,7 @@ resource "aws_imagebuilder_image" "aws_ec2_images_image" {
 }
 
 resource "aws_imagebuilder_distribution_configuration" "aws_ec2_images_distribution_configuration" {
-  name = "ec2-images-dc-${var.test_prefix}${var.test_suffix}"
+  name = "ec2-images-dc-test"
 
   distribution {
 
@@ -23,7 +23,7 @@ resource "aws_imagebuilder_distribution_configuration" "aws_ec2_images_distribut
         CostCenter = "IT"
       }
 
-      name = "aws-ec2-images-image-${var.test_prefix}${var.test_suffix}-{{ imagebuilder:buildDate }}"
+      name = "aws-ec2-images-image-test-{{ imagebuilder:buildDate }}"
 
       launch_permission {
         user_ids = [
@@ -50,7 +50,7 @@ resource "aws_imagebuilder_image_recipe" "aws_ec2_images_image_recipe" {
     component_arn = aws_imagebuilder_component.aws_ec2_images_hello_world.arn
   }
 
-  name = "ec2-images-recipe-${var.test_prefix}${var.test_suffix}"
+  name = "ec2-images-recipe-test"
   parent_image = "arn:${data.aws_partition.current.partition}:imagebuilder:${data.aws_region.current.name}:aws:image/amazon-linux-2-x86/x.x.x"
   version = "0.1.1"
 
@@ -59,12 +59,12 @@ resource "aws_imagebuilder_image_recipe" "aws_ec2_images_image_recipe" {
 data "aws_partition" "current" {}
 
 resource "aws_imagebuilder_infrastructure_configuration" "aws_ec2_images_infrastructure_configuration" {
-  description = "ec2-images-ic-${var.test_prefix}${var.test_suffix}"
+  description = "ec2-images-ic-test"
   instance_profile_name = aws_iam_instance_profile.aws_ec2_images_instance_profile.name
   instance_types = [
     "t2.nano",
     "t3.micro"]
-  name = "ec2-images-ic-${var.test_prefix}${var.test_suffix}"
+  name = "ec2-images-ic-test"
   terminate_instance_on_failure = true
 
   logging {
@@ -80,12 +80,12 @@ resource "aws_imagebuilder_infrastructure_configuration" "aws_ec2_images_infrast
 }
 
 resource "aws_iam_instance_profile" "aws_ec2_images_instance_profile" {
-  name = "ec2-images-ip-${var.test_prefix}${var.test_suffix}"
+  name = "ec2-images-ip-test"
   role = aws_iam_role.aws_ec2_images_role.name
 }
 
 resource "aws_iam_role" "aws_ec2_images_role" {
-  name = "ec2-images-role-${var.test_prefix}${var.test_suffix}"
+  name = "ec2-images-role-test"
   managed_policy_arns = [
     data.aws_iam_policy.aws_ec2_images_instance_profile_for_imagebuilder.arn,
     data.aws_iam_policy.aws_ec2_images_ecr_containers.arn,
@@ -99,13 +99,13 @@ resource "aws_iam_role" "aws_ec2_images_role" {
 }
 
 resource "aws_s3_bucket" "aws_ec2_images_bucket" {
-  bucket = "ec2-images-logs-${var.test_prefix}${var.test_suffix}"
+  bucket = "ec2-images-logs-test"
   acl = "private"
 
   force_destroy = true
 
   tags = {
-    Name = "My bucket ${var.test_prefix}${var.test_suffix}"
+    Name = "My bucket test"
     Environment = "test"
   }
 }
@@ -122,13 +122,13 @@ resource "aws_imagebuilder_component" "aws_ec2_images_hello_world" {
               commands = [
                 "echo 'hello world'"]
             }
-            name = "example-${var.test_prefix}${var.test_suffix}"
+            name = "example-test"
             onFailure = "Continue"
           }]
       }]
     schemaVersion = 1.0
   })
-  name = "hello_world_${var.test_prefix}${var.test_suffix}"
+  name = "hello_world_test"
   platform = "Linux"
   version = "1.0.0"
 }
