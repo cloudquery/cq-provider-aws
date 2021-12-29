@@ -43,3 +43,4 @@ resources/integration_tests/infra/tmp/
 ./terraform/terraform-override.tf
 .env
 ./terraform/builds
+terraform/downloaded*

@@ -74,9 +74,9 @@ func AWSTestHelper(t *testing.T, table *schema.Table, snapshotDirPath string) {
 				"test_resource": table,
 			},
 		},
-		Table:        table,
-		Config:       cfg,
-		SnapshotsDir: snapshotDirPath,
+		Table:         table,
+		Config:        cfg,
+		SkipEmptyRows: true,
 	})
 
 }

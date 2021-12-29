@@ -75,11 +75,10 @@ func EfsFilesystems() *schema.Table {
 				Resolver:    schema.PathResolver("SizeInBytes.Value"),
 			},
 			{
-				Name:             "size_in_bytes_timestamp",
-				Description:      "The time at which the size of data, returned in the Value field, was determined.",
-				Type:             schema.TypeTimestamp,
-				Resolver:         schema.PathResolver("SizeInBytes.Timestamp"),
-				IgnoreInIntTests: true,
+				Name:        "size_in_bytes_timestamp",
+				Description: "The time at which the size of data, returned in the Value field, was determined.",
+				Type:        schema.TypeTimestamp,
+				Resolver:    schema.PathResolver("SizeInBytes.Timestamp"),
 			},
 			{
 				Name:        "size_in_bytes_value_in_ia",

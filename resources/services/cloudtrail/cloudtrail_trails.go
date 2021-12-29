@@ -59,10 +59,9 @@ func CloudtrailTrails() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:             "latest_delivery_time",
-				Description:      "Specifies the date and time that CloudTrail last delivered log files to an account's Amazon S3 bucket.",
-				Type:             schema.TypeTimestamp,
-				IgnoreInIntTests: true,
+				Name:        "latest_delivery_time",
+				Description: "Specifies the date and time that CloudTrail last delivered log files to an account's Amazon S3 bucket.",
+				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "latest_digest_delivery_error",
@@ -70,10 +69,9 @@ func CloudtrailTrails() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:             "latest_digest_delivery_time",
-				Description:      "Specifies the date and time that CloudTrail last delivered a digest file to an account's Amazon S3 bucket.",
-				Type:             schema.TypeTimestamp,
-				IgnoreInIntTests: true,
+				Name:        "latest_digest_delivery_time",
+				Description: "Specifies the date and time that CloudTrail last delivered a digest file to an account's Amazon S3 bucket.",
+				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "latest_notification_error",

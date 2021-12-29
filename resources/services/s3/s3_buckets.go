@@ -53,9 +53,8 @@ func S3Buckets() *schema.Table {
 				Type: schema.TypeString,
 			},
 			{
-				Name:             "policy",
-				Type:             schema.TypeJSON,
-				IgnoreInIntTests: true,
+				Name: "policy",
+				Type: schema.TypeJSON,
 			},
 			{
 				Name: "tags",
@@ -453,7 +452,7 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 	var ae smithy.APIError
 	log := meta.Logger()
 	r := resource.Item.(*WrappedBucket)
-	log.Debug("fetching bucket attributes", "bucket", r.Name)
+	log.Debug("fetching bucket attributes", "bucket", aws.ToString(r.Name))
 	mgr := meta.(*client.Client).Services().S3Manager
 	output, err := mgr.GetBucketRegion(ctx, *r.Name)
 	if err != nil {
