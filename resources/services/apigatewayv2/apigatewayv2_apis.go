@@ -42,7 +42,7 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
-				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 					r, ok := resource.Item.(types.Api)
 					if !ok {
 						return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -186,7 +186,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Authorizer)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -284,7 +284,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Deployment)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -350,7 +350,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Integration)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -487,7 +487,7 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "arn",
 								Description: "The Amazon Resource Name (ARN) for the resource.",
 								Type:        schema.TypeString,
-								Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+								Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 									r, ok := resource.Item.(types.IntegrationResponse)
 									if !ok {
 										return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -559,7 +559,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Model)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -625,7 +625,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Route)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -726,7 +726,7 @@ func Apigatewayv2Apis() *schema.Table {
 								Name:        "arn",
 								Description: "The Amazon Resource Name (ARN) for the resource.",
 								Type:        schema.TypeString,
-								Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+								Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 									r, ok := resource.Item.(types.RouteResponse)
 									if !ok {
 										return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -793,7 +793,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.Stage)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
+	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -30,6 +31,18 @@ func Apigatewayv2VpcLinks() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.VpcLink)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"vpclinks", *r.VpcLinkId}, nil
+				}),
 			},
 			{
 				Name:        "name",

@@ -35,6 +35,18 @@ func Ec2Instances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.Instance)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"instance", *r.InstanceId}, nil
+				}),
+			},
+			{
 				Name:     "state_transition_reason_time",
 				Type:     schema.TypeTimestamp,
 				Resolver: resolveEc2InstanceStateTransitionReasonTime,
@@ -493,6 +505,18 @@ func Ec2Instances() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_ec2_instances table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+							r, ok := resource.Item.(types.InstanceNetworkInterface)
+							if !ok {
+								return nil, client.UnexpectedResourceType(r, resource.Item)
+							}
+							return []string{"network-interface", *r.NetworkInterfaceId}, nil
+						}),
 					},
 					{
 						Name:        "association_carrier_ip",

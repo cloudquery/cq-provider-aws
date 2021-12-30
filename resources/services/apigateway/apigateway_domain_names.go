@@ -39,7 +39,7 @@ func ApigatewayDomainNames() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
-				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 					r, ok := resource.Item.(types.DomainName)
 					if !ok {
 						return nil, client.UnexpectedResourceType(r, resource.Item)
@@ -164,7 +164,7 @@ func ApigatewayDomainNames() *schema.Table {
 						Name:        "arn",
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
-						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.BasePathMapping)
 							if !ok {
 								return nil, client.UnexpectedResourceType(r, resource.Item)

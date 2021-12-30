@@ -33,6 +33,18 @@ func CognitoIdentityPools() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.CognitoIdentityService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"identitypool", *r.IdentityPoolId}, nil
+				}),
+			},
+			{
 				Name:        "allow_unauthenticated_identities",
 				Description: "TRUE if the identity pool supports unauthenticated logins.",
 				Type:        schema.TypeBool,

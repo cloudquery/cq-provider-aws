@@ -33,6 +33,18 @@ func Ec2RouteTables() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.RouteTable)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"route-table", *r.RouteTableId}, nil
+				}),
+			},
+			{
 				Name:        "owner_id",
 				Description: "The ID of the AWS account that owns the route table.",
 				Type:        schema.TypeString,

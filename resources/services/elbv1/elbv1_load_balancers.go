@@ -36,6 +36,18 @@ func Elbv1LoadBalancers() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.ElasticLoadBalancingService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(ELBv1LoadBalancerWrapper)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"loadbalancer", *r.LoadBalancerName}, nil
+				}),
+			},
+			{
 				Name:     "attributes_access_log_enabled",
 				Type:     schema.TypeBool,
 				Resolver: resolveElbv1loadBalancerAttributesAccessLogEnabled,

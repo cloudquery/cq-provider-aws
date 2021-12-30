@@ -2,7 +2,6 @@ package directconnect
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
@@ -32,6 +31,18 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithAccount(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.DirectConnectGateway)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"dx-gateway", *r.DirectConnectGatewayId}, nil
+				}),
 			},
 			{
 				Name:        "amazon_side_asn",
@@ -233,15 +244,12 @@ func fetchDirectconnectGateways(ctx context.Context, meta schema.ClientMeta, par
 func fetchDirectconnectGatewayAssociations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	gateway, ok := parent.Item.(types.DirectConnectGateway)
 	if !ok {
-		return fmt.Errorf("not direct connect gateway")
+		return client.UnexpectedResourceType(gateway, parent.Item)
 	}
-
-	var config directconnect.DescribeDirectConnectGatewayAssociationsInput
-	config.DirectConnectGatewayId = gateway.DirectConnectGatewayId
 
 	c := meta.(*client.Client)
 	svc := c.Services().Directconnect
-
+	config := directconnect.DescribeDirectConnectGatewayAssociationsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
 	for {
 		output, err := svc.DescribeDirectConnectGatewayAssociations(ctx, &config, func(options *directconnect.Options) {
 			options.Region = c.Region
@@ -261,15 +269,12 @@ func fetchDirectconnectGatewayAssociations(ctx context.Context, meta schema.Clie
 func fetchDirectconnectGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
 	gateway, ok := parent.Item.(types.DirectConnectGateway)
 	if !ok {
-		return fmt.Errorf("not direct connect gateway")
+		return client.UnexpectedResourceType(gateway, parent.Item)
 	}
-
-	var config directconnect.DescribeDirectConnectGatewayAttachmentsInput
-	config.DirectConnectGatewayId = gateway.DirectConnectGatewayId
 
 	c := meta.(*client.Client)
 	svc := c.Services().Directconnect
-
+	config := directconnect.DescribeDirectConnectGatewayAttachmentsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
 	for {
 		output, err := svc.DescribeDirectConnectGatewayAttachments(ctx, &config, func(options *directconnect.Options) {
 			options.Region = c.Region

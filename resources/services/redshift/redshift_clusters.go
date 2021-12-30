@@ -34,6 +34,18 @@ func RedshiftClusters() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.RedshiftService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.Cluster)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"cluster", *r.ClusterIdentifier}, nil
+				}),
+			},
+			{
 				Name:        "allow_version_upgrade",
 				Description: "A boolean value that, if true, indicates that major version upgrades will be applied automatically to the cluster during the maintenance window.",
 				Type:        schema.TypeBool,

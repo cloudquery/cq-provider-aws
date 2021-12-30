@@ -27,6 +27,18 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.VirtualInterface)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"dxvif", *r.VirtualInterfaceId}, nil
+				}),
+			},
+			{
 				Name:        "address_family",
 				Description: "The address family for the BGP peer.",
 				Type:        schema.TypeString,

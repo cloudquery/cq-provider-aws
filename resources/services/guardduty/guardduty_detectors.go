@@ -32,6 +32,18 @@ func GuarddutyDetectors() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.GuardDutyService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(Detector)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{"detector", r.Id}, nil
+				}),
+			},
+			{
 				Name:        "id",
 				Description: "The Unique Identifier of the Detector.",
 				Type:        schema.TypeString,

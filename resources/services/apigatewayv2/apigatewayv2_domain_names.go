@@ -13,6 +13,8 @@ import (
 	apigatewayv2fix "github.com/cloudquery/cq-provider-aws/resources/forks/apigatewayv2"
 )
 
+const domainNamesIDPart = "domainnames"
+
 func Apigatewayv2DomainNames() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_apigatewayv2_domain_names",
@@ -34,6 +36,18 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					r, ok := resource.Item.(types.DomainName)
+					if !ok {
+						return nil, client.UnexpectedResourceType(r, resource.Item)
+					}
+					return []string{domainNamesIDPart, *r.DomainName}, nil
+				}),
 			},
 			{
 				Name:        "domain_name",
@@ -144,6 +158,22 @@ func Apigatewayv2DomainNames() *schema.Table {
 						Name:        "api_id",
 						Description: "The API identifier.",
 						Type:        schema.TypeString,
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r, ok := resource.Item.(types.ApiMapping)
+							if !ok {
+								return nil, client.UnexpectedResourceType(r, resource.Item)
+							}
+							p, ok := resource.Parent.Item.(types.DomainName)
+							if !ok {
+								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
+							}
+							return []string{domainNamesIDPart, *p.DomainName, "apimappings", *r.ApiMappingId}, nil
+						}),
 					},
 					{
 						Name:        "stage",
