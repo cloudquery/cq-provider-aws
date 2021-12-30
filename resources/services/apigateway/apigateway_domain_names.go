@@ -42,7 +42,7 @@ func ApigatewayDomainNames() *schema.Table {
 				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 					r, ok := resource.Item.(types.DomainName)
 					if !ok {
-						return nil, unexpectedResourceType(r, resource.Item)
+						return nil, client.UnexpectedResourceType(r, resource.Item)
 					}
 					return []string{domainNameIDPart, *r.DomainName}, nil
 				}),
@@ -167,11 +167,11 @@ func ApigatewayDomainNames() *schema.Table {
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r, ok := resource.Item.(types.BasePathMapping)
 							if !ok {
-								return nil, unexpectedResourceType(r, resource.Item)
+								return nil, client.UnexpectedResourceType(r, resource.Item)
 							}
 							p, ok := resource.Parent.Item.(types.DomainName)
 							if !ok {
-								return nil, unexpectedResourceType(p, resource.Parent.Item)
+								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
 							}
 							return []string{domainNameIDPart, *p.DomainName, "basepathmappings", *r.BasePath}, nil
 						}),
