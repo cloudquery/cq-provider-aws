@@ -4,7 +4,7 @@ cloudquery {
 
   provider "aws" {
     source = "cloudquery/cq-provider-aws"
-    version = "latest"
+    version = "v0.8.4"
   }
 
   connection {
