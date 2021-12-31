@@ -83,7 +83,7 @@ jobs:
 
       - name: Run upgrade
         run: |
-          ./cloudquery provider build-schema aws --config ./client/testdata/initial_migration.hcl --enable-console-log --verbose
+          ./cloudquery provider build-schema aws --config ./client/testdata/initial_migration.hcl --enable-console-log --verbose && \
           ./cloudquery provider upgrade aws --config ./client/testdata/default.hcl --enable-console-log --verbose
         env:
           CQ_NO_TELEMETRY: 1
