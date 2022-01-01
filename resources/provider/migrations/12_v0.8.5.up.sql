@@ -4,4 +4,3 @@ ALTER TABLE "aws_elasticsearch_domains"
     ADD CONSTRAINT "aws_elasticsearch_domains_pk"
         PRIMARY KEY(account_id, region, id);
 
-asdlkasmda8923u1
