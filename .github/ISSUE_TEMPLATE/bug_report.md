@@ -1,53 +1,58 @@
----
 name: 🐛 Bug Report
-about: If something isn't working as expected 🤔.
-labels: bug
----
+description: If something isn't working as expected 🤔.
+title: "(short issue description)"
+labels: [bug, needs-triage]
+body:
 
-<!--
-    If the feature request is related to  CloudQuery Core generic functionality
-        * https://github.com/cloudquery/cloudquery
- -->
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
 
-### Describe the Bug
-<!-- try to elaborate as much as you can on the bug and the behaviour -->
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: Tell us what should happen.
+    validations:
+      required: true
 
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        Provide a list of all steps and commands required to reproduce this issue.
+        Also, please provide config.hcl with any PII (such as account number) reducted.
+    validations:
+      required: true
 
-### Expected Behavior
-<!--
-What should have happened?
--->
+  - type: textarea
+    id: solution
+    attributes:
+      label: Possible Solution
+      description: |
+        Suggest a fix/reason for the bug
+    validations:
+      required: false
 
+  - type: input
+    id: version
+    attributes:
+      label: Provider and CloudQuery version
+      description: |
+        output of `cloudquery version` and provider version
+    validations:
+      required: true
 
-### CloudQuery Version
-<!--
-Output of `cloudquery version`
--->
-
-### Debug Output
-<!--
-Full debug output can be obtained by running `cloudquery --enable-console-log --debug`
-
-Debug logs may contain sensitive information. Please review and censor it before posting publicly.
--->
-
-### Steps to Reproduce
-<!--
-Please list all steps required to reproduce the issue, for example:
-```
-cloudquery init
-cloudquery fetch
-```
-
-Also please share any other necessary configuration files like config.hcl
--->
-
-### Additional Context
-<!--
-Add any other context or examples about the feature request here.
--->
-
-### References
-<!--
-Link any other relevant PRs or Issues
--->
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context or examples about the feature request here.
+    validations:
+      required: false
