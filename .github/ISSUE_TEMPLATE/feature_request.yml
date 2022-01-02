@@ -15,9 +15,9 @@ body:
     id: usecase
     attributes:
       label: Use Case
-      description: | 
-      Please tell us about the use case so we can understand better the request and potentially
-      open other follow-up improvments.
+      description: |
+        Please tell us about the use case so we can understand better the request and potentially
+        open other follow-up improvments.
     validations:
       required: true
 
