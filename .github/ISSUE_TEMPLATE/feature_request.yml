@@ -7,7 +7,7 @@ body:
     id: description
     attributes:
       label: Describe the resource.
-      description: Please link to official API
+      description: Please link to official API that can fetch the needed resources.
     validations:
       required: true
 

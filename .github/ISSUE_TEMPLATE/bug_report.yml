@@ -43,7 +43,7 @@ body:
     attributes:
       label: Provider and CloudQuery version
       description: |
-        output of `cloudquery version` and provider version
+        output of `cloudquery version` and provider version.
     validations:
       required: true
 
