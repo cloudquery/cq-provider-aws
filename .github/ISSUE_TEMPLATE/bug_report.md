@@ -3,7 +3,6 @@ description: If something isn't working as expected 🤔.
 title: "(short issue description)"
 labels: [bug, needs-triage]
 body:
-
   - type: textarea
     id: description
     attributes:

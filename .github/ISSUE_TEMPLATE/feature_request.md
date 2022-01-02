@@ -1,34 +1,30 @@
----
-name: 🚀 Feature request
-about: Suggest an idea for this project
-labels: enhancement
----
+name: "\U0001F680 New Resource"
+description: Ask for support of a new resource or service
+title: "(short issue description)"
+labels: [feature-request, needs-triage]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the resource.
+      description: Please link to official API
+    validations:
+      required: true
 
-<!--
-    If the feature request is related to  CloudQuery Core generic functionality
-        * https://github.com/cloudquery/cloudquery
- -->
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use Case
+      description: Please tell us about the use case so we can understand better the request and potentially
+      open other follow-up improvments.
+    validations:
+      required: true
 
-
-
-### New Resource
-<!-- 
-    * Missing resource or column name
-    * Link to official API
--->
-
-### Use Case
-<!-- 
-    Please share a few words about the use-case or the query where the new table or column is needed,
-    this can help identify other missing tables, columns.
--->
-
-### Additional context
-<!--
-Add any other context or examples about the feature request here.
-
-If you feature request is not related to a missing table, column just describe the:
-* Problem you are having
-* Solution you'd like
-* Alternatives you've considered
--->
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: |
+        Any additonal context or information that might help. 
+    validations:
+      required: false
