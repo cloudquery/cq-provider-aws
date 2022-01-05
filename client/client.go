@@ -290,9 +290,16 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	if len(client.regions) == 0 {
 		client.regions = allRegions
 		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
+	} else {
+		for i, region := range client.regions {
+			if i != 0 && region == "*" {
+				return nil, fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
+			}
+		}
 	}
 	var wildcardAllRegions bool
 	if len(client.regions) == 1 && client.regions[0] == "*" {
+		logger.Info(fmt.Sprintf("All regions specified in config.yml. Assuming all %d regions", len(allRegions)))
 		client.regions = allRegions
 		wildcardAllRegions = true
 	}
@@ -377,7 +384,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
-				if len(awsConfig.Regions) > 0 {
+				if len(awsConfig.Regions) > 0 && awsConfig.Regions[0] != "*" {
 					o.Region = awsConfig.Regions[0]
 				}
 			})
