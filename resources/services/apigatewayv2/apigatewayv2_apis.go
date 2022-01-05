@@ -43,11 +43,7 @@ func Apigatewayv2Apis() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Api)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{apiIDPart, *r.ApiId}, nil
+					return []string{apiIDPart, *resource.Item.(types.Api).ApiId}, nil
 				}),
 			},
 			{
@@ -187,14 +183,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Authorizer)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Authorizer)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, "authorizers", *r.AuthorizerId}, nil
 						}),
 					},
@@ -285,14 +275,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Deployment)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Deployment)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, "deployments", *r.DeploymentId}, nil
 						}),
 					},
@@ -351,14 +335,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Integration)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Integration)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, "integrations", *r.IntegrationId}, nil
 						}),
 					},
@@ -488,18 +466,8 @@ func Apigatewayv2Apis() *schema.Table {
 								Description: "The Amazon Resource Name (ARN) for the resource.",
 								Type:        schema.TypeString,
 								Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-									r, ok := resource.Item.(types.IntegrationResponse)
-									if !ok {
-										return nil, client.UnexpectedResourceType(r, resource.Item)
-									}
-									i, ok := resource.Parent.Item.(types.Integration)
-									if !ok {
-										return nil, client.UnexpectedResourceType(i, resource.Parent.Item)
-									}
-									api, ok := resource.Parent.Parent.Item.(types.Api)
-									if !ok {
-										return nil, client.UnexpectedResourceType(api, resource.Parent.Item)
-									}
+									r := resource.Item.(types.IntegrationResponse)
+									api := resource.Parent.Parent.Item.(types.Api)
 									return []string{apiIDPart, *api.ApiId, "integrationresponses", *r.IntegrationResponseId}, nil
 								}),
 							},
@@ -560,14 +528,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Model)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Model)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, "models", *r.ModelId}, nil
 						}),
 					},
@@ -626,14 +588,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Route)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Route)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, apiRouteIDPart, *r.RouteId}, nil
 						}),
 					},
@@ -727,18 +683,9 @@ func Apigatewayv2Apis() *schema.Table {
 								Description: "The Amazon Resource Name (ARN) for the resource.",
 								Type:        schema.TypeString,
 								Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-									r, ok := resource.Item.(types.RouteResponse)
-									if !ok {
-										return nil, client.UnexpectedResourceType(r, resource.Item)
-									}
-									route, ok := resource.Parent.Item.(types.Route)
-									if !ok {
-										return nil, client.UnexpectedResourceType(route, resource.Item)
-									}
-									api, ok := resource.Parent.Parent.Item.(types.Api)
-									if !ok {
-										return nil, client.UnexpectedResourceType(api, resource.Parent.Item)
-									}
+									r := resource.Item.(types.RouteResponse)
+									route := resource.Parent.Item.(types.Route)
+									api := resource.Parent.Parent.Item.(types.Api)
 									return []string{apiIDPart, *api.ApiId, apiRouteIDPart, *route.RouteId, "routeresponses", *r.RouteResponseId}, nil
 								}),
 							},
@@ -794,14 +741,8 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.Stage)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.Api)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.Stage)
+							p := resource.Parent.Item.(types.Api)
 							return []string{apiIDPart, *p.ApiId, "stages", *r.StageName}, nil
 						}),
 					},
