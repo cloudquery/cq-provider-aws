@@ -38,11 +38,7 @@ func RedshiftClusters() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.RedshiftService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Cluster)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"cluster", *r.ClusterIdentifier}, nil
+					return []string{"cluster", *resource.Item.(types.Cluster).ClusterIdentifier}, nil
 				}),
 			},
 			{

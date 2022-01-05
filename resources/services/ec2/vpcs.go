@@ -37,11 +37,7 @@ func Ec2Vpcs() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Vpc)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"vpc", *r.VpcId}, nil
+					return []string{"vpc", *resource.Item.(types.Vpc).VpcId}, nil
 				}),
 			},
 			{

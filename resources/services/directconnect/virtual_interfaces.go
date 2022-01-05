@@ -31,11 +31,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.VirtualInterface)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"dxvif", *r.VirtualInterfaceId}, nil
+					return []string{"dxvif", *resource.Item.(types.VirtualInterface).VirtualInterfaceId}, nil
 				}),
 			},
 			{

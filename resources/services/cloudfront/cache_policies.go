@@ -31,11 +31,7 @@ func CloudfrontCachePolicies() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNWithAccount(client.CloudfrontService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.CachePolicySummary)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"cache-policy", *r.CachePolicy.Id}, nil
+					return []string{"cache-policy", *resource.Item.(types.CachePolicySummary).CachePolicy.Id}, nil
 				}),
 			},
 			{

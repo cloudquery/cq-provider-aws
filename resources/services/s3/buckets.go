@@ -100,11 +100,7 @@ func S3Buckets() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNGlobal(client.S3Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(*WrappedBucket)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{*r.Name}, nil
+					return []string{*resource.Item.(*WrappedBucket).Name}, nil
 				}),
 			},
 		},

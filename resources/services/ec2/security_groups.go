@@ -37,11 +37,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.SecurityGroup)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"security-group", *r.GroupId}, nil
+					return []string{"security-group", *resource.Item.(types.SecurityGroup).GroupId}, nil
 				}),
 			},
 			{

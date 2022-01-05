@@ -29,11 +29,7 @@ func Route53ReusableDelegationSets() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNGlobal(client.Route53Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.DelegationSet)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"delegationset", *r.Id}, nil
+					return []string{"delegationset", *resource.Item.(types.DelegationSet).Id}, nil
 				}),
 			},
 			{

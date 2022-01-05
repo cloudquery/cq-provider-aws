@@ -37,11 +37,7 @@ func Ec2NetworkAcls() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.NetworkAcl)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"network-acl", *r.NetworkAclId}, nil
+					return []string{"network-acl", *resource.Item.(types.NetworkAcl).NetworkAclId}, nil
 				}),
 			},
 			{

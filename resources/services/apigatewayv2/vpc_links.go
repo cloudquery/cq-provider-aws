@@ -37,11 +37,7 @@ func Apigatewayv2VpcLinks() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.VpcLink)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"vpclinks", *r.VpcLinkId}, nil
+					return []string{"vpclinks", *resource.Item.(types.VpcLink).VpcLinkId}, nil
 				}),
 			},
 			{

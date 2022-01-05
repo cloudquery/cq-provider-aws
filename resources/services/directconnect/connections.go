@@ -37,11 +37,7 @@ func DirectconnectConnections() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Connection)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"dxcon", *r.ConnectionId}, nil
+					return []string{"dxcon", *resource.Item.(types.Connection).ConnectionId}, nil
 				}),
 			},
 			{

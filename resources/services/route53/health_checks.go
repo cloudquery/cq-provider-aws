@@ -221,11 +221,7 @@ func Route53HealthChecks() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNGlobal(client.Route53Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(Route53HealthCheckWrapper)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"healthcheck", *r.Id}, nil
+					return []string{"healthcheck", *resource.Item.(Route53HealthCheckWrapper).Id}, nil
 				}),
 			},
 		},

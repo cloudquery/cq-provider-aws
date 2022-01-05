@@ -36,11 +36,7 @@ func DirectconnectLags() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Lag)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"dxlag", *r.LagId}, nil
+					return []string{"dxlag", *resource.Item.(types.Lag).LagId}, nil
 				}),
 			},
 			{
@@ -207,10 +203,7 @@ func resolveDirectconnectLagTags(ctx context.Context, meta schema.ClientMeta, re
 }
 
 func fetchDirectconnectLagMacSecKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	connection, ok := parent.Item.(types.Lag)
-	if !ok {
-		return client.UnexpectedResourceType(connection, parent.Item)
-	}
+	connection := parent.Item.(types.Lag)
 	res <- connection.MacSecKeys
 	return nil
 }

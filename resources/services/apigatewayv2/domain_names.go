@@ -42,11 +42,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.DomainName)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{domainNamesIDPart, *r.DomainName}, nil
+					return []string{domainNamesIDPart, *resource.Item.(types.DomainName).DomainName}, nil
 				}),
 			},
 			{
@@ -164,14 +160,8 @@ func Apigatewayv2DomainNames() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.ApiMapping)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							p, ok := resource.Parent.Item.(types.DomainName)
-							if !ok {
-								return nil, client.UnexpectedResourceType(p, resource.Parent.Item)
-							}
+							r := resource.Item.(types.ApiMapping)
+							p := resource.Parent.Item.(types.DomainName)
 							return []string{domainNamesIDPart, *p.DomainName, "apimappings", *r.ApiMappingId}, nil
 						}),
 					},

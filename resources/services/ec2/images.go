@@ -37,11 +37,7 @@ func Ec2Images() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARNWithRegion(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Image)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"image", *r.ImageId}, nil
+					return []string{"image", *resource.Item.(types.Image).ImageId}, nil
 				}),
 			},
 			{

@@ -39,11 +39,7 @@ func Ec2Instances() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(types.Instance)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"instance", *r.InstanceId}, nil
+					return []string{"instance", *resource.Item.(types.Instance).InstanceId}, nil
 				}),
 			},
 			{
@@ -511,11 +507,7 @@ func Ec2Instances() *schema.Table {
 						Description: "The Amazon Resource Name (ARN) for the resource.",
 						Type:        schema.TypeString,
 						Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-							r, ok := resource.Item.(types.InstanceNetworkInterface)
-							if !ok {
-								return nil, client.UnexpectedResourceType(r, resource.Item)
-							}
-							return []string{"network-interface", *r.NetworkInterfaceId}, nil
+							return []string{"network-interface", *resource.Item.(types.InstanceNetworkInterface).NetworkInterfaceId}, nil
 						}),
 					},
 					{

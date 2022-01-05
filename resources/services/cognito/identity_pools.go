@@ -37,11 +37,7 @@ func CognitoIdentityPools() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.CognitoIdentityService, func(resource *schema.Resource) ([]string, error) {
-					r, ok := resource.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
-					if !ok {
-						return nil, client.UnexpectedResourceType(r, resource.Item)
-					}
-					return []string{"identitypool", *r.IdentityPoolId}, nil
+					return []string{"identitypool", *resource.Item.(*cognitoidentity.DescribeIdentityPoolOutput).IdentityPoolId}, nil
 				}),
 			},
 			{
