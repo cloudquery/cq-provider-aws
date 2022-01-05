@@ -291,6 +291,11 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		client.regions = allRegions
 		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
 	}
+	var wildcardAllRegions bool
+	if len(client.regions) == 1 && client.regions[0] == "*" {
+		client.regions = allRegions
+		wildcardAllRegions = true
+	}
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
@@ -379,7 +384,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
-		client.regions = filterDisabledRegions(client.regions, res.Regions)
+		client.regions = filterDisabledRegions(client.regions, res.Regions, wildcardAllRegions)
 
 		if len(client.regions) == 0 {
 			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
@@ -464,7 +469,7 @@ func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
 	}
 }
 
-func filterDisabledRegions(regions []string, enabledRegions []types.Region) []string {
+func filterDisabledRegions(regions []string, enabledRegions []types.Region, allRegions bool) []string {
 	regionsMap := map[string]bool{}
 	for _, r := range enabledRegions {
 		if r.RegionName != nil && r.OptInStatus != nil && *r.OptInStatus != "not-opted-in" {
@@ -473,9 +478,15 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 	}
 
 	var filteredRegions []string
-	for _, r := range regions {
-		if regionsMap[r] {
-			filteredRegions = append(filteredRegions, r)
+	if allRegions {
+		for region := range regionsMap {
+			filteredRegions = append(filteredRegions, region)
+		}
+	} else {
+		for _, r := range regions {
+			if regionsMap[r] {
+				filteredRegions = append(filteredRegions, r)
+			}
 		}
 	}
 	return filteredRegions
