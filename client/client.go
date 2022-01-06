@@ -372,8 +372,8 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
-				if len(awsConfig.Regions) > 0 {
-					o.Region = awsConfig.Regions[0]
+				if len(localRegions) > 0 {
+					o.Region = localRegions[0]
 				}
 			})
 		if err != nil {
