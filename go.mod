@@ -65,6 +65,9 @@ require (
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/spf13/cast v1.4.1
 	github.com/stretchr/testify v1.7.0
+	github.com/aws/aws-sdk-go-v2/service/codebuild v1.14.1
+	github.com/aws/aws-sdk-go-v2/service/route53domains v1.6.0
+	github.com/google/go-cmp v0.5.6
 )
 
 require (
@@ -146,8 +149,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-require (
-	github.com/aws/aws-sdk-go-v2/service/codebuild v1.14.1
-	github.com/aws/aws-sdk-go-v2/service/route53domains v1.6.0
-	github.com/google/go-cmp v0.5.6
-)
+replace github.com/cloudquery/cq-provider-sdk v0.6.1 => ../cq-provider-sdk
