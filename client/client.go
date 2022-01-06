@@ -287,18 +287,15 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
 
-	if len(client.regions) == 0 {
-		client.regions = allRegions
-		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
-	} else {
-		for i, region := range client.regions {
-			if i != 0 && region == "*" {
-				return nil, fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
-			}
+	// validate regions values
+	for i, region := range client.regions {
+		if i != 0 && region == "*" {
+			return nil, fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
 		}
 	}
+
 	var wildcardAllRegions bool
-	if len(client.regions) == 1 && client.regions[0] == "*" {
+	if len(client.regions) == 1 && client.regions[0] == "*" || len(client.regions) == 0 {
 		logger.Info(fmt.Sprintf("All regions specified in config.yml. Assuming all %d regions", len(allRegions)))
 		client.regions = allRegions
 		wildcardAllRegions = true
@@ -485,6 +482,8 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region, allR
 	}
 
 	var filteredRegions []string
+	// Our list of regions might not always be the latest and most up to date list
+	// if a user specifies all regions via a "*" then they should get the most broad list possible
 	if allRegions {
 		for region := range regionsMap {
 			filteredRegions = append(filteredRegions, region)
