@@ -308,7 +308,8 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			RoleARN:   defaultVar,
 		})
 	}
-
+	// Use a copy of the full region list for each account
+	localRegions := client.regions
 	for _, account := range awsConfig.Accounts {
 		var err error
 		var awsCfg aws.Config
@@ -381,14 +382,14 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
-				if len(awsConfig.Regions) > 0 && awsConfig.Regions[0] != "*" {
-					o.Region = awsConfig.Regions[0]
+				if len(localRegions) > 0 {
+					o.Region = localRegions[0]
 				}
 			})
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
-		client.regions = filterDisabledRegions(client.regions, res.Regions, wildcardAllRegions)
+		localRegions = filterDisabledRegions(localRegions, res.Regions, wildcardAllRegions)
 
 		if len(client.regions) == 0 {
 			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
@@ -397,10 +398,10 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if client.AccountID == "" {
 			// set default
 			client.AccountID = *output.Account
-			client.Region = client.regions[0]
+			client.Region = localRegions[0]
 			client.Accounts = append(client.Accounts, Account{ID: *output.Account, RoleARN: *output.Arn})
 		}
-		for _, region := range client.regions {
+		for _, region := range localRegions {
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
 		}
 	}
