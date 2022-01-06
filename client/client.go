@@ -287,9 +287,18 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
 
-	if len(client.regions) == 0 {
+	// validate regions values
+	for i, region := range client.regions {
+		if i != 0 && region == "*" {
+			return nil, fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
+		}
+	}
+
+	var wildcardAllRegions bool
+	if len(client.regions) == 1 && client.regions[0] == "*" || len(client.regions) == 0 {
+		logger.Info(fmt.Sprintf("All regions specified in config.yml. Assuming all %d regions", len(allRegions)))
 		client.regions = allRegions
-		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
+		wildcardAllRegions = true
 	}
 
 	if len(awsConfig.Accounts) == 0 {
@@ -380,7 +389,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
-		localRegions = filterDisabledRegions(localRegions, res.Regions)
+		localRegions = filterDisabledRegions(localRegions, res.Regions, wildcardAllRegions)
 
 		if len(client.regions) == 0 {
 			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
@@ -465,7 +474,7 @@ func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
 	}
 }
 
-func filterDisabledRegions(regions []string, enabledRegions []types.Region) []string {
+func filterDisabledRegions(regions []string, enabledRegions []types.Region, allRegions bool) []string {
 	regionsMap := map[string]bool{}
 	for _, r := range enabledRegions {
 		if r.RegionName != nil && r.OptInStatus != nil && *r.OptInStatus != "not-opted-in" {
@@ -474,9 +483,17 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 	}
 
 	var filteredRegions []string
-	for _, r := range regions {
-		if regionsMap[r] {
-			filteredRegions = append(filteredRegions, r)
+	// Our list of regions might not always be the latest and most up to date list
+	// if a user specifies all regions via a "*" then they should get the most broad list possible
+	if allRegions {
+		for region := range regionsMap {
+			filteredRegions = append(filteredRegions, region)
+		}
+	} else {
+		for _, r := range regions {
+			if regionsMap[r] {
+				filteredRegions = append(filteredRegions, r)
+			}
 		}
 	}
 	return filteredRegions
