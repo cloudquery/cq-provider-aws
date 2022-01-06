@@ -299,7 +299,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			RoleARN:   defaultVar,
 		})
 	}
-	// Use a copy of the full region list
+	// Use a copy of the full region list for each account
 	localRegions := client.regions
 	for _, account := range awsConfig.Accounts {
 		var err error
