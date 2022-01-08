@@ -162,7 +162,6 @@ type Client struct {
 	// Those are already normalized values after configure and this is why we don't want to hold
 	// config directly.
 	Accounts        []Account
-	regions         []string
 	logLevel        *string
 	maxRetries      int
 	maxBackoff      int
@@ -192,14 +191,13 @@ func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, o
 	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
 }
 
-func NewAwsClient(logger hclog.Logger, accounts []Account, regions []string) Client {
+func NewAwsClient(logger hclog.Logger, accounts []Account) Client {
 	return Client{
 		ServicesManager: ServicesManager{
 			services: ServicesAccountRegionMap{},
 		},
 		logger:   logger,
 		Accounts: accounts,
-		regions:  regions,
 	}
 }
 func (c *Client) Logger() hclog.Logger {
@@ -213,7 +211,6 @@ func (c *Client) Services() *Services {
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -228,7 +225,6 @@ func (c *Client) withAccountID(accountID string) *Client {
 func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -243,7 +239,6 @@ func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -275,7 +270,7 @@ func validateRegions(logger hclog.Logger, regions []string) (bool, error) {
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
+	client := NewAwsClient(logger, awsConfig.Accounts)
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
@@ -291,7 +286,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		localRegions := account.Regions
 
 		if len(localRegions) == 0 {
-			localRegions = client.regions
+			localRegions = awsConfig.Regions
 		}
 
 		wildcardAllRegions, err := validateRegions(logger, localRegions)
