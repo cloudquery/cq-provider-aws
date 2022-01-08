@@ -69,33 +69,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-// Provider Client passed as meta to all table fetchers
-
-var allRegions = []string{
-	"us-east-1",
-	"us-east-2",
-	"us-west-1",
-	"us-west-2",
-	"af-south-1",
-	"ap-east-1",
-	"ap-south-1",
-	"ap-northeast-1",
-	"ap-northeast-2",
-	"ap-southeast-1",
-	"ap-southeast-2",
-	"ca-central-1",
-	"cn-north-1",
-	"cn-northwest-1",
-	"eu-central-1",
-	"eu-west-1",
-	"eu-west-2",
-	"eu-west-3",
-	"eu-south-1",
-	"eu-north-1",
-	"me-south-1",
-	"sa-east-1",
-}
-
 var envVarsToCheck = []string{
 	"AWS_PROFILE",
 	"AWS_ACCESS_KEY_ID",
@@ -180,7 +153,7 @@ func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region st
 
 func (s *ServicesManager) InitServicesForAccountAndRegion(accountId string, region string, services Services) {
 	if s.services[accountId] == nil {
-		s.services[accountId] = make(map[string]*Services, len(allRegions))
+		s.services[accountId] = make(map[string]*Services)
 	}
 	s.services[accountId][region] = &services
 }
@@ -282,25 +255,31 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 	}
 }
 
-func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
-	ctx := context.Background()
-	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
-
+func validateRegions(logger hclog.Logger, regions []string) (bool, error) {
 	// validate regions values
-	for i, region := range client.regions {
+	for i, region := range regions {
 		if i != 0 && region == "*" {
-			return nil, fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
+			return false, fmt.Errorf("region wildcard \"*\" is only supported as first argument")
 		}
 	}
 
 	var wildcardAllRegions bool
-	if len(client.regions) == 1 && client.regions[0] == "*" || len(client.regions) == 0 {
-		logger.Info(fmt.Sprintf("All regions specified in config.yml. Assuming all %d regions", len(allRegions)))
-		client.regions = allRegions
+	if len(regions) == 1 && regions[0] == "*" || len(regions) == 0 {
+		logger.Info("All regions specified in config.yml. Assuming all regions")
 		wildcardAllRegions = true
 	}
+	return wildcardAllRegions, nil
 
+}
+
+func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
+	ctx := context.Background()
+	awsConfig := providerConfig.(*Config)
+	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
+	wildcardAllRegions, err := validateRegions(logger, client.regions)
+	if err != nil {
+		return nil, err
+	}
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
 			ID:        defaultVar,
@@ -310,14 +289,18 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	}
 
 	for _, account := range awsConfig.Accounts {
-		// Use a copy of the full region list for each account
-		localRegions := account.Regions
-		if len(localRegions) == 0 {
-			localRegions = client.regions
-		}
-
 		var err error
 		var awsCfg aws.Config
+		// Use a copy of the full region list for each account
+		localRegions := client.regions
+
+		if len(localRegions) > 0 {
+			localRegions = client.regions
+			wildcardAllRegions, err = validateRegions(logger, account.Regions)
+			if err != nil {
+				return nil, err
+			}
+		}
 
 		// account id can be defined in account block label or in block attr
 		// we take the block att as default and use the block label if the attr is not defined
@@ -387,7 +370,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
-				if len(localRegions) > 0 {
+				if len(localRegions) > 0 && !wildcardAllRegions {
 					o.Region = localRegions[0]
 				}
 			})
