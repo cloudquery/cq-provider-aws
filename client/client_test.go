@@ -121,13 +121,13 @@ func Test_isValidRegions(t *testing.T) {
 			want:    nil,
 		}, {
 			regions: []string{"us-east-1", "*"},
-			want:    InvalidRegionError,
+			want:    errInvalidRegion,
 		}, {
 			regions: []string{"*"},
 			want:    nil,
 		}, {
 			regions: []string{"*", "us-east-1"},
-			want:    InvalidRegionError,
+			want:    errInvalidRegion,
 		},
 	}
 	for i, tt := range tests {

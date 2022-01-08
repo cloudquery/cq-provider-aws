@@ -85,7 +85,7 @@ const (
 	defaultVar                 = "default"
 )
 
-var InvalidRegionError = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
+var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
 
 type Services struct {
 	ACM                    ACMClient
@@ -260,15 +260,17 @@ func isValidRegions(regions []string) error {
 			hasWildcard = true
 		}
 		if i != 0 && region == "*" {
-			return InvalidRegionError
+			return errInvalidRegion
 		}
 		if i > 0 && hasWildcard {
-			return InvalidRegionError
+			return errInvalidRegion
 		}
 	}
 	return nil
 }
 func isAllRegions(regions []string) bool {
+
+	// if regions array is not valid return false
 	err := isValidRegions(regions)
 	if err != nil {
 		return false
