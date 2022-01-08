@@ -276,10 +276,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
-	wildcardAllRegions, err := validateRegions(logger, client.regions)
-	if err != nil {
-		return nil, err
-	}
+
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
 			ID:        defaultVar,
@@ -291,15 +288,15 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	for _, account := range awsConfig.Accounts {
 		var err error
 		var awsCfg aws.Config
-		// Use a copy of the full region list for each account
-		localRegions := client.regions
+		localRegions := account.Regions
 
-		if len(localRegions) > 0 {
+		if len(localRegions) == 0 {
 			localRegions = client.regions
-			wildcardAllRegions, err = validateRegions(logger, account.Regions)
-			if err != nil {
-				return nil, err
-			}
+		}
+
+		wildcardAllRegions, err := validateRegions(logger, localRegions)
+		if err != nil {
+			return nil, err
 		}
 
 		// account id can be defined in account block label or in block attr
