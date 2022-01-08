@@ -85,6 +85,8 @@ const (
 	defaultVar                 = "default"
 )
 
+var InvalidRegionError = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
+
 type Services struct {
 	ACM                    ACMClient
 	Analyzer               AnalyzerClient
@@ -252,16 +254,28 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 
 func isValidRegions(regions []string) error {
 	// validate regions values
+	var hasWildcard bool
 	for i, region := range regions {
+		if region == "*" {
+			hasWildcard = true
+		}
 		if i != 0 && region == "*" {
-			return fmt.Errorf("region wildcard \"*\" is only supported as first argument")
+			return InvalidRegionError
+		}
+		if i > 0 && hasWildcard {
+			return InvalidRegionError
 		}
 	}
 	return nil
 }
 func isAllRegions(regions []string) bool {
+	err := isValidRegions(regions)
+	if err != nil {
+		return false
+	}
+
 	wildcardAllRegions := false
-	if (len(regions) == 1) && (regions[0] == "*" || len(regions) == 0) {
+	if (len(regions) == 1 && regions[0] == "*") || (len(regions) == 0) {
 		wildcardAllRegions = true
 	}
 	return wildcardAllRegions
