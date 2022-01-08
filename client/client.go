@@ -71,31 +71,6 @@ import (
 
 // Provider Client passed as meta to all table fetchers
 
-var allRegions = []string{
-	"us-east-1",
-	"us-east-2",
-	"us-west-1",
-	"us-west-2",
-	"af-south-1",
-	"ap-east-1",
-	"ap-south-1",
-	"ap-northeast-1",
-	"ap-northeast-2",
-	"ap-southeast-1",
-	"ap-southeast-2",
-	"ca-central-1",
-	"cn-north-1",
-	"cn-northwest-1",
-	"eu-central-1",
-	"eu-west-1",
-	"eu-west-2",
-	"eu-west-3",
-	"eu-south-1",
-	"eu-north-1",
-	"me-south-1",
-	"sa-east-1",
-}
-
 var envVarsToCheck = []string{
 	"AWS_PROFILE",
 	"AWS_ACCESS_KEY_ID",
@@ -180,7 +155,7 @@ func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region st
 
 func (s *ServicesManager) InitServicesForAccountAndRegion(accountId string, region string, services Services) {
 	if s.services[accountId] == nil {
-		s.services[accountId] = make(map[string]*Services, len(allRegions))
+		s.services[accountId] = make(map[string]*Services)
 	}
 	s.services[accountId][region] = &services
 }
@@ -189,7 +164,6 @@ type Client struct {
 	// Those are already normalized values after configure and this is why we don't want to hold
 	// config directly.
 	Accounts        []Account
-	regions         []string
 	logLevel        *string
 	maxRetries      int
 	maxBackoff      int
@@ -219,14 +193,13 @@ func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, o
 	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
 }
 
-func NewAwsClient(logger hclog.Logger, accounts []Account, regions []string) Client {
+func NewAwsClient(logger hclog.Logger, accounts []Account) Client {
 	return Client{
 		ServicesManager: ServicesManager{
 			services: ServicesAccountRegionMap{},
 		},
 		logger:   logger,
 		Accounts: accounts,
-		regions:  regions,
 	}
 }
 func (c *Client) Logger() hclog.Logger {
@@ -240,7 +213,6 @@ func (c *Client) Services() *Services {
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -255,7 +227,6 @@ func (c *Client) withAccountID(accountID string) *Client {
 func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -270,7 +241,6 @@ func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace string) *Client {
 	return &Client{
 		Accounts:             c.Accounts,
-		regions:              c.regions,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
@@ -285,11 +255,14 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger, awsConfig.Accounts, awsConfig.Regions)
+	client := NewAwsClient(logger, awsConfig.Accounts)
 
-	if len(client.regions) == 0 {
-		client.regions = allRegions
-		logger.Info(fmt.Sprintf("No regions specified in config.yml. Assuming all %d regions", len(client.regions)))
+	if err := validateRegions(awsConfig.Regions); err != nil {
+		return nil, err
+	}
+
+	if isAllRegions(awsConfig.Regions) {
+		logger.Info("assuming all regions")
 	}
 
 	if len(awsConfig.Accounts) == 0 {
@@ -379,19 +352,19 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
-		client.regions = filterDisabledRegions(client.regions, res.Regions)
+		filteredRegions := filterDisabledRegions(awsConfig.Regions, res.Regions)
 
-		if len(client.regions) == 0 {
+		if len(filteredRegions) == 0 {
 			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
 		}
 
 		if client.AccountID == "" {
 			// set default
 			client.AccountID = *output.Account
-			client.Region = client.regions[0]
+			client.Region = filteredRegions[0]
 			client.Accounts = append(client.Accounts, Account{ID: *output.Account, RoleARN: *output.Arn})
 		}
-		for _, region := range client.regions {
+		for _, region := range filteredRegions {
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
 		}
 	}
@@ -472,12 +445,20 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 		}
 	}
 
-	var filteredRegions []string
-	for _, r := range regions {
-		if regionsMap[r] {
-			filteredRegions = append(filteredRegions, r)
+	filteredRegions := make([]string, 0, len(enabledRegions))
+	// if a user specifies all regions via a "*" then they should get all the regions without filter
+	if isAllRegions(regions) {
+		for region := range regionsMap {
+			filteredRegions = append(filteredRegions, region)
+		}
+	} else {
+		for _, r := range regions {
+			if regionsMap[r] {
+				filteredRegions = append(filteredRegions, r)
+			}
 		}
 	}
+
 	return filteredRegions
 }
 

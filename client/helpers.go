@@ -89,6 +89,23 @@ func isSupportedServiceForRegion(service string, region string) bool {
 	return true
 }
 
+// isAllRegions return true if regions is empty which means fetch all regions
+// or ["*"]
+func isAllRegions(regions []string) bool {
+	return len(regions) == 0 || (len(regions) == 1 && regions[0] == "*")
+}
+
+// validateRegions will return an error for the following cases (cases might grow over time):
+// "*" is specified with aditional regions
+func validateRegions(regions []string) error {
+	for i, r := range regions {
+		if i != 0 && r == "*" {
+			return fmt.Errorf("region wildcard \"*\" is only supported in 0 index")
+		}
+	}
+	return nil
+}
+
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
