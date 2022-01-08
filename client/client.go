@@ -250,20 +250,21 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 	}
 }
 
-func validateRegions(logger hclog.Logger, regions []string) (bool, error) {
+func isValidRegions(regions []string) error {
 	// validate regions values
 	for i, region := range regions {
 		if i != 0 && region == "*" {
-			return false, fmt.Errorf("region wildcard \"*\" is only supported as first argument")
+			return fmt.Errorf("region wildcard \"*\" is only supported as first argument")
 		}
 	}
-
-	var wildcardAllRegions bool
-	if len(regions) == 1 && regions[0] == "*" || len(regions) == 0 {
-		logger.Info("All regions specified in config.yml. Assuming all regions")
+	return nil
+}
+func isAllRegions(regions []string) bool {
+	wildcardAllRegions := false
+	if (len(regions) == 1) && (regions[0] == "*" || len(regions) == 0) {
 		wildcardAllRegions = true
 	}
-	return wildcardAllRegions, nil
+	return wildcardAllRegions
 
 }
 
@@ -289,9 +290,12 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			localRegions = awsConfig.Regions
 		}
 
-		wildcardAllRegions, err := validateRegions(logger, localRegions)
+		err = isValidRegions(localRegions)
 		if err != nil {
 			return nil, err
+		}
+		if isAllRegions(localRegions) {
+			logger.Info("All regions specified in config.yml. Assuming all regions")
 		}
 
 		// account id can be defined in account block label or in block attr
@@ -362,14 +366,14 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
-				if len(localRegions) > 0 && !wildcardAllRegions {
+				if len(localRegions) > 0 && !isAllRegions(localRegions) {
 					o.Region = localRegions[0]
 				}
 			})
 		if err != nil {
 			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
 		}
-		account.Regions = filterDisabledRegions(localRegions, res.Regions, wildcardAllRegions)
+		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
 			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
@@ -454,7 +458,7 @@ func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
 	}
 }
 
-func filterDisabledRegions(regions []string, enabledRegions []types.Region, allRegions bool) []string {
+func filterDisabledRegions(regions []string, enabledRegions []types.Region) []string {
 	regionsMap := map[string]bool{}
 	for _, r := range enabledRegions {
 		if r.RegionName != nil && r.OptInStatus != nil && *r.OptInStatus != "not-opted-in" {
@@ -465,7 +469,7 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region, allR
 	var filteredRegions []string
 	// Our list of regions might not always be the latest and most up to date list
 	// if a user specifies all regions via a "*" then they should get the most broad list possible
-	if allRegions {
+	if isAllRegions(regions) {
 		for region := range regionsMap {
 			filteredRegions = append(filteredRegions, region)
 		}
