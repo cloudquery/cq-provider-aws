@@ -50,12 +50,12 @@ provider "aws" {
 }
 ```
 
-By default, CloudQuery will fetch all configuration from **all** resources in **all** regions in the **default** account. You can change this behavior with the following arguments:
+By default, CloudQuery will fetch all configuration from **all** supported resources in **all** commercial regions in the **default** account. You can change this behavior with the following arguments:
 
-### Arguments
+#### Arguments for AWS Provider block
 
 - `accounts` **(Optional)** - Specify multiple accounts to fetch data from them concurrently and then query across accounts. The default configured account should be able [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) to the specified accounts.
-- `regions` **(Optional)** - limit fetching to specific regions.
+- `regions` **(Optional)** - limit fetching to specific regions. You can specify all regions by using the `*` character as the only argument in the array
 - `max_retries` **(Optional)** - The maximum number of times that a request will be retried for failures. Defaults to 5 retry attempts.
 - `max_backoff` **(Optional)** - The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts. Defaults to 60 seconds.
 - `aws_debug` **(Optional)** - This will print very verbose/debug output from AWS SDK. Defaults to false.
@@ -69,18 +69,32 @@ provider "aws" {
   configuration {
     // Optional. if you want to assume role to multiple account and fetch data from them
     accounts "<AccountID_1>" {
-      Optional. Role ARN we want to assume when accessing this account
+      // Optional. Role ARN we want to assume when accessing this account
       role_arn = <YOUR_ROLE_ARN_1>
+      // Optional. Local Profile is the named profile in your shared configuration file (usually `~/.aws/config`) that you want to use for this specific account
+      local_profile = "<NAMED_PROFILE>
     }
-    accounts "<AccountID_2>" {
-      Optional. Role ARN we want to assume when accessing this account
+    accounts "<AccountID_Alias_2>" {
+      // Optional. Role ARN we want to assume when accessing this account
       role_arn = <YOUR_ROLE_ARN_2>
+      // Optional Account ID is the named profile in your shared configuration file (usually `~/.aws/config`)
+      account_id = "<NAMED_PROFILE>
     }
   }
 
   resources = ["*"]
 }
 ```
+
+
+#### Arguments for Accounts block:
+
+- `role_arn`  **(Optional)** - The role that CloudQuery will use to perform the fetch
+- `local_profile`  **(Optional)** - Local Profile is the named profile in your shared configuration file (usually `~/.aws/config`) that you want to use for the account
+- `external_id`    **(Optional)** - The unique identifier used to by non aws entities to assume a role in an AWS account
+- `regions`  **(Optional)** - Limit fetching resources within this specific account to only these regions. This will override any regions specified in the provider block. You can specify all regions by using the `*` character as the only argument in the array
+
+
 
 ### Assume Role with MFA
 

@@ -324,24 +324,13 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		// This is a try to solve https://aws.amazon.com/premiumsupport/knowledge-center/iam-validate-access-credentials/
 		// with this https://github.com/aws/aws-sdk-go-v2/issues/515#issuecomment-607387352
 		switch {
-		case accountID != "default" && account.RoleARN != "":
-			// assume role if specified (SDK takes it from default or env var: AWS_PROFILE)
+		case account.LocalProfile != "":
 			awsCfg, err = config.LoadDefaultConfig(
 				ctx,
 				config.WithDefaultRegion(defaultRegion),
+				config.WithSharedConfigProfile(account.LocalProfile),
 				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 			)
-			if err != nil {
-				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
-			}
-			opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
-			if account.ExternalID != "" {
-				opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
-					opts.ExternalID = &account.ExternalID
-				})
-			}
-			provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
-			awsCfg.Credentials = aws.NewCredentialsCache(provider)
 		case accountID != "default":
 			awsCfg, err = config.LoadDefaultConfig(
 				ctx,
@@ -359,6 +348,17 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 		if err != nil {
 			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
+		}
+
+		if account.RoleARN != "" {
+			opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
+			if account.ExternalID != "" {
+				opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
+					opts.ExternalID = &account.ExternalID
+				})
+			}
+			provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
+			awsCfg.Credentials = aws.NewCredentialsCache(provider)
 		}
 
 		if awsConfig.AWSDebug {
