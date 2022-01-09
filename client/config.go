@@ -18,7 +18,7 @@ type Config struct {
 }
 
 func (c Config) Example() string {
-	return `configuration {
+	return ` configuration {
   // Optional. if you want to assume role to multiple account and fetch data from them
   // accounts "<YOUR ACCOUNT ID>" {
     // Optional. Role ARN we want to assume when accessing this account
