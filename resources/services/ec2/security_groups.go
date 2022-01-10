@@ -279,12 +279,11 @@ func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.
 	for _, ip := range securityGroupIpPermission.Ipv6Ranges {
 		ipRanges = append(ipRanges, customIpRange{aws.ToString(ip.CidrIpv6), aws.ToString(ip.Description), "ipv6"})
 	}
-
 	res <- ipRanges
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionPrefixListIds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission, ok := parent.Item.(types.IpPermission)
+	securityGroupIpPermission, ok := parent.Item.(ipPermission)
 	if !ok {
 		return fmt.Errorf("not ec2 security group ip permission in ip range")
 	}
@@ -292,7 +291,7 @@ func fetchEc2SecurityGroupIpPermissionPrefixListIds(ctx context.Context, meta sc
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission, ok := parent.Item.(types.IpPermission)
+	securityGroupIpPermission, ok := parent.Item.(ipPermission)
 	if !ok {
 		return fmt.Errorf("not ec2 security group ip permission in user id group pair")
 	}
