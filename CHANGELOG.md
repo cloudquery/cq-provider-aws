@@ -5,7 +5,7 @@ All notable changes to this provider will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.8.5] - 2022-01-10
+## [v0.9.0] - 2022-01-10
 ###### SDK Version: 0.6.1
 ### :spider: Fixed
 * chore: update partition_service_region.json [#398](https://github.com/cloudquery/cq-provider-aws/pull/398)
