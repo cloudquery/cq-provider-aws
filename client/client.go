@@ -320,31 +320,24 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if accountID == "" {
 			accountID = account.ID
 		}
+		configFns := []func(*config.LoadOptions) error{
+			config.WithDefaultRegion(defaultRegion),
+			config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
+		}
 
 		// This is a try to solve https://aws.amazon.com/premiumsupport/knowledge-center/iam-validate-access-credentials/
 		// with this https://github.com/aws/aws-sdk-go-v2/issues/515#issuecomment-607387352
-		switch {
-		case account.LocalProfile != "":
-			awsCfg, err = config.LoadDefaultConfig(
-				ctx,
-				config.WithDefaultRegion(defaultRegion),
-				config.WithSharedConfigProfile(account.LocalProfile),
-				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
-			)
-		case accountID != "default":
-			awsCfg, err = config.LoadDefaultConfig(
-				ctx,
-				config.WithDefaultRegion(defaultRegion),
-				config.WithSharedConfigProfile(accountID),
-				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
-			)
-		default:
-			awsCfg, err = config.LoadDefaultConfig(
-				ctx,
-				config.WithDefaultRegion(defaultRegion),
-				config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
-			)
+
+		if account.LocalProfile != "" {
+			configFns = append(configFns, config.WithSharedConfigProfile(account.LocalProfile))
+		} else if accountID != "default" && account.RoleARN != "" {
+			// logger.Warn("Deprecation: in future version we will remove account_id. To specify a role use local_profile")
+			// Cannot use this with assume role functionality
+			// assume role if specified (SDK takes it from default or env var: AWS_PROFILE)
+			configFns = append(configFns, config.WithSharedConfigProfile(accountID))
 		}
+
+		awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
 
 		if err != nil {
 			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
@@ -358,6 +351,12 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				})
 			}
 			provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
+			// Test out retrieving credentials
+			_, err := provider.Retrieve(ctx)
+			if err != nil {
+				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
+			}
+
 			awsCfg.Credentials = aws.NewCredentialsCache(provider)
 		}
 
