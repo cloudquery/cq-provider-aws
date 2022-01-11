@@ -1,12 +1,13 @@
 
 # Table: aws_iot_security_profiles
-A security profile defines a set of expected behaviors for devices in your account and specifies the actions to take when an anomaly is detected
+
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |targets|text[]||
+|tags|jsonb||
 |additional_metrics_to_retain|text[]|Please use DescribeSecurityProfileResponse$additionalMetricsToRetainV2 instead. A list of metrics whose data is retained (stored)|
 |alert_targets|jsonb|Where the alerts are sent|
 |creation_date|timestamp without time zone|The time the security profile was created.|
