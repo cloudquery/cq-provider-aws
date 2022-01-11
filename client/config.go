@@ -25,7 +25,7 @@ func (c Config) Example() string {
     // role_arn = < YOUR_ROLE_ARN >
     // Optional. Account ID we want to assume when accessing this account - override the block label
     // account_id = < YOUR ACCOUNT ID >
-  }
+  // }
   // Optional. by default assumes all regions
   // regions = ["us-east-1", "us-west-2"]
   // Optional. Enable AWS SDK debug logging.
