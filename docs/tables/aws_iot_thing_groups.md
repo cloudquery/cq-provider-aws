@@ -8,7 +8,7 @@ Groups allow you to manage several things at once by categorizing them into grou
 |region|text|The AWS Region of the resource.|
 |things_in_group|text[]|Lists the things in the specified group|
 |policies|text[]||
-|tags|jsonb||
+|tags|jsonb|Tags of the resource|
 |index_name|text|The dynamic thing group index name.|
 |query_string|text|The dynamic thing group search query string.|
 |query_version|text|The dynamic thing group query version.|

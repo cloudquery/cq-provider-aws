@@ -18,6 +18,7 @@ func IotPolicies() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -32,9 +33,10 @@ func IotPolicies() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotPolicyTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotPolicyTags,
 			},
 			{
 				Name:        "creation_date",

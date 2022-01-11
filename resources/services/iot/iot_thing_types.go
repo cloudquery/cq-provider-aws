@@ -34,9 +34,10 @@ func IotThingTypes() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotThingTypeTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotThingTypeTags,
 			},
 			{
 				Name:        "arn",

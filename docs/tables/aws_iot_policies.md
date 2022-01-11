@@ -6,7 +6,7 @@ The output from the GetPolicy operation.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|tags|jsonb||
+|tags|jsonb|Tags of the resource|
 |creation_date|timestamp without time zone|The date the policy was created.|
 |default_version_id|text|The default policy version ID.|
 |generation_id|text|The generation ID of the policy.|

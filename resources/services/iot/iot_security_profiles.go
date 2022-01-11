@@ -19,6 +19,7 @@ func IotSecurityProfiles() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -38,14 +39,21 @@ func IotSecurityProfiles() *schema.Table {
 				Resolver: ResolveIotSecurityProfileTargets,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotSecurityProfileTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotSecurityProfileTags,
 			},
 			{
 				Name:        "additional_metrics_to_retain",
 				Description: "Please use DescribeSecurityProfileResponse$additionalMetricsToRetainV2 instead. A list of metrics whose data is retained (stored)",
 				Type:        schema.TypeStringArray,
+			},
+			{
+				Name:        "additional_metrics_to_retain_v2",
+				Description: "A list of metrics whose data is retained (stored)",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveIotSecurityProfilesAdditionalMetricsToRetainV2,
 			},
 			{
 				Name:        "alert_targets",
@@ -88,36 +96,6 @@ func IotSecurityProfiles() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_iot_security_profile_additional_metrics_to_retain_v2",
-				Description: "The metric you want to retain",
-				Resolver:    fetchIotSecurityProfileAdditionalMetricsToRetainV2,
-				Columns: []schema.Column{
-					{
-						Name:        "security_profile_cq_id",
-						Description: "Unique CloudQuery ID of aws_iot_security_profiles table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "metric",
-						Description: "What is measured by the behavior.  This member is required.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "metric_dimension_name",
-						Description: "A unique identifier for the dimension.  This member is required.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("MetricDimension.DimensionName"),
-					},
-					{
-						Name:        "metric_dimension_operator",
-						Description: "Defines how the dimensionValues of a dimension are interpreted",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("MetricDimension.Operator"),
-					},
-				},
-			},
-			{
 				Name:        "aws_iot_security_profile_behaviors",
 				Description: "A Device Defender security profile behavior.",
 				Resolver:    fetchIotSecurityProfileBehaviors,
@@ -130,7 +108,7 @@ func IotSecurityProfiles() *schema.Table {
 					},
 					{
 						Name:        "name",
-						Description: "The name you've given to the behavior.  This member is required.",
+						Description: "The name you've given to the behavior. ",
 						Type:        schema.TypeString,
 					},
 					{
@@ -158,13 +136,13 @@ func IotSecurityProfiles() *schema.Table {
 						Resolver:    schema.PathResolver("Criteria.DurationSeconds"),
 					},
 					{
-						Name:        "criteria__ml_detection_config_confidence_level",
+						Name:        "criteria_ml_detection_config_confidence_level",
 						Description: "The sensitivity of anomalous behavior evaluation",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Criteria.MlDetectionConfig.ConfidenceLevel"),
 					},
 					{
-						Name:        "criteria__statistical_threshold_statistic",
+						Name:        "criteria_statistical_threshold_statistic",
 						Description: "The percentile that resolves to a threshold value by which compliance with a behavior is determined",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Criteria.StatisticalThreshold.Statistic"),
@@ -182,7 +160,7 @@ func IotSecurityProfiles() *schema.Table {
 					},
 					{
 						Name:        "metric_dimension_dimension_name",
-						Description: "A unique identifier for the dimension.  This member is required.",
+						Description: "A unique identifier for the dimension. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("MetricDimension.DimensionName"),
 					},
@@ -303,17 +281,21 @@ func ResolveIotSecurityProfileTags(ctx context.Context, meta schema.ClientMeta, 
 	}
 	return resource.Set(c.Name, tags)
 }
-func fetchIotSecurityProfileAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	i, ok := parent.Item.(*iot.DescribeSecurityProfileOutput)
+func resolveIotSecurityProfilesAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*iot.DescribeSecurityProfileOutput)
 	if !ok {
-		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", parent.Item)
+		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", resource.Item)
 	}
+
 	if i.AdditionalMetricsToRetainV2 == nil {
 		return nil
 	}
 
-	res <- i.AdditionalMetricsToRetainV2
-	return nil
+	b, err := json.Marshal(i.AdditionalMetricsToRetainV2)
+	if err != nil {
+		return err
+	}
+	return resource.Set(c.Name, b)
 }
 func fetchIotSecurityProfileBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i, ok := parent.Item.(*iot.DescribeSecurityProfileOutput)

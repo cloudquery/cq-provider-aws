@@ -39,9 +39,10 @@ func IotBillingGroups() *schema.Table {
 				Resolver:    ResolveIotBillingGroupThingsInGroup,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotBillingGroupTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotBillingGroupTags,
 			},
 			{
 				Name:        "arn",

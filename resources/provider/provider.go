@@ -197,9 +197,10 @@ func Provider() *provider.Provider {
 			"iot.billing_groups":                    iot.IotBillingGroups(),
 			"iot.thing_groups":                      iot.IotThingGroups(),
 			"iot.thing_types":                       iot.IotThingTypes(),
-			"iot.security_profiles":                 iot.IotSecurityProfiles(),
-			"iot.policies":                          iot.IotPolicies(),
-			"iot.topic_rules":                       iot.IotTopicRules(),
+			//todo disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
+			//"iot.security_profiles":                 iot.IotSecurityProfiles(),
+			"iot.policies":    iot.IotPolicies(),
+			"iot.topic_rules": iot.IotTopicRules(),
 		},
 		Config: func() provider.Config {
 			return &client.Config{}

@@ -19,6 +19,7 @@ func IotJobs() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -33,9 +34,10 @@ func IotJobs() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotJobTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotJobTags,
 			},
 			{
 				Name:        "comment",
@@ -231,17 +233,17 @@ func IotJobs() *schema.Table {
 					},
 					{
 						Name:        "action",
-						Description: "The type of job action to take to initiate the job abort.  This member is required.",
+						Description: "The type of job action to take to initiate the job abort.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "failure_type",
-						Description: "The type of job execution failures that can initiate a job abort.  This member is required.",
+						Description: "The type of job execution failures that can initiate a job abort.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "min_number_of_executed_things",
-						Description: "The minimum number of things which must receive job execution notifications before the job can be aborted.  This member is required.",
+						Description: "The minimum number of things which must receive job execution notifications before the job can be aborted.",
 						Type:        schema.TypeInt,
 					},
 					{

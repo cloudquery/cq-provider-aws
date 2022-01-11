@@ -45,9 +45,10 @@ func IotThingGroups() *schema.Table {
 				Resolver: ResolveIotThingGroupPolicies,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveIotThingGroupTags,
+				Name:        "tags",
+				Description: "Tags of the resource",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveIotThingGroupTags,
 			},
 			{
 				Name:        "index_name",
