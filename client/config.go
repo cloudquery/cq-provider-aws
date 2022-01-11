@@ -3,6 +3,7 @@ package client
 type Account struct {
 	ID           string   `hcl:",label"`
 	AccountID    string   `hcl:"account_id,optional"`
+	AccountName  string   `hcl:"account_name,optional"`
 	RoleARN      string   `hcl:"role_arn,optional"`
 	LocalProfile string   `hcl:"local_profile,optional"`
 	ExternalID   string   `hcl:"external_id,optional"`

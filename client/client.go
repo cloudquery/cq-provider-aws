@@ -284,6 +284,98 @@ func isAllRegions(regions []string) bool {
 
 }
 
+func getAccountId(ctx context.Context, awsCfg aws.Config) (*sts.GetCallerIdentityOutput, error) {
+	svc := sts.NewFromConfig(awsCfg)
+	return svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
+		o.Region = "aws-global"
+	})
+
+}
+
+func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Config, account Account) (aws.Config, error) {
+	var err error
+	var awsCfg aws.Config
+	localRegions := account.Regions
+
+	if len(localRegions) == 0 {
+		localRegions = awsConfig.Regions
+	}
+
+	err = isValidRegions(localRegions)
+	if err != nil {
+		return awsCfg, err
+	}
+	if isAllRegions(localRegions) {
+		logger.Info("All regions specified in config.yml. Assuming all regions")
+	}
+
+	if account.AccountID != "" {
+		return awsCfg, fmt.Errorf("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`")
+	}
+	// if accountName is not specified, use block label
+	var accountName = account.AccountName
+	if accountName == "" {
+		accountName = account.ID
+	}
+	configFns := []func(*config.LoadOptions) error{
+		config.WithDefaultRegion(defaultRegion),
+		config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
+	}
+
+	if account.LocalProfile != "" {
+		configFns = append(configFns, config.WithSharedConfigProfile(account.LocalProfile))
+	}
+
+	awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
+
+	if err != nil {
+		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, accountName, err, checkEnvVariables())
+	}
+
+	if account.RoleARN != "" {
+		opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
+		if account.ExternalID != "" {
+			opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
+				opts.ExternalID = &account.ExternalID
+			})
+		}
+		provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
+		// Test out retrieving credentials
+		_, err := provider.Retrieve(ctx)
+		if err != nil {
+			return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, accountName, err, checkEnvVariables())
+		}
+
+		awsCfg.Credentials = aws.NewCredentialsCache(provider)
+	}
+
+	if awsConfig.AWSDebug {
+		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
+		awsCfg.Logger = AwsLogger{logger.With("accountName", accountName)}
+	}
+
+	// This is a work-around to skip disabled regions
+	// https://github.com/aws/aws-sdk-go-v2/issues/1068
+	res, err := ec2.NewFromConfig(awsCfg).DescribeRegions(ctx,
+		&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
+		func(o *ec2.Options) {
+			o.Region = defaultRegion
+			if len(localRegions) > 0 && !isAllRegions(localRegions) {
+				o.Region = localRegions[0]
+			}
+		})
+	if err != nil {
+		return awsCfg, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountName, err)
+	}
+	account.Regions = filterDisabledRegions(localRegions, res.Regions)
+
+	if len(account.Regions) == 0 {
+		return awsCfg, fmt.Errorf("no enabled regions provided in config for account %s", accountName)
+	}
+
+	return awsCfg, err
+}
+
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
@@ -291,109 +383,21 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID:        defaultVar,
-			AccountID: defaultVar,
-			RoleARN:   defaultVar,
+			ID:      defaultVar,
+			RoleARN: defaultVar,
 		})
 	}
 
 	for _, account := range awsConfig.Accounts {
-		var err error
-		var awsCfg aws.Config
-		localRegions := account.Regions
-
-		if len(localRegions) == 0 {
-			localRegions = awsConfig.Regions
-		}
-
-		err = isValidRegions(localRegions)
+		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account)
 		if err != nil {
 			return nil, err
 		}
-		if isAllRegions(localRegions) {
-			logger.Info("All regions specified in config.yml. Assuming all regions")
-		}
 
-		// account id can be defined in account block label or in block attr
-		// we take the block att as default and use the block label if the attr is not defined
-		var accountID = account.AccountID
-		if accountID == "" {
-			accountID = account.ID
-		}
-		configFns := []func(*config.LoadOptions) error{
-			config.WithDefaultRegion(defaultRegion),
-			config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
-		}
-
-		// This is a try to solve https://aws.amazon.com/premiumsupport/knowledge-center/iam-validate-access-credentials/
-		// with this https://github.com/aws/aws-sdk-go-v2/issues/515#issuecomment-607387352
-
-		if account.LocalProfile != "" {
-			configFns = append(configFns, config.WithSharedConfigProfile(account.LocalProfile))
-		} else if accountID != "default" && account.RoleARN != "" {
-			// logger.Warn("Deprecation: in future version we will remove account_id. To specify a role use local_profile")
-			// Cannot use this with assume role functionality
-			// assume role if specified (SDK takes it from default or env var: AWS_PROFILE)
-			configFns = append(configFns, config.WithSharedConfigProfile(accountID))
-		}
-
-		awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
-
+		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
+			return nil, err
 		}
-
-		if account.RoleARN != "" {
-			opts := make([]func(*stscreds.AssumeRoleOptions), 0, 1)
-			if account.ExternalID != "" {
-				opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
-					opts.ExternalID = &account.ExternalID
-				})
-			}
-			provider := stscreds.NewAssumeRoleProvider(sts.NewFromConfig(awsCfg), account.RoleARN, opts...)
-			// Test out retrieving credentials
-			_, err := provider.Retrieve(ctx)
-			if err != nil {
-				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
-			}
-
-			awsCfg.Credentials = aws.NewCredentialsCache(provider)
-		}
-
-		if awsConfig.AWSDebug {
-			awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
-			awsCfg.Logger = AwsLogger{logger.With("account", obfuscateAccountId(accountID))}
-		}
-		svc := sts.NewFromConfig(awsCfg)
-		output, err := svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
-			o.Region = "aws-global"
-		})
-		if err != nil {
-			creds, e := awsCfg.Credentials.Retrieve(ctx)
-			if e != nil {
-				return nil, fmt.Errorf(awsFailedToConfigureErrMsg, accountID, err, checkEnvVariables())
-			}
-			return nil, fmt.Errorf("failed to create aws client for account %s. AWS Error: %w, authorization source: %s, detected aws env variables: %s", accountID, err, creds.Source, checkEnvVariables())
-		}
-		// This is a work-around to skip disabled regions
-		// https://github.com/aws/aws-sdk-go-v2/issues/1068
-		res, err := ec2.NewFromConfig(awsCfg).DescribeRegions(ctx,
-			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
-			func(o *ec2.Options) {
-				o.Region = defaultRegion
-				if len(localRegions) > 0 && !isAllRegions(localRegions) {
-					o.Region = localRegions[0]
-				}
-			})
-		if err != nil {
-			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", accountID, err)
-		}
-		account.Regions = filterDisabledRegions(localRegions, res.Regions)
-
-		if len(account.Regions) == 0 {
-			return nil, fmt.Errorf("no enabled regions provided in config for account %s", accountID)
-		}
-
 		if client.AccountID == "" {
 			// set default
 			client.AccountID = *output.Account
