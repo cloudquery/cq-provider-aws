@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -152,10 +152,12 @@ func IotCertificates() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
-	input := iot.ListCertificatesInput{}
+	input := iot.ListCertificatesInput{
+		PageSize: aws.Int32(250),
+	}
 
 	for {
 		response, err := svc.ListCertificates(ctx, &input, func(options *iot.Options) {
@@ -192,7 +194,8 @@ func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, 
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListAttachedPoliciesInput{
-		Target: i.CertificateArn,
+		Target:   i.CertificateArn,
+		PageSize: aws.Int32(250),
 	}
 
 	var policies []string

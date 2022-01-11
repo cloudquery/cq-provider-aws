@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -111,8 +111,10 @@ func IotCaCertificates() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListCACertificatesInput
+func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListCACertificatesInput{
+		PageSize: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT
@@ -150,6 +152,7 @@ func ResolveIotCaCertificateCertificates(ctx context.Context, meta schema.Client
 	svc := client.Services().IOT
 	input := iot.ListCertificatesByCAInput{
 		CaCertificateId: i.CertificateId,
+		PageSize:        aws.Int32(250),
 	}
 
 	var certs []string

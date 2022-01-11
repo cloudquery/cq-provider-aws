@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"testing"
@@ -40,11 +40,20 @@ func buildIotSecurityProfilesMock(t *testing.T, ctrl *gomock.Controller) client.
 	m.EXPECT().ListTargetsForSecurityProfile(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&targets, nil)
 
+	tags := iot.ListTagsForResourceOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tags.NextToken = nil
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&tags, nil)
+
 	return client.Services{
 		IOT: m,
 	}
 }
 
 func TestIotSecurityProfiles(t *testing.T) {
-	awsTestHelper(t, IotSecurityProfiles(), buildIotSecurityProfilesMock, TestOptions{})
+	client.AwsMockTestHelper(t, IotSecurityProfiles(), buildIotSecurityProfilesMock, client.TestOptions{})
 }

@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -88,8 +88,10 @@ func IotThingTypes() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListThingTypesInput
+func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListThingTypesInput{
+		MaxResults: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT

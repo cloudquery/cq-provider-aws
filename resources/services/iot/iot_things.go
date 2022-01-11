@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -74,8 +74,10 @@ func IotThings() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotThings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListThingsInput
+func fetchIotThings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListThingsInput{
+		MaxResults: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT
@@ -102,7 +104,8 @@ func ResolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, reso
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListThingPrincipalsInput{
-		ThingName: i.ThingName,
+		ThingName:  i.ThingName,
+		MaxResults: aws.Int32(250),
 	}
 	var principals []string
 

@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -117,8 +117,10 @@ func IotStreams() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListStreamsInput
+func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListStreamsInput{
+		MaxResults: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT
@@ -147,7 +149,7 @@ func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema
 	}
 	return nil
 }
-func fetchIotStreamFiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchIotStreamFiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i, ok := parent.Item.(*types.StreamInfo)
 	if !ok {
 		return fmt.Errorf("expected types.StreamSummary but got %T", parent.Item)

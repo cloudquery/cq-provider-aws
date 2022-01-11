@@ -1,10 +1,9 @@
-package resources
+package iot
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
@@ -15,12 +14,10 @@ import (
 func IotSecurityProfiles() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_iot_security_profiles",
-		Description:  "A security profile defines a set of expected behaviors for devices in your account and specifies the actions to take when an anomaly is detected",
 		Resolver:     fetchIotSecurityProfiles,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -38,6 +35,11 @@ func IotSecurityProfiles() *schema.Table {
 				Name:     "targets",
 				Type:     schema.TypeStringArray,
 				Resolver: ResolveIotSecurityProfileTargets,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: ResolveIotSecurityProfileTags,
 			},
 			{
 				Name:        "additional_metrics_to_retain",
@@ -204,10 +206,12 @@ func IotSecurityProfiles() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
-	input := iot.ListSecurityProfilesInput{}
+	input := iot.ListSecurityProfilesInput{
+		MaxResults: aws.Int32(250),
+	}
 
 	for {
 		response, err := svc.ListSecurityProfiles(ctx, &input, func(options *iot.Options) {
@@ -245,6 +249,7 @@ func ResolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMet
 	svc := client.Services().IOT
 	input := iot.ListTargetsForSecurityProfileInput{
 		SecurityProfileName: i.SecurityProfileName,
+		MaxResults:          aws.Int32(250),
 	}
 
 	var targets []string
@@ -267,7 +272,37 @@ func ResolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMet
 	}
 	return resource.Set(c.Name, targets)
 }
-func fetchIotSecurityProfileAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func ResolveIotSecurityProfileTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	i, ok := resource.Item.(*iot.DescribeSecurityProfileOutput)
+	if !ok {
+		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", resource.Item)
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().IOT
+	input := iot.ListTagsForResourceInput{
+		ResourceArn: i.SecurityProfileArn,
+	}
+	tags := make(map[string]interface{})
+
+	for {
+		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
+			options.Region = client.Region
+		})
+
+		if err != nil {
+			return err
+		}
+		for _, t := range response.Tags {
+			tags[*t.Key] = t.Value
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return resource.Set(c.Name, tags)
+}
+func fetchIotSecurityProfileAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i, ok := parent.Item.(*iot.DescribeSecurityProfileOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", parent.Item)
@@ -279,7 +314,7 @@ func fetchIotSecurityProfileAdditionalMetricsToRetainV2(ctx context.Context, met
 	res <- i.AdditionalMetricsToRetainV2
 	return nil
 }
-func fetchIotSecurityProfileBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
+func fetchIotSecurityProfileBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i, ok := parent.Item.(*iot.DescribeSecurityProfileOutput)
 	if !ok {
 		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", parent.Item)

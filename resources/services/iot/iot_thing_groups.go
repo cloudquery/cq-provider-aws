@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -136,8 +136,10 @@ func IotThingGroups() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListThingGroupsInput
+func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListThingGroupsInput{
+		MaxResults: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT
@@ -176,6 +178,7 @@ func ResolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 	svc := client.Services().IOT
 	input := iot.ListThingsInThingGroupInput{
 		ThingGroupName: i.ThingGroupName,
+		MaxResults:     aws.Int32(250),
 	}
 
 	var things []string
@@ -204,7 +207,8 @@ func ResolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, r
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListAttachedPoliciesInput{
-		Target: i.ThingGroupArn,
+		Target:   i.ThingGroupArn,
+		PageSize: aws.Int32(250),
 	}
 
 	var policies []string

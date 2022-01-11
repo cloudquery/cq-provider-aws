@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"testing"
@@ -63,5 +63,5 @@ func buildIotThingGroupsMock(t *testing.T, ctrl *gomock.Controller) client.Servi
 }
 
 func TestIotThingGroups(t *testing.T) {
-	awsTestHelper(t, IotThingGroups(), buildIotThingGroupsMock, TestOptions{})
+	client.AwsMockTestHelper(t, IotThingGroups(), buildIotThingGroupsMock, client.TestOptions{})
 }

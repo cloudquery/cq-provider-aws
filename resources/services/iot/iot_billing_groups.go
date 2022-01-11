@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"context"
@@ -86,8 +86,10 @@ func IotBillingGroups() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan interface{}) error {
-	var input iot.ListBillingGroupsInput
+func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	input := iot.ListBillingGroupsInput{
+		MaxResults: aws.Int32(250),
+	}
 	c := meta.(*client.Client)
 
 	svc := c.Services().IOT
@@ -126,6 +128,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 	svc := client.Services().IOT
 	input := iot.ListThingsInBillingGroupInput{
 		BillingGroupName: i.BillingGroupName,
+		MaxResults:       aws.Int32(250),
 	}
 
 	var things []string

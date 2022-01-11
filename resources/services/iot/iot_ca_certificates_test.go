@@ -1,4 +1,4 @@
-package resources
+package iot
 
 import (
 	"testing"
@@ -45,5 +45,5 @@ func buildIotCaCertificatesMock(t *testing.T, ctrl *gomock.Controller) client.Se
 }
 
 func TestIotCaCertificates(t *testing.T) {
-	awsTestHelper(t, IotCaCertificates(), buildIotCaCertificatesMock, TestOptions{})
+	client.AwsMockTestHelper(t, IotCaCertificates(), buildIotCaCertificatesMock, client.TestOptions{})
 }
