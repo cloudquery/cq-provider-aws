@@ -26,6 +26,8 @@ jobs:
             docs
             ci
             chore
+            refactor
+            test
           # Configure that a scope must always be provided.
           requireScope: false
           # Configure additional validation for the subject based on a regex.
