@@ -20,7 +20,7 @@
 | `refactor: <Message>`      |  `<String>`       | patch release|
 | `test: <Message>`      |  `<String>`       | patch release|
 | `fix: <Message>`      |  `<String>`      | patch release|
-    
+
     
 
 ## Running locally:
