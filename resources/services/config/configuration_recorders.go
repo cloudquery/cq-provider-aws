@@ -114,6 +114,7 @@ func ConfigConfigurationRecorders() *schema.Table {
 // ====================================================================================================================
 func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
+
 	resp, err := c.Services().ConfigService.DescribeConfigurationRecorders(ctx, &configservice.DescribeConfigurationRecordersInput{}, func(options *configservice.Options) {
 		options.Region = c.Region
 	})
@@ -136,7 +137,7 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 	for _, configurationRecorder := range resp.ConfigurationRecorders {
 		var configurationRecorderStatus types.ConfigurationRecorderStatus
 		for _, s := range status.ConfigurationRecordersStatus {
-			if s.Name == configurationRecorder.Name {
+			if *s.Name == *configurationRecorder.Name {
 				configurationRecorderStatus = s
 				break
 			}
