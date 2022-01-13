@@ -9,9 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.9.1] - 2022-01-13
 ###### SDK Version: 0.6.1
 ### :spider: Fixed
-* Config Status Recorder (#406 (https://github.com/cloudquery/cq-provider-aws/issues/406)) (a251428 (https://github.com/cloudquery/cq-provider-aws/commit/a251428e5740040b820c9f8529372065a0870a0f))
-
-
+* Config Status Recorder [#406](https://github.com/cloudquery/cq-provider-aws/pull/406)
 
 
 ## [v0.9.0] - 2022-01-10
