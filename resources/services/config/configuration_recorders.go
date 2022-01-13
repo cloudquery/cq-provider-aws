@@ -142,6 +142,7 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 				break
 			}
 		}
+
 		res <- configurationRecorderWrapper{
 			ConfigurationRecorder:      configurationRecorder,
 			StatusLastErrorCode:        configurationRecorderStatus.LastErrorCode,
