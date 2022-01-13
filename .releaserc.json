@@ -17,6 +17,10 @@
                     {
                         "type": "chore",
                         "release": "patch"
+                    },
+                    {
+                        "type": "enhancement",
+                        "release": "patch"
                     }
                 ]
             }
