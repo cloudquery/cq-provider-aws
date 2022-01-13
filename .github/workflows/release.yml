@@ -7,7 +7,7 @@ on:
 jobs:
   dry-run-release-notes:
     if: github.event_name == 'push'
-    name: Release
+    name: Release (Dry Run)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-notes:
     if: github.event_name != 'push'
-    name: Release
+    name: Release (Live)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
