@@ -1,4 +1,3 @@
-//go:build mock
 // +build mock
 
 package applicationautoscaling
