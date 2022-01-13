@@ -14,6 +14,7 @@
 | ----------- | ----------- |----------- |
 | `<Message>`      |  `BREAKING CHANGE: <String>`       | major release|
 | `feat: <Message>`      |  `<String>`       | minor release|
+| `enhancement: <Message>`      |  `<String>`       | patch release|
 | `docs: <Message>`      |  `<String>`       | patch release|
 | `ci: <Message>`      |  `<String>`       | patch release|
 | `chore: <Message>`      |  `<String>`       | patch release|
