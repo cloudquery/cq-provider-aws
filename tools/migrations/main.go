@@ -6,11 +6,11 @@ import (
 	"os"
 
 	"github.com/cloudquery/cq-provider-aws/resources/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/migrations"
+	"github.com/cloudquery/cq-provider-sdk/migration"
 )
 
 func main() {
-	if err := migrations.Run(context.Background(), provider.Provider(), ""); err != nil {
+	if err := migration.Run(context.Background(), provider.Provider(), ""); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
 		os.Exit(1)
 	}
