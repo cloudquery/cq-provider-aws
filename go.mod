@@ -57,7 +57,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.9.1
 	github.com/bxcodec/faker v2.0.1+incompatible
-	github.com/cloudquery/cq-provider-sdk v0.6.1
+	github.com/cloudquery/cq-provider-sdk v0.6.2-0.20220114183641-587ed0610c0f
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -72,6 +72,15 @@ require (
 
 require (
 	github.com/Masterminds/squirrel v1.5.0 // indirect
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
+	github.com/kylelemons/godebug v1.1.0 // indirect
+	github.com/sergi/go-diff v1.2.0 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+)
+
+require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.0.0 // indirect
@@ -92,6 +101,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang-migrate/migrate/v4 v4.15.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-cmp v0.5.6
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -99,8 +109,6 @@ require (
 	github.com/hashicorp/go-version v1.3.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.1 // indirect
 	github.com/hashicorp/yamux v0.0.0-20210826001029-26ff87cf9493 // indirect
-	github.com/huandu/go-sqlbuilder v1.13.0 // indirect
-	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.0 // indirect
@@ -149,4 +157,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-replace github.com/cloudquery/cq-provider-sdk v0.6.1 => ../cq-provider-sdk
+//replace github.com/cloudquery/cq-provider-sdk v0.6.1 => ../cq-provider-sdk
