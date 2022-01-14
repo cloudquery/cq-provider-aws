@@ -9,18 +9,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func SecretsmanagerSecrets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_secretsmanager_secrets",
-		Description:  "A structure that contains the details about a secret",
-		Resolver:     fetchSecretsmanagerSecrets,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("secretsmanager"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_secretsmanager_secrets",
+		Description:   "A structure that contains the details about a secret",
+		Resolver:      fetchSecretsmanagerSecrets,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("secretsmanager"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -36,7 +38,7 @@ func SecretsmanagerSecrets() *schema.Table {
 			},
 			{
 				Name:        "policy",
-				Description: "A JSON-formatted string that describes the permissions that are associated with the attached secret.",
+				Description: "A JSON-formatted string that describes the permissions that are associated withfaws_secretsmanager_secretsthe attached secret.",
 				Type:        schema.TypeJSON,
 				Resolver:    fetchSecretsmanagerSecretPolicy,
 			},
