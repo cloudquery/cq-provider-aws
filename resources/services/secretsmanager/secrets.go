@@ -38,7 +38,7 @@ func SecretsmanagerSecrets() *schema.Table {
 			},
 			{
 				Name:        "policy",
-				Description: "A JSON-formatted string that describes the permissions that are associated withfaws_secretsmanager_secretsthe attached secret.",
+				Description: "A JSON-formatted string that describes the permissions that are associated with the attached secret.",
 				Type:        schema.TypeJSON,
 				Resolver:    fetchSecretsmanagerSecretPolicy,
 			},
