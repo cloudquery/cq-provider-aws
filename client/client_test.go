@@ -1,11 +1,13 @@
 package client
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -163,5 +165,29 @@ func Test_isAllRegions(t *testing.T) {
 		if results != "" {
 			t.Errorf("Case-%d failed: %s", i, results)
 		}
+	}
+}
+
+func Test_Configure(t *testing.T) {
+	ctx := context.Background()
+	logger := hclog.New(&hclog.LoggerOptions{})
+	tests := []struct {
+		account   Account
+		awsConfig *Config
+		keyId     string
+	}{}
+	for i, tt := range tests {
+		awsClient, err := configureAwsClient(ctx, logger, tt.awsConfig, tt.account)
+		if err != nil {
+			t.Errorf("Case-%d failed: %+v", i, err)
+		}
+		a, err := awsClient.Credentials.Retrieve(ctx)
+		if err != nil {
+			t.Errorf("Case-%d failed: %+v", i, err)
+		}
+		if a.AccessKeyID != tt.keyId {
+			t.Errorf("Case-%d failed: %+v", i, err)
+		}
+
 	}
 }
