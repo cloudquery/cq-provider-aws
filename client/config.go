@@ -8,6 +8,7 @@ type Account struct {
 	LocalProfile string   `hcl:"local_profile,optional"`
 	ExternalID   string   `hcl:"external_id,optional"`
 	Regions      []string `hcl:"regions,optional"`
+	accountName  string
 }
 
 type Config struct {
