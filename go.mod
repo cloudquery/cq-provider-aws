@@ -59,7 +59,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.9.1
 	github.com/bxcodec/faker v2.0.1+incompatible
-	github.com/cloudquery/cq-provider-sdk v0.6.2-0.20220117181622-5b2bfd72cf18
+	github.com/cloudquery/cq-provider-sdk v0.6.2-0.20220117212543-7670f98adb8d
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -147,4 +147,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-//replace github.com/cloudquery/cq-provider-sdk v0.6.2-0.20220117181622-5b2bfd72cf18 => ../cq-provider-sdk
+//replace github.com/cloudquery/cq-provider-sdk v0.6.2-0.20220117212543-7670f98adb8d => ../cq-provider-sdk
