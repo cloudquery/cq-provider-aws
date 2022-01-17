@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -126,9 +127,10 @@ func RdsDbParameterGroups() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "supported_engine_modes",
-						Description: "The valid DB engine modes.",
-						Type:        schema.TypeStringArray,
+						Name:          "supported_engine_modes",
+						Description:   "The valid DB engine modes.",
+						Type:          schema.TypeStringArray,
+						IgnoreInTests: true,
 					},
 				},
 			},
@@ -162,10 +164,7 @@ func fetchRdsDbParameterGroups(ctx context.Context, meta schema.ClientMeta, pare
 func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	g, ok := parent.Item.(types.DBParameterGroup)
-	if !ok {
-		return client.UnexpectedResourceType(g, parent.Item)
-	}
+	g := parent.Item.(types.DBParameterGroup)
 	input := rds.DescribeDBParametersInput{DBParameterGroupName: g.DBParameterGroupName}
 	for {
 		output, err := svc.DescribeDBParameters(ctx, &input, func(o *rds.Options) {
@@ -184,10 +183,7 @@ func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.Clien
 }
 
 func resolveRdsDbParameterGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	g, ok := resource.Item.(types.DBParameterGroup)
-	if !ok {
-		return client.UnexpectedResourceType(g, resource.Item)
-	}
+	g := resource.Item.(types.DBParameterGroup)
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
 	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBParameterGroupArn}, func(o *rds.Options) {

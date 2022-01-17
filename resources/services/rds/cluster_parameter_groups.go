@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -106,9 +107,10 @@ func RdsClusterParameterGroups() *schema.Table {
 						Type:        schema.TypeBool,
 					},
 					{
-						Name:        "minimum_engine_version",
-						Description: "The earliest engine version to which the parameter can apply.",
-						Type:        schema.TypeString,
+						Name:          "minimum_engine_version",
+						Description:   "The earliest engine version to which the parameter can apply.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "parameter_name",
@@ -162,10 +164,7 @@ func fetchRdsClusterParameterGroups(ctx context.Context, meta schema.ClientMeta,
 func fetchRdsClusterParameterGroupDbParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	g, ok := parent.Item.(types.DBClusterParameterGroup)
-	if !ok {
-		return client.UnexpectedResourceType(g, parent.Item)
-	}
+	g := parent.Item.(types.DBClusterParameterGroup)
 	input := rds.DescribeDBClusterParametersInput{DBClusterParameterGroupName: g.DBClusterParameterGroupName}
 	for {
 		output, err := svc.DescribeDBClusterParameters(ctx, &input, func(o *rds.Options) {
@@ -184,10 +183,7 @@ func fetchRdsClusterParameterGroupDbParameters(ctx context.Context, meta schema.
 }
 
 func resolveRdsClusterParameterGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	g, ok := resource.Item.(types.DBClusterParameterGroup)
-	if !ok {
-		return client.UnexpectedResourceType(g, resource.Item)
-	}
+	g := resource.Item.(types.DBClusterParameterGroup)
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
 	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBClusterParameterGroupArn}, func(o *rds.Options) {

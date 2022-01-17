@@ -10,18 +10,20 @@ import (
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func Elbv1LoadBalancers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_elbv1_load_balancers",
-		Description:  "Information about a load balancer.",
-		Resolver:     fetchElbv1LoadBalancers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		Name:          "aws_elbv1_load_balancers",
+		Description:   "Information about a load balancer.",
+		Resolver:      fetchElbv1LoadBalancers,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -34,6 +36,14 @@ func Elbv1LoadBalancers() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.ElasticLoadBalancingService, func(resource *schema.Resource) ([]string, error) {
+					return []string{"loadbalancer", *resource.Item.(ELBv1LoadBalancerWrapper).LoadBalancerName}, nil
+				}),
 			},
 			{
 				Name:     "attributes_access_log_enabled",
@@ -195,10 +205,11 @@ func Elbv1LoadBalancers() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_elbv1_load_balancer_backend_server_descriptions",
-				Description: "Information about the configuration of an EC2 instance.",
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "instance_port"}},
-				Resolver:    fetchElbv1LoadBalancerBackendServerDescriptions,
+				Name:          "aws_elbv1_load_balancer_backend_server_descriptions",
+				Description:   "Information about the configuration of an EC2 instance.",
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "instance_port"}},
+				Resolver:      fetchElbv1LoadBalancerBackendServerDescriptions,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -225,10 +236,11 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_listeners",
-				Description: "The policies enabled for a listener.",
-				Resolver:    fetchElbv1LoadBalancerListeners,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "listener_instance_port", "listener_load_balancer_port"}},
+				Name:          "aws_elbv1_load_balancer_listeners",
+				Description:   "The policies enabled for a listener.",
+				Resolver:      fetchElbv1LoadBalancerListeners,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "listener_instance_port", "listener_load_balancer_port"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -280,10 +292,11 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_policies_app_cookie_stickiness",
-				Description: "Information about a policy for application-controlled session stickiness.",
-				Resolver:    fetchElbv1LoadBalancerPoliciesAppCookieStickinessPolicies,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "cookie_name", "policy_name"}},
+				Name:          "aws_elbv1_load_balancer_policies_app_cookie_stickiness",
+				Description:   "Information about a policy for application-controlled session stickiness.",
+				Resolver:      fetchElbv1LoadBalancerPoliciesAppCookieStickinessPolicies,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "cookie_name", "policy_name"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -310,10 +323,11 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_policies_lb_cookie_stickiness",
-				Description: "Information about a policy for duration-based session stickiness.",
-				Resolver:    fetchElbv1LoadBalancerPoliciesLbCookieStickinessPolicies,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
+				Name:          "aws_elbv1_load_balancer_policies_lb_cookie_stickiness",
+				Description:   "Information about a policy for duration-based session stickiness.",
+				Resolver:      fetchElbv1LoadBalancerPoliciesLbCookieStickinessPolicies,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -340,10 +354,11 @@ func Elbv1LoadBalancers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv1_load_balancer_policies",
-				Description: "Information about a policy.",
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
-				Resolver:    fetchElbv1LoadBalancerPolicies,
+				Name:          "aws_elbv1_load_balancer_policies",
+				Description:   "Information about a policy.",
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"load_balancer_cq_id", "policy_name"}},
+				Resolver:      fetchElbv1LoadBalancerPolicies,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",

@@ -7,18 +7,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func Ec2FlowLogs() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_flow_logs",
-		Description:  "Describes a flow log.",
-		Resolver:     fetchEc2FlowLogs,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_ec2_flow_logs",
+		Description:   "Describes a flow log.",
+		Resolver:      fetchEc2FlowLogs,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -31,6 +33,14 @@ func Ec2FlowLogs() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+					return []string{"vpc-flow-log", *resource.Item.(types.FlowLog).FlowLogId}, nil
+				}),
 			},
 			{
 				Name:        "id",

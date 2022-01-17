@@ -8,18 +8,22 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+const restApiIDPart = "/restapis"
+
 func ApigatewayRestApis() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_apigateway_rest_apis",
-		Description:  "Represents a REST API.",
-		Resolver:     fetchApigatewayRestApis,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_apigateway_rest_apis",
+		Description:   "Represents a REST API.",
+		Resolver:      fetchApigatewayRestApis,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -32,6 +36,14 @@ func ApigatewayRestApis() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					return []string{restApiIDPart, *resource.Item.(types.RestApi).Id}, nil
+				}),
 			},
 			{
 				Name:        "api_key_source",
@@ -109,10 +121,11 @@ func ApigatewayRestApis() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_apigateway_rest_api_authorizers",
-				Description: "Represents an authorization layer for methods.",
-				Resolver:    fetchApigatewayRestApiAuthorizers,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_authorizers",
+				Description:   "Represents an authorization layer for methods.",
+				Resolver:      fetchApigatewayRestApiAuthorizers,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -125,6 +138,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Authorizer)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "authorizers", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "auth_type",
@@ -181,10 +204,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_deployments",
-				Description: "An immutable representation of a RestApi resource that can be called by users using Stages.",
-				Resolver:    fetchApigatewayRestApiDeployments,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_deployments",
+				Description:   "An immutable representation of a RestApi resource that can be called by users using Stages.",
+				Resolver:      fetchApigatewayRestApiDeployments,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -197,6 +221,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Deployment)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "deployments", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "api_summary",
@@ -222,10 +256,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_documentation_parts",
-				Description: "A documentation part for a targeted API entity.",
-				Resolver:    fetchApigatewayRestApiDocumentationParts,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_documentation_parts",
+				Description:   "A documentation part for a targeted API entity.",
+				Resolver:      fetchApigatewayRestApiDocumentationParts,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -238,6 +273,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.DocumentationPart)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "documentation/parts", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "id",
@@ -283,10 +328,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_documentation_versions",
-				Description: "A snapshot of the documentation of an API.",
-				Resolver:    fetchApigatewayRestApiDocumentationVersions,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "version"}},
+				Name:          "aws_apigateway_rest_api_documentation_versions",
+				Description:   "A snapshot of the documentation of an API.",
+				Resolver:      fetchApigatewayRestApiDocumentationVersions,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "version"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -299,6 +345,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.DocumentationVersion)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "documentation/versions", *r.Version}, nil
+						}),
 					},
 					{
 						Name:        "created_date",
@@ -318,9 +374,10 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_gateway_responses",
-				Description: "A gateway response of a given response type and status code, with optional response parameters and mapping templates.",
-				Resolver:    fetchApigatewayRestApiGatewayResponses,
+				Name:          "aws_apigateway_rest_api_gateway_responses",
+				Description:   "A gateway response of a given response type and status code, with optional response parameters and mapping templates.",
+				Resolver:      fetchApigatewayRestApiGatewayResponses,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -333,6 +390,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.GatewayResponse)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "gatewayresponses", string(r.ResponseType)}, nil
+						}),
 					},
 					{
 						Name:        "default_response",
@@ -362,10 +429,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_models",
-				Description: "Represents the data structure of a method's request or response payload.",
-				Resolver:    fetchApigatewayRestApiModels,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_models",
+				Description:   "Represents the data structure of a method's request or response payload.",
+				Resolver:      fetchApigatewayRestApiModels,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -378,6 +446,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Model)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "models", *r.Name}, nil
+						}),
 					},
 					{
 						Name:     "model_template",
@@ -413,10 +491,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_request_validators",
-				Description: "A set of validation rules for incoming Method requests.",
-				Resolver:    fetchApigatewayRestApiRequestValidators,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_request_validators",
+				Description:   "A set of validation rules for incoming Method requests.",
+				Resolver:      fetchApigatewayRestApiRequestValidators,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -429,6 +508,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.RequestValidator)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "requestvalidators", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "id",
@@ -454,10 +543,11 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_resources",
-				Description: "Represents an API resource.",
-				Resolver:    fetchApigatewayRestApiResources,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				Name:          "aws_apigateway_rest_api_resources",
+				Description:   "Represents an API resource.",
+				Resolver:      fetchApigatewayRestApiResources,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -470,6 +560,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Resource)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "resources", *r.Id}, nil
+						}),
 					},
 					{
 						Name:        "id",
@@ -500,9 +600,10 @@ func ApigatewayRestApis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigateway_rest_api_stages",
-				Description: "Represents a unique identifier for a version of a deployed RestApi that is callable by users.",
-				Resolver:    fetchApigatewayRestApiStages,
+				Name:          "aws_apigateway_rest_api_stages",
+				Description:   "Represents a unique identifier for a version of a deployed RestApi that is callable by users.",
+				Resolver:      fetchApigatewayRestApiStages,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "rest_api_cq_id",
@@ -515,6 +616,16 @@ func ApigatewayRestApis() *schema.Table {
 						Description: "The API's identifier. This identifier is unique across all of your APIs in API Gateway.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Stage)
+							p := resource.Parent.Item.(types.RestApi)
+							return []string{restApiIDPart, *p.Id, "stages", *r.StageName}, nil
+						}),
 					},
 					{
 						Name:        "access_log_settings_destination_arn",
