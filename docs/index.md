@@ -77,8 +77,6 @@ provider "aws" {
     accounts "<AccountID_Alias_2>" {
       // Optional. Role ARN we want to assume when accessing this account
       role_arn = <YOUR_ROLE_ARN_2>
-      // Optional Account ID is the named profile in your shared configuration file (usually `~/.aws/config`)
-      account_id = "<NAMED_PROFILE>
     }
   }
 
