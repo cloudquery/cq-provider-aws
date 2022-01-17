@@ -357,10 +357,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	}
 
 	for _, account := range awsConfig.Accounts {
-		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, nil)
-		if err != nil {
-			return nil, err
-		}
+
 		if account.AccountID != "" {
 			return nil, fmt.Errorf("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`")
 		}
@@ -369,19 +366,26 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if account.accountName == "" {
 			account.accountName = account.ID
 		}
+
 		localRegions := account.Regions
 
 		if len(localRegions) == 0 {
 			localRegions = awsConfig.Regions
 		}
 
-		err = isValidRegions(localRegions)
+		err := isValidRegions(localRegions)
 		if err != nil {
 			return nil, err
 		}
 		if isAllRegions(localRegions) {
 			logger.Info("All regions specified in config.yml. Assuming all regions")
 		}
+
+		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, nil)
+		if err != nil {
+			return nil, err
+		}
+
 		// This is a work-around to skip disabled regions
 		// https://github.com/aws/aws-sdk-go-v2/issues/1068
 		res, err := ec2.NewFromConfig(awsCfg).DescribeRegions(ctx,
