@@ -351,8 +351,8 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID:      defaultVar,
-			RoleARN: defaultVar,
+			ID:           defaultVar,
+			LocalProfile: defaultVar,
 		})
 	}
 
