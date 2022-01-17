@@ -34,9 +34,10 @@ func IotSecurityProfiles() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "targets",
-				Type:     schema.TypeStringArray,
-				Resolver: ResolveIotSecurityProfileTargets,
+				Name:        "targets",
+				Description: "Targets associated with the security profile",
+				Type:        schema.TypeStringArray,
+				Resolver:    ResolveIotSecurityProfileTargets,
 			},
 			{
 				Name:        "tags",

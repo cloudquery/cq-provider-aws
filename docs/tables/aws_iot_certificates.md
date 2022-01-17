@@ -6,7 +6,7 @@ Describes a certificate.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|policies|text[]||
+|policies|text[]|Policies of the certificate|
 |ca_certificate_id|text|The certificate ID of the CA certificate used to sign this certificate.|
 |arn|text|The ARN of the certificate.|
 |id|text|The ID of the certificate.|

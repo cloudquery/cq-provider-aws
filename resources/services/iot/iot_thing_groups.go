@@ -40,9 +40,10 @@ func IotThingGroups() *schema.Table {
 				Resolver:    ResolveIotThingGroupThingsInGroup,
 			},
 			{
-				Name:     "policies",
-				Type:     schema.TypeStringArray,
-				Resolver: ResolveIotThingGroupPolicies,
+				Name:        "policies",
+				Description: "Policies associated with the thing group",
+				Type:        schema.TypeStringArray,
+				Resolver:    ResolveIotThingGroupPolicies,
 			},
 			{
 				Name:        "tags",

@@ -1,4 +1,3 @@
-// +build mock
 
 package ec2
 

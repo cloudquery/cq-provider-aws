@@ -34,9 +34,10 @@ func IotThings() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "principals",
-				Type:     schema.TypeStringArray,
-				Resolver: ResolveIotThingPrincipals,
+				Name:        "principals",
+				Description: "Principals associated with the thing",
+				Type:        schema.TypeStringArray,
+				Resolver:    ResolveIotThingPrincipals,
 			},
 			{
 				Name:        "attributes",

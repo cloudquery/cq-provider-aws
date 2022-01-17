@@ -34,9 +34,10 @@ func IotCaCertificates() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "certificates",
-				Type:     schema.TypeStringArray,
-				Resolver: ResolveIotCaCertificateCertificates,
+				Name:        "certificates",
+				Description: "Certificates of the ca certificate",
+				Type:        schema.TypeStringArray,
+				Resolver:    ResolveIotCaCertificateCertificates,
 			},
 			{
 				Name:        "auto_registration_status",

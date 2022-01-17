@@ -6,7 +6,7 @@ Describes a CA certificate.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
-|certificates|text[]||
+|certificates|text[]|Certificates of the ca certificate|
 |auto_registration_status|text|Whether the CA certificate configured for auto registration of device certificates|
 |arn|text|The CA certificate ARN.|
 |id|text|The CA certificate ID.|

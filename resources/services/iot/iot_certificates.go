@@ -34,9 +34,10 @@ func IotCertificates() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "policies",
-				Type:     schema.TypeStringArray,
-				Resolver: ResolveIotCertificatePolicies,
+				Name:        "policies",
+				Description: "Policies of the certificate",
+				Type:        schema.TypeStringArray,
+				Resolver:    ResolveIotCertificatePolicies,
 			},
 			{
 				Name:        "ca_certificate_id",
