@@ -322,10 +322,8 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 			})
 		}
 		if stsClient == nil {
-			logger.Debug("create client")
-			//stsClient = sts.NewFromConfig(awsCfg)
+			stsClient = sts.NewFromConfig(awsCfg)
 		}
-		logger.Debug("using client")
 		provider := stscreds.NewAssumeRoleProvider(stsClient, account.RoleARN, opts...)
 		// Test out retrieving credentials
 
@@ -357,7 +355,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	}
 
 	for _, account := range awsConfig.Accounts {
-
+		logger.Debug("accounts", "account", account)
 		if account.AccountID != "" {
 			return nil, fmt.Errorf("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`")
 		}
