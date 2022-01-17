@@ -8,18 +8,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func Route53HealthChecks() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_route53_health_checks",
-		Description:  "A complex type that contains information about one health check that is associated with the current AWS account.",
-		Resolver:     fetchRoute53HealthChecks,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_route53_health_checks",
+		Description:   "A complex type that contains information about one health check that is associated with the current AWS account.",
+		Resolver:      fetchRoute53HealthChecks,
+		Multiplex:     client.AccountMultiplex,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -218,9 +220,11 @@ func Route53HealthChecks() *schema.Table {
 			},
 			{
 				Name:        "arn",
-				Description: "The Amazon Resource Name (ARN) for the route 53 health check",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
-				Resolver:    resolveRoute53HealthChecksArn,
+				Resolver: client.ResolveARNGlobal(client.Route53Service, func(resource *schema.Resource) ([]string, error) {
+					return []string{"healthcheck", *resource.Item.(Route53HealthCheckWrapper).Id}, nil
+				}),
 			},
 		},
 	}
@@ -306,12 +310,4 @@ func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context
 type Route53HealthCheckWrapper struct {
 	types.HealthCheck
 	Tags map[string]interface{}
-}
-
-func resolveRoute53HealthChecksArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	hc, ok := resource.Item.(Route53HealthCheckWrapper)
-	if !ok {
-		return fmt.Errorf("not route53 health check")
-	}
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "healthcheck", *hc.Id, "", ""))
 }

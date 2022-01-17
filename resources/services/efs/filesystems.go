@@ -7,18 +7,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/efs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func EfsFilesystems() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_efs_filesystems",
-		Description:  "A description of the file system.",
-		Resolver:     fetchEfsFilesystems,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_efs_filesystems",
+		Description:   "A description of the file system.",
+		Resolver:      fetchEfsFilesystems,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -114,9 +116,10 @@ func EfsFilesystems() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "file_system_arn",
+				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the EFS file system, in the format arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id .",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemArn"),
 			},
 			{
 				Name:        "kms_key_id",
