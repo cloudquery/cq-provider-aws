@@ -1,5 +1,4 @@
-# DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
-name: release
+name: release-binary
 on:
   push:
     tags:

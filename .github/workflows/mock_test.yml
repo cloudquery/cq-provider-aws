@@ -1,4 +1,5 @@
-name: test
+# DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
+name: Provider Mock Test
 
 on:
   push:
@@ -44,7 +45,6 @@ jobs:
       - name: Get dependencies
         run: |
           go get -v -t -d ./...
-
       - name: Build
         run: go build -v .
 
