@@ -217,12 +217,7 @@ func Test_Configure(t *testing.T) {
 			stsclient: func(t *testing.T) AssumeRoleAPIClient {
 				return mockAssumeRole(func(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error) {
 					t.Helper()
-					log.Println("asfasdfasdf")
-					return &sts.AssumeRoleOutput{
-						Credentials: &stsTypes.Credentials{
-							AccessKeyId: aws.String("<AssumedRoleKeyId>"),
-						},
-					}, nil
+					return &sts.AssumeRoleOutput{}, nil
 				})
 			},
 			account: Account{
@@ -234,12 +229,7 @@ func Test_Configure(t *testing.T) {
 			stsclient: func(t *testing.T) AssumeRoleAPIClient {
 				return mockAssumeRole(func(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error) {
 					t.Helper()
-					log.Println("asfasdfasdf")
-					return &sts.AssumeRoleOutput{
-						Credentials: &stsTypes.Credentials{
-							AccessKeyId: aws.String("<AssumedRoleKeyId>"),
-						},
-					}, nil
+					return &sts.AssumeRoleOutput{}, nil
 				})
 			},
 			account:   Account{},
@@ -247,6 +237,27 @@ func Test_Configure(t *testing.T) {
 			keyId:     "<DEFAULT>",
 		},
 		{
+			stsclient: func(t *testing.T) AssumeRoleAPIClient {
+				return mockAssumeRole(func(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error) {
+					t.Helper()
+					return &sts.AssumeRoleOutput{
+						Credentials: &stsTypes.Credentials{
+							AccessKeyId:     aws.String("<AssumedRoleKeyId>"),
+							Expiration:      aws.Time(time.Now()),
+							SecretAccessKey: aws.String("<AssumedRoleKeySecret>"),
+							SessionToken:    aws.String("<AssumedRoleSessionToken>"),
+						},
+					}, nil
+				})
+			},
+
+			account: Account{
+				LocalProfile: "test",
+				RoleARN:      "arn:aws:iam::123456789012:role/demo",
+			},
+			awsConfig: &Config{},
+			keyId:     "<AssumedRoleKeyId>",
+		}, {
 			stsclient: func(t *testing.T) AssumeRoleAPIClient {
 				return mockAssumeRole(func(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error) {
 					t.Helper()
@@ -264,6 +275,7 @@ func Test_Configure(t *testing.T) {
 			account: Account{
 				LocalProfile: "test",
 				RoleARN:      "arn:aws:iam::123456789012:role/demo",
+				AccountID:    "asdfasdf",
 			},
 			awsConfig: &Config{},
 			keyId:     "<AssumedRoleKeyId>",
@@ -271,7 +283,6 @@ func Test_Configure(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		log.Println("test", i)
 		stsClient := tt.stsclient(t)
 		awsClient, err := configureAwsClient(ctx, logger, tt.awsConfig, tt.account, stsClient)
 		if err != nil {
