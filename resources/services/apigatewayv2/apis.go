@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	apiIDPart      = "/apis"
-	apiRouteIDPart = "routes"
+	apiIDPart            = "/apis"
+	apiRouteIDPart       = "routes"
+	apiIntegrationIDPart = "integrations"
 )
 
 func Apigatewayv2Apis() *schema.Table {
@@ -337,7 +338,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 							r := resource.Item.(types.Integration)
 							p := resource.Parent.Item.(types.Api)
-							return []string{apiIDPart, *p.ApiId, "integrations", *r.IntegrationId}, nil
+							return []string{apiIDPart, *p.ApiId, apiIntegrationIDPart, *r.IntegrationId}, nil
 						}),
 					},
 					{
@@ -467,8 +468,9 @@ func Apigatewayv2Apis() *schema.Table {
 								Type:        schema.TypeString,
 								Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
 									r := resource.Item.(types.IntegrationResponse)
+									i := resource.Parent.Item.(types.Integration)
 									api := resource.Parent.Parent.Item.(types.Api)
-									return []string{apiIDPart, *api.ApiId, "integrationresponses", *r.IntegrationResponseId}, nil
+									return []string{apiIDPart, *api.ApiId, apiIntegrationIDPart, *i.IntegrationId, "integrationresponses", *r.IntegrationResponseId}, nil
 								}),
 							},
 							{
