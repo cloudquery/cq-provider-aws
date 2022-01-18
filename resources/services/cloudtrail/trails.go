@@ -264,25 +264,28 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 			input.ResourceIdList = append(input.ResourceIdList, *h.TrailARN)
 		}
 
-		if len(input.ResourceIdList) > 0 {
-			for {
-				response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
-					options.Region = region
-				})
-				if err != nil {
-					return nil, err
-				}
-				for _, tr := range processed {
-					for _, t := range getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList) {
-						tr.Tags[*t.Key] = t.Value
-					}
-				}
-				if aws.ToString(response.NextToken) == "" {
-					break
-				}
-				input.NextToken = response.NextToken
-			}
+		if len(input.ResourceIdList) == 0 {
+			return processed, nil
 		}
+
+		for {
+			response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
+				options.Region = region
+			})
+			if err != nil {
+				return nil, err
+			}
+			for _, tr := range processed {
+				for _, t := range getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList) {
+					tr.Tags[*t.Key] = t.Value
+				}
+			}
+			if aws.ToString(response.NextToken) == "" {
+				break
+			}
+			input.NextToken = response.NextToken
+		}
+
 		return processed, nil
 	}
 
