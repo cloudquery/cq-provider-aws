@@ -267,7 +267,6 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 		if len(input.ResourceIdList) > 0 {
 
 			for {
-
 				response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
 					options.Region = region
 				})
