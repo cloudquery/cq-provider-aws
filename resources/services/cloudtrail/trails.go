@@ -248,7 +248,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 				Tags:  make(map[string]interface{}),
 			}
 
-			// Before fetching trail tags we have to check if the trail is organization tail
+			// Before fetching trail tags we have to check if the trail is organization trail
 			// If the trail is organization trail and the account id is not matched with current account id
 			// We skip, and not fetch the trail tags
 			arnParts, err := arn.Parse(*h.TrailARN)
@@ -265,7 +265,6 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 		}
 
 		if len(input.ResourceIdList) > 0 {
-
 			for {
 				response, err := svc.ListTags(ctx, &input, func(options *cloudtrail.Options) {
 					options.Region = region
