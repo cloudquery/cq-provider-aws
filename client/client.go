@@ -313,7 +313,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
 
 	if err != nil {
-		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.accountName, err, checkEnvVariables())
+		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
 
 	if account.RoleARN != "" {
@@ -334,11 +334,11 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 
 	if awsConfig.AWSDebug {
 		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
-		awsCfg.Logger = AwsLogger{logger.With("accountName", account.accountName)}
+		awsCfg.Logger = AwsLogger{logger.With("accountName", account.AccountName)}
 	}
 	_, err = awsCfg.Credentials.Retrieve(ctx)
 	if err != nil {
-		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.accountName, err, checkEnvVariables())
+		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
 
 	return awsCfg, err
@@ -361,14 +361,12 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if account.AccountID != "" {
 			return nil, fmt.Errorf("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`")
 		}
-		// if accountName is not specified, use block label
-		account.accountName = account.AccountName
-		if account.accountName == "" {
-			account.accountName = account.ID
+
+		if account.AccountName == "" {
+			account.AccountName = account.ID
 		}
 
 		localRegions := account.Regions
-
 		if len(localRegions) == 0 {
 			localRegions = awsConfig.Regions
 		}
@@ -397,12 +395,12 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				}
 			})
 		if err != nil {
-			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.accountName, err)
+			return nil, fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err)
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
-			return nil, fmt.Errorf("no enabled regions provided in config for account %s", account.accountName)
+			return nil, fmt.Errorf("no enabled regions provided in config for account %s", account.AccountName)
 		}
 
 		output, err := getAccountId(ctx, awsCfg)
