@@ -327,8 +327,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 			stsClient = sts.NewFromConfig(awsCfg)
 		}
 		provider := stscreds.NewAssumeRoleProvider(stsClient, account.RoleARN, opts...)
-		// Test out retrieving credentials
-
+		
 		awsCfg.Credentials = aws.NewCredentialsCache(provider)
 	}
 
@@ -336,6 +335,8 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
 		awsCfg.Logger = AwsLogger{logger.With("accountName", account.AccountName)}
 	}
+
+	// Test out retrieving credentials
 	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
 		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
