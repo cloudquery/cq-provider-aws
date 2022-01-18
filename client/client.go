@@ -357,7 +357,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	}
 
 	for _, account := range awsConfig.Accounts {
-		logger.Debug("accounts", "account", account)
+		logger.Debug("user defined account", "account", account)
 		if account.AccountID != "" {
 			return nil, fmt.Errorf("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`")
 		}
