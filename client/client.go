@@ -336,8 +336,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
 		awsCfg.Logger = AwsLogger{logger.With("accountName", account.AccountName)}
 	}
-	_, err = awsCfg.Credentials.Retrieve(ctx)
-	if err != nil {
+	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
 		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
 
