@@ -696,6 +696,9 @@ func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.Cli
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
+	if r.CheckpointConfig == nil {
+		return nil
+	}
 	checkpointConfig := map[string]interface{}{
 		"s3_uri":     aws.ToString(r.CheckpointConfig.S3Uri),
 		"local_path": aws.ToString(r.CheckpointConfig.LocalPath),
@@ -706,6 +709,9 @@ func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.Cli
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	if r.ExperimentConfig == nil {
+		return nil
 	}
 	experimentConfig := map[string]interface{}{
 		"experiment_name":              aws.ToString(r.ExperimentConfig.ExperimentName),
@@ -719,6 +725,9 @@ func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.Clie
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
+	if r.ModelArtifacts == nil {
+		return nil
+	}
 	modelArtifacts := map[string]interface{}{
 		"s3_model_artifacts": aws.ToString(r.ModelArtifacts.S3ModelArtifacts),
 	}
@@ -728,6 +737,9 @@ func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.Cli
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	if r.OutputDataConfig == nil {
+		return nil
 	}
 	outputDataConfig := map[string]interface{}{
 		"s3_output_path": aws.ToString(r.OutputDataConfig.S3OutputPath),
@@ -740,6 +752,10 @@ func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.Clien
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
+	if r.ProfilerConfig == nil {
+		return nil
+	}
+
 	profilerConfig := map[string]interface{}{
 		"s3_output_path":           aws.ToString(r.ProfilerConfig.S3OutputPath),
 		"profiling_interval_in_ms": aws.ToInt64(r.ProfilerConfig.ProfilingIntervalInMilliseconds),
@@ -751,6 +767,9 @@ func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.Clien
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	if r.ResourceConfig == nil {
+		return nil
 	}
 	resourceConfig := map[string]interface{}{
 		"instance_count":    r.ResourceConfig.InstanceCount,
@@ -765,6 +784,9 @@ func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.Cl
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
+	if r.StoppingCondition == nil {
+		return nil
+	}
 	stoppingCondition := map[string]interface{}{
 		"max_runtime_in_seconds":   r.StoppingCondition.MaxRuntimeInSeconds,
 		"max_wait_time_in_seconds": r.StoppingCondition.MaxWaitTimeInSeconds,
@@ -776,6 +798,9 @@ func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ sch
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
 	}
+	if r.StoppingCondition == nil {
+		return nil
+	}
 	tensorBoardOutputConfig := map[string]interface{}{
 		"max_runtime_in_seconds":   r.StoppingCondition.MaxRuntimeInSeconds,
 		"max_wait_time_in_seconds": r.StoppingCondition.MaxWaitTimeInSeconds,
@@ -786,6 +811,9 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", r)
+	}
+	if r.VpcConfig == nil {
+		return nil
 	}
 	vpcConfig := map[string]interface{}{
 		"subnets":            r.VpcConfig.Subnets,
