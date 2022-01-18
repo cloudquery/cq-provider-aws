@@ -327,7 +327,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 			stsClient = sts.NewFromConfig(awsCfg)
 		}
 		provider := stscreds.NewAssumeRoleProvider(stsClient, account.RoleARN, opts...)
-		
+
 		awsCfg.Credentials = aws.NewCredentialsCache(provider)
 	}
 
@@ -371,10 +371,10 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			localRegions = awsConfig.Regions
 		}
 
-		err := isValidRegions(localRegions)
-		if err != nil {
+		if err := isValidRegions(localRegions); err != nil {
 			return nil, err
 		}
+
 		if isAllRegions(localRegions) {
 			logger.Info("All regions specified in config.yml. Assuming all regions")
 		}
