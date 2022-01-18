@@ -11,6 +11,9 @@ run:
     - all
 
 linters-settings:
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
   errcheck:
     check-blank: false
     ignore: fmt:.*,[rR]ead|[wW]rite|[cC]lose,io:Copy
