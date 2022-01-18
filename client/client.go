@@ -254,7 +254,7 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 	}
 }
 
-func isValidRegions(regions []string) error {
+func verifyRegions(regions []string) error {
 	// validate regions values
 	var hasWildcard bool
 	for i, region := range regions {
@@ -273,7 +273,7 @@ func isValidRegions(regions []string) error {
 func isAllRegions(regions []string) bool {
 
 	// if regions array is not valid return false
-	err := isValidRegions(regions)
+	err := verifyRegions(regions)
 	if err != nil {
 		return false
 	}
@@ -371,7 +371,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			localRegions = awsConfig.Regions
 		}
 
-		if err := isValidRegions(localRegions); err != nil {
+		if err := verifyRegions(localRegions); err != nil {
 			return nil, err
 		}
 
