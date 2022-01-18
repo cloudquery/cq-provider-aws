@@ -139,7 +139,7 @@ func Test_isValidRegions(t *testing.T) {
 		},
 	}
 	for i, tt := range tests {
-		err := isValidRegions(tt.regions)
+		err := verifyRegions(tt.regions)
 		results := cmp.Diff(err, tt.want, cmpopts.EquateErrors())
 		if results != "" {
 			t.Errorf("Case-%d failed: %s", i, results)
