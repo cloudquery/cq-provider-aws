@@ -64,13 +64,13 @@ jobs:
 
       - name: Test migrations for Postgres
         run: |
-          go test -v ./resources/provider_test.go
+          go test -v ./resources/provider/provider_test.go
         env:
           CQ_MIGRATION_TEST_DSN: postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
 
       - name: Test migrations for Timescale
         run: |
-          go test -v ./resources/provider_test.go
+          go test -v ./resources/provider/provider_test.go
         env:
           CQ_MIGRATION_TEST_DSN: tsdb://postgres:pass@localhost:5432/postgres?sslmode=disable
 
