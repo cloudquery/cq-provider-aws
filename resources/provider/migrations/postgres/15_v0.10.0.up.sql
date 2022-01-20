@@ -6870,5 +6870,5 @@ CREATE TABLE IF NOT EXISTS "aws_wafv2_web_acl_pre_process_firewall_manager_rule_
 
 
 ALTER TABLE IF EXISTS aws_efs_filesystems
-    ADD COLUM backup_policy_status TEXT;
+    ADD COLUMN backup_policy_status TEXT;
 

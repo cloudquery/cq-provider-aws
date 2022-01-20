@@ -592,4 +592,4 @@ DROP TABLE IF EXISTS aws_wafv2_web_acls;
 
 
 ALTER TABLE IF EXISTS aws_efs_filesystems
-    DROP COLUM backup_policy_status;
+    DROP COLUMN backup_policy_status;
