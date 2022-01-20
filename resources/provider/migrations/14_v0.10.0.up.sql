@@ -365,3 +365,6 @@ ALTER TABLE aws_guardduty_detectors ADD COLUMN arn TEXT;
 
 UPDATE aws_guardduty_detectors
 SET arn = format('arn:aws:guardduty:%s:%s:detector/%s', region, account_id, id);
+
+ALTER TABLE IF EXISTS aws_efs_filesystems
+    ADD COLUM backup_policy_status TEXT;

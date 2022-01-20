@@ -52,3 +52,6 @@ ALTER TABLE aws_rds_clusters RENAME COLUMN arn TO db_cluster_arn;
 ALTER TABLE aws_redshift_clusters DROP COLUMN arn TEXT;
 ALTER TABLE aws_redshift_subnet_groups DROP COLUMN arn TEXT;
 ALTER TABLE aws_guardduty_detectors DROP COLUMN arn TEXT;
+
+ALTER TABLE IF EXISTS aws_efs_filesystems
+    DROP COLUM backup_policy_status;
