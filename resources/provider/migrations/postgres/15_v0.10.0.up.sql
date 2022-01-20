@@ -6867,3 +6867,8 @@ CREATE TABLE IF NOT EXISTS "aws_wafv2_web_acl_pre_process_firewall_manager_rule_
 	UNIQUE(cq_id),
 	FOREIGN KEY (web_acl_cq_id) REFERENCES aws_wafv2_web_acls(cq_id) ON DELETE CASCADE
 );
+
+
+ALTER TABLE IF EXISTS aws_efs_filesystems
+    ADD COLUM backup_policy_status TEXT;
+

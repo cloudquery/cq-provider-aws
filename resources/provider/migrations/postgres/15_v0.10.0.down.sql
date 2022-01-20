@@ -589,3 +589,7 @@ DROP TABLE IF EXISTS aws_wafv2_web_acl_rules;
 DROP TABLE IF EXISTS aws_wafv2_web_acl_post_process_firewall_manager_rule_groups;
 DROP TABLE IF EXISTS aws_wafv2_web_acl_pre_process_firewall_manager_rule_groups;
 DROP TABLE IF EXISTS aws_wafv2_web_acls;
+
+
+ALTER TABLE IF EXISTS aws_efs_filesystems
+    DROP COLUM backup_policy_status;
