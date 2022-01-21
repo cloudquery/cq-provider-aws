@@ -67,7 +67,6 @@ resource "aws_iot_certificate" "iot_certificate" {
 }
 
 
-
 resource "aws_iot_policy_attachment" "integration_test_iot_policy_attachment" {
   policy = aws_iot_policy.iot_policy.name
   target = aws_iot_certificate.iot_certificate.arn
@@ -84,6 +83,14 @@ resource "aws_iot_topic_rule" "integration_test_iot_topic_rule" {
     message_format = "RAW"
     role_arn       = aws_iam_role.integration_test_iot_role.arn
     target_arn     = aws_sns_topic.iot_test_topic.arn
+  }
+
+  error_action {
+    sns {
+      message_format = "RAW"
+      role_arn       = aws_iam_role.integration_test_iot_role.arn
+      target_arn     = aws_sns_topic.iot_test_topic.arn
+    }
   }
 
 
