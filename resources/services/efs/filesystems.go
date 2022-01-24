@@ -40,23 +40,23 @@ func EfsFilesystems() *schema.Table {
 			},
 			{
 				Name:        "creation_time",
-				Description: "The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z).  This member is required.",
+				Description: "The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z). ",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "creation_token",
-				Description: "The opaque string specified in the request.  This member is required.",
+				Description: "The opaque string specified in the request. ",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "id",
-				Description: "The ID of the file system, assigned by Amazon EFS.  This member is required.",
+				Description: "The ID of the file system, assigned by Amazon EFS. ",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("FileSystemId"),
 			},
 			{
 				Name:        "life_cycle_state",
-				Description: "The lifecycle phase of the file system.  This member is required.",
+				Description: "The lifecycle phase of the file system. ",
 				Type:        schema.TypeString,
 			},
 			{
@@ -71,12 +71,12 @@ func EfsFilesystems() *schema.Table {
 			},
 			{
 				Name:        "performance_mode",
-				Description: "The performance mode of the file system.  This member is required.",
+				Description: "The performance mode of the file system. ",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "size_in_bytes_value",
-				Description: "The latest known metered size (in bytes) of data stored in the file system.  This member is required.",
+				Description: "The latest known metered size (in bytes) of data stored in the file system. ",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("SizeInBytes.Value"),
 			},
@@ -100,7 +100,7 @@ func EfsFilesystems() *schema.Table {
 			},
 			{
 				Name:        "tags",
-				Description: "The tags associated with the file system, presented as an array of Tag objects.  This member is required.",
+				Description: "The tags associated with the file system, presented as an array of Tag objects. ",
 				Type:        schema.TypeJSON,
 				Resolver:    resolveEfsFilesystemsTags,
 			},

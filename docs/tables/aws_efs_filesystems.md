@@ -7,18 +7,18 @@ A description of the file system.
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |backup_policy_status|text||
-|creation_time|timestamp without time zone|The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z).  This member is required.|
-|creation_token|text|The opaque string specified in the request.  This member is required.|
-|id|text|The ID of the file system, assigned by Amazon EFS.  This member is required.|
-|life_cycle_state|text|The lifecycle phase of the file system.  This member is required.|
+|creation_time|timestamp without time zone|The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z). |
+|creation_token|text|The opaque string specified in the request. |
+|id|text|The ID of the file system, assigned by Amazon EFS. |
+|life_cycle_state|text|The lifecycle phase of the file system. |
 |number_of_mount_targets|integer|The current number of mount targets that the file system has|
 |owner_id|text|The AWS account that created the file system|
-|performance_mode|text|The performance mode of the file system.  This member is required.|
-|size_in_bytes_value|bigint|The latest known metered size (in bytes) of data stored in the file system.  This member is required.|
+|performance_mode|text|The performance mode of the file system. |
+|size_in_bytes_value|bigint|The latest known metered size (in bytes) of data stored in the file system. |
 |size_in_bytes_timestamp|timestamp without time zone|The time at which the size of data, returned in the Value field, was determined. The value is the integer number of seconds since 1970-01-01T00:00:00Z.|
 |size_in_bytes_value_in_ia|bigint|The latest known metered size (in bytes) of data stored in the Infrequent Access storage class.|
 |size_in_bytes_value_in_standard|bigint|The latest known metered size (in bytes) of data stored in the Standard storage class.|
-|tags|jsonb|The tags associated with the file system, presented as an array of Tag objects.  This member is required.|
+|tags|jsonb|The tags associated with the file system, presented as an array of Tag objects. |
 |availability_zone_id|text|The unique and consistent identifier of the Availability Zone in which the file system's One Zone storage classes exist|
 |availability_zone_name|text|Describes the AWS Availability Zone in which the file system is located, and is valid only for file systems using One Zone storage classes|
 |encrypted|boolean|A Boolean value that, if true, indicates that the file system is encrypted.|
