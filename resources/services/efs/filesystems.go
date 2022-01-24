@@ -38,9 +38,10 @@ func EfsFilesystems() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "backup_policy_status",
-				Type:     schema.TypeString,
-				Resolver: ResolveEfsFilesystemBackupPolicyStatus,
+				Description: "Status of efs filesystem's backup policy",
+				Name:        "backup_policy_status",
+				Type:        schema.TypeString,
+				Resolver:    ResolveEfsFilesystemBackupPolicyStatus,
 			},
 			{
 				Name:        "creation_time",
@@ -192,7 +193,7 @@ func ResolveEfsFilesystemBackupPolicyStatus(ctx context.Context, meta schema.Cli
 	if err != nil {
 		var ae smithy.APIError
 		if errors.As(err, &ae) && ae.ErrorCode() == "PolicyNotFound" {
-			return nil
+			return resource.Set(c.Name, response.BackupPolicy.Status)
 		}
 		return err
 	}
