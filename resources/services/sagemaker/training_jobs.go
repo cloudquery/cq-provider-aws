@@ -601,7 +601,7 @@ func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schem
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	} else if r == nil {
+	} else if r == nil || r.AlgorithmSpecification == nil {
 		return nil
 	}
 	res <- r.AlgorithmSpecification
@@ -632,7 +632,7 @@ func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.Clien
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	} else if r == nil {
+	} else if r == nil || r.DebugHookConfig == nil {
 		return nil
 	}
 	res <- r.DebugHookConfig
@@ -794,8 +794,7 @@ func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.Cl
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.StoppingCondition == nil {
+	} else if r == nil || r.StoppingCondition == nil {
 		return nil
 	}
 	stoppingCondition := map[string]interface{}{
