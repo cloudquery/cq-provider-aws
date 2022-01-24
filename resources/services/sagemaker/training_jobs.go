@@ -601,6 +601,8 @@ func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schem
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.AlgorithmSpecification
 	return nil
@@ -609,6 +611,8 @@ func resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions(_ conte
 	r, ok := resource.Item.(*types.AlgorithmSpecification)
 	if !ok {
 		return fmt.Errorf("expected AlgorithmSpecification but got %T", resource.Item)
+	} else if r == nil {
+		return nil
 	}
 	var metricDefinitions = make([]map[string]interface{}, len(r.MetricDefinitions))
 
@@ -628,6 +632,8 @@ func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.Clien
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.DebugHookConfig
 	return nil
@@ -636,6 +642,8 @@ func resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations(_ conte
 	r, ok := resource.Item.(*types.DebugHookConfig)
 	if !ok {
 		return fmt.Errorf("expected DebugHookConfig but got %T", resource.Item)
+	} else if r == nil {
+		return nil
 	}
 	var collectionConfigurations = make([]map[string]interface{}, len(r.CollectionConfigurations))
 
@@ -655,6 +663,8 @@ func fetchSagemakerTrainingJobDebugRuleConfigurations(_ context.Context, _ schem
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.DebugRuleConfigurations
 	return nil
@@ -663,6 +673,8 @@ func fetchSagemakerTrainingJobDebugRuleEvaluationStatuses(_ context.Context, _ s
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.DebugRuleEvaluationStatuses
 	return nil
@@ -671,6 +683,8 @@ func fetchSagemakerTrainingJobInputDataConfigs(_ context.Context, _ schema.Clien
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.InputDataConfig
 	return nil
@@ -679,6 +693,8 @@ func fetchSagemakerTrainingJobProfilerRuleConfigurations(_ context.Context, _ sc
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.ProfilerRuleConfigurations
 	return nil
@@ -687,6 +703,8 @@ func fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses(_ context.Context, 
 	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
+	} else if r == nil {
+		return nil
 	}
 	res <- r.ProfilerRuleEvaluationStatuses
 	return nil
@@ -695,8 +713,7 @@ func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.Cli
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.CheckpointConfig == nil {
+	} else if r == nil || r.CheckpointConfig == nil {
 		return nil
 	}
 	checkpointConfig := map[string]interface{}{
@@ -709,8 +726,7 @@ func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.Cli
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.ExperimentConfig == nil {
+	} else if r == nil || r.ExperimentConfig == nil {
 		return nil
 	}
 	experimentConfig := map[string]interface{}{
@@ -724,8 +740,7 @@ func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.Clie
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.ModelArtifacts == nil {
+	} else if r == nil || r.ModelArtifacts == nil {
 		return nil
 	}
 	modelArtifacts := map[string]interface{}{
@@ -737,8 +752,7 @@ func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.Cli
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.OutputDataConfig == nil {
+	} else if r == nil || r.OutputDataConfig == nil {
 		return nil
 	}
 	outputDataConfig := map[string]interface{}{
@@ -751,8 +765,7 @@ func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.Clien
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.ProfilerConfig == nil {
+	} else if r == nil || r.ProfilerConfig == nil {
 		return nil
 	}
 	profilerConfig := map[string]interface{}{
@@ -766,8 +779,7 @@ func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.Clien
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.ResourceConfig == nil {
+	} else if r == nil || r.ResourceConfig == nil {
 		return nil
 	}
 	resourceConfig := map[string]interface{}{
@@ -796,8 +808,7 @@ func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ sch
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.TensorBoardOutputConfig == nil {
+	} else if r == nil || r.TensorBoardOutputConfig == nil {
 		return nil
 	}
 	tensorBoardOutputConfig := map[string]interface{}{
@@ -810,8 +821,7 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
-	if r.VpcConfig == nil {
+	} else if r == nil || r.VpcConfig == nil {
 		return nil
 	}
 	vpcConfig := map[string]interface{}{
@@ -822,9 +832,10 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 }
 func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-
 	if !ok {
 		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
+	} else if r == nil {
+		return nil
 	}
 
 	c := meta.(*client.Client)
@@ -848,10 +859,12 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 }
 func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-
 	if !ok {
 		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", resource.Item)
+	} else if r == nil {
+		return nil
 	}
+
 	var secondaryStatusTransitions = make([]map[string]interface{}, len(r.SecondaryStatusTransitions))
 
 	for i, status := range r.SecondaryStatusTransitions {
@@ -870,12 +883,13 @@ func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ 
 }
 func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-
 	if !ok {
 		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", resource.Item)
+	} else if r == nil {
+		return nil
 	}
-	var finalMetricDataList = make([]map[string]interface{}, len(r.FinalMetricDataList))
 
+	var finalMetricDataList = make([]map[string]interface{}, len(r.FinalMetricDataList))
 	for i, config := range r.FinalMetricDataList {
 		finalMetricDataList[i] = map[string]interface{}{
 			"metric_name": config.MetricName,
