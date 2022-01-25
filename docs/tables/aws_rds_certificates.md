@@ -10,7 +10,7 @@ A CA certificate for an AWS account.
 |certificate_identifier|text|The unique key that identifies a certificate.|
 |certificate_type|text|The type of the certificate.|
 |customer_override|boolean|Whether there is an override for the default certificate identifier.|
-|customer_override_valid_till|timestamp without time zone|If there is an override for the default certificate identifier, when the override expires.|
+|customer_override_valid_until|timestamp without time zone|If there is an override for the default certificate identifier, when the override expires.|
 |thumbprint|text|The thumbprint of the certificate.|
 |valid_from|timestamp without time zone|The starting date from which the certificate is valid.|
-|valid_till|timestamp without time zone|The final date that the certificate continues to be valid.|
+|valid_until|timestamp without time zone|The final date that the certificate continues to be valid.|

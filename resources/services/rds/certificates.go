@@ -17,7 +17,7 @@ func RdsCertificates() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("rds"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "thumbprint"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -52,7 +52,7 @@ func RdsCertificates() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "customer_override_valid_till",
+				Name:        "customer_override_valid_until",
 				Description: "If there is an override for the default certificate identifier, when the override expires.",
 				Type:        schema.TypeTimestamp,
 			},
@@ -67,7 +67,7 @@ func RdsCertificates() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "valid_till",
+				Name:        "valid_until",
 				Description: "The final date that the certificate continues to be valid.",
 				Type:        schema.TypeTimestamp,
 			},
