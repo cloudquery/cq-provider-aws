@@ -43,8 +43,6 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []d
 	return []diag.Diagnostic{
 		diag.FromError(err, diag.ERROR, diag.RESOLVING, resourceName, removePII(client.Accounts, err.Error()), ""),
 	}
-
-	return nil
 }
 
 func ParseSummaryMessage(aa []Account, err error, apiErr smithy.APIError) string {
@@ -95,7 +93,7 @@ func isCodeThrottle(code string) bool {
 }
 
 var (
-	requestIdRegex = regexp.MustCompile(`"RequestID: [0-9a-f-]+`)
+	requestIdRegex = regexp.MustCompile(`RequestID: [0-9a-f-]+`)
 	arnIdRegex     = regexp.MustCompile(`\sarn:aws:.+?\s`)
 )
 
