@@ -52,7 +52,7 @@ func RdsCertificates() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "customer_override_valid_until",
+				Name:        "customer_override_valid_till",
 				Description: "If there is an override for the default certificate identifier, when the override expires.",
 				Type:        schema.TypeTimestamp,
 			},
@@ -67,7 +67,7 @@ func RdsCertificates() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "valid_until",
+				Name:        "valid_till",
 				Description: "The final date that the certificate continues to be valid.",
 				Type:        schema.TypeTimestamp,
 			},
