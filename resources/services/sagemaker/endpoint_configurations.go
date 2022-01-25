@@ -8,18 +8,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func SagemakerEndpointConfigurations() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_sagemaker_endpoint_configurations",
-		Description:  "Provides summary information for an endpoint configuration.",
-		Resolver:     fetchSagemakerEndpointConfigurations,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_sagemaker_endpoint_configurations",
+		Description:   "Provides summary information for an endpoint configuration.",
+		Resolver:      fetchSagemakerEndpointConfigurations,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -68,9 +70,10 @@ func SagemakerEndpointConfigurations() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_sagemaker_endpoint_configuration_production_variants",
-				Description: "Identifies a model that you want to host and the resources chosen to deploy for hosting it",
-				Resolver:    fetchSagemakerEndpointConfigurationProductionVariants,
+				Name:          "aws_sagemaker_endpoint_configuration_production_variants",
+				Description:   "Identifies a model that you want to host and the resources chosen to deploy for hosting it",
+				Resolver:      fetchSagemakerEndpointConfigurationProductionVariants,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "endpoint_configuration_cq_id",
@@ -80,12 +83,12 @@ func SagemakerEndpointConfigurations() *schema.Table {
 					},
 					{
 						Name:        "initial_instance_count",
-						Description: "Number of instances to launch initially.  This member is required.",
+						Description: "Number of instances to launch initially. ",
 						Type:        schema.TypeInt,
 					},
 					{
 						Name:        "instance_type",
-						Description: "The ML compute instance type.  This member is required.",
+						Description: "The ML compute instance type. ",
 						Type:        schema.TypeString,
 					},
 					{
@@ -95,7 +98,7 @@ func SagemakerEndpointConfigurations() *schema.Table {
 					},
 					{
 						Name:        "variant_name",
-						Description: "The name of the production variant.  This member is required.",
+						Description: "The name of the production variant. ",
 						Type:        schema.TypeString,
 					},
 					{
@@ -105,7 +108,7 @@ func SagemakerEndpointConfigurations() *schema.Table {
 					},
 					{
 						Name:        "core_dump_config_destination_s3_uri",
-						Description: "The Amazon S3 bucket to send the core dump to.  This member is required.",
+						Description: "The Amazon S3 bucket to send the core dump to. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("CoreDumpConfig.DestinationS3Uri"),
 					},

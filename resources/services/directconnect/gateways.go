@@ -2,24 +2,25 @@ package directconnect
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func DirectconnectGateways() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_directconnect_gateways",
-		Description:  "Information about a Direct Connect gateway, which enables you to connect virtual interfaces and virtual private gateway or transit gateways.",
-		Resolver:     fetchDirectconnectGateways,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
+		Name:          "aws_directconnect_gateways",
+		Description:   "Information about a Direct Connect gateway, which enables you to connect virtual interfaces and virtual private gateway or transit gateways.",
+		Resolver:      fetchDirectconnectGateways,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -32,6 +33,14 @@ func DirectconnectGateways() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithAccount(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
+					return []string{"dx-gateway", *resource.Item.(types.DirectConnectGateway).DirectConnectGatewayId}, nil
+				}),
 			},
 			{
 				Name:        "amazon_side_asn",
@@ -69,10 +78,11 @@ func DirectconnectGateways() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_directconnect_gateway_associations",
-				Description: "Information about the association between an Direct Connect Gateway and either a Virtual Private Gateway, or Transit Gateway",
-				Resolver:    fetchDirectconnectGatewayAssociations,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"gateway_cq_id", "association_id"}},
+				Name:          "aws_directconnect_gateway_associations",
+				Description:   "Information about the association between an Direct Connect Gateway and either a Virtual Private Gateway, or Transit Gateway",
+				Resolver:      fetchDirectconnectGatewayAssociations,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"gateway_cq_id", "association_id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "gateway_cq_id",
@@ -155,9 +165,10 @@ func DirectconnectGateways() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_directconnect_gateway_attachments",
-				Description: "Information about the attachment between a Direct Connect gateway and virtual interfaces.",
-				Resolver:    fetchDirectconnectGatewayAttachments,
+				Name:          "aws_directconnect_gateway_attachments",
+				Description:   "Information about the attachment between a Direct Connect gateway and virtual interfaces.",
+				Resolver:      fetchDirectconnectGatewayAttachments,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "gateway_cq_id",
@@ -231,17 +242,10 @@ func fetchDirectconnectGateways(ctx context.Context, meta schema.ClientMeta, par
 }
 
 func fetchDirectconnectGatewayAssociations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	gateway, ok := parent.Item.(types.DirectConnectGateway)
-	if !ok {
-		return fmt.Errorf("not direct connect gateway")
-	}
-
-	var config directconnect.DescribeDirectConnectGatewayAssociationsInput
-	config.DirectConnectGatewayId = gateway.DirectConnectGatewayId
-
+	gateway := parent.Item.(types.DirectConnectGateway)
 	c := meta.(*client.Client)
 	svc := c.Services().Directconnect
-
+	config := directconnect.DescribeDirectConnectGatewayAssociationsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
 	for {
 		output, err := svc.DescribeDirectConnectGatewayAssociations(ctx, &config, func(options *directconnect.Options) {
 			options.Region = c.Region
@@ -259,17 +263,10 @@ func fetchDirectconnectGatewayAssociations(ctx context.Context, meta schema.Clie
 }
 
 func fetchDirectconnectGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	gateway, ok := parent.Item.(types.DirectConnectGateway)
-	if !ok {
-		return fmt.Errorf("not direct connect gateway")
-	}
-
-	var config directconnect.DescribeDirectConnectGatewayAttachmentsInput
-	config.DirectConnectGatewayId = gateway.DirectConnectGatewayId
-
+	gateway := parent.Item.(types.DirectConnectGateway)
 	c := meta.(*client.Client)
 	svc := c.Services().Directconnect
-
+	config := directconnect.DescribeDirectConnectGatewayAttachmentsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
 	for {
 		output, err := svc.DescribeDirectConnectGatewayAttachments(ctx, &config, func(options *directconnect.Options) {
 			options.Region = c.Region

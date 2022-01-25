@@ -2,23 +2,24 @@ package directconnect
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func DirectconnectLags() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_directconnect_lags",
-		Description:  "Information about Direct Connect Link Aggregation Group (LAG)",
-		Resolver:     fetchDirectconnectLags,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_directconnect_lags",
+		Description:   "Information about Direct Connect Link Aggregation Group (LAG)",
+		Resolver:      fetchDirectconnectLags,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -31,6 +32,14 @@ func DirectconnectLags() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.DirectConnectService, func(resource *schema.Resource) ([]string, error) {
+					return []string{"dxlag", *resource.Item.(types.Lag).LagId}, nil
+				}),
 			},
 			{
 				Name:        "allows_hosted_connections",
@@ -125,10 +134,11 @@ func DirectconnectLags() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_directconnect_lag_mac_sec_keys",
-				Description: "The MAC Security (MACsec) security keys associated with the LAG.",
-				Resolver:    fetchDirectconnectLagMacSecKeys,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"lag_cq_id", "secret_arn"}},
+				Name:          "aws_directconnect_lag_mac_sec_keys",
+				Description:   "The MAC Security (MACsec) security keys associated with the LAG.",
+				Resolver:      fetchDirectconnectLagMacSecKeys,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"lag_cq_id", "secret_arn"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "lag_cq_id",
@@ -196,10 +206,7 @@ func resolveDirectconnectLagTags(ctx context.Context, meta schema.ClientMeta, re
 }
 
 func fetchDirectconnectLagMacSecKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	connection, ok := parent.Item.(types.Lag)
-	if !ok {
-		return fmt.Errorf("not a direct connect LAG")
-	}
+	connection := parent.Item.(types.Lag)
 	res <- connection.MacSecKeys
 	return nil
 }

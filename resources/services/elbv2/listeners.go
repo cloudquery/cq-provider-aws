@@ -8,16 +8,18 @@ import (
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func Elbv2Listeners() *schema.Table {
 	return &schema.Table{
-		Name:        "aws_elbv2_listeners",
-		Description: "Information about a listener.",
-		Resolver:    fetchElbv2Listeners,
-		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
-		Options:     schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_elbv2_listeners",
+		Description:   "Information about a listener.",
+		Resolver:      fetchElbv2Listeners,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -76,9 +78,10 @@ func Elbv2Listeners() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_elbv2_listener_certificates",
-				Description: "Information about an SSL server certificate.",
-				Resolver:    fetchElbv2ListenerCertificates,
+				Name:          "aws_elbv2_listener_certificates",
+				Description:   "Information about an SSL server certificate.",
+				Resolver:      fetchElbv2ListenerCertificates,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "listener_cq_id",
@@ -99,9 +102,10 @@ func Elbv2Listeners() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_elbv2_listener_default_actions",
-				Description: "Information about an action",
-				Resolver:    fetchElbv2ListenerDefaultActions,
+				Name:          "aws_elbv2_listener_default_actions",
+				Description:   "Information about an action",
+				Resolver:      fetchElbv2ListenerDefaultActions,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "listener_cq_id",
@@ -111,24 +115,24 @@ func Elbv2Listeners() *schema.Table {
 					},
 					{
 						Name:        "type",
-						Description: "The type of action.  This member is required.",
+						Description: "The type of action. ",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "auth_cognito_user_pool_arn",
-						Description: "The Amazon Resource Name (ARN) of the Amazon Cognito user pool.  This member is required.",
+						Description: "The Amazon Resource Name (ARN) of the Amazon Cognito user pool. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("AuthenticateCognitoConfig.UserPoolArn"),
 					},
 					{
 						Name:        "auth_cognito_user_pool_client_id",
-						Description: "The ID of the Amazon Cognito user pool client.  This member is required.",
+						Description: "The ID of the Amazon Cognito user pool client. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("AuthenticateCognitoConfig.UserPoolClientId"),
 					},
 					{
 						Name:        "auth_cognito_user_pool_domain",
-						Description: "The domain prefix or fully-qualified domain name of the Amazon Cognito user pool.  This member is required.",
+						Description: "The domain prefix or fully-qualified domain name of the Amazon Cognito user pool. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("AuthenticateCognitoConfig.UserPoolDomain"),
 					},
@@ -170,7 +174,7 @@ func Elbv2Listeners() *schema.Table {
 					},
 					{
 						Name:        "auth_oidc_client_id",
-						Description: "The OAuth 2.0 client identifier.  This member is required.",
+						Description: "The OAuth 2.0 client identifier. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("AuthenticateOidcConfig.ClientId"),
 					},
@@ -236,7 +240,7 @@ func Elbv2Listeners() *schema.Table {
 					},
 					{
 						Name:        "fixed_response_config_status_code",
-						Description: "The HTTP response code (2XX, 4XX, or 5XX).  This member is required.",
+						Description: "The HTTP response code (2XX, 4XX, or 5XX). ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("FixedResponseConfig.StatusCode"),
 					},
@@ -313,9 +317,10 @@ func Elbv2Listeners() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_elbv2_listener_default_action_forward_config_target_groups",
-						Description: "Information about how traffic will be distributed between multiple target groups in a forward rule.",
-						Resolver:    fetchElbv2ListenerDefaultActionForwardConfigTargetGroups,
+						Name:          "aws_elbv2_listener_default_action_forward_config_target_groups",
+						Description:   "Information about how traffic will be distributed between multiple target groups in a forward rule.",
+						Resolver:      fetchElbv2ListenerDefaultActionForwardConfigTargetGroups,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "listener_default_action_cq_id",

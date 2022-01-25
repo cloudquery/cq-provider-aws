@@ -8,7 +8,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+)
+
+const (
+	apiIDPart            = "/apis"
+	apiRouteIDPart       = "routes"
+	apiIntegrationIDPart = "integrations"
 )
 
 func Apigatewayv2Apis() *schema.Table {
@@ -32,6 +39,14 @@ func Apigatewayv2Apis() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+					return []string{apiIDPart, *resource.Item.(types.Api).ApiId}, nil
+				}),
 			},
 			{
 				Name:        "name",
@@ -94,10 +109,11 @@ func Apigatewayv2Apis() *schema.Table {
 				Resolver:    schema.PathResolver("CorsConfiguration.AllowOrigins"),
 			},
 			{
-				Name:        "cors_configuration_expose_headers",
-				Description: "Represents a collection of exposed headers. Supported only for HTTP APIs.",
-				Type:        schema.TypeStringArray,
-				Resolver:    schema.PathResolver("CorsConfiguration.ExposeHeaders"),
+				Name:          "cors_configuration_expose_headers",
+				Description:   "Represents a collection of exposed headers. Supported only for HTTP APIs.",
+				Type:          schema.TypeStringArray,
+				Resolver:      schema.PathResolver("CorsConfiguration.ExposeHeaders"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "cors_configuration_max_age",
@@ -111,9 +127,10 @@ func Apigatewayv2Apis() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "description",
-				Description: "The description of the API.",
-				Type:        schema.TypeString,
+				Name:          "description",
+				Description:   "The description of the API.",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "disable_execute_api_endpoint",
@@ -126,9 +143,10 @@ func Apigatewayv2Apis() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "import_info",
-				Description: "The validation information during API import. This may include particular properties of your OpenAPI definition which are ignored during import. Supported only for HTTP APIs.",
-				Type:        schema.TypeStringArray,
+				Name:          "import_info",
+				Description:   "The validation information during API import. This may include particular properties of your OpenAPI definition which are ignored during import. Supported only for HTTP APIs.",
+				Type:          schema.TypeStringArray,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "tags",
@@ -136,14 +154,16 @@ func Apigatewayv2Apis() *schema.Table {
 				Type:        schema.TypeJSON,
 			},
 			{
-				Name:        "version",
-				Description: "A version identifier for the API.",
-				Type:        schema.TypeString,
+				Name:          "version",
+				Description:   "A version identifier for the API.",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "warnings",
-				Description: "The warning messages reported when failonwarnings is turned on during API import.",
-				Type:        schema.TypeStringArray,
+				Name:          "warnings",
+				Description:   "The warning messages reported when failonwarnings is turned on during API import.",
+				Type:          schema.TypeStringArray,
+				IgnoreInTests: true,
 			},
 		},
 		Relations: []*schema.Table{
@@ -166,14 +186,25 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Authorizer)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, "authorizers", *r.AuthorizerId}, nil
+						}),
+					},
+					{
 						Name:        "name",
 						Description: "The name of the authorizer.",
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "authorizer_credentials_arn",
-						Description: "Specifies the required credentials as an IAM role for API Gateway to invoke the authorizer. To specify an IAM role for API Gateway to assume, use the role's Amazon Resource Name (ARN). To use resource-based permissions on the Lambda function, don't specify this parameter. Supported only for REQUEST authorizers.",
-						Type:        schema.TypeString,
+						Name:          "authorizer_credentials_arn",
+						Description:   "Specifies the required credentials as an IAM role for API Gateway to invoke the authorizer. To specify an IAM role for API Gateway to assume, use the role's Amazon Resource Name (ARN). To use resource-based permissions on the Lambda function, don't specify this parameter. Supported only for REQUEST authorizers.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "authorizer_id",
@@ -181,9 +212,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "authorizer_payload_format_version",
-						Description: "Specifies the format of the payload sent to an HTTP API Lambda authorizer. Required for HTTP API Lambda authorizers. Supported values are 1.0 and 2.0. To learn more, see Working with AWS Lambda authorizers for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html).",
-						Type:        schema.TypeString,
+						Name:          "authorizer_payload_format_version",
+						Description:   "Specifies the format of the payload sent to an HTTP API Lambda authorizer. Required for HTTP API Lambda authorizers. Supported values are 1.0 and 2.0. To learn more, see Working with AWS Lambda authorizers for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html).",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "authorizer_result_ttl_in_seconds",
@@ -196,9 +228,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "authorizer_uri",
-						Description: "The authorizer's Uniform Resource Identifier (URI). For REQUEST authorizers, this must be a well-formed Lambda function URI, for example, arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:{account_id}:function:{lambda_function_name}/invocations. In general, the URI has this form: arn:aws:apigateway:{region}:lambda:path/{service_api} , where {region} is the same as the region hosting the Lambda function, path indicates that the remaining substring in the URI should be treated as the path to the resource, including the initial /. For Lambda functions, this is usually of the form /2015-03-31/functions/[FunctionARN]/invocations. Supported only for REQUEST authorizers.",
-						Type:        schema.TypeString,
+						Name:          "authorizer_uri",
+						Description:   "The authorizer's Uniform Resource Identifier (URI). For REQUEST authorizers, this must be a well-formed Lambda function URI, for example, arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:{account_id}:function:{lambda_function_name}/invocations. In general, the URI has this form: arn:aws:apigateway:{region}:lambda:path/{service_api} , where {region} is the same as the region hosting the Lambda function, path indicates that the remaining substring in the URI should be treated as the path to the resource, including the initial /. For Lambda functions, this is usually of the form /2015-03-31/functions/[FunctionARN]/invocations. Supported only for REQUEST authorizers.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "enable_simple_responses",
@@ -211,9 +244,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeStringArray,
 					},
 					{
-						Name:        "identity_validation_expression",
-						Description: "The validation expression does not apply to the REQUEST authorizer.",
-						Type:        schema.TypeString,
+						Name:          "identity_validation_expression",
+						Description:   "The validation expression does not apply to the REQUEST authorizer.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "jwt_configuration_audience",
@@ -248,6 +282,16 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Deployment)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, "deployments", *r.DeploymentId}, nil
+						}),
+					},
+					{
 						Name:        "auto_deployed",
 						Description: "Specifies whether a deployment was automatically released.",
 						Type:        schema.TypeBool,
@@ -268,9 +312,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "deployment_status_message",
-						Description: "May contain additional feedback on the status of an API deployment.",
-						Type:        schema.TypeString,
+						Name:          "deployment_status_message",
+						Description:   "May contain additional feedback on the status of an API deployment.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "description",
@@ -298,14 +343,25 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Integration)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, apiIntegrationIDPart, *r.IntegrationId}, nil
+						}),
+					},
+					{
 						Name:        "api_gateway_managed",
 						Description: "Specifies whether an integration is managed by API Gateway. If you created an API using using quick create, the resulting integration is managed by API Gateway. You can update a managed integration, but you can't delete it.",
 						Type:        schema.TypeBool,
 					},
 					{
-						Name:        "connection_id",
-						Description: "The ID of the VPC link for a private integration. Supported only for HTTP APIs.",
-						Type:        schema.TypeString,
+						Name:          "connection_id",
+						Description:   "The ID of the VPC link for a private integration. Supported only for HTTP APIs.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "connection_type",
@@ -323,9 +379,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "description",
-						Description: "Represents the description of an integration.",
-						Type:        schema.TypeString,
+						Name:          "description",
+						Description:   "Represents the description of an integration.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "integration_id",
@@ -338,9 +395,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "integration_response_selection_expression",
-						Description: "The integration response selection expression for the integration. Supported only for WebSocket APIs. See Integration Response Selection Expressions (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-integration-response-selection-expressions).",
-						Type:        schema.TypeString,
+						Name:          "integration_response_selection_expression",
+						Description:   "The integration response selection expression for the integration. Supported only for WebSocket APIs. See Integration Response Selection Expressions (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-integration-response-selection-expressions).",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "integration_subtype",
@@ -373,9 +431,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeJSON,
 					},
 					{
-						Name:        "request_templates",
-						Description: "Represents a map of Velocity templates that are applied on the request payload based on the value of the Content-Type header sent by the client. The content type value is the key in this map, and the template (as a String) is the value. Supported only for WebSocket APIs.",
-						Type:        schema.TypeJSON,
+						Name:          "request_templates",
+						Description:   "Represents a map of Velocity templates that are applied on the request payload based on the value of the Content-Type header sent by the client. The content type value is the key in this map, and the template (as a String) is the value. Supported only for WebSocket APIs.",
+						Type:          schema.TypeJSON,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "response_parameters",
@@ -383,9 +442,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeJSON,
 					},
 					{
-						Name:        "template_selection_expression",
-						Description: "The template selection expression for the integration. Supported only for WebSocket APIs.",
-						Type:        schema.TypeString,
+						Name:          "template_selection_expression",
+						Description:   "The template selection expression for the integration. Supported only for WebSocket APIs.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "timeout_in_millis",
@@ -393,18 +453,20 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeInt,
 					},
 					{
-						Name:        "tls_config_server_name_to_verify",
-						Description: "If you specify a server name, API Gateway uses it to verify the hostname on the integration's certificate. The server name is also included in the TLS handshake to support Server Name Indication (SNI) or virtual hosting.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("TlsConfig.ServerNameToVerify"),
+						Name:          "tls_config_server_name_to_verify",
+						Description:   "If you specify a server name, API Gateway uses it to verify the hostname on the integration's certificate. The server name is also included in the TLS handshake to support Server Name Indication (SNI) or virtual hosting.",
+						Type:          schema.TypeString,
+						Resolver:      schema.PathResolver("TlsConfig.ServerNameToVerify"),
+						IgnoreInTests: true,
 					},
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_apigatewayv2_api_integration_responses",
-						Description: "Represents an integration response.",
-						Resolver:    fetchApigatewayv2ApiIntegrationResponses,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_integration_cq_id", "integration_response_id"}},
+						Name:          "aws_apigatewayv2_api_integration_responses",
+						Description:   "Represents an integration response.",
+						Resolver:      fetchApigatewayv2ApiIntegrationResponses,
+						Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_integration_cq_id", "integration_response_id"}},
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "api_integration_cq_id",
@@ -417,6 +479,17 @@ func Apigatewayv2Apis() *schema.Table {
 								Description: "Represents the identifier of an integration.",
 								Type:        schema.TypeString,
 								Resolver:    schema.ParentResourceFieldResolver("integration_id"),
+							},
+							{
+								Name:        "arn",
+								Description: "The Amazon Resource Name (ARN) for the resource.",
+								Type:        schema.TypeString,
+								Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+									r := resource.Item.(types.IntegrationResponse)
+									i := resource.Parent.Item.(types.Integration)
+									api := resource.Parent.Parent.Item.(types.Api)
+									return []string{apiIDPart, *api.ApiId, apiIntegrationIDPart, *i.IntegrationId, "integrationresponses", *r.IntegrationResponseId}, nil
+								}),
 							},
 							{
 								Name:        "integration_response_key",
@@ -453,10 +526,11 @@ func Apigatewayv2Apis() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_apigatewayv2_api_models",
-				Description: "Represents a data model for an API.",
-				Resolver:    fetchApigatewayv2ApiModels,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "model_id"}},
+				Name:          "aws_apigatewayv2_api_models",
+				Description:   "Represents a data model for an API.",
+				Resolver:      fetchApigatewayv2ApiModels,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "model_id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -469,6 +543,16 @@ func Apigatewayv2Apis() *schema.Table {
 						Description: "The API ID.",
 						Type:        schema.TypeString,
 						Resolver:    schema.ParentResourceFieldResolver("id"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Model)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, "models", *r.ModelId}, nil
+						}),
 					},
 					{
 						Name:     "model_template",
@@ -521,6 +605,16 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Route)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, apiRouteIDPart, *r.RouteId}, nil
+						}),
+					},
+					{
 						Name:        "route_key",
 						Description: "The route key for the route.",
 						Type:        schema.TypeString,
@@ -551,9 +645,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "model_selection_expression",
-						Description: "The model selection expression for the route. Supported only for WebSocket APIs.",
-						Type:        schema.TypeString,
+						Name:          "model_selection_expression",
+						Description:   "The model selection expression for the route. Supported only for WebSocket APIs.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "operation_name",
@@ -561,9 +656,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "request_models",
-						Description: "The request models for the route. Supported only for WebSocket APIs.",
-						Type:        schema.TypeJSON,
+						Name:          "request_models",
+						Description:   "The request models for the route. Supported only for WebSocket APIs.",
+						Type:          schema.TypeJSON,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "request_parameters",
@@ -576,9 +672,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "route_response_selection_expression",
-						Description: "The route response selection expression for the route. Supported only for WebSocket APIs.",
-						Type:        schema.TypeString,
+						Name:          "route_response_selection_expression",
+						Description:   "The route response selection expression for the route. Supported only for WebSocket APIs.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "target",
@@ -588,10 +685,11 @@ func Apigatewayv2Apis() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_apigatewayv2_api_route_responses",
-						Description: "Represents a route response.",
-						Resolver:    fetchApigatewayv2ApiRouteResponses,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_route_cq_id", "route_response_id"}},
+						Name:          "aws_apigatewayv2_api_route_responses",
+						Description:   "Represents a route response.",
+						Resolver:      fetchApigatewayv2ApiRouteResponses,
+						Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_route_cq_id", "route_response_id"}},
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "api_route_cq_id",
@@ -604,6 +702,17 @@ func Apigatewayv2Apis() *schema.Table {
 								Description: "Represents the identifier of an route.",
 								Type:        schema.TypeString,
 								Resolver:    schema.ParentResourceFieldResolver("route_id"),
+							},
+							{
+								Name:        "arn",
+								Description: "The Amazon Resource Name (ARN) for the resource.",
+								Type:        schema.TypeString,
+								Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+									r := resource.Item.(types.RouteResponse)
+									route := resource.Parent.Item.(types.Route)
+									api := resource.Parent.Parent.Item.(types.Api)
+									return []string{apiIDPart, *api.ApiId, apiRouteIDPart, *route.RouteId, "routeresponses", *r.RouteResponseId}, nil
+								}),
 							},
 							{
 								Name:        "route_response_key",
@@ -653,6 +762,16 @@ func Apigatewayv2Apis() *schema.Table {
 						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) for the resource.",
+						Type:        schema.TypeString,
+						Resolver: client.ResolveARNWithRegion(client.ApigatewayService, func(resource *schema.Resource) ([]string, error) {
+							r := resource.Item.(types.Stage)
+							p := resource.Parent.Item.(types.Api)
+							return []string{apiIDPart, *p.ApiId, "stages", *r.StageName}, nil
+						}),
+					},
+					{
 						Name:        "stage_name",
 						Description: "The name of the stage.",
 						Type:        schema.TypeString,
@@ -680,9 +799,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeBool,
 					},
 					{
-						Name:        "client_certificate_id",
-						Description: "The identifier of a client certificate for a Stage. Supported only for WebSocket APIs.",
-						Type:        schema.TypeString,
+						Name:          "client_certificate_id",
+						Description:   "The identifier of a client certificate for a Stage. Supported only for WebSocket APIs.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "created_date",
@@ -725,9 +845,10 @@ func Apigatewayv2Apis() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "description",
-						Description: "The description of the stage.",
-						Type:        schema.TypeString,
+						Name:          "description",
+						Description:   "The description of the stage.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "last_deployment_status_message",
@@ -769,7 +890,7 @@ func fetchApigatewayv2Apis(ctx context.Context, meta schema.ClientMeta, parent *
 	svc := c.Services().Apigatewayv2
 	for {
 		response, err := svc.GetApis(ctx, &config, func(o *apigatewayv2.Options) {
-			//o.Region = c.Region
+			// o.Region = c.Region
 		})
 
 		if err != nil {

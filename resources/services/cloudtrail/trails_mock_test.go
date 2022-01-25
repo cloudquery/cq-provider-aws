@@ -1,9 +1,12 @@
+//go:build mock
 // +build mock
 
 package cloudtrail
 
 import (
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	cloudtrailTypes "github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
@@ -23,6 +26,9 @@ func buildCloudtrailTrailsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	trail.TrailARN = aws.String("arn:aws:cloudtrail:eu-central-1:testAccount:trail/test-trail")
+
 	trailStatus := cloudtrail.GetTrailStatusOutput{}
 	err = faker.FakeData(&trailStatus)
 	if err != nil {

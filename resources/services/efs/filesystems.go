@@ -2,6 +2,10 @@ package efs
 
 import (
 	"context"
+	"errors"
+	"fmt"
+
+	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
@@ -12,13 +16,14 @@ import (
 
 func EfsFilesystems() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_efs_filesystems",
-		Description:  "A description of the file system.",
-		Resolver:     fetchEfsFilesystems,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_efs_filesystems",
+		Description:   "A description of the file system.",
+		Resolver:      fetchEfsFilesystems,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -33,50 +38,56 @@ func EfsFilesystems() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Description: "Status of efs filesystem's backup policy",
+				Name:        "backup_policy_status",
+				Type:        schema.TypeString,
+				Resolver:    ResolveEfsFilesystemBackupPolicyStatus,
+			},
+			{
 				Name:        "creation_time",
-				Description: "The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z).",
+				Description: "The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z). ",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "creation_token",
-				Description: "The opaque string specified in the request.",
+				Description: "The opaque string specified in the request. ",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "id",
-				Description: "The ID of the file system, assigned by Amazon EFS.",
+				Description: "The ID of the file system, assigned by Amazon EFS. ",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("FileSystemId"),
 			},
 			{
 				Name:        "life_cycle_state",
-				Description: "The lifecycle phase of the file system.",
+				Description: "The lifecycle phase of the file system. ",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "number_of_mount_targets",
-				Description: "The current number of mount targets that the file system has.",
+				Description: "The current number of mount targets that the file system has",
 				Type:        schema.TypeInt,
 			},
 			{
 				Name:        "owner_id",
-				Description: "The AWS account that created the file system.",
+				Description: "The AWS account that created the file system",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "performance_mode",
-				Description: "The performance mode of the file system.",
+				Description: "The performance mode of the file system. ",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "size_in_bytes_value",
-				Description: "The latest known metered size (in bytes) of data stored in the file system.",
+				Description: "The latest known metered size (in bytes) of data stored in the file system. ",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("SizeInBytes.Value"),
 			},
 			{
 				Name:        "size_in_bytes_timestamp",
-				Description: "The time at which the size of data, returned in the Value field, was determined.",
+				Description: "The time at which the size of data, returned in the Value field, was determined. The value is the integer number of seconds since 1970-01-01T00:00:00Z.",
 				Type:        schema.TypeTimestamp,
 				Resolver:    schema.PathResolver("SizeInBytes.Timestamp"),
 			},
@@ -94,18 +105,18 @@ func EfsFilesystems() *schema.Table {
 			},
 			{
 				Name:        "tags",
-				Description: "The tags associated with the file system, presented as an array of Tag objects.",
+				Description: "The tags associated with the file system, presented as an array of Tag objects. ",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEfsFilesystemTags,
+				Resolver:    resolveEfsFilesystemsTags,
 			},
 			{
 				Name:        "availability_zone_id",
-				Description: "The unique and consistent identifier of the Availability Zone in which the file system's One Zone storage classes exist.",
+				Description: "The unique and consistent identifier of the Availability Zone in which the file system's One Zone storage classes exist",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "availability_zone_name",
-				Description: "Describes the AWS Availability Zone in which the file system is located, and is valid only for file systems using One Zone storage classes.",
+				Description: "Describes the AWS Availability Zone in which the file system is located, and is valid only for file systems using One Zone storage classes",
 				Type:        schema.TypeString,
 			},
 			{
@@ -114,9 +125,10 @@ func EfsFilesystems() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "file_system_arn",
-				Description: "The Amazon Resource Name (ARN) for the EFS file system, in the format arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id .",
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the EFS file system, in the format arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemArn"),
 			},
 			{
 				Name:        "kms_key_id",
@@ -125,17 +137,17 @@ func EfsFilesystems() *schema.Table {
 			},
 			{
 				Name:        "name",
-				Description: "You can add tags to a file system, including a Name tag.",
+				Description: "You can add tags to a file system, including a Name tag",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "provisioned_throughput_in_mibps",
-				Description: "The amount of provisioned throughput, measured in MiB/s, for the file system.",
+				Description: "The amount of provisioned throughput, measured in MiB/s, for the file system. Valid for file systems using ThroughputMode set to provisioned.",
 				Type:        schema.TypeFloat,
 			},
 			{
 				Name:        "throughput_mode",
-				Description: "Displays the file system's throughput mode.",
+				Description: "Displays the file system's throughput mode",
 				Type:        schema.TypeString,
 			},
 		},
@@ -145,6 +157,7 @@ func EfsFilesystems() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchEfsFilesystems(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config efs.DescribeFileSystemsInput
 	c := meta.(*client.Client)
@@ -164,7 +177,33 @@ func fetchEfsFilesystems(ctx context.Context, meta schema.ClientMeta, parent *sc
 	}
 	return nil
 }
-func resolveEfsFilesystemTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func ResolveEfsFilesystemBackupPolicyStatus(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p, ok := resource.Item.(types.FileSystemDescription)
+	if !ok {
+		return fmt.Errorf("expected types.FileSystemDescription but got %T", resource.Item)
+	}
+	config := efs.DescribeBackupPolicyInput{
+		FileSystemId: p.FileSystemId,
+	}
+	client := meta.(*client.Client)
+	svc := client.Services().EFS
+	response, err := svc.DescribeBackupPolicy(ctx, &config, func(options *efs.Options) {
+		options.Region = client.Region
+	})
+	if err != nil {
+		var ae smithy.APIError
+		if errors.As(err, &ae) && ae.ErrorCode() == "PolicyNotFound" {
+			return resource.Set(c.Name, types.StatusDisabled)
+		}
+		return err
+	}
+	if response.BackupPolicy == nil {
+		return nil
+	}
+
+	return resource.Set(c.Name, response.BackupPolicy.Status)
+}
+func resolveEfsFilesystemsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.FileSystemDescription)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {

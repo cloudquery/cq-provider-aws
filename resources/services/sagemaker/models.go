@@ -8,18 +8,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func SagemakerModels() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_sagemaker_models",
-		Description:  "Provides summary information about a model.",
-		Resolver:     fetchSagemakerModels,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_sagemaker_models",
+		Description:   "Provides summary information about a model.",
+		Resolver:      fetchSagemakerModels,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -79,9 +81,10 @@ func SagemakerModels() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_sagemaker_model_containers",
-				Description: "Describes the container, as part of model definition.",
-				Resolver:    fetchSagemakerModelContainers,
+				Name:          "aws_sagemaker_model_containers",
+				Description:   "Describes the container, as part of model definition.",
+				Resolver:      fetchSagemakerModelContainers,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",
@@ -106,7 +109,7 @@ func SagemakerModels() *schema.Table {
 					},
 					{
 						Name:        "image_config_repository_access_mode",
-						Description: "Set this to one of the following values:  * Platform - The model image is hosted in Amazon ECR.  * Vpc - The model image is hosted in a private Docker registry in your VPC.  This member is required.",
+						Description: "Set this to one of the following values:  * Platform - The model image is hosted in Amazon ECR.  * Vpc - The model image is hosted in a private Docker registry in your VPC. ",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("ImageConfig.RepositoryAccessMode"),
 					},
@@ -140,9 +143,10 @@ func SagemakerModels() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_sagemaker_model_vpc_config",
-				Description: "Specifies a VPC that your training jobs and hosted models have access to. Control access to and from your training and model containers by configuring the VPC",
-				Resolver:    fetchSagemakerModelVpcConfigs,
+				Name:          "aws_sagemaker_model_vpc_config",
+				Description:   "Specifies a VPC that your training jobs and hosted models have access to. Control access to and from your training and model containers by configuring the VPC",
+				Resolver:      fetchSagemakerModelVpcConfigs,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",

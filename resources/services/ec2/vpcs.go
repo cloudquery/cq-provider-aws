@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -31,6 +32,14 @@ func Ec2Vpcs() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+					return []string{"vpc", *resource.Item.(types.Vpc).VpcId}, nil
+				}),
 			},
 			{
 				Name:        "cidr_block",
@@ -105,10 +114,11 @@ func Ec2Vpcs() *schema.Table {
 						Resolver:    schema.PathResolver("CidrBlockState.State"),
 					},
 					{
-						Name:        "cidr_block_state_status_message",
-						Description: "A message about the status of the CIDR block, if applicable.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("CidrBlockState.StatusMessage"),
+						Name:          "cidr_block_state_status_message",
+						Description:   "A message about the status of the CIDR block, if applicable.",
+						Type:          schema.TypeString,
+						Resolver:      schema.PathResolver("CidrBlockState.StatusMessage"),
+						IgnoreInTests: true,
 					},
 				},
 			},
@@ -141,10 +151,11 @@ func Ec2Vpcs() *schema.Table {
 						Resolver:    schema.PathResolver("Ipv6CidrBlockState.State"),
 					},
 					{
-						Name:        "ipv6_cidr_block_state_status_message",
-						Description: "A message about the status of the CIDR block, if applicable.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("Ipv6CidrBlockState.StatusMessage"),
+						Name:          "ipv6_cidr_block_state_status_message",
+						Description:   "A message about the status of the CIDR block, if applicable.",
+						Type:          schema.TypeString,
+						Resolver:      schema.PathResolver("Ipv6CidrBlockState.StatusMessage"),
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "ipv6_pool",

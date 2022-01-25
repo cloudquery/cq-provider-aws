@@ -5,18 +5,20 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/client"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func ElasticbeanstalkApplications() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_elasticbeanstalk_applications",
-		Description:  "Describes the properties of an application.",
-		Resolver:     fetchElasticbeanstalkApplications,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn", "date_created"}},
+		Name:          "aws_elasticbeanstalk_applications",
+		Description:   "Describes the properties of an application.",
+		Resolver:      fetchElasticbeanstalkApplications,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn", "date_created"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -70,7 +72,7 @@ func ElasticbeanstalkApplications() *schema.Table {
 			},
 			{
 				Name:        "max_age_rule_enabled",
-				Description: "Specify true to apply the rule, or false to disable it.  This member is required.",
+				Description: "Specify true to apply the rule, or false to disable it. ",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("ResourceLifecycleConfig.VersionLifecycleConfig.MaxAgeRule.Enabled"),
 			},
@@ -88,7 +90,7 @@ func ElasticbeanstalkApplications() *schema.Table {
 			},
 			{
 				Name:        "max_count_rule_enabled",
-				Description: "Specify true to apply the rule, or false to disable it.  This member is required.",
+				Description: "Specify true to apply the rule, or false to disable it. ",
 				Type:        schema.TypeBool,
 				Resolver:    schema.PathResolver("ResourceLifecycleConfig.VersionLifecycleConfig.MaxCountRule.Enabled"),
 			},
