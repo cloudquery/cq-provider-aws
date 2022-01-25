@@ -3,6 +3,8 @@ package client
 import (
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/aws/smithy-go"
 
@@ -37,16 +39,21 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []d
 		}
 	}
 
+	// Take over from SDK and always return diagnostics, redacting PII
+	return []diag.Diagnostic{
+		diag.FromError(err, diag.ERROR, diag.RESOLVING, resourceName, removePII(client.Accounts, err.Error()), ""),
+	}
+
 	return nil
 }
 
 func ParseSummaryMessage(aa []Account, err error, apiErr smithy.APIError) string {
 	for {
 		if op, ok := err.(*smithy.OperationError); ok {
-			return fmt.Sprintf("%s: %s - %s", op.Service(), op.Operation(), accountObfusactor(aa, apiErr.ErrorMessage()))
+			return fmt.Sprintf("%s: %s - %s", op.Service(), op.Operation(), removePII(aa, apiErr.ErrorMessage()))
 		}
 		if err = errors.Unwrap(err); err == nil {
-			return accountObfusactor(aa, apiErr.ErrorMessage())
+			return removePII(aa, apiErr.ErrorMessage())
 		}
 	}
 }
@@ -85,4 +92,20 @@ var throttleCodes = map[string]struct{}{
 func isCodeThrottle(code string) bool {
 	_, ok := throttleCodes[code]
 	return ok
+}
+
+var (
+	requestIdRegex = regexp.MustCompile(`"RequestID: [0-9a-f-]+`)
+	arnIdRegex     = regexp.MustCompile(`\sarn:aws:.+?\s`)
+)
+
+func removePII(aa []Account, msg string) string {
+	for i := range aa {
+		msg = strings.ReplaceAll(msg, " AccountID "+aa[i].ID, " AccountID xxxx")
+	}
+	msg = requestIdRegex.ReplaceAllString(msg, "RequestID: xxxx")
+	msg = arnIdRegex.ReplaceAllString(msg, " arn:xxxx ")
+	msg = accountObfusactor(aa, msg)
+
+	return msg
 }
