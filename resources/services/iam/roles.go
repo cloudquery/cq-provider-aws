@@ -2,6 +2,8 @@ package iam
 
 import (
 	"context"
+	"errors"
+	"github.com/aws/smithy-go"
 	"net/url"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -147,6 +149,10 @@ func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resourc
 	for {
 		response, err := svc.ListAttachedRolePolicies(ctx, &input)
 		if err != nil {
+			var ae smithy.APIError
+			if errors.As(err, &ae) && ae.ErrorCode() == "NoSuchEntity" {
+				return nil
+			}
 			return err
 		}
 		for _, p := range response.AttachedPolicies {
