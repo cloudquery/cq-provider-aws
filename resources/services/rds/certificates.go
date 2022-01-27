@@ -18,6 +18,7 @@ func RdsCertificates() *schema.Table {
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Global:       true,
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
