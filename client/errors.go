@@ -17,11 +17,7 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []d
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
-		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError":
-			return []diag.Diagnostic{
-				diag.FromError(err, diag.WARNING, diag.ACCESS, resourceName, ParseSummaryMessage(client.Accounts, err, ae), errorCodeDescriptions[ae.ErrorCode()]),
-			}
-		case "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
+		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
 			return []diag.Diagnostic{
 				diag.FromError(err, diag.WARNING, diag.ACCESS, resourceName, ParseSummaryMessage(client.Accounts, err, ae), errorCodeDescriptions[ae.ErrorCode()]),
 			}
