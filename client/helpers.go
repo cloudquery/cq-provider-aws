@@ -238,7 +238,7 @@ func (c *Client) IgnoreApiError(err error) bool {
 			strings.HasPrefix(errorCode, "NoSuch") ||
 			strings.HasSuffix(errorCode, "NotFound") ||
 			strings.HasSuffix(errorCode, "NotFoundError") {
-			c.logger.Warn("API returned 404 error ignoring it...", "error", err)
+			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
 			return true
 		}
 	}
