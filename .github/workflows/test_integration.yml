@@ -1,4 +1,4 @@
-name: integration_test
+name: test_integration
 
 on:
   push:
@@ -10,22 +10,23 @@ on:
 jobs:
   is_organization_member:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request_target'
     outputs:
       status: ${{ steps.is_organization_member.result }}
     steps:
       - uses: yevgenypats/is-organization-member@2cff10d857776aacefe5fb11acea8c1a8d270d3f
+        if: ${{ github.event_name == 'pull_request_target' }}
         id: is_organization_member
         with:
           organization: cloudquery
           username: ${{ github.event.pull_request.user.login }}
           token: ${{ secrets.GITHUB_TOKEN }}  
       - name: Skip if not member and event is pull_request_target
+        if: ${{ github.event_name == 'pull_request_target' && steps.is_organization_member.result == 'false' }}
         run: |
             echo "user is not part of org. Please run 'go test -tags=integration ./..'"
             echo "and paste the output in the PR"
 
-  integration_test:
+  test_integration:
     needs: is_organization_member
     if: github.event_name != 'pull_request_target' || needs.is_organization_member.outputs.status == 'true'
     strategy:
@@ -77,14 +78,4 @@ jobs:
       - name: Integration Test
         run: |
           go test -tags=integration ./...
-
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        if: ${{  github.event_name != 'pull_request_target' && failure() }}
-        env:
-          SLACK_CHANNEL: oss-tests
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'AWS - E2E tests failed'
-          SLACK_TITLE: AWS - E2E tests failed
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
