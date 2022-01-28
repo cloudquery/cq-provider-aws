@@ -10,8 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
+
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -217,4 +218,29 @@ func ResolveARN(service AWSService, resourceID func(resource *schema.Resource) (
 // Region  and account id are left empty.
 func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
 	return resolveARN(service, resourceID, false, false)
+}
+
+func stringOneOf(a string, args ...interface{}) bool {
+	for _, b := range args {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
+// IgnoreApiError checks if api error should be ignored
+func (c *Client) IgnoreApiError(err error) bool {
+	var ae smithy.APIError
+	if errors.As(err, &ae) {
+		errorCode := ae.ErrorCode()
+		if stringOneOf(errorCode, "ResourceNotFoundException", "WAFNonexistentItemException") ||
+			strings.HasPrefix(errorCode, "NoSuch") ||
+			strings.HasSuffix(errorCode, "NotFound") ||
+			strings.HasSuffix(errorCode, "NotFoundError") {
+			c.logger.Warn("API returned 404 error ignoring it...", "error", err)
+			return true
+		}
+	}
+	return false
 }
