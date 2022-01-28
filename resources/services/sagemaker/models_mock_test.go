@@ -1,5 +1,4 @@
-//go:build mock
-// +build mock
+//go:build !integration
 
 package sagemaker
 
