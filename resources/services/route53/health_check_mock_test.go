@@ -1,5 +1,3 @@
-//go:build !integration
-
 package route53
 
 import (

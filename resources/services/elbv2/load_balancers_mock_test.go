@@ -1,5 +1,3 @@
-//go:build !integration
-
 package elbv2
 
 import (
