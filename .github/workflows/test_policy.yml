@@ -45,17 +45,13 @@ jobs:
           curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Linux_x86_64 -o cloudquery
           chmod a+x cloudquery
 
-      - name: Build Schema
+      - name: Build Schema and Run Policy
         run: |
           rm -rf .cq_reattach
-          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery provider build-schema --config ./client/testdata/default.hcl --enable-console-log
+          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done \
+          && ./cloudquery provider build-schema --config ./client/testdata/default.hcl --enable-console-log \
+          && ./cloudquery policy run --config ./client/testdata/default.hcl --enable-console-log
         env:
           CQ_REATTACH_PROVIDERS: .cq_reattach
           CQ_NO_TELEMETRY: 1
 
-      - name: Policy Run
-        run: |
-          ./cloudquery policy run --config ./client/testdata/default.hcl --enable-console-log
-        env:
-          CQ_REATTACH_PROVIDERS: .cq_reattach
-          CQ_NO_TELEMETRY: 1
