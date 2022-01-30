@@ -48,7 +48,7 @@ jobs:
       - name: Build Schema
         run: |
           rm -rf .cq_reattach
-          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery provider build_schema --config ./client/testdata/default.hcl --enable-console-log
+          CQ_PROVIDER_DEBUG=1 go run main.go & while [ ! -f .cq_reattach ]; do sleep 1; done && ./cloudquery provider build-schema --config ./client/testdata/default.hcl --enable-console-log
         env:
           CQ_REATTACH_PROVIDERS: .cq_reattach
           CQ_NO_TELEMETRY: 1
