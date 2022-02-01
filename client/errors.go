@@ -8,48 +8,75 @@ import (
 
 	"github.com/aws/smithy-go"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema/diag"
 )
 
-func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) []diag.Diagnostic {
+func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
 		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
-			return []diag.Diagnostic{
-				diag.FromError(err, diag.WARNING, diag.ACCESS, resourceName, ParseSummaryMessage(client.Accounts, err, ae), errorCodeDescriptions[ae.ErrorCode()]),
+			return diag.Diagnostics{
+				RedactError(client.Accounts, diag.NewBaseError(err, diag.WARNING, diag.ACCESS, resourceName, ParseSummaryMessage(err, ae), errorCodeDescriptions[ae.ErrorCode()])),
 			}
 		case "InvalidAction":
-			return []diag.Diagnostic{
-				diag.FromError(err, diag.IGNORE, diag.RESOLVING, resourceName, ParseSummaryMessage(client.Accounts, err, ae),
-					"The action is invalid for the service."),
+			return diag.Diagnostics{
+				RedactError(client.Accounts, diag.NewBaseError(err, diag.IGNORE, diag.RESOLVING, resourceName, ParseSummaryMessage(err, ae),
+					"The action is invalid for the service.")),
 			}
 		}
 	}
 	if IsErrorThrottle(err) {
-		return []diag.Diagnostic{
-			diag.FromError(err, diag.WARNING, diag.THROTTLE, resourceName, ParseSummaryMessage(client.Accounts, err, ae),
-				"CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."),
+		return diag.Diagnostics{
+			RedactError(client.Accounts, diag.NewBaseError(err, diag.WARNING, diag.THROTTLE, resourceName, ParseSummaryMessage(err, ae),
+				"CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration.")),
 		}
 	}
 
 	// Take over from SDK and always return diagnostics, redacting PII
-	return []diag.Diagnostic{
-		diag.FromError(err, diag.ERROR, diag.RESOLVING, resourceName, removePII(client.Accounts, err.Error()), ""),
+	return diag.Diagnostics{
+		RedactError(client.Accounts, diag.NewBaseError(err, diag.ERROR, diag.RESOLVING, resourceName, err.Error(), "")),
 	}
 }
 
-func ParseSummaryMessage(aa []Account, err error, apiErr smithy.APIError) string {
+func ParseSummaryMessage(err error, apiErr smithy.APIError) string {
 	for {
 		if op, ok := err.(*smithy.OperationError); ok {
-			return fmt.Sprintf("%s: %s - %s", op.Service(), op.Operation(), removePII(aa, apiErr.ErrorMessage()))
+			return fmt.Sprintf("%s: %s - %s", op.Service(), op.Operation(), apiErr.ErrorMessage())
 		}
 		if err = errors.Unwrap(err); err == nil {
-			return removePII(aa, apiErr.ErrorMessage())
+			return apiErr.ErrorMessage()
 		}
 	}
+}
+
+// RedactedDiagnostic contains both original and redacted versions of a diagnostic
+type RedactedDiagnostic struct {
+	diag.Diagnostic
+	redacted diag.Diagnostic
+}
+
+// RedactError redacts a given diagnostic and returns a RedactedDiagnostic containing both original and redacted versions
+func RedactError(aa []Account, e *diag.BaseError) *RedactedDiagnostic {
+	r := diag.NewBaseError(
+		errors.New(removePII(aa, e.Error())),
+		e.Severity(),
+		e.Type(),
+		e.Description().Resource,
+		removePII(aa, e.Description().Summary),
+		removePII(aa, e.Description().Detail),
+	)
+	return &RedactedDiagnostic{
+		Diagnostic: e,
+		redacted:   r,
+	}
+}
+
+// Redacted returns the redacted diagnostic contained within
+func (r *RedactedDiagnostic) Redacted() diag.Diagnostic {
+	return r.redacted
 }
 
 // IsErrorThrottle returns whether the error is to be throttled based on its code.
@@ -89,15 +116,15 @@ func isCodeThrottle(code string) bool {
 }
 
 var (
-	requestIdRegex = regexp.MustCompile(`RequestID: [0-9a-f-]+`)
-	arnIdRegex     = regexp.MustCompile(`\sarn:aws:.+?\s`)
+	requestIdRegex = regexp.MustCompile(`\sRequestID: [0-9a-f-]+`)
+	arnIdRegex     = regexp.MustCompile(`\sarn:aws[A-Za-z0-9-]*:.+?\s`)
 )
 
 func removePII(aa []Account, msg string) string {
 	for i := range aa {
 		msg = strings.ReplaceAll(msg, " AccountID "+aa[i].ID, " AccountID xxxx")
 	}
-	msg = requestIdRegex.ReplaceAllString(msg, "RequestID: xxxx")
+	msg = requestIdRegex.ReplaceAllString(msg, " RequestID: xxxx")
 	msg = arnIdRegex.ReplaceAllString(msg, " arn:xxxx ")
 	msg = accountObfusactor(aa, msg)
 
