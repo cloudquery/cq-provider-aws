@@ -52,14 +52,8 @@ func ParseSummaryMessage(err error, apiErr smithy.APIError) string {
 	}
 }
 
-// RedactedDiagnostic contains both original and redacted versions of a diagnostic
-type RedactedDiagnostic struct {
-	diag.Diagnostic
-	redacted diag.Diagnostic
-}
-
 // RedactError redacts a given diagnostic and returns a RedactedDiagnostic containing both original and redacted versions
-func RedactError(aa []Account, e *diag.BaseError) *RedactedDiagnostic {
+func RedactError(aa []Account, e *diag.BaseError) diag.Diagnostic {
 	r := diag.NewBaseError(
 		errors.New(removePII(aa, e.Error())),
 		e.Severity(),
@@ -68,15 +62,7 @@ func RedactError(aa []Account, e *diag.BaseError) *RedactedDiagnostic {
 		removePII(aa, e.Description().Summary),
 		removePII(aa, e.Description().Detail),
 	)
-	return &RedactedDiagnostic{
-		Diagnostic: e,
-		redacted:   r,
-	}
-}
-
-// Redacted returns the redacted diagnostic contained within
-func (r *RedactedDiagnostic) Redacted() diag.Diagnostic {
-	return r.redacted
+	return diag.NewRedactedDiagnostic(e, r)
 }
 
 // IsErrorThrottle returns whether the error is to be throttled based on its code.
