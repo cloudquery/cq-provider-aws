@@ -14,6 +14,14 @@ import (
 
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
+
+	// Don't override if already a diagnostic, just redact
+	if d, ok := err.(diag.Diagnostic); ok {
+		return diag.Diagnostics{
+			RedactError(client.Accounts, d),
+		}
+	}
+
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
@@ -53,7 +61,7 @@ func ParseSummaryMessage(err error, apiErr smithy.APIError) string {
 }
 
 // RedactError redacts a given diagnostic and returns a RedactedDiagnostic containing both original and redacted versions
-func RedactError(aa []Account, e *diag.BaseError) diag.Diagnostic {
+func RedactError(aa []Account, e diag.Diagnostic) diag.Diagnostic {
 	r := diag.NewBaseError(
 		errors.New(removePII(aa, e.Error())),
 		e.Severity(),
