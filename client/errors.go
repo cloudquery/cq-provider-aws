@@ -116,7 +116,8 @@ func isCodeThrottle(code string) bool {
 }
 
 var (
-	requestIdRegex = regexp.MustCompile(`\sRequestID: [0-9a-f-]+`)
+	requestIdRegex = regexp.MustCompile(`\sRequestID: [A-Za-z0-9-]+`)
+	hostIdRegex    = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
 	arnIdRegex     = regexp.MustCompile(`\sarn:aws[A-Za-z0-9-]*:.+?\s`)
 )
 
@@ -125,6 +126,7 @@ func removePII(aa []Account, msg string) string {
 		msg = strings.ReplaceAll(msg, " AccountID "+aa[i].ID, " AccountID xxxx")
 	}
 	msg = requestIdRegex.ReplaceAllString(msg, " RequestID: xxxx")
+	msg = hostIdRegex.ReplaceAllString(msg, " HostID: xxxx")
 	msg = arnIdRegex.ReplaceAllString(msg, " arn:xxxx ")
 	msg = accountObfusactor(aa, msg)
 
