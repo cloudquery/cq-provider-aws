@@ -1,4 +1,3 @@
-//go:build migrations
 package provider_test
 
 import (
