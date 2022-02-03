@@ -10,9 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aws/smithy-go"
-
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -220,26 +219,24 @@ func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resou
 	return resolveARN(service, resourceID, false, false)
 }
 
-func stringOneOf(a string, args ...interface{}) bool {
-	for _, b := range args {
-		if b == a {
-			return true
-		}
-	}
-	return false
+var notFoundErrorPrefixes = []string{
+	"ResourceNotFoundException",
+	"WAFNonexistentItemException",
+	"NoSuch",
+	"NotFound",
+	"NotFoundError",
 }
 
-// IgnoreApiError checks if api error should be ignored
-func (c *Client) IgnoreApiError(err error) bool {
+// IsNotFoundError checks if api error should be ignored
+func (c *Client) IsNotFoundError(err error) bool {
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		errorCode := ae.ErrorCode()
-		if stringOneOf(errorCode, "ResourceNotFoundException", "WAFNonexistentItemException") ||
-			strings.HasPrefix(errorCode, "NoSuch") ||
-			strings.HasSuffix(errorCode, "NotFound") ||
-			strings.HasSuffix(errorCode, "NotFoundError") {
-			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
-			return true
+		for _, s := range notFoundErrorPrefixes {
+			if strings.Contains(errorCode, s) {
+				c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
+				return true
+			}
 		}
 	}
 	return false

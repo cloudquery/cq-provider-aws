@@ -188,7 +188,7 @@ func ResolveEfsFilesystemBackupPolicyStatus(ctx context.Context, meta schema.Cli
 		options.Region = cl.Region
 	})
 	if err != nil {
-		if cl.IgnoreApiError(err) {
+		if cl.IsNotFoundError(err) {
 			return resource.Set(c.Name, types.StatusDisabled)
 		}
 		return err

@@ -217,7 +217,7 @@ func fetchEksClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 				options.Region = c.Region
 			})
 			if err != nil {
-				if c.IgnoreApiError(err) {
+				if c.IsNotFoundError(err) {
 					continue
 				}
 				return err
