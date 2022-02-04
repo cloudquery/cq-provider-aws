@@ -13,12 +13,13 @@ import (
 
 func DaxClusters() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_dax_clusters",
-		Description:  "Information about a DAX cluster.",
-		Resolver:     fetchDaxClusters,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("dax"),
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_dax_clusters",
+		Description:   "Information about a DAX cluster.",
+		Resolver:      fetchDaxClusters,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("dax"),
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -257,7 +258,7 @@ func resolveDaxClusterTags(ctx context.Context, meta schema.ClientMeta, resource
 	cl := meta.(*client.Client)
 	svc := cl.Services().DAX
 	response, err := svc.ListTags(ctx, &dax.ListTagsInput{
-		ResourceName: cluster.ClusterName,
+		ResourceName: cluster.ClusterArn,
 	}, func(options *dax.Options) {
 		options.Region = cl.Region
 	})

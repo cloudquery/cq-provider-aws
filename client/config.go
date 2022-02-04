@@ -1,13 +1,14 @@
 package client
 
 type Account struct {
-	ID           string `hcl:",label"`
-	AccountID    string
-	AccountName  string   `hcl:"account_name,optional"`
-	RoleARN      string   `hcl:"role_arn,optional"`
-	LocalProfile string   `hcl:"local_profile,optional"`
-	ExternalID   string   `hcl:"external_id,optional"`
-	Regions      []string `hcl:"regions,optional"`
+	ID              string `hcl:",label"`
+	AccountID       string
+	AccountName     string   `hcl:"account_name,optional"`
+	LocalProfile    string   `hcl:"local_profile,optional"`
+	RoleARN         string   `hcl:"role_arn,optional"`
+	RoleSessionName string   `hcl:"role_session_name,optional"`
+	ExternalID      string   `hcl:"external_id,optional"`
+	Regions         []string `hcl:"regions,optional"`
 }
 
 type Config struct {
@@ -25,7 +26,7 @@ func (c Config) Example() string {
     // Optional. Role ARN we want to assume when accessing this account
     // role_arn = < YOUR_ROLE_ARN >
     // Optional. Named profile in config or credential file from where CQ should grab credentials
-    // LocalProfile = < PROFILE_NAME >
+    // local_profile = < PROFILE_NAME >
   // }
   // Optional. by default assumes all regions
   // regions = ["us-east-1", "us-west-2"]

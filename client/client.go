@@ -82,7 +82,7 @@ var envVarsToCheck = []string{
 
 const (
 	defaultRegion              = "us-east-1"
-	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws en	v variables: %s"
+	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
 	defaultVar                 = "default"
 )
 
@@ -321,6 +321,11 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 		if account.ExternalID != "" {
 			opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
 				opts.ExternalID = &account.ExternalID
+			})
+		}
+		if account.RoleSessionName != "" {
+			opts = append(opts, func(opts *stscreds.AssumeRoleOptions) {
+				opts.RoleSessionName = account.RoleSessionName
 			})
 		}
 		if stsClient == nil {

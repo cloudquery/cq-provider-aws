@@ -1,6 +1,3 @@
-//go:build mock
-// +build mock
-
 package wafv2
 
 import (
@@ -111,5 +108,5 @@ func buildWAFV2WebACLMock(t *testing.T, ctrl *gomock.Controller) client.Services
 }
 
 func TestWafV2WebACL(t *testing.T) {
-	client.AwsMockTestHelper(t, Wafv2WebAcls(), buildWAFV2WebACLMock, client.TestOptions{SkipEmptyJsonB: true})
+	client.AwsMockTestHelper(t, Wafv2WebAcls(), buildWAFV2WebACLMock, client.TestOptions{})
 }
