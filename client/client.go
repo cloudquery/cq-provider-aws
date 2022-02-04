@@ -351,11 +351,13 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 }
 
 func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
+	// TODO: validate awsConfig.Organization struct values
+
 	awsCfg, err := configureAwsClient(ctx, logger, awsConfig, awsConfig.Organization.AdminAccount, nil)
 	if err != nil {
 		return nil, nil, err
 	}
-	var accounts []Account
+	accounts := make([]Account, 0)
 	svc := organizations.NewFromConfig(awsCfg)
 	var rawAccounts []orgTypes.Account
 	var paginationToken *string
