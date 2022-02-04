@@ -51,6 +51,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
+	orgTypes "github.com/aws/aws-sdk-go-v2/service/organizations/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -349,10 +350,54 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	return awsCfg, err
 }
 
+func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
+	awsCfg, err := configureAwsClient(ctx, logger, awsConfig, awsConfig.Organization.AdminAccount, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var accounts []Account
+	svc := organizations.NewFromConfig(awsCfg)
+	var rawAccounts []orgTypes.Account
+	var paginationToken *string
+	for {
+		resp, err := svc.ListAccounts(ctx, &organizations.ListAccountsInput{
+			NextToken: paginationToken,
+		})
+		if err != nil {
+			return nil, nil, err
+		}
+		rawAccounts = append(rawAccounts, resp.Accounts...)
+		if resp.NextToken == nil {
+			break
+		}
+		paginationToken = resp.NextToken
+	}
+
+	for _, account := range rawAccounts {
+		accounts = append(accounts, Account{
+			ID:              *account.Id,
+			RoleARN:         fmt.Sprintf("arn:aws:iam::%s:role/%s", *account.Id, awsConfig.Organization.ChildAccountRoleName),
+			RoleSessionName: awsConfig.Organization.ChildAccountRoleSessionName,
+			ExternalID:      awsConfig.Organization.ChildAccountExternalID,
+			LocalProfile:    awsConfig.Organization.AdminAccount.LocalProfile,
+			Regions:         awsConfig.Organization.ChildAccountRegions,
+		})
+	}
+	return accounts, sts.NewFromConfig(awsCfg), err
+
+}
+
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts)
+
+	childAccounts, adminAccountSts, err := getOrgAccounts(ctx, logger, awsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	awsConfig.Accounts = childAccounts
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
@@ -383,7 +428,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			logger.Info("All regions specified in config.yml. Assuming all regions")
 		}
 
-		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, nil)
+		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, adminAccountSts)
 		if err != nil {
 			return nil, err
 		}
