@@ -11,19 +11,15 @@ import (
 func TestMigrationPostgreSQL(t *testing.T) {
 	dsn := os.Getenv("CQ_MIGRATION_TEST_PG_DSN")
 	if dsn == "" {
-		os.Setenv("CQ_MIGRATION_TEST_DSN", "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable")
-	} else {
-		os.Setenv("CQ_MIGRATION_TEST_DSN", dsn)
+		dsn = "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable"
 	}
-	migration.RunMigrationsTest(t, provider.Provider(), []string{"latest"})
+	migration.RunMigrationsTestWithNewDB(t, dsn, "testpgmigration", provider.Provider(), []string{"latest"})
 }
 
 func TestMigrationTimescaleDB(t *testing.T) {
 	dsn := os.Getenv("CQ_MIGRATION_TEST_TSDB_DSN")
 	if dsn == "" {
-		os.Setenv("CQ_MIGRATION_TEST_DSN", "tsdb://postgres:pass@localhost:5432/postgres?sslmode=disable")
-	} else {
-		os.Setenv("CQ_MIGRATION_TEST_DSN", dsn)
+		dsn = "tsdb://postgres:pass@localhost:5432/postgres?sslmode=disable"
 	}
-	migration.RunMigrationsTest(t, provider.Provider(), []string{"latest"})
+	migration.RunMigrationsTestWithNewDB(t, dsn, "testtsdbmigration", provider.Provider(), []string{"latest"})
 }
