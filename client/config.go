@@ -11,12 +11,21 @@ type Account struct {
 	Regions         []string `hcl:"regions,optional"`
 }
 
+type AwsOrg struct {
+	AdminAccount                Account
+	ChildAccountRoleName        string   `hcl:"role_name,optional"`
+	ChildAccountRoleSessionName string   `hcl:"role_session_name,optional"`
+	ChildAccountExternalID      string   `hcl:"external_id,optional"`
+	ChildAccountRegions         []string `hcl:"regions,optional"`
+}
+
 type Config struct {
-	Regions    []string  `hcl:"regions,optional"`
-	Accounts   []Account `hcl:"accounts,block"`
-	AWSDebug   bool      `hcl:"aws_debug,optional"`
-	MaxRetries int       `hcl:"max_retries,optional" default:"10"`
-	MaxBackoff int       `hcl:"max_backoff,optional" default:"90"`
+	Regions      []string  `hcl:"regions,optional"`
+	Accounts     []Account `hcl:"accounts,block"`
+	Organization AwsOrg    `hcl:"accounts,block"`
+	AWSDebug     bool      `hcl:"aws_debug,optional"`
+	MaxRetries   int       `hcl:"max_retries,optional" default:"10"`
+	MaxBackoff   int       `hcl:"max_backoff,optional" default:"90"`
 }
 
 func (c Config) Example() string {
