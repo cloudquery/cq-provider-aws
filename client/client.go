@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -314,6 +315,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
 
 	if err != nil {
+		logger.Error("error loading default config", "err", err)
 		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
 
@@ -344,6 +346,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 
 	// Test out retrieving credentials
 	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
+		logger.Error("error retrieving credentials", "err", err)
 		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
 	}
 
@@ -351,7 +354,6 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 }
 
 func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
-	// TODO: validate awsConfig.Organization struct values
 
 	awsCfg, err := configureAwsClient(ctx, logger, awsConfig, awsConfig.Organization.AdminAccount, nil)
 	if err != nil {
@@ -376,6 +378,10 @@ func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config)
 	}
 
 	for _, account := range rawAccounts {
+		logger.Info("adding account", "account", account)
+		if account.Status != orgTypes.AccountStatusActive {
+			continue
+		}
 		accounts = append(accounts, Account{
 			ID:              *account.Id,
 			RoleARN:         fmt.Sprintf("arn:aws:iam::%s:role/%s", *account.Id, awsConfig.Organization.ChildAccountRoleName),
@@ -383,23 +389,31 @@ func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config)
 			ExternalID:      awsConfig.Organization.ChildAccountExternalID,
 			LocalProfile:    awsConfig.Organization.AdminAccount.LocalProfile,
 			Regions:         awsConfig.Organization.ChildAccountRegions,
+			source:          "org",
 		})
 	}
 	return accounts, sts.NewFromConfig(awsCfg), err
 
 }
 
+func (org AwsOrg) Validate() bool {
+	// Only required field is the Child Account Role name
+	return org.ChildAccountRoleName != ""
+}
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts)
+	var adminAccountSts AssumeRoleAPIClient
 
-	childAccounts, adminAccountSts, err := getOrgAccounts(ctx, logger, awsConfig)
-	if err != nil {
-		return nil, err
+	if awsConfig.Organization.Validate() {
+		var err error
+		awsConfig.Accounts, adminAccountSts, err = getOrgAccounts(ctx, logger, awsConfig)
+		if err != nil {
+			logger.Error("error getting child accounts", "err", err)
+			return nil, err
+		}
 	}
-
-	awsConfig.Accounts = childAccounts
 
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
@@ -432,6 +446,11 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, adminAccountSts)
 		if err != nil {
+			if account.source == "org" {
+				logger.Warn("unable to assume role in account")
+				continue
+
+			}
 			return nil, err
 		}
 
@@ -468,7 +487,9 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
 		}
 	}
-
+	if len(client.Accounts) == 0 {
+		return nil, errors.New("no accounts instantiated")
+	}
 	return &client, nil
 }
 
