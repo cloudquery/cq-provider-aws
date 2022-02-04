@@ -9,10 +9,11 @@ type Account struct {
 	RoleSessionName string   `hcl:"role_session_name,optional"`
 	ExternalID      string   `hcl:"external_id,optional"`
 	Regions         []string `hcl:"regions,optional"`
+	source          string
 }
 
 type AwsOrg struct {
-	AdminAccount                Account
+	AdminAccount                Account  `hcl:"accounts,block"`
 	ChildAccountRoleName        string   `hcl:"role_name,optional"`
 	ChildAccountRoleSessionName string   `hcl:"role_session_name,optional"`
 	ChildAccountExternalID      string   `hcl:"external_id,optional"`
@@ -22,7 +23,7 @@ type AwsOrg struct {
 type Config struct {
 	Regions      []string  `hcl:"regions,optional"`
 	Accounts     []Account `hcl:"accounts,block"`
-	Organization AwsOrg    `hcl:"accounts,block"`
+	Organization AwsOrg    `hcl:"org,block"`
 	AWSDebug     bool      `hcl:"aws_debug,optional"`
 	MaxRetries   int       `hcl:"max_retries,optional" default:"10"`
 	MaxBackoff   int       `hcl:"max_backoff,optional" default:"90"`
