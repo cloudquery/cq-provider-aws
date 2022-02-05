@@ -23,7 +23,7 @@ type AwsOrg struct {
 type Config struct {
 	Regions      []string  `hcl:"regions,optional"`
 	Accounts     []Account `hcl:"accounts,block"`
-	Organization AwsOrg    `hcl:"org,block"`
+	Organization *AwsOrg   `hcl:"org,block"`
 	AWSDebug     bool      `hcl:"aws_debug,optional"`
 	MaxRetries   int       `hcl:"max_retries,optional" default:"10"`
 	MaxBackoff   int       `hcl:"max_backoff,optional" default:"90"`
