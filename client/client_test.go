@@ -324,8 +324,9 @@ func Test_Org_Configure(t *testing.T) {
 		listAccountsForParent func(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error)
 		listAccounts          func(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error)
 		ous                   []string
-		accounts              []orgTypes.Account
+		accounts              []Account
 		err                   error
+		config                *Config
 	}{
 		{
 			listAccounts: func(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error) {
@@ -333,26 +334,40 @@ func Test_Org_Configure(t *testing.T) {
 					Accounts: []orgTypes.Account{},
 				}, nil
 			},
-			accounts: []orgTypes.Account{},
+			accounts: []Account{},
 			err:      nil,
+			config: &Config{
+				Organization: &AwsOrg{},
+			},
 		},
 		{
 			listAccountsForParent: func(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error) {
 				return &organizations.ListAccountsForParentOutput{
 					Accounts: []orgTypes.Account{
 						{
-							Arn: aws.String("test"),
+							Id:     aws.String("012345678910"),
+							Status: orgTypes.AccountStatusActive,
 						},
 					},
 				}, nil
 			},
-
-			accounts: []orgTypes.Account{
-				{
-					Arn: aws.String("test"),
+			config: &Config{
+				Organization: &AwsOrg{
+					OrganizationUnits:    []string{"test-ou"},
+					ChildAccountRoleName: "test",
 				},
 			},
-			ous: []string{"test"},
+			accounts: []Account{
+				{
+					ID:              "012345678910",
+					RoleARN:         "arn:aws:iam::012345678910:role/test",
+					RoleSessionName: "",
+					ExternalID:      "",
+					LocalProfile:    "",
+					Regions:         []string{},
+					source:          "org",
+				},
+			},
 			err: nil,
 		},
 	}
@@ -362,8 +377,8 @@ func Test_Org_Configure(t *testing.T) {
 			listAccountsForParent: test.listAccountsForParent,
 			listAccounts:          test.listAccounts,
 		}
-		resp, err := loadAccounts(ctx, api, test.ous)
-		respDiff := cmp.Diff(resp, test.accounts, cmpopts.EquateEmpty())
+		resp, err := loadAccounts(ctx, test.config, api)
+		respDiff := cmp.Diff(resp, test.accounts, cmpopts.IgnoreUnexported(Account{}), cmpopts.EquateEmpty())
 
 		if respDiff != "" {
 			t.Fatal(respDiff)
@@ -375,5 +390,4 @@ func Test_Org_Configure(t *testing.T) {
 		}
 
 	}
-
 }

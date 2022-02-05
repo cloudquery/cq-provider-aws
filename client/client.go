@@ -403,12 +403,39 @@ func getAllAccounts(ctx context.Context, accountsApi ListAccountsAPI) ([]orgType
 
 }
 
-func loadAccounts(ctx context.Context, accountsApi ListAccountsAPI, ous []string) ([]orgTypes.Account, error) {
-	if len(ous) > 0 {
-		return getOUAccounts(ctx, accountsApi, ous)
+func loadAccounts(ctx context.Context, awsConfig *Config, accountsApi ListAccountsAPI) ([]Account, error) {
+	var accounts []Account
+	var rawAccounts []orgTypes.Account
+	var err error
+	if len(awsConfig.Organization.OrganizationUnits) > 0 {
+		rawAccounts, err = getOUAccounts(ctx, accountsApi, awsConfig.Organization.OrganizationUnits)
+	} else {
+		rawAccounts, err = getAllAccounts(ctx, accountsApi)
 	}
-	return getAllAccounts(ctx, accountsApi)
 
+	if err != nil {
+		return accounts, err
+	}
+	for _, account := range rawAccounts {
+		// Only load Active accounts
+		if account.Status != orgTypes.AccountStatusActive {
+			continue
+		}
+		localProfile := ""
+		if awsConfig.Organization.AdminAccount != nil {
+			localProfile = awsConfig.Organization.AdminAccount.LocalProfile
+		}
+		accounts = append(accounts, Account{
+			ID:              *account.Id,
+			RoleARN:         GenerateResourceARN("iam", "role", awsConfig.Organization.ChildAccountRoleName, "", *account.Id),
+			RoleSessionName: awsConfig.Organization.ChildAccountRoleSessionName,
+			ExternalID:      awsConfig.Organization.ChildAccountExternalID,
+			LocalProfile:    localProfile,
+			Regions:         awsConfig.Organization.ChildAccountRegions,
+			source:          "org",
+		})
+	}
+	return accounts, err
 }
 
 func loadOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
@@ -421,43 +448,22 @@ func loadOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config
 	if err != nil {
 		return nil, nil, err
 	}
-	accounts := make([]Account, 0)
 	svc := organizations.NewFromConfig(awsCfg)
-	rawAccounts, err := loadAccounts(ctx, svc, awsConfig.Organization.OrganizationUnits)
+	accounts, err := loadAccounts(ctx, awsConfig, svc)
 	if err != nil {
 		return nil, nil, err
-	}
-	for _, account := range rawAccounts {
-		logger.Info("adding account", "account", account)
-		// Only load Active accounts
-		if account.Status != orgTypes.AccountStatusActive {
-			continue
-		}
-		accounts = append(accounts, Account{
-			ID:              *account.Id,
-			RoleARN:         fmt.Sprintf("arn:aws:iam::%s:role/%s", *account.Id, awsConfig.Organization.ChildAccountRoleName),
-			RoleSessionName: awsConfig.Organization.ChildAccountRoleSessionName,
-			ExternalID:      awsConfig.Organization.ChildAccountExternalID,
-			LocalProfile:    awsConfig.Organization.AdminAccount.LocalProfile,
-			Regions:         awsConfig.Organization.ChildAccountRegions,
-			source:          "org",
-		})
 	}
 	return accounts, sts.NewFromConfig(awsCfg), err
 
 }
 
-func (org AwsOrg) Validate() bool {
-	// Only required field is the Child Account Role name
-	return org.ChildAccountRoleName != ""
-}
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts)
 	var adminAccountSts AssumeRoleAPIClient
 
-	if awsConfig.Organization != nil && awsConfig.Organization.Validate() {
+	if awsConfig.Organization != nil {
 		var err error
 		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
