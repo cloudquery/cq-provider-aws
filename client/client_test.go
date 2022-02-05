@@ -15,6 +15,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/organizations"
+	orgTypes "github.com/aws/aws-sdk-go-v2/service/organizations/types"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	stsTypes "github.com/aws/aws-sdk-go-v2/service/sts/types"
 )
@@ -301,4 +303,77 @@ func Test_Configure(t *testing.T) {
 		}
 
 	}
+}
+
+func (m mockOrgClient) ListAccountsForParent(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error) {
+	return m.listAccountsForParent(ctx, params, optFns...)
+}
+
+func (m mockOrgClient) ListAccounts(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error) {
+	return m.listAccounts(ctx, params, optFns...)
+}
+
+type mockOrgClient struct {
+	listAccountsForParent func(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error)
+	listAccounts          func(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error)
+}
+
+func Test_Org_Configure(t *testing.T) {
+	ctx := context.Background()
+	tests := []struct {
+		listAccountsForParent func(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error)
+		listAccounts          func(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error)
+		ous                   []string
+		accounts              []orgTypes.Account
+		err                   error
+	}{
+		{
+			listAccounts: func(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error) {
+				return &organizations.ListAccountsOutput{
+					Accounts: []orgTypes.Account{},
+				}, nil
+			},
+			accounts: []orgTypes.Account{},
+			err:      nil,
+		},
+		{
+			listAccountsForParent: func(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error) {
+				return &organizations.ListAccountsForParentOutput{
+					Accounts: []orgTypes.Account{
+						{
+							Arn: aws.String("test"),
+						},
+					},
+				}, nil
+			},
+
+			accounts: []orgTypes.Account{
+				{
+					Arn: aws.String("test"),
+				},
+			},
+			ous: []string{"test"},
+			err: nil,
+		},
+	}
+
+	for _, test := range tests {
+		api := mockOrgClient{
+			listAccountsForParent: test.listAccountsForParent,
+			listAccounts:          test.listAccounts,
+		}
+		resp, err := loadAccounts(ctx, api, test.ous)
+		respDiff := cmp.Diff(resp, test.accounts, cmpopts.EquateEmpty())
+
+		if respDiff != "" {
+			t.Fatal(respDiff)
+		}
+		errDiff := cmp.Diff(err, test.err)
+
+		if errDiff != "" {
+			t.Fatal(errDiff)
+		}
+
+	}
+
 }

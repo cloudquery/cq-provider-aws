@@ -353,12 +353,12 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	return awsCfg, err
 }
 
-type ListAccounts interface {
+type ListAccountsAPI interface {
 	ListAccountsForParent(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error)
 	ListAccounts(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error)
 }
 
-func getOUAccounts(ctx context.Context, accountsApi ListAccounts, ous []string) ([]orgTypes.Account, error) {
+func getOUAccounts(ctx context.Context, accountsApi ListAccountsAPI, ous []string) ([]orgTypes.Account, error) {
 	var rawAccounts []orgTypes.Account
 
 	for _, ou := range ous {
@@ -382,7 +382,7 @@ func getOUAccounts(ctx context.Context, accountsApi ListAccounts, ous []string) 
 	return rawAccounts, nil
 }
 
-func getAllAccounts(ctx context.Context, accountsApi ListAccounts) ([]orgTypes.Account, error) {
+func getAllAccounts(ctx context.Context, accountsApi ListAccountsAPI) ([]orgTypes.Account, error) {
 	var rawAccounts []orgTypes.Account
 	var paginationToken *string
 
@@ -403,7 +403,7 @@ func getAllAccounts(ctx context.Context, accountsApi ListAccounts) ([]orgTypes.A
 
 }
 
-func loadAccounts(ctx context.Context, accountsApi ListAccounts, ous []string) ([]orgTypes.Account, error) {
+func loadAccounts(ctx context.Context, accountsApi ListAccountsAPI, ous []string) ([]orgTypes.Account, error) {
 	if len(ous) > 0 {
 		return getOUAccounts(ctx, accountsApi, ous)
 	}
