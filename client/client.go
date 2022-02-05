@@ -406,7 +406,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	client := NewAwsClient(logger, awsConfig.Accounts)
 	var adminAccountSts AssumeRoleAPIClient
 
-	if awsConfig.Organization.Validate() {
+	if awsConfig.Organization != nil && awsConfig.Organization.Validate() {
 		var err error
 		awsConfig.Accounts, adminAccountSts, err = getOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
