@@ -353,22 +353,45 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	return awsCfg, err
 }
 
-func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
+type ListAccounts interface {
+	ListAccountsForParent(ctx context.Context, params *organizations.ListAccountsForParentInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsForParentOutput, error)
+	ListAccounts(ctx context.Context, params *organizations.ListAccountsInput, optFns ...func(*organizations.Options)) (*organizations.ListAccountsOutput, error)
+}
 
-	awsCfg, err := configureAwsClient(ctx, logger, awsConfig, awsConfig.Organization.AdminAccount, nil)
-	if err != nil {
-		return nil, nil, err
+func getOUAccounts(ctx context.Context, accountsApi ListAccounts, ous []string) ([]orgTypes.Account, error) {
+	var rawAccounts []orgTypes.Account
+
+	for _, ou := range ous {
+		var paginationToken *string
+		for {
+			resp, err := accountsApi.ListAccountsForParent(ctx, &organizations.ListAccountsForParentInput{
+				NextToken: paginationToken,
+				ParentId:  aws.String(ou),
+			})
+			if err != nil {
+				return nil, err
+			}
+			rawAccounts = append(rawAccounts, resp.Accounts...)
+			if resp.NextToken == nil {
+				break
+			}
+			paginationToken = resp.NextToken
+		}
 	}
-	accounts := make([]Account, 0)
-	svc := organizations.NewFromConfig(awsCfg)
+
+	return rawAccounts, nil
+}
+
+func getAllAccounts(ctx context.Context, accountsApi ListAccounts) ([]orgTypes.Account, error) {
 	var rawAccounts []orgTypes.Account
 	var paginationToken *string
+
 	for {
-		resp, err := svc.ListAccounts(ctx, &organizations.ListAccountsInput{
+		resp, err := accountsApi.ListAccounts(ctx, &organizations.ListAccountsInput{
 			NextToken: paginationToken,
 		})
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 		rawAccounts = append(rawAccounts, resp.Accounts...)
 		if resp.NextToken == nil {
@@ -376,9 +399,37 @@ func getOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config)
 		}
 		paginationToken = resp.NextToken
 	}
+	return rawAccounts, nil
 
+}
+
+func loadAccounts(ctx context.Context, accountsApi ListAccounts, ous []string) ([]orgTypes.Account, error) {
+	if len(ous) > 0 {
+		return getOUAccounts(ctx, accountsApi, ous)
+	}
+	return getAllAccounts(ctx, accountsApi)
+
+}
+
+func loadOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config) ([]Account, AssumeRoleAPIClient, error) {
+
+	adminAccount := Account{AccountName: "Default-Admin-Account"}
+	if awsConfig.Organization.AdminAccount != nil {
+		adminAccount = *awsConfig.Organization.AdminAccount
+	}
+	awsCfg, err := configureAwsClient(ctx, logger, awsConfig, adminAccount, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	accounts := make([]Account, 0)
+	svc := organizations.NewFromConfig(awsCfg)
+	rawAccounts, err := loadAccounts(ctx, svc, awsConfig.Organization.OrganizationUnits)
+	if err != nil {
+		return nil, nil, err
+	}
 	for _, account := range rawAccounts {
 		logger.Info("adding account", "account", account)
+		// Only load Active accounts
 		if account.Status != orgTypes.AccountStatusActive {
 			continue
 		}
@@ -408,7 +459,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	if awsConfig.Organization != nil && awsConfig.Organization.Validate() {
 		var err error
-		awsConfig.Accounts, adminAccountSts, err = getOrgAccounts(ctx, logger, awsConfig)
+		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
 			logger.Error("error getting child accounts", "err", err)
 			return nil, err

@@ -13,11 +13,12 @@ type Account struct {
 }
 
 type AwsOrg struct {
-	AdminAccount                Account  `hcl:"accounts,block"`
-	ChildAccountRoleName        string   `hcl:"role_name,optional"`
-	ChildAccountRoleSessionName string   `hcl:"role_session_name,optional"`
-	ChildAccountExternalID      string   `hcl:"external_id,optional"`
-	ChildAccountRegions         []string `hcl:"regions,optional"`
+	OrganizationUnits           []string `hcl:"organization_units,optional"`
+	AdminAccount                *Account `hcl:"admin_account,block"`
+	ChildAccountRoleName        string   `hcl:"member_role_name,optional"`
+	ChildAccountRoleSessionName string   `hcl:"member_role_session_name,optional"`
+	ChildAccountExternalID      string   `hcl:"member_external_id,optional"`
+	ChildAccountRegions         []string `hcl:"member_regions,optional"`
 }
 
 type Config struct {
