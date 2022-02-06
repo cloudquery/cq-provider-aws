@@ -61,6 +61,7 @@ func Test_Org_Configure(t *testing.T) {
 				Organization: &AwsOrg{
 					OrganizationUnits:    []string{"test-ou"},
 					ChildAccountRoleName: "test",
+					AdminAccount:         &Account{},
 				},
 			},
 			accounts: []Account{
