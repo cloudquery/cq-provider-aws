@@ -454,7 +454,7 @@ func loadOrgAccounts(ctx context.Context, logger hclog.Logger, awsConfig *Config
 	if err != nil {
 		return nil, nil, err
 	}
-	return accounts, sts.NewFromConfig(awsCfg), err
+	return accounts, sts.NewFromConfig(awsCfg), nil
 
 }
 
