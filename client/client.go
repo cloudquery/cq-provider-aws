@@ -416,7 +416,7 @@ func loadAccounts(ctx context.Context, awsConfig *Config, accountsApi ListAccoun
 	if err != nil {
 		return []Account{}, err
 	}
-	accounts := make([]Account, len(rawAccounts))
+	accounts := make([]Account, 0)
 	for _, account := range rawAccounts {
 		// Only load Active accounts
 		if account.Status != orgTypes.AccountStatusActive {
