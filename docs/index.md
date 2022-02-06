@@ -97,7 +97,7 @@ Using AWS Organization:
 ```hcl
     org {
       member_role_name = "OrganizationAccountAccessRole"
-      admin_account {
+      admin_account "admin" {
         local_profile = "<Named-Profile>"
       }
     }
@@ -106,7 +106,7 @@ Using AWS Organization:
 ```hcl
     org {
       member_role_name = "OrganizationAccountAccessRole"
-      admin_account {
+      admin_account "admin" {
         local_profile = "<Named-Profile>"
         
         role_arn      = "arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>"
@@ -126,7 +126,7 @@ Using AWS Organization:
 ```hcl
     org {
       member_role_name = "OrganizationAccountAccessRole"
-      admin_account {
+      admin_account "admin" {
         local_profile = "<Named-Profile>"
       }
       organization_units = ["ou-<ID-1>","ou-<ID-2>"]
