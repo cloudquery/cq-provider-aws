@@ -71,7 +71,7 @@ Prerequisites for using AWS Org functionality:
   `organizations:ListAccountsForParent`
   `organizations:ListChildren`
 
-2. Have a role in each child account that has a trust policy with the admin accounts. The default profile name is `OrganizationAccountAccessRole`
+2. Have a role in each child account that has a trust policy with the admin accounts. The default profile name is `OrganizationAccountAccessRole`. More information can be found [here](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role), including how to create the role if it doesn't already exist in your account
 
 
 Using AWS Organization:
