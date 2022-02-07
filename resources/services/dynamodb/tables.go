@@ -674,6 +674,9 @@ func fetchDynamodbTableReplicaAutoScalings(ctx context.Context, meta schema.Clie
 		o.Region = c.Region
 	})
 	if err != nil {
+		if c.IsNotFoundError(err) {
+			return nil
+		}
 		return err
 	}
 
