@@ -231,14 +231,14 @@ var notFoundErrorPrefixes = []string{
 func (c *Client) IsNotFoundError(err error) bool {
 	var ae smithy.APIError
 	if !errors.As(err, &ae) {
-	   return false
+		return false
 	}
-        errorCode := ae.ErrorCode()
-        for _, s := range notFoundErrorPrefixes {
-	        if strings.Contains(errorCode, s) {
-		        c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
-		        return true
-	        }
-        }
-        return false
+	errorCode := ae.ErrorCode()
+	for _, s := range notFoundErrorPrefixes {
+		if strings.Contains(errorCode, s) {
+			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
+			return true
+		}
+	}
+	return false
 }
