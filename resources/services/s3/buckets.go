@@ -452,8 +452,6 @@ func fetchS3Buckets(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	}
 	wb := make([]*WrappedBucket, len(response.Buckets))
 	for i, b := range response.Buckets {
-		res <- &WrappedBucket{b, nil, nil}
-		return nil
 		wb[i] = &WrappedBucket{b, nil, nil}
 	}
 
