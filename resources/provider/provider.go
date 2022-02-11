@@ -201,6 +201,7 @@ func Provider() *provider.Provider {
 			"iot.policies":    iot.IotPolicies(),
 			"iot.topic_rules": iot.IotTopicRules(),
 		},
+		ModuleInfoReader: client.ModuleInfo,
 		Config: func() provider.Config {
 			return &client.Config{}
 		},
