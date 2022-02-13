@@ -353,15 +353,6 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 }
 
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
-	{
-		resp, diags := ModuleInfo(logger, "drift", []uint32{1})
-		if diags.HasDiags() {
-			logger.Error("diags", "diags", diags)
-		}
-		logger.Info("resp", "data", resp)
-		return nil, fmt.Errorf("done")
-	}
-
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger, awsConfig.Accounts)

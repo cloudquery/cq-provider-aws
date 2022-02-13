@@ -5,6 +5,7 @@ import (
 
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-sdk/provider"
+	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -58,16 +59,21 @@ import (
 var (
 	//go:embed migrations/*/*.sql
 	awsMigrations embed.FS
-	Version       = "Development"
+
+	//go:embed moduledata/*
+	moduleData embed.FS
+
+	Version = "Development"
 )
 
 func Provider() *provider.Provider {
 	return &provider.Provider{
-		Name:            "aws",
-		Version:         Version,
-		Configure:       client.Configure,
-		ErrorClassifier: client.ErrorClassifier,
-		Migrations:      awsMigrations,
+		Name:             "aws",
+		Version:          Version,
+		Configure:        client.Configure,
+		ErrorClassifier:  client.ErrorClassifier,
+		Migrations:       awsMigrations,
+		ModuleInfoReader: module.Serve(moduleData),
 		ResourceMap: map[string]*schema.Table{
 			"acm.certificates":                      acm.AcmCertificates(),
 			"aws.regions":                           ec2.AwsRegions(),
@@ -201,7 +207,6 @@ func Provider() *provider.Provider {
 			"iot.policies":    iot.IotPolicies(),
 			"iot.topic_rules": iot.IotTopicRules(),
 		},
-		ModuleInfoReader: client.ModuleInfo,
 		Config: func() provider.Config {
 			return &client.Config{}
 		},
