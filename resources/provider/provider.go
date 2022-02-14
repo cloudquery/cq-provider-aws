@@ -73,7 +73,7 @@ func Provider() *provider.Provider {
 		Configure:        client.Configure,
 		ErrorClassifier:  client.ErrorClassifier,
 		Migrations:       awsMigrations,
-		ModuleInfoReader: module.Serve(moduleData),
+		ModuleInfoReader: module.EmbeddedReader(moduleData, "moduledata"),
 		ResourceMap: map[string]*schema.Table{
 			"acm.certificates":                      acm.AcmCertificates(),
 			"aws.regions":                           ec2.AwsRegions(),
