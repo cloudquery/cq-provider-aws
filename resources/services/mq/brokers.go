@@ -422,6 +422,9 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 	broker := parent.Item.(*mq.DescribeBrokerOutput)
 	c := meta.(*client.Client)
 	svc := c.Services().MQ
+	if broker.Configurations == nil {
+		return nil
+	}
 	for _, cfg := range broker.Configurations.History {
 		input := mq.DescribeConfigurationInput{ConfigurationId: cfg.Id}
 		output, err := svc.DescribeConfiguration(ctx, &input, func(options *mq.Options) {
