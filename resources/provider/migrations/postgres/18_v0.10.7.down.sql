@@ -1,4 +1,4 @@
-ALTER TABLE IF EXISTS aws_rds_certificates
-    DROP CONSTRAINT aws_rds_certificates_pk;
-ALTER TABLE IF EXISTS aws_rds_certificates
-    ADD CONSTRAINT aws_rds_certificates_pk PRIMARY KEY (arn);
+ALTER TABLE IF EXISTS aws_route53_traffic_policy_versions
+    DROP CONSTRAINT aws_route53_traffic_policy_versions_pk;
+ALTER TABLE IF EXISTS aws_route53_traffic_policy_versions
+    ADD CONSTRAINT aws_route53_traffic_policy_versions_pk PRIMARY KEY (traffic_policy_cq_id, id);
