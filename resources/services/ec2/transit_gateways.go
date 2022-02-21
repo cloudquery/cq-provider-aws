@@ -412,7 +412,7 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r, ok := parent.Item.(types.TransitGateway)
 	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
+		return fmt.Errorf("expected TransitGateway but got %T", r)
 	}
 
 	config := ec2.DescribeTransitGatewayAttachmentsInput{
@@ -444,7 +444,7 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r, ok := parent.Item.(types.TransitGateway)
 	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
+		return fmt.Errorf("expected TransitGateway but got %T", r)
 	}
 
 	config := ec2.DescribeTransitGatewayRouteTablesInput{
@@ -477,7 +477,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 
 	r, ok := parent.Item.(types.TransitGateway)
 	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
+		return fmt.Errorf("expected TransitGateway but got %T", r)
 	}
 
 	config := ec2.DescribeTransitGatewayVpcAttachmentsInput{
@@ -509,7 +509,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r, ok := parent.Item.(types.TransitGateway)
 	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
+		return fmt.Errorf("expected TransitGateway but got %T", r)
 	}
 
 	config := ec2.DescribeTransitGatewayPeeringAttachmentsInput{
@@ -542,7 +542,7 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r, ok := parent.Item.(types.TransitGateway)
 	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
+		return fmt.Errorf("expected TransitGateway but got %T", r)
 	}
 
 	config := ec2.DescribeTransitGatewayMulticastDomainsInput{
