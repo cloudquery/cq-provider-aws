@@ -305,6 +305,12 @@ func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta
 	if !ok {
 		return fmt.Errorf("not ec2 security group ip permission in user id group pair")
 	}
+
+	for i := range securityGroupIpPermission.UserIdGroupPairs {
+		if securityGroupIpPermission.UserIdGroupPairs[i].UserId == nil {
+			securityGroupIpPermission.UserIdGroupPairs[i].UserId = aws.String("DELETED")
+		}
+	}
 	res <- securityGroupIpPermission.UserIdGroupPairs
 	return nil
 }
