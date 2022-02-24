@@ -27,6 +27,7 @@ type supportedServicesData struct {
 }
 
 func getPartitionRegionServiceData() (*client.SupportedServiceRegionsData, error) {
+
 	// fetch the aws endpoints json file
 	req, err := http.NewRequest(http.MethodGet, awsEndpointFile, nil)
 	if err != nil {
