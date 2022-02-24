@@ -3,6 +3,7 @@ package ec2
 import (
 	"context"
 	"fmt"
+	"math/rand"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -308,7 +309,7 @@ func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta
 
 	for i := range securityGroupIpPermission.UserIdGroupPairs {
 		if securityGroupIpPermission.UserIdGroupPairs[i].UserId == nil {
-			securityGroupIpPermission.UserIdGroupPairs[i].UserId = aws.String("DELETED")
+			securityGroupIpPermission.UserIdGroupPairs[i].UserId = aws.String("DELETED-" + randomString(5))
 		}
 	}
 	res <- securityGroupIpPermission.UserIdGroupPairs
@@ -318,4 +319,14 @@ func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta
 type ipPermission struct {
 	types.IpPermission
 	PermissionType string
+}
+
+func randomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(s)
 }
