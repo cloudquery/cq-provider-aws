@@ -29,13 +29,13 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Check for terrafrom files changes
+      - name: Check for terrafrom directory changes
         run: |
           git fetch origin main
           test "$(git diff --name-only $(git merge-base origin/main HEAD) | grep "terraform/.*.tf" | wc -l)" -eq 0
 
       - name: Terraform plan for changes
-        if: failure()
+        if: ${{ failure() }}
         run: |
           cd terrafrom
           terraform apply
