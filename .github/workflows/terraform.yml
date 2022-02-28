@@ -35,6 +35,7 @@ jobs:
 #          test "$(git diff --name-only $(git merge-base origin/main HEAD) | grep "terraform/.*.tf" | wc -l)" -eq 0
           git diff --name-only $(git merge-base origin/main HEAD)
 
+
 #      - name: Terraform plan for changes
 #        if: ${{ failure() }}
 #        run: |
