@@ -7,7 +7,7 @@ on:
 
 jobs:
   terrafrom_plan:
-    name: Terrafrom plan
+    name: Terrafrom Plan
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.x
