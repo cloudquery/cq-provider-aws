@@ -33,7 +33,6 @@ jobs:
         run: |
           git fetch origin main
           test "$(git diff --name-only $(git merge-base origin/main HEAD) | grep "terraform/.*.tf" | wc -l)" -eq 0
-        continue-on-error: true
 
       - name: Terraform plan for changes
         if: failure()
