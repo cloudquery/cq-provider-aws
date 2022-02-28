@@ -32,4 +32,4 @@ jobs:
       - name: Check for terrafrom files changes
         run: |
           git fetch origin main
-          git diff --name-only $(git merge-base cq/main HEAD)
+          git diff --name-only $(git merge-base origin/main HEAD)
