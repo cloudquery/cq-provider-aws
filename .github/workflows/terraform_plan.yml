@@ -34,12 +34,9 @@ jobs:
           PATTERNS: '*.tf'
           RELATIVE: 'terraform'
 
-      - name: Install Package dependencies
-        run: |
-          echo env.GIT_DIFF
+      - name: Run Terraform Plan
         if: env.GIT_DIFF
-
-#      - name: Check for terrafrom files changes
-#        run: |
-#          git fetch origin main
-#          git diff --name-only $(git merge-base origin/main HEAD)
+        run: |
+          cd terraform
+          terraform init
+          terraform plan
