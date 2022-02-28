@@ -29,7 +29,18 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Check for terrafrom files changes
+      - uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            +terraform/**/*.tf
+
+      - name: Install Package dependencies
         run: |
-          git fetch origin main
-          git diff --name-only $(git merge-base origin/main HEAD)
+          echo env.GIT_DIFF
+          echo env.MATCHED_FILES
+        if: env.GIT_DIFF && env.MATCHED_FILES
+
+#      - name: Check for terrafrom files changes
+#        run: |
+#          git fetch origin main
+#          git diff --name-only $(git merge-base origin/main HEAD)
