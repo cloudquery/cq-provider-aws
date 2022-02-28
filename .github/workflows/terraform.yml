@@ -31,14 +31,13 @@ jobs:
 
       - uses: technote-space/get-diff-action@v6
         with:
-          PATTERNS: |
-            +terraform/**/*.tf
+          PATTERNS: '*.tf'
+          RELATIVE: 'terraform'
 
       - name: Install Package dependencies
         run: |
           echo env.GIT_DIFF
-          echo env.MATCHED_FILES
-        if: env.GIT_DIFF && env.MATCHED_FILES
+        if: env.GIT_DIFF
 
 #      - name: Check for terrafrom files changes
 #        run: |
