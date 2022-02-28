@@ -31,6 +31,7 @@ jobs:
 
       - name: Check for terrafrom files changes
         run: |
+          git fetch origin main
           test "$(git diff --name-only $(git merge-base main HEAD) | grep "terrafrom/*" | wc -l)" -eq 0
         continue-on-error: true
 
