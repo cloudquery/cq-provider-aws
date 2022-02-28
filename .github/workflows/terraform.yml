@@ -1,6 +1,6 @@
 name: terraform_plan
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
   pull_request:
     branches:
       - main
@@ -32,11 +32,11 @@ jobs:
       - name: Check for terrafrom files changes
         run: |
           git fetch origin main
-          git diff --name-only $(git merge-base origin/main HEAD) | grep "terrafrom/*" | wc -l
-#        continue-on-error: true
+          test "$(git diff --name-only $(git merge-base cq/main HEAD) | grep "terraform/.*.tf" | wc -l)" -eq 0
+        continue-on-error: true
 
-#      - name: Terraform plan for changes
-#        if: failure()
-#        run: |
-#          cd terrafrom
-#          terraform apply
+      - name: Terraform plan for changes
+        if: failure()
+        run: |
+          cd terrafrom
+          terraform apply
