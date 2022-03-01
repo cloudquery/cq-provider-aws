@@ -13,14 +13,84 @@ cloudquery init aws
 
 ## Authentication
 
-To authenticate CloudQuery with your AWS account you can use any of the following options (see full documentation at [AWS SDK V2](https://aws.github.io/aws-sdk-go-v2/docs/configuring-sdk/#specifying-credentials)):
+CloudQuery needs to be authenticated with your AWS account in order to fetch information about your cloud setup. 
+CloudQuery requires only *read* permissions (we will never make any changes to your cloud setup), 
+so, following the priniciple of least privilege, it's recommended to grant it read-only permissions.
 
-- Environment variables: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, `AWS_PROFILE`
-- Shared configuration files (via `aws configure`).
-  - SDK defaults to `credentials` file under `.aws` folder that is placed in the home folder on your computer.
-  - SDK defaults to `config` file under `.aws` folder that is placed in the home folder on your computer.
-  - SDK is able to use SSO credentials stored in the `~/.aws/` directory
-- The SDK is able to use the IAM role associated with AWS Compute resources including (EC2 instances, Fargate and ECS containers).
+There are multiple ways to authenticate with AWS, and CloudQuery respects the AWS credential provider chain. This means that CloudQuery will follow the following priorities when attempting to authenticate:
+
+- The `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` environment variables.
+- The `credentials` and `config` files in `~/.aws` (the `credentials` file takes priority).
+  - You can also use `aws sso` to authenticate cloudquery - [you can read more about it here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html).
+- IAM roles for AWS compute resources (including EC2 instances, fargate and ECS containers).
+
+You can read more about AWS authentication [here](https://aws.github.io/aws-sdk-go-v2/docs/configuring-sdk/#specifying-credentials) and [here](https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html).
+
+### Environment Variables
+
+CloudQuery can use the credentials from the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and
+`AWS_SESSION_TOKEN` environment variables (`AWS_SESSION_TOKEN` can be optional for some accounts). For information on obtaining credentials, see the 
+[AWS guide](https://aws.github.io/aws-sdk-go-v2/docs/getting-started/#get-your-aws-access-keys). 
+
+To export the environment variables (On Linux/Mac - similar for Windows):
+
+```bash
+export AWS_ACCESS_KEY_ID={Your AWS Access Key ID}
+export AWS_SECRET_ACCESS_KEY={Your AWS secret access key}
+export AWS_SESSION_TOKEN={Your AWS session token}
+```
+
+### Shared Configuration files
+
+CloudQuery can use credentials from your `credentials` and `config` files in the `.aws` directory in your home folder. 
+The contents of these files are practically interchangable, but CloudQuery will prioritize credentials in the `credentials` file.
+
+For information about obtaining credentials, see the 
+[AWS guide](https://aws.github.io/aws-sdk-go-v2/docs/getting-started/#get-your-aws-access-keys). 
+
+Here are example contents for a `credentials` file:
+
+```toml title="~/.aws/credentials"
+[default]
+aws_access_key_id = <YOUR_ACCESS_KEY_ID>
+aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+```
+
+You can also specify credentials for a different profile, and instruct CloudQuery to use the credentials from this profile instead of the default one.
+
+For example:
+
+```toml title="~/.aws/credentials"
+[myprofile]
+aws_access_key_id = <YOUR_ACCESS_KEY_ID>
+aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+```
+
+Then, you can either export the `AWS_PROFILE` environment variable (On Linux/Mac, similar for Windows):
+
+```bash
+export AWS_PROFILE=myprofile
+```
+
+or, configure your desired profile in the `local_profile` field of your CloudQuery `config.hcl`:
+
+```hcl title="config.hcl"
+provider "aws" {
+  configuration {
+    accounts "<account_alias>" {
+      local_profile = "myprofile"
+    }
+    ...
+  }
+  ...
+}
+```
+
+### IAM Roles for AWS Compute Resources
+
+Cloudquery can use IAM roles for AWS compute resources (including EC2 instances, fargate and ECS containers).
+If you configured your AWS compute resources with IAM, cloudquery will use these roles automatically! You don't need to specify additional 
+credentials manually. For more information on configuring IAM, see the AWS docs [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html) and [here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
 
 ## Configuration
 
@@ -54,11 +124,102 @@ By default, CloudQuery will fetch all configuration from **all** supported resou
 
 #### Arguments for AWS Provider block
 
-- `accounts` **(Optional)** - Specify multiple accounts to fetch data from them concurrently and then query across accounts. The default configured account should be able [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) to the specified accounts.
+- `accounts` **(Optional, Repeated)** - Specify multiple accounts to fetch data from them concurrently and then query across accounts. The default configured account should be able [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) to the specified accounts. You can have multiple `accounts` blocks.
 - `regions` **(Optional)** - limit fetching to specific regions. You can specify all regions by using the `*` character as the only argument in the array
 - `max_retries` **(Optional)** - The maximum number of times that a request will be retried for failures. Defaults to 5 retry attempts.
 - `max_backoff` **(Optional)** - The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts. Defaults to 60 seconds.
 - `aws_debug` **(Optional)** - This will print very verbose/debug output from AWS SDK. Defaults to false.
+
+
+### Multi Account Configuration- AWS Organizations:
+
+CloudQuery supports discovery of AWS Accounts via AWS Organizations. This means that as Accounts get added or removed from your organization CloudQuery will be able to handle new or removed accounts without any configuration changes.
+
+Prerequisites for using AWS Org functionality:
+1. Have a role (or user) in an Admin account with the following access 
+  `organizations:ListAccounts`
+  `organizations:ListAccountsForParent`
+  `organizations:ListChildren`
+
+2. Have a role in each child account that has a trust policy with the admin accounts. The default profile name is `OrganizationAccountAccessRole`. More information can be found [here](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role), including how to create the role if it doesn't already exist in your account
+
+
+Using AWS Organization:
+1. Specify member role name:
+
+```hcl
+    org {
+      member_role_name = "OrganizationAccountAccessRole"
+    }
+```
+
+
+
+2. Getting credentials in an admin account:
+    1. Sourcing Credentials from the default credential tool chain:
+```hcl
+    org {
+      member_role_name = "OrganizationAccountAccessRole"
+    }
+```
+
+    2. Sourcing credentials from a named profile in the shared configuration or credentials file
+```hcl
+    org {
+      member_role_name = "OrganizationAccountAccessRole"
+      admin_account "admin" {
+        local_profile = "<Named-Profile>"
+      }
+    }
+```
+    3. Assuming a role in admin account using credentials in the shared configuration or credentials file: 
+```hcl
+    org {
+      member_role_name = "OrganizationAccountAccessRole"
+      admin_account "admin" {
+        local_profile = "<Named-Profile>"
+        
+        role_arn      = "arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>"
+        
+        // Optional. Specify the name of the session 
+        // role_session_name = ""
+
+        // Optional. Specify the ExternalID if required for trust policy 
+      	// external_id = "
+
+      }
+    }
+```
+
+3. Optional. If you want to specify specific Organizational Units to fetch from you can add them to the `organization_units` list. 
+
+```hcl
+    org {
+      member_role_name = "OrganizationAccountAccessRole"
+      admin_account "admin" {
+        local_profile = "<Named-Profile>"
+      }
+      organization_units = ["ou-<ID-1>","ou-<ID-2>"]
+    }
+```
+
+***note: If you specify an OU, CloudQuery will not child OUs***
+
+
+
+
+#### Arguments for Org block:
+
+- `organization_units`  **(Optional)** - List of Organizational Units that CloudQuery should use to source accounts from
+- `admin_account`  **(Optional)** - Configuration on how to grab credentials from an Admin account
+- `member_role_name`  **(Required)** - Role name that CloudQuery should use to assume a role in the member account from the admin account. Note: This is not a full ARN, it is just the name
+- `member_role_session_name`    **(Optional)** - Override the default Session name.
+- `member_external_id`  **(Optional)** - Specify an ExternalID for use in the trust policy
+- `member_regions`  **(Optional)** - Limit fetching resources within this specific account to only these regions. This will override any regions specified in the provider block. You can specify all regions by using the `*` character as the only argument in the array 
+
+
+
+
 
 ### Multi Account Configuration
 
@@ -74,7 +235,7 @@ provider "aws" {
       // Optional. Local Profile is the named profile in your shared configuration file (usually `~/.aws/config`) that you want to use for this specific account
       local_profile = "<NAMED_PROFILE>
       // Optional. Specify the Role Session name
-      role_session_name = 
+      role_session_name = ""
     }
     accounts "<AccountID_Alias_2>" {
       // Optional. Role ARN we want to assume when accessing this account
@@ -91,6 +252,7 @@ provider "aws" {
 - `role_arn`  **(Optional)** - The role that CloudQuery will use to perform the fetch
 - `local_profile`  **(Optional)** - Local Profile is the named profile in your shared configuration file (usually `~/.aws/config`) that you want to use for the account
 - `external_id`    **(Optional)** - The unique identifier used to by non aws entities to assume a role in an AWS account
+- `role_session_name`    **(Optional)** - Override the default Session name.
 - `regions`  **(Optional)** - Limit fetching resources within this specific account to only these regions. This will override any regions specified in the provider block. You can specify all regions by using the `*` character as the only argument in the array
 
 

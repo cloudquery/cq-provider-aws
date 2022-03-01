@@ -9,19 +9,30 @@ type Account struct {
 	RoleSessionName string   `hcl:"role_session_name,optional"`
 	ExternalID      string   `hcl:"external_id,optional"`
 	Regions         []string `hcl:"regions,optional"`
+	source          string
+}
+
+type AwsOrg struct {
+	OrganizationUnits           []string `hcl:"organization_units,optional"`
+	AdminAccount                *Account `hcl:"admin_account,block"`
+	ChildAccountRoleName        string   `hcl:"member_role_name,optional"`
+	ChildAccountRoleSessionName string   `hcl:"member_role_session_name,optional"`
+	ChildAccountExternalID      string   `hcl:"member_external_id,optional"`
+	ChildAccountRegions         []string `hcl:"member_regions,optional"`
 }
 
 type Config struct {
-	Regions    []string  `hcl:"regions,optional"`
-	Accounts   []Account `hcl:"accounts,block"`
-	AWSDebug   bool      `hcl:"aws_debug,optional"`
-	MaxRetries int       `hcl:"max_retries,optional" default:"10"`
-	MaxBackoff int       `hcl:"max_backoff,optional" default:"90"`
+	Regions      []string  `hcl:"regions,optional"`
+	Accounts     []Account `hcl:"accounts,block"`
+	Organization *AwsOrg   `hcl:"org,block"`
+	AWSDebug     bool      `hcl:"aws_debug,optional"`
+	MaxRetries   int       `hcl:"max_retries,optional" default:"10"`
+	MaxBackoff   int       `hcl:"max_backoff,optional" default:"90"`
 }
 
 func (c Config) Example() string {
 	return ` configuration {
-  // Optional. if you want to assume role to multiple account and fetch data from them
+  // Optional, Repeated. Add an 'accounts' block for every account you want to assume-role into and fetch data from.
   // accounts "<UNIQUE ACCOUNT IDENTIFIER>" {
     // Optional. Role ARN we want to assume when accessing this account
     // role_arn = < YOUR_ROLE_ARN >

@@ -16,7 +16,7 @@ jobs:
     outputs:
       status: ${{ steps.is_organization_member.outputs.result }}
     steps:
-      - uses: yevgenypats/is-organization-member@2cff10d857776aacefe5fb11acea8c1a8d270d3f
+      - uses: yevgenypats/is-organization-member@e02c0c02d780c65e9981fe8777409e94cfdd2eda
         if: github.event_name == 'pull_request_target'
         id: is_organization_member
         with:
@@ -88,7 +88,6 @@ jobs:
         env:
           SLACK_CHANNEL: oss-tests
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'AWS - E2E tests failed'
-          SLACK_TITLE: AWS - E2E tests failed
+          SLACK_MESSAGE: 'aws - E2E tests failed'
+          SLACK_TITLE: aws - E2E tests failed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
