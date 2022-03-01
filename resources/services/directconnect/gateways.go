@@ -18,7 +18,7 @@ func DirectconnectGateways() *schema.Table {
 		Resolver:      fetchDirectconnectGateways,
 		Multiplex:     client.AccountMultiplex,
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{
