@@ -1,13 +1,13 @@
-name: terraform_plan
+name: terraform_apply
 on:
   workflow_dispatch:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
-  terrafrom_plan:
-    name: Terrafrom Plan
+  terrafrom_apply:
+    name: Terrafrom Apply
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.x
@@ -34,9 +34,9 @@ jobs:
           PATTERNS: '*.tf'
           RELATIVE: 'terraform'
 
-      - name: Run Terraform Plan
+      - name: Run Terraform Apply
         if: env.GIT_DIFF
         run: |
           cd terraform
           terraform init
-          terraform plan
+          terraform apply
