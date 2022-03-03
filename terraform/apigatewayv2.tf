@@ -247,6 +247,7 @@ resource "aws_s3_bucket" "truststore" {
   acl    = "private"
 }
 
+
 resource "aws_s3_bucket_object" "truststore" {
   bucket                 = aws_s3_bucket.truststore.bucket
   key                    = "truststore.pem"
