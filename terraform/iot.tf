@@ -15,6 +15,7 @@ resource "aws_iot_thing_group" "iot_thing_group_parent" {
   name = "iot_group_parent"
 }
 
+
 resource "aws_iot_thing_group" "iot_thing_group_group" {
   name = "iot_group_child"
 
