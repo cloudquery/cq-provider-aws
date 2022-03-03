@@ -8,7 +8,7 @@ locals {
 ###################
 
 module "api_gateway" {
-  source = "terraform-aws-modules/apigateway-v2/aws"
+  source  = "terraform-aws-modules/apigateway-v2/aws"
   version = "~> 1.5.0"
 
   name          = "cq-provider-awsapigatewayv2-http"
