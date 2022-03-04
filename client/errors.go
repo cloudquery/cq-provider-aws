@@ -51,25 +51,41 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 }
 
 func ParseSummaryMessage(err error) diag.BaseErrorOption {
+	var (
+		ae     smithy.APIError
+		errMsg string
+	)
+	if errors.As(err, &ae) {
+		errMsg = ae.ErrorMessage()
+	}
+
 	for {
 		if op, ok := err.(*smithy.OperationError); ok {
-			errForMsg := err
-			if op.Err != nil {
-				errForMsg = op.Err
+			if errMsg == "" {
+				if op.Err != nil {
+					errMsg = op.Err.Error()
+				} else {
+					errMsg = err.Error()
+				}
 			}
+			return diag.WithError(fmt.Errorf("%s: %s - %s", op.Service(), op.Operation(), errMsg))
+		}
+		if err2 := errors.Unwrap(err); err2 != nil {
+			err = err2
+			continue
+		}
 
-			return diag.WithError(fmt.Errorf("%s: %s - %s", op.Service(), op.Operation(), errForMsg.Error()))
+		if errMsg == "" {
+			errMsg = err.Error()
 		}
-		if err = errors.Unwrap(err); err == nil {
-			return diag.WithError(errors.New(err.Error()))
-		}
+		return diag.WithError(errors.New(errMsg))
 	}
 }
 
 // RedactError redacts a given diagnostic and returns a RedactedDiagnostic containing both original and redacted versions
 func RedactError(aa []Account, e diag.Diagnostic) diag.Diagnostic {
 	r := diag.NewBaseError(
-		errors.New(removePII(aa, e.Error())),
+		nil,
 		e.Type(),
 		diag.WithSeverity(e.Severity()),
 		diag.WithResourceName(e.Description().Resource),
@@ -83,15 +99,11 @@ func RedactError(aa []Account, e diag.Diagnostic) diag.Diagnostic {
 // Returns false if error is nil.
 func IsErrorThrottle(err error) bool {
 	var ae smithy.APIError
-	if errors.As(err, &ae) {
-		return isCodeThrottle(ae.ErrorCode())
-	}
-	var qe ratelimit.QuotaExceededError
-	if errors.As(err, &qe) {
+	if errors.As(err, &ae) && isCodeThrottle(ae.ErrorCode()) {
 		return true
 	}
-
-	return false
+	var qe ratelimit.QuotaExceededError
+	return errors.As(err, &qe)
 }
 
 var errorCodeDescriptions = map[string]string{
@@ -123,7 +135,8 @@ func isCodeThrottle(code string) bool {
 var (
 	requestIdRegex = regexp.MustCompile(`\sRequestID: [A-Za-z0-9-]+`)
 	hostIdRegex    = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
-	arnIdRegex     = regexp.MustCompile(`\sarn:aws[A-Za-z0-9-]*:.+?\s`)
+	arnIdRegex     = regexp.MustCompile(`(\s)(arn:aws[A-Za-z0-9-]*:)[^ \.\(\)\[\]\{\}\;\,]+(\s?)`)
+	urlRegex       = regexp.MustCompile(`(\s)http(s?):\/\/[a-z0-9_\-\./]+(\s?)`)
 )
 
 func removePII(aa []Account, msg string) string {
@@ -132,7 +145,8 @@ func removePII(aa []Account, msg string) string {
 	}
 	msg = requestIdRegex.ReplaceAllString(msg, " RequestID: xxxx")
 	msg = hostIdRegex.ReplaceAllString(msg, " HostID: xxxx")
-	msg = arnIdRegex.ReplaceAllString(msg, " arn:xxxx ")
+	msg = arnIdRegex.ReplaceAllString(msg, "${1}${2}xxxx${3}")
+	msg = urlRegex.ReplaceAllString(msg, "${1}http${2}://xxxx${3}")
 	msg = accountObfusactor(aa, msg)
 
 	return msg
