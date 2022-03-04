@@ -196,65 +196,86 @@ provider "aws" {
   }
 
   resource "aws_apigatewayv2_api_authorizers" {
+    identifiers = [ "api_id", "authorizer_id" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_authorizer"
+        identifiers = [ "api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_deployments" {
+    identifiers = [ "api_id", "deployment_id" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_deployment"
+        identifiers = [ "api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_integrations" {
+    identifiers = [ "api_id", "integration_id" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_integration"
+        identifiers = [ "api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_integration_responses" {
+    identifiers = [ "parent.api_id", "c.integration_id", "c.integration_response_id" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_integration_response"
+        identifiers = [ "api_id", "integration_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_models" {
+    identifiers = [ "api_id", "model_id" ]
     iac {
       terraform {
         type = "aws_apigatewayv2_model"
+        identifiers = [ "api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_routes" {
+    identifiers = [ "api_id", "route_id" ]
     iac {
       terraform {
         type = "aws_apigatewayv2_route"
+        identifiers = [ "api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_route_responses" {
+    identifiers = [ "parent.api_id", "c.route_id", "c.route_response_id" ]
     iac {
       terraform {
         type = "aws_apigatewayv2_route_response"
+        identifiers = [ "api_id", "route_id", "id" ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_stages" {
+    identifiers = [ "arn" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_stage"
+        identifiers = [ "arn" ]
       }
     }
   }
