@@ -2,6 +2,7 @@ resource "aws_iot_thing_type" "integration_test_thing_types" {
   name = "integration-test-thing-type"
 }
 
+
 resource "aws_iot_thing" "integration_test_thing" {
   name = "integration_test_thing"
 
