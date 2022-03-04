@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/aws/aws-sdk-go-v2/aws/ratelimit"
 	"github.com/aws/smithy-go"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
@@ -20,19 +21,19 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 		switch ae.ErrorCode() {
 		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err, diag.ACCESS, diag.WithType(diag.ACCESS), ParseSummaryMessage(err, ae),
+				RedactError(client.Accounts, diag.NewBaseError(err, diag.ACCESS, diag.WithType(diag.ACCESS), ParseSummaryMessage(err),
 					diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]), diag.WithNoOverwrite(), diag.WithSeverity(diag.WARNING))),
 			}
 		case "InvalidAction":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err, diag.RESOLVING, diag.WithType(diag.RESOLVING), diag.WithSeverity(diag.IGNORE), ParseSummaryMessage(err, ae),
+				RedactError(client.Accounts, diag.NewBaseError(err, diag.RESOLVING, diag.WithType(diag.RESOLVING), diag.WithSeverity(diag.IGNORE), ParseSummaryMessage(err),
 					diag.WithDetails("The action is invalid for the service."))),
 			}
 		}
 	}
 	if IsErrorThrottle(err) {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, diag.NewBaseError(err, diag.THROTTLE, diag.WithType(diag.THROTTLE), diag.WithSeverity(diag.WARNING), ParseSummaryMessage(err, ae),
+			RedactError(client.Accounts, diag.NewBaseError(err, diag.THROTTLE, diag.WithType(diag.THROTTLE), diag.WithSeverity(diag.WARNING), ParseSummaryMessage(err),
 				diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."))),
 		}
 	}
@@ -49,13 +50,18 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 	}
 }
 
-func ParseSummaryMessage(err error, apiErr smithy.APIError) diag.BaseErrorOption {
+func ParseSummaryMessage(err error) diag.BaseErrorOption {
 	for {
 		if op, ok := err.(*smithy.OperationError); ok {
-			return diag.WithError(fmt.Errorf("%s: %s - %s", op.Service(), op.Operation(), apiErr.ErrorMessage()))
+			errForMsg := err
+			if op.Err != nil {
+				errForMsg = op.Err
+			}
+
+			return diag.WithError(fmt.Errorf("%s: %s - %s", op.Service(), op.Operation(), errForMsg.Error()))
 		}
 		if err = errors.Unwrap(err); err == nil {
-			return diag.WithError(errors.New(apiErr.ErrorMessage()))
+			return diag.WithError(errors.New(err.Error()))
 		}
 	}
 }
@@ -80,6 +86,11 @@ func IsErrorThrottle(err error) bool {
 	if errors.As(err, &ae) {
 		return isCodeThrottle(ae.ErrorCode())
 	}
+	var qe ratelimit.QuotaExceededError
+	if errors.As(err, &qe) {
+		return true
+	}
+
 	return false
 }
 
