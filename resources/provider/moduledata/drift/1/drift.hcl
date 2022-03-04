@@ -56,17 +56,23 @@ provider "aws" {
   }
 
   resource "aws_apigateway_rest_api_authorizers" {
+    identifiers = [ "rest_api_id", "id" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_authorizer"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_deployments" {
+    identifiers = [ "rest_api_id", "id" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_deployment"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
@@ -94,35 +100,45 @@ provider "aws" {
   # Unmatched: aws_apigateway_rest_api_gateway_responses
 
   resource "aws_apigateway_rest_api_models" {
+    identifiers = [ "rest_api_id", "id" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_model"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_request_validators" {
+    identifiers = [ "rest_api_id", "id" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_request_validator"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_resources" {
+    identifiers = [ "rest_api_id", "parent_id", "id" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_resource"
+        identifiers = [ "rest_api_id", "parent_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_stages" {
-    identifiers = [ sql("CONCAT('ags-',parent.id,'-',c.stage_name)") ]
+    identifiers = [ "arn" ]
 
     iac {
       terraform {
         type = "aws_api_gateway_stage"
+        identifiers = [ "arn" ]
       }
     }
   }
