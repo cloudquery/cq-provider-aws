@@ -1,5 +1,4 @@
 -- Resource: ec2.eips
-TRUNCATE aws_ec2_eips CASCADE;
 
 ALTER TABLE IF EXISTS aws_ec2_eips
     DROP CONSTRAINT aws_ec2_eips_pk;
