@@ -3,6 +3,8 @@ package provider
 import (
 	"embed"
 
+	"github.com/cloudquery/cq-provider-aws/resources/services/cloudformation"
+
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
@@ -94,6 +96,7 @@ func Provider() *provider.Provider {
 			"cloudfront.distributions":              cloudfront.CloudfrontDistributions(),
 			"cloudtrail.trails":                     cloudtrail.CloudtrailTrails(),
 			"cloudwatch.alarms":                     cloudwatch.CloudwatchAlarms(),
+			"cloudformation.stacks":                 cloudformation.Stacks(),
 			"cloudwatchlogs.filters":                cloudwatchlogs.CloudwatchlogsFilters(),
 			"codebuild.projects":                    codebuild.CodebuildProjects(),
 			"cognito.identity_pools":                cognito.CognitoIdentityPools(),
