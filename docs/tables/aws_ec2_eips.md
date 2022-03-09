@@ -15,7 +15,7 @@ Describes an Elastic IP address, or a carrier IP address.
 |instance_id|text|The ID of the instance that the address is associated with (if any).|
 |network_border_group|text|The name of the unique set of Availability Zones, Local Zones, or Wavelength Zones from which AWS advertises IP addresses.|
 |network_interface_id|text|The ID of the network interface.|
-|network_interface_owner_id|text|The ID of the AWS account that owns the network interface.|
+|network_interface_owner_id|text|The ID of the Amazon Web Services account that owns the network interface.|
 |private_ip_address|inet|The private IP address associated with the Elastic IP address.|
 |public_ip|inet|The Elastic IP address.|
 |public_ipv4_pool|text|The ID of an address pool.|
