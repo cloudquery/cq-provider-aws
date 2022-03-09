@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -18,7 +17,7 @@ func Ec2Eips() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "public_ip"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "allocation_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -85,7 +84,7 @@ func Ec2Eips() *schema.Table {
 			},
 			{
 				Name:        "network_interface_owner_id",
-				Description: "The ID of the AWS account that owns the network interface.",
+				Description: "The ID of the Amazon Web Services account that owns the network interface.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -109,7 +108,7 @@ func Ec2Eips() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the Elastic IP address.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEc2eipTags,
+				Resolver:    resolveEc2EipsTags,
 			},
 		},
 	}
@@ -118,6 +117,7 @@ func Ec2Eips() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
@@ -130,7 +130,7 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	res <- output.Addresses
 	return nil
 }
-func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveEc2EipsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Address)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {
