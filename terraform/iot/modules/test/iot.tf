@@ -136,3 +136,4 @@ resource "aws_iam_role_policy" "integration_test_tot_poicy" {
 }
 EOF
 }
+
