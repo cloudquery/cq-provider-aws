@@ -443,6 +443,8 @@ func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.C
 			break
 		}
 		config.StartRecordIdentifier = response.NextRecordIdentifier
+		config.StartRecordType = response.NextRecordType
+		config.StartRecordName = response.NextRecordName
 	}
 
 	return nil
