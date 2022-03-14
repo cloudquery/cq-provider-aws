@@ -293,9 +293,6 @@ func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, _ *s
 		if err != nil {
 			return err
 		}
-		if err != nil {
-			return err
-		}
 		res <- output.Stacks
 		if aws.ToString(output.NextToken) == "" {
 			break
