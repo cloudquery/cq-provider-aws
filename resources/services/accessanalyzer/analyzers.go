@@ -85,6 +85,7 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 			{
 				Name:        "aws_access_analyzer_analyzer_findings",
 				Description: "Contains information about a finding",
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"analyzer_cq_id", "id"}},
 				Resolver:    fetchAccessAnalyzerAnalyzerFindings,
 				Columns: []schema.Column{
 					{
