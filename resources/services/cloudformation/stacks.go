@@ -328,9 +328,6 @@ func fetchCloudformationStackResources(ctx context.Context, meta schema.ClientMe
 		if err != nil {
 			return err
 		}
-		if err != nil {
-			return err
-		}
 		res <- output.StackResourceSummaries
 		if aws.ToString(output.NextToken) == "" {
 			break
