@@ -87,8 +87,8 @@ resource "aws" "cloudformation" "stacks" {
   user_relation "aws" "cloudformation" "resources" {
     path = "github.com/aws/aws-sdk-go-v2/service/cloudformation/types.StackResourceSummary"
 
-    column "drift_information_stack_drift_status" {
-      rename = "stack_drift_status"
+    column "drift_information_stack_resource_drift_status" {
+      rename = "stack_resource_drift_status"
     }
 
     column "drift_information_last_check_timestamp" {

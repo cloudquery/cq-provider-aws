@@ -87,15 +87,17 @@ func Stacks() *schema.Table {
 				Resolver:    schema.PathResolver("DriftInformation.StackDriftStatus"),
 			},
 			{
-				Name:        "drift_last_check_timestamp",
-				Description: "Most recent time when a drift detection operation was initiated on the stack, or any of its individual resources that support drift detection.",
-				Type:        schema.TypeTimestamp,
-				Resolver:    schema.PathResolver("DriftInformation.LastCheckTimestamp"),
+				Name:          "drift_last_check_timestamp",
+				Description:   "Most recent time when a drift detection operation was initiated on the stack, or any of its individual resources that support drift detection.",
+				Type:          schema.TypeTimestamp,
+				Resolver:      schema.PathResolver("DriftInformation.LastCheckTimestamp"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "enable_termination_protection",
-				Description: "Whether termination protection is enabled for the stack",
-				Type:        schema.TypeBool,
+				Name:          "enable_termination_protection",
+				Description:   "Whether termination protection is enabled for the stack",
+				Type:          schema.TypeBool,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "last_updated_time",
@@ -119,21 +121,24 @@ func Stacks() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "role_arn",
-				Description: "The Amazon Resource Name (ARN) of an Identity and Access Management (IAM) role that's associated with the stack",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("RoleARN"),
+				Name:          "role_arn",
+				Description:   "The Amazon Resource Name (ARN) of an Identity and Access Management (IAM) role that's associated with the stack",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("RoleARN"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "rollback_configuration_monitoring_time_in_minutes",
-				Description: "The amount of time, in minutes, during which CloudFormation should monitor all the rollback triggers after the stack creation or update operation deploys all necessary resources",
-				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("RollbackConfiguration.MonitoringTimeInMinutes"),
+				Name:          "rollback_configuration_monitoring_time_in_minutes",
+				Description:   "The amount of time, in minutes, during which CloudFormation should monitor all the rollback triggers after the stack creation or update operation deploys all necessary resources",
+				Type:          schema.TypeInt,
+				Resolver:      schema.PathResolver("RollbackConfiguration.MonitoringTimeInMinutes"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "rollback_configuration_rollback_triggers",
-				Description: "The triggers to monitor during stack creation or update actions",
-				Type:        schema.TypeJSON,
+				Name:          "rollback_configuration_rollback_triggers",
+				Description:   "The triggers to monitor during stack creation or update actions",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "root_id",
@@ -147,9 +152,10 @@ func Stacks() *schema.Table {
 				Resolver:    schema.PathResolver("StackId"),
 			},
 			{
-				Name:        "stack_status_reason",
-				Description: "Success/failure message associated with the stack status.",
-				Type:        schema.TypeString,
+				Name:          "stack_status_reason",
+				Description:   "Success/failure message associated with the stack status.",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "tags",
@@ -229,28 +235,31 @@ func Stacks() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "drift_information_stack_resource_drift_status",
+						Name:        "stack_resource_drift_status",
 						Description: "Status of the resource's actual configuration compared to its expected configuration.  * DELETED: The resource differs from its expected configuration in that it has been deleted.  * MODIFIED: The resource differs from its expected configuration.  * NOT_CHECKED: CloudFormation hasn't checked if the resource differs from its expected configuration",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DriftInformation.StackResourceDriftStatus"),
 					},
 					{
-						Name:        "drift_last_check_timestamp",
-						Description: "When CloudFormation last checked if the resource had drifted from its expected configuration.",
-						Type:        schema.TypeTimestamp,
-						Resolver:    schema.PathResolver("DriftInformation.LastCheckTimestamp"),
+						Name:          "drift_last_check_timestamp",
+						Description:   "When CloudFormation last checked if the resource had drifted from its expected configuration.",
+						Type:          schema.TypeTimestamp,
+						Resolver:      schema.PathResolver("DriftInformation.LastCheckTimestamp"),
+						IgnoreInTests: true,
 					},
 					{
-						Name:        "module_info_logical_id_hierarchy",
-						Description: "A concatenated list of the logical IDs of the module or modules containing the resource",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("ModuleInfo.LogicalIdHierarchy"),
+						Name:          "module_info_logical_id_hierarchy",
+						Description:   "A concatenated list of the logical IDs of the module or modules containing the resource",
+						Type:          schema.TypeString,
+						Resolver:      schema.PathResolver("ModuleInfo.LogicalIdHierarchy"),
+						IgnoreInTests: true,
 					},
 					{
-						Name:        "module_info_type_hierarchy",
-						Description: "A concatenated list of the module type or types containing the resource",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("ModuleInfo.TypeHierarchy"),
+						Name:          "module_info_type_hierarchy",
+						Description:   "A concatenated list of the module type or types containing the resource",
+						Type:          schema.TypeString,
+						Resolver:      schema.PathResolver("ModuleInfo.TypeHierarchy"),
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "physical_resource_id",
@@ -258,9 +267,10 @@ func Stacks() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "resource_status_reason",
-						Description: "Success/failure message associated with the resource.",
-						Type:        schema.TypeString,
+						Name:          "resource_status_reason",
+						Description:   "Success/failure message associated with the resource.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 				},
 			},
@@ -272,7 +282,7 @@ func Stacks() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan<- interface{}) error {
 	var config cloudformation.DescribeStacksInput
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudformation
@@ -294,7 +304,7 @@ func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, pare
 	}
 	return nil
 }
-func resolveStacksTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveStacksTags(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(types.Stack)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {
@@ -302,7 +312,7 @@ func resolveStacksTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 	}
 	return resource.Set("tags", tags)
 }
-func fetchCloudformationStackOutputs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchCloudformationStackOutputs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Stack)
 	res <- r.Outputs
 	return nil
