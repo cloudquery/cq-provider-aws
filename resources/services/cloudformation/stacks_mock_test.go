@@ -41,7 +41,7 @@ func buildStacks(t *testing.T, ctrl *gomock.Controller) client.Services {
 		nil,
 	)
 
-	return client.Services{CloudFormation: mock}
+	return client.Services{Cloudformation: mock}
 }
 
 func TestCloudformationStacks(t *testing.T) {

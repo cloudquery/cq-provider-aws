@@ -275,7 +275,7 @@ func Stacks() *schema.Table {
 func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config cloudformation.DescribeStacksInput
 	c := meta.(*client.Client)
-	svc := c.Services().CloudFormation
+	svc := c.Services().Cloudformation
 	for {
 		output, err := svc.DescribeStacks(ctx, &config, func(options *cloudformation.Options) {
 			options.Region = c.Region
@@ -313,7 +313,7 @@ func fetchCloudformationStackResources(ctx context.Context, meta schema.ClientMe
 		StackName: stack.StackName,
 	}
 	c := meta.(*client.Client)
-	svc := c.Services().CloudFormation
+	svc := c.Services().Cloudformation
 	for {
 		output, err := svc.ListStackResources(ctx, &config, func(options *cloudformation.Options) {
 			options.Region = c.Region

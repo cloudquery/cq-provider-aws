@@ -142,7 +142,7 @@ type Services struct {
 	Codebuild              CodebuildClient
 	GuardDuty              GuardDutyClient
 	IOT                    IOTClient
-	CloudFormation         CloudFormationClient
+	Cloudformation         CloudFormationClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -462,7 +462,7 @@ func initServices(region string, c aws.Config) Services {
 		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),
 		Cloudwatch:             cloudwatch.NewFromConfig(awsCfg),
 		CloudwatchLogs:         cloudwatchlogs.NewFromConfig(awsCfg),
-		CloudFormation:         cloudformation.NewFromConfig(awsCfg),
+		Cloudformation:         cloudformation.NewFromConfig(awsCfg),
 		CognitoIdentityPools:   cognitoidentity.NewFromConfig(awsCfg),
 		CognitoUserPools:       cognitoidentityprovider.NewFromConfig(awsCfg),
 		ConfigService:          configservice.NewFromConfig(awsCfg),
