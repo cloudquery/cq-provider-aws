@@ -2,11 +2,12 @@ package apigateway
 
 import (
 	"context"
+	"errors"
 	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -916,6 +917,10 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 	client := meta.(*client.Client)
 	svc := client.Services().Apigateway
 
+	if api.Id == nil || r.Name == nil {
+		return nil
+	}
+
 	config := apigateway.GetModelTemplateInput{
 		RestApiId: api.Id,
 		ModelName: r.Name,
@@ -924,6 +929,15 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 	response, err := svc.GetModelTemplate(ctx, &config, func(options *apigateway.Options) {
 		options.Region = client.Region
 	})
+
+	var ae smithy.APIError
+	if errors.As(err, &ae) {
+		switch ae.ErrorCode() {
+		case "NotFoundException":
+			return nil
+		}
+	}
+
 	if err != nil {
 		return err
 	}
