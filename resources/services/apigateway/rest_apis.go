@@ -928,11 +928,10 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 		options.Region = client.Region
 	})
 
-	if client.IsNotFoundError(err) {
-		return nil
-	}
-
 	if err != nil {
+		if client.IsNotFoundError(err) {
+			return nil
+		}
 		return err
 	}
 	return resource.Set(c.Name, response.Value)
