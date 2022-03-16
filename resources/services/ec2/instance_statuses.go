@@ -2,6 +2,8 @@ package ec2
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -18,6 +20,7 @@ func Ec2InstanceStatuses() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -30,6 +33,14 @@ func Ec2InstanceStatuses() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the resource.",
+				Type:        schema.TypeString,
+				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
+					return []string{"instance-status", *resource.Item.(types.InstanceStatus).InstanceId}, nil
+				}),
 			},
 			{
 				Name:        "availability_zone",
@@ -54,13 +65,13 @@ func Ec2InstanceStatuses() *schema.Table {
 				Resolver:    schema.PathResolver("InstanceState.Name"),
 			},
 			{
-				Name:        "instance_status_details",
+				Name:        "details",
 				Description: "The system instance health or application instance health.",
 				Type:        schema.TypeJSON,
 				Resolver:    schema.PathResolver("InstanceStatus.Details"),
 			},
 			{
-				Name:        "instance_status_status",
+				Name:        "status",
 				Description: "The instance status.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("InstanceStatus.Status"),
@@ -71,16 +82,16 @@ func Ec2InstanceStatuses() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
+				Name:        "system_status",
+				Description: "The system status.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("SystemStatus.Status"),
+			},
+			{
 				Name:        "system_status_details",
 				Description: "The system instance health or application instance health.",
 				Type:        schema.TypeJSON,
 				Resolver:    schema.PathResolver("SystemStatus.Details"),
-			},
-			{
-				Name:        "system_status_status",
-				Description: "The system status.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("SystemStatus.Status"),
 			},
 		},
 		Relations: []*schema.Table{
@@ -157,7 +168,10 @@ func fetchEc2InstanceStatuses(ctx context.Context, meta schema.ClientMeta, paren
 	return nil
 }
 func fetchEc2InstanceStatusEvents(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.InstanceStatus)
+	r, ok := parent.Item.(types.InstanceStatus)
+	if !ok {
+		return fmt.Errorf("not ec2 instance status")
+	}
 	res <- r.Events
 	return nil
 }

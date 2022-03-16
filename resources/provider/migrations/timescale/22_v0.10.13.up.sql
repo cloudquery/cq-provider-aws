@@ -8,16 +8,17 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_instance_statuses" (
 	"cq_fetch_date" timestamp without time zone NOT NULL,
 	"account_id" text,
 	"region" text,
+	"arn" text,
 	"availability_zone" text,
 	"instance_id" text,
 	"instance_state_code" integer,
 	"instance_state_name" text,
-	"instance_status_details" jsonb,
-	"instance_status_status" text,
+	"details" jsonb,
+	"status" text,
 	"outpost_arn" text,
+	"system_status" text,
 	"system_status_details" jsonb,
-	"system_status_status" text,
-	CONSTRAINT aws_ec2_instance_statuses_pk PRIMARY KEY(cq_fetch_date,cq_id),
+	CONSTRAINT aws_ec2_instance_statuses_pk PRIMARY KEY(cq_fetch_date,arn),
 	UNIQUE(cq_fetch_date,cq_id)
 );
 SELECT setup_tsdb_parent('aws_ec2_instance_statuses');
