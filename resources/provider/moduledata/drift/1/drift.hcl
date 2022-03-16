@@ -1385,4 +1385,19 @@ provider "aws" {
     }
   }
 
+
+  resource "cloudformation.stacks" {
+    identifiers = [ "id" ]
+    ignore_attributes = [ "status", "stack_drift_status" ]
+    iac {
+      terraform {
+        type = "aws_cloudformation_stack"
+        attribute_map = [
+          "arn=id",
+          "stack=name"
+        ]
+      }
+    }
+  }
+
 }
