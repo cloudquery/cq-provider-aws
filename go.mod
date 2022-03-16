@@ -3,11 +3,11 @@ module github.com/cloudquery/cq-provider-aws
 go 1.17
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.12.0
+	github.com/aws/aws-sdk-go-v2 v1.15.0
 	github.com/aws/aws-sdk-go-v2/config v1.3.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.2.1
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.2.1
-	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.4.1
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.0
 	github.com/aws/aws-sdk-go-v2/service/acm v1.9.1
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.3.1
@@ -57,13 +57,13 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.4.1
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
-	github.com/aws/smithy-go v1.9.1
+	github.com/aws/smithy-go v1.11.1
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-provider-sdk v0.8.7
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
-	github.com/google/go-cmp v0.5.6
+	github.com/google/go-cmp v0.5.7
 	github.com/hashicorp/go-hclog v1.0.0
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/spf13/cast v1.4.1
@@ -76,8 +76,8 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.1.1 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.3 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.1.0 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.6 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.0 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.5.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.3.3 // indirect

@@ -270,17 +270,7 @@ func fetchAccessAnalyzerAnalyzerFindings(ctx context.Context, meta schema.Client
 	}
 	for {
 		response, err := svc.ListFindings(ctx, &config, func(options *accessanalyzer.Options) {
-			options.APIOptions = append(options.APIOptions, func(stack *middleware.Stack) error {
-				if err := stack.Initialize.Add(&awsmiddleware.RegisterServiceMetadata{
-					Region:        c.Region,
-					ServiceID:     accessanalyzer.ServiceID,
-					SigningName:   "access-analyzer",
-					OperationName: "ListFindings",
-				}, middleware.Before); err != nil {
-					return nil
-				}
-				return nil
-			})
+			options.Region = c.Region
 		})
 		if err != nil {
 			return err
@@ -308,17 +298,7 @@ func fetchAccessAnalyzerAnalyzerArchiveRules(ctx context.Context, meta schema.Cl
 	}
 	for {
 		response, err := svc.ListArchiveRules(ctx, &config, func(options *accessanalyzer.Options) {
-			options.APIOptions = append(options.APIOptions, func(stack *middleware.Stack) error {
-				if err := stack.Initialize.Add(&awsmiddleware.RegisterServiceMetadata{
-					Region:        c.Region,
-					ServiceID:     accessanalyzer.ServiceID,
-					SigningName:   "access-analyzer",
-					OperationName: "ListFindings",
-				}, middleware.Before); err != nil {
-					return nil
-				}
-				return nil
-			})
+			options.Region = c.Region
 		})
 		if err != nil {
 			return err
