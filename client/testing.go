@@ -50,8 +50,8 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 				return &Config{}
 			},
 		},
-		Config:       cfg,
-		IgnoreInTest: false,
+		Config:           cfg,
+		SkipIgnoreInTest: true,
 	})
 }
 
@@ -73,8 +73,8 @@ func AWSTestHelper(t *testing.T, table *schema.Table) {
 				"test_resource": table,
 			},
 		},
-		Config:       cfg,
-		IgnoreInTest: true,
+		Config:           cfg,
+		SkipIgnoreInTest: true,
 	})
 
 }
