@@ -56,17 +56,25 @@ provider "aws" {
   }
 
   resource "aws_apigateway_rest_api_authorizers" {
+    identifiers = [ "rest_api_id", "id" ]
+    ignore_attributes = [ "arn", "auth_type" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_authorizer"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_deployments" {
+    identifiers = [ "rest_api_id", "id" ]
+    ignore_attributes = [ "arn", "created_date" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_deployment"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
@@ -94,35 +102,52 @@ provider "aws" {
   # Unmatched: aws_apigateway_rest_api_gateway_responses
 
   resource "aws_apigateway_rest_api_models" {
+    identifiers = [ "rest_api_id", "id" ]
+    ignore_attributes = [ "arn", "model_template" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_model"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_request_validators" {
+    identifiers = [ "rest_api_id", "id" ]
+    ignore_attributes = [ "arn" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_request_validator"
+        identifiers = [ "rest_api_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_resources" {
+    identifiers = [ "rest_api_id", "parent_id", "id" ]
+    ignore_attributes = [ "arn", "resource_methods" ]
+
     iac {
       terraform {
         type = "aws_api_gateway_resource"
+        identifiers = [ "rest_api_id", "parent_id", "id" ]
       }
     }
   }
 
   resource "aws_apigateway_rest_api_stages" {
-    identifiers = [ sql("CONCAT('ags-',parent.id,'-',c.stage_name)") ]
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "cache_cluster_status", "canary_settings_percent_traffic", "canary_settings_use_stage_cache", "canary_settings_deployment_id", "canary_settings_stage_variable_overrides", "created_date", "last_updated_date", "method_settings" ]
 
     iac {
       terraform {
         type = "aws_api_gateway_stage"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "tracing_enabled=xray_tracing_enabled"
+        ]
       }
     }
   }
@@ -150,9 +175,15 @@ provider "aws" {
   }
 
   resource "aws_apigateway_usage_plan_keys" {
+    identifiers = [ "usage_plan_id", "id" ]
+    ignore_attributes = [ "arn" ]
     iac {
       terraform {
         type = "aws_api_gateway_usage_plan_key"
+        identifiers = [ "usage_plan_id", "id" ]
+        attribute_map = [
+          "type=key_type"
+        ]
       }
     }
   }
@@ -174,65 +205,128 @@ provider "aws" {
   }
 
   resource "aws_apigatewayv2_api_authorizers" {
+    identifiers = [ "api_id", "authorizer_id" ]
+    ignore_attributes = [ "arn" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_authorizer"
+        identifiers = [ "api_id", "id" ]
+        attribute_map = [
+          "authorizer_id=id",
+          "identity_source=identity_sources"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_deployments" {
+    identifiers = [ "api_id", "deployment_id" ]
+    ignore_attributes = [ "arn", "created_date", "deployment_status" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_deployment"
+        identifiers = [ "api_id", "id" ]
+        attribute_map = [
+          "deployment_id=id"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_integrations" {
+    identifiers = [ "api_id", "integration_id" ]
+    ignore_attributes = [ "arn", "api_gateway_managed", "deployment_status" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_integration"
+        identifiers = [ "api_id", "id" ]
+        attribute_map = [
+          "integration_id=id",
+          "timeout_in_millis=timeout_milliseconds"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_integration_responses" {
+    identifiers = [ "parent.api_id", "c.integration_id", "c.integration_response_id" ]
+    ignore_attributes = [ "arn" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_integration_response"
+        identifiers = [ "api_id", "integration_id", "id" ]
+        attribute_map = [
+          "integration_response_id=id"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_models" {
+    identifiers = [ "api_id", "model_id" ]
+    ignore_attributes = [ "arn", "model_template" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_model"
+        identifiers = [ "api_id", "id" ]
+        attribute_map = [
+          "model_id=id"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_routes" {
+    identifiers = [ "api_id", "route_id" ]
+    ignore_attributes = [ "arn", "api_gateway_managed" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_route"
+        identifiers = [ "api_id", "id" ]
+        attribute_map = [
+          "route_id=id"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_route_responses" {
+    identifiers = [ "parent.api_id", "c.route_id", "c.route_response_id" ]
+    ignore_attributes = [ "arn" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_route_response"
+        identifiers = [ "api_id", "route_id", "id" ]
+        attribute_map = [
+          "route_response_id=id"
+        ]
       }
     }
   }
 
   resource "aws_apigatewayv2_api_stages" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "api_gateway_managed", "created_date", "last_updated_date" ]
+
     iac {
       terraform {
         type = "aws_apigatewayv2_stage"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "stage_name=id",
+          "route_settings_data_trace_enabled=route_settings.0|@getbool:data_trace_enabled",
+          "route_settings_detailed_metrics_enabled=route_settings.0|@getbool:detailed_metrics_enabled",
+          "route_settings_logging_level=route_settings.0.logging_level",
+          "route_settings_throttling_burst_limit=route_settings.0.throttling_burst_limit",
+          "route_settings_throttling_rate_limit=route_settings.0.throttling_rate_limit"
+        ]
       }
     }
   }
@@ -319,17 +413,34 @@ provider "aws" {
   }
 
   resource "aws_cloudfront_distribution_origins" {
-    identifiers = [ sql("SPLIT_PART(c.s3_origin_config_origin_access_identity,'/', 3)") ]
+    identifiers = [ "domain_name", "id", "s3_origin_config_origin_access_identity" ]
     filters = [
       "c.s3_origin_config_origin_access_identity IS NOT NULL AND c.s3_origin_config_origin_access_identity!=''"
     ]
 
     iac {
       terraform {
-        type = "aws_cloudfront_origin_access_identity"
+        type = "aws_cloudfront_distribution"
+        path = "origin"
+        identifiers = [ "domain_name", "origin_id", "s3_origin_config.0.origin_access_identity" ]
+        attribute_map = [
+          "id=origin_id",
+          "s3_origin_config_origin_access_identity=s3_origin_config.0.origin_access_identity",
+          "custom_origin_config_http_port=s3_origin_config.0.http_port",
+          "custom_origin_config_https_port=s3_origin_config.0.https_port",
+          "custom_origin_config_protocol_policy=s3_origin_config.0.origin_protocol_policy",
+          "custom_origin_config_ssl_protocols=s3_origin_config.0.origin_ssl_protocols",
+          "custom_origin_config_keepalive_timeout=s3_origin_config.0.origin_keepalive_timeout",
+          "custom_origin_config_read_timeout=s3_origin_config.0.origin_read_timeout",
+          "origin_shield_enabled=origin_shield.0|@getbool:enabled",
+          "origin_shield_region=origin_shield.0.origin_shield_region",
+          "custom_headers=custom_header"
+        ]
       }
     }
   }
+
+  # Unmatched: aws_cloudfront_origin_access_identity (contained in aws_cloudfront_distribution_origins)
 
   # Unmatched: aws_cloudfront_distribution_alias_icp_recordals (no data in tests)
 
@@ -537,10 +648,14 @@ provider "aws" {
   }
 
   resource "ec2.images" {
-    identifiers = [ sql("tags->>'Ec2ImageBuilderArn'") ]
+    identifiers = [ "id", "region" ]
     iac {
       terraform {
         type = "aws_imagebuilder_image"
+        identifiers = [
+          "output_resources.#.amis.#.image|@flatten|0",
+          "output_resources.#.amis.#.region|@flatten|0",
+        ]
       }
     }
   }
@@ -1113,11 +1228,26 @@ provider "aws" {
   }
 
   resource "rds.instances" {
-    identifiers = [ "db_name" ]
+    identifiers = [ "arn" ]
+    ignore_attributes = [
+      "allocated_storage", "backup_retention_period", "customer_owned_ip_enabled", "user_instance_id", "db_instance_status", "db_name",
+      "subnet_group_description", "subnet_group_subnet_group_status", "subnet_group_vpc_id", "instance_port", "deletion_protection",
+      "endpoint_hosted_zone_id", "iam_database_authentication_enabled", "instance_create_time", "license_model", "listener_endpoint_port",
+      "master_username", "multi_az", "performance_insights_retention_period", "storage_type"
+    ]
 
     iac {
       terraform {
+        identifiers = [ "arn" ]
         type = "aws_rds_cluster_instance"
+        attribute_map = [
+          "id=dbi_resource_id",
+          "ca_certificate_identifier=ca_cert_identifier",
+          "endpoint_address=endpoint",
+          "endpoint_port=port",
+          "db_instance_class=instance_class",
+          "subnet_group_name=db_subnet_group_name"
+        ]
       }
     }
   }
@@ -1251,6 +1381,21 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_wafv2_web_acl"
+      }
+    }
+  }
+
+
+  resource "cloudformation.stacks" {
+    identifiers = [ "id" ]
+    ignore_attributes = [ "status", "stack_drift_status" ]
+    iac {
+      terraform {
+        type = "aws_cloudformation_stack"
+        attribute_map = [
+          "arn=id",
+          "stack=name"
+        ]
       }
     }
   }
