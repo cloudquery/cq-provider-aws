@@ -3,11 +3,11 @@ package apigateway
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
