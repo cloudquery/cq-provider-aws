@@ -18,7 +18,7 @@ jobs:
     outputs:
       status: ${{ steps.is_organization_member.outputs.result }}
     steps:
-      - uses: yevgenypats/is-organization-member@167d83f7b2972fbed7920155f9eadc6debada5de
+      - uses: yevgenypats/is-organization-member@9431f7bf8f0f325f284423c16d2a817399538eff
         if: github.event_name == 'pull_request_target'
         id: is_organization_member
         with:
