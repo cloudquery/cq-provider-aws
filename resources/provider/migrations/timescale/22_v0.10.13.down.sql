@@ -4,5 +4,3 @@
 -- Resource: ec2.instance_statuses
 DROP TABLE IF EXISTS aws_ec2_instance_status_events;
 DROP TABLE IF EXISTS aws_ec2_instance_statuses;
-
-DROP TABLE IF EXISTS aws_access_analyzer_analyzer_archive_rules;
