@@ -39,7 +39,7 @@ func Ec2InstanceStatuses() *schema.Table {
 				Description: "The Amazon Resource Name (ARN) for the resource.",
 				Type:        schema.TypeString,
 				Resolver: client.ResolveARN(client.EC2Service, func(resource *schema.Resource) ([]string, error) {
-					return []string{"instance-status", *resource.Item.(types.InstanceStatus).InstanceId}, nil
+					return []string{"instance", *resource.Item.(types.InstanceStatus).InstanceId}, nil
 				}),
 			},
 			{
