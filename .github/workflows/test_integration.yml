@@ -9,6 +9,8 @@ on:
   pull_request_target:
     branches:
       - main
+    paths-ignore:
+      - 'terraform/**'
 
 jobs:
   is_organization_member:
@@ -16,20 +18,24 @@ jobs:
     outputs:
       status: ${{ steps.is_organization_member.outputs.result }}
     steps:
-      - uses: yevgenypats/is-organization-member@2cff10d857776aacefe5fb11acea8c1a8d270d3f
+      - uses: yevgenypats/is-organization-member@b7e015aa5ba590b3bb301cb4d219d2942eff65a9
         if: github.event_name == 'pull_request_target'
         id: is_organization_member
         with:
           organization: cloudquery
           username: ${{ github.event.pull_request.user.login }}
-          token: ${{ secrets.GITHUB_TOKEN }}  
+          token: ${{ secrets.GH_PAT }}  
       - name: Skip if not member and event is pull_request_target
         if: github.event_name != 'pull_request_target' || steps.is_organization_member.outputs.result == 'false'
         run: |
-            echo "user is not part of org. Please run 'go test -run=TestIntegration -tags=integration ./..'"
+            echo ${{ steps.is_organization_member.outputs }}
+            echo "user ${{ github.event.pull_request.user.login }} is not part of org. Please run 'go test -run=TestIntegration -tags=integration ./..'"
             echo "and paste the output in the PR"
 
   test_integration:
+    permissions:
+        id-token: write
+        contents: read    # This is required for actions/checkout@v2
     needs: is_organization_member
     if: github.event_name != 'pull_request_target' || needs.is_organization_member.outputs.status == 'true'
     strategy:
@@ -74,8 +80,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::707066037989:role/cq-provider-aws-github-action
           aws-region: us-east-1
 
       - name: Integration Test
@@ -88,7 +93,6 @@ jobs:
         env:
           SLACK_CHANNEL: oss-tests
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'AWS - E2E tests failed'
-          SLACK_TITLE: AWS - E2E tests failed
+          SLACK_MESSAGE: 'aws - E2E tests failed'
+          SLACK_TITLE: aws - E2E tests failed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
