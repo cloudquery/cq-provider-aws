@@ -8,6 +8,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -755,7 +757,7 @@ func fetchApigatewayRestApis(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -778,7 +780,7 @@ func fetchApigatewayRestApiAuthorizers(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -801,7 +803,7 @@ func fetchApigatewayRestApiDeployments(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -824,7 +826,7 @@ func fetchApigatewayRestApiDocumentationParts(ctx context.Context, meta schema.C
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -847,7 +849,7 @@ func fetchApigatewayRestApiDocumentationVersions(ctx context.Context, meta schem
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -870,7 +872,7 @@ func fetchApigatewayRestApiGatewayResponses(ctx context.Context, meta schema.Cli
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -893,7 +895,7 @@ func fetchApigatewayRestApiModels(ctx context.Context, meta schema.ClientMeta, p
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -927,12 +929,11 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 	response, err := svc.GetModelTemplate(ctx, &config, func(options *apigateway.Options) {
 		options.Region = client.Region
 	})
-
 	if err != nil {
 		if client.IsNotFoundError(err) {
 			return nil
 		}
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, response.Value)
 }
@@ -949,7 +950,7 @@ func fetchApigatewayRestApiRequestValidators(ctx context.Context, meta schema.Cl
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -972,7 +973,7 @@ func fetchApigatewayRestApiResources(ctx context.Context, meta schema.ClientMeta
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -995,7 +996,7 @@ func fetchApigatewayRestApiStages(ctx context.Context, meta schema.ClientMeta, p
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- response.Item
 

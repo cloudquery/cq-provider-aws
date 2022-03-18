@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -132,7 +133,7 @@ func Ec2NatGateways() *schema.Table {
 				Name:        "aws_ec2_nat_gateway_addresses",
 				Description: "Describes the IP addresses and network interface associated with a NAT gateway.",
 				Resolver:    fetchEc2NatGatewayAddresses,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"nat_gateway_cq_id", "allocation_id", "network_interface_id"}},
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"nat_gateway_cq_id", "network_interface_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "nat_gateway_cq_id",
@@ -178,7 +179,7 @@ func fetchEc2NatGateways(ctx context.Context, meta schema.ClientMeta, parent *sc
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.NatGateways
 		if aws.ToString(output.NextToken) == "" {
