@@ -3,10 +3,12 @@ package apigateway
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
@@ -933,8 +935,11 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 		if cl.IsNotFoundError(err) {
 			return nil
 		}
-		if cl.IsBadRequestExceptionError(err) {
-			return diag.NewBaseError(err, diag.RESOLVING, diag.WithType(diag.RESOLVING), client.ParseSummaryMessage(err))
+
+		var ae smithy.APIError
+		errorCode := ae.ErrorCode()
+		if strings.Contains(errorCode, "BadRequestException") {
+			return diag.NewBaseError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING), client.ParseSummaryMessage(err))
 		}
 		return diag.WrapError(err)
 	}

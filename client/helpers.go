@@ -227,10 +227,6 @@ var notFoundErrorPrefixes = []string{
 	"NotFoundError",
 }
 
-var badExceptionErrorPrefixes = []string{
-	"BadRequestException",
-}
-
 // IsNotFoundError checks if api error should be ignored
 func (c *Client) IsNotFoundError(err error) bool {
 	var ae smithy.APIError
@@ -241,22 +237,6 @@ func (c *Client) IsNotFoundError(err error) bool {
 	for _, s := range notFoundErrorPrefixes {
 		if strings.Contains(errorCode, s) {
 			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
-			return true
-		}
-	}
-	return false
-}
-
-// IsBadRequestExceptionError checks if api error should be ignored
-func (c *Client) IsBadRequestExceptionError(err error) bool {
-	var ae smithy.APIError
-	if !errors.As(err, &ae) {
-		return false
-	}
-	errorCode := ae.ErrorCode()
-	for _, s := range badExceptionErrorPrefixes {
-		if strings.Contains(errorCode, s) {
-			c.logger.Warn("API returned \"BadRequest\" error ignoring it...", "error", err)
 			return true
 		}
 	}
