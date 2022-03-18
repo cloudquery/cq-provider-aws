@@ -914,8 +914,8 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 	if !ok {
 		return fmt.Errorf("expected RestApi but got %T", r)
 	}
-	client := meta.(*client.Client)
-	svc := client.Services().Apigateway
+	cl := meta.(*client.Client)
+	svc := cl.Services().Apigateway
 
 	if api.Id == nil || r.Name == nil {
 		return nil
@@ -927,11 +927,14 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 	}
 
 	response, err := svc.GetModelTemplate(ctx, &config, func(options *apigateway.Options) {
-		options.Region = client.Region
+		options.Region = cl.Region
 	})
 	if err != nil {
-		if client.IsNotFoundError(err) {
+		if cl.IsNotFoundError(err) {
 			return nil
+		}
+		if cl.IsBadRequestExceptionError(err) {
+			return diag.NewBaseError(err, diag.RESOLVING, diag.WithType(diag.RESOLVING), client.ParseSummaryMessage(err))
 		}
 		return diag.WrapError(err)
 	}
