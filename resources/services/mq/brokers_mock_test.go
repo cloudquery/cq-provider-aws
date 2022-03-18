@@ -66,10 +66,9 @@ func buildMqBrokers(t *testing.T, ctrl *gomock.Controller) client.Services {
 	if err := faker.FakeData(&revision); err != nil {
 		t.Fatal(err)
 	}
-	revisions.NextToken = nil
 	revision.Data = aws.String("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48aGVsbG8+d29ybGQ8L2hlbGxvPg==")
 	m.EXPECT().DescribeConfigurationRevision(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&revisions, nil)
+		&revision, nil)
 
 	return client.Services{MQ: m}
 }

@@ -186,11 +186,6 @@ func Brokers() *schema.Table {
 				Description: "The list of all tags associated with this broker.",
 				Type:        schema.TypeJSON,
 			},
-			{
-				Name:     "result_metadata_values",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("ResultMetadata.values"),
-			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -267,11 +262,6 @@ func Brokers() *schema.Table {
 						Description: "The list of all tags associated with this configuration.",
 						Type:        schema.TypeJSON,
 					},
-					{
-						Name:     "result_metadata_values",
-						Type:     schema.TypeJSON,
-						Resolver: schema.PathResolver("ResultMetadata.values"),
-					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -341,11 +331,6 @@ func Brokers() *schema.Table {
 						Name:        "username",
 						Description: "The username of the ActiveMQ user.",
 						Type:        schema.TypeString,
-					},
-					{
-						Name:     "result_metadata_values",
-						Type:     schema.TypeJSON,
-						Resolver: schema.PathResolver("ResultMetadata.values"),
 					},
 				},
 			},
