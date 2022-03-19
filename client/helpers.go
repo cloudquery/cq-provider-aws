@@ -236,6 +236,7 @@ func (c *Client) IsNotFoundError(err error) bool {
 	errorCode := ae.ErrorCode()
 	for _, s := range notFoundErrorPrefixes {
 		if strings.Contains(errorCode, s) {
+			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
 			return true
 		}
 	}
