@@ -314,9 +314,10 @@ func LambdaFunctions() *schema.Table {
 				IgnoreInTests: true,
 			},
 			{
-				Name:        "tags",
-				Description: "The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).",
-				Type:        schema.TypeJSON,
+				Name:          "tags",
+				Description:   "The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
 			},
 		},
 		Relations: []*schema.Table{

@@ -59,8 +59,9 @@ func S3Buckets() *schema.Table {
 				IgnoreInTests: true,
 			},
 			{
-				Name: "tags",
-				Type: schema.TypeJSON,
+				Name:          "tags",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "creation_date",
