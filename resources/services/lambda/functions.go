@@ -1027,7 +1027,7 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		options.Region = c.Region
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "ResourceNotFoundException") {
 			return nil
 		}
 		return err

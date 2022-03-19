@@ -539,7 +539,7 @@ func fetchS3BucketCorsRules(ctx context.Context, meta schema.ClientMeta, parent 
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchCORSConfiguration") {
 			return nil
 		}
 		return err
@@ -557,7 +557,7 @@ func fetchS3BucketEncryptionRules(ctx context.Context, meta schema.ClientMeta, p
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "ServerSideEncryptionConfigurationNotFoundError") {
 			return nil
 		}
 		return err
@@ -591,7 +591,7 @@ func fetchS3BucketLifecycles(ctx context.Context, meta schema.ClientMeta, parent
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchLifecycleConfiguration") {
 			return nil
 		}
 		return err
@@ -676,7 +676,7 @@ func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *
 	// check if we got an error but its access denied we can continue
 	if err != nil {
 		// if we got an error and its not a NoSuchBucketError, return err
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchBucketPolicy") {
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {

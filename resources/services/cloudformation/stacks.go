@@ -67,9 +67,10 @@ func Stacks() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "deletion_time",
-				Description: "The time the stack was deleted.",
-				Type:        schema.TypeTimestamp,
+				Name:          "deletion_time",
+				Description:   "The time the stack was deleted.",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "description",
@@ -172,9 +173,10 @@ func Stacks() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_cloudformation_stack_outputs",
-				Description: "The Output data type.",
-				Resolver:    fetchCloudformationStackOutputs,
+				Name:          "aws_cloudformation_stack_outputs",
+				Description:   "The Output data type.",
+				Resolver:      fetchCloudformationStackOutputs,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "stack_cq_id",
