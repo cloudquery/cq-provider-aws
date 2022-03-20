@@ -3,12 +3,12 @@ package route53
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -416,13 +416,13 @@ func fetchRoute53Domains(ctx context.Context, meta schema.ClientMeta, parent *sc
 	for {
 		output, err := svc.ListDomains(ctx, &input, optsFunc)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, v := range output.Domains {
 			d, err := svc.GetDomainDetail(ctx, &route53domains.GetDomainDetailInput{DomainName: v.DomainName}, optsFunc)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- d
 		}
@@ -436,10 +436,7 @@ func fetchRoute53Domains(ctx context.Context, meta schema.ClientMeta, parent *sc
 }
 
 func fetchRoute53DomainNameservers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	d, ok := parent.Item.(*route53domains.GetDomainDetailOutput)
-	if !ok {
-		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", parent.Item)
-	}
+	d := parent.Item.(*route53domains.GetDomainDetailOutput)
 	res <- d.Nameservers
 	return nil
 }
@@ -447,16 +444,13 @@ func fetchRoute53DomainNameservers(ctx context.Context, meta schema.ClientMeta, 
 func resolveRoute53DomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Route53Domains
-	d, ok := resource.Item.(*route53domains.GetDomainDetailOutput)
-	if !ok {
-		return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", resource.Item)
-	}
+	d := resource.Item.(*route53domains.GetDomainDetailOutput)
 	out, err := svc.ListTagsForDomain(ctx, &route53domains.ListTagsForDomainInput{DomainName: d.DomainName}, func(options *route53domains.Options) {
 		// Set region to default global region
 		options.Region = "us-east-1"
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	tags := make(map[string]string, len(out.TagList))
 	for _, v := range out.TagList {
@@ -471,10 +465,7 @@ func resolveRoute53DomainTags(ctx context.Context, meta schema.ClientMeta, resou
 
 func resolveRoute53DomainContactExtraParams(extractValue func(*route53domains.GetDomainDetailOutput) *types.ContactDetail) func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
 	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
-		d, ok := resource.Item.(*route53domains.GetDomainDetailOutput)
-		if !ok {
-			return fmt.Errorf("not a *route53domains.GetDomainDetailOutput instance: %T", resource.Item)
-		}
+		d := resource.Item.(*route53domains.GetDomainDetailOutput)
 		detail := extractValue(d)
 		if detail == nil {
 			return nil
@@ -485,7 +476,7 @@ func resolveRoute53DomainContactExtraParams(extractValue func(*route53domains.Ge
 		}
 		b, err := json.Marshal(m)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		return resource.Set(col.Name, b)
 	}

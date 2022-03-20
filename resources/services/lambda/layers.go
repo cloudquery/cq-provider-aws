@@ -2,13 +2,13 @@ package lambda
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -178,7 +178,7 @@ func fetchLambdaLayers(ctx context.Context, meta schema.ClientMeta, parent *sche
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		res <- response.Layers
@@ -191,10 +191,7 @@ func fetchLambdaLayers(ctx context.Context, meta schema.ClientMeta, parent *sche
 	return nil
 }
 func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.LayersListItem)
-	if !ok {
-		return fmt.Errorf("wrong type assertion: got %T instead of LayersListItem", p)
-	}
+	p := parent.Item.(types.LayersListItem)
 	svc := meta.(*client.Client).Services().Lambda
 	config := lambda.ListLayerVersionsInput{
 		LayerName: p.LayerName,
@@ -203,7 +200,7 @@ func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, paren
 	for {
 		output, err := svc.ListLayerVersions(ctx, &config)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.LayerVersions
 		if output.NextMarker == nil {
@@ -214,15 +211,9 @@ func fetchLambdaLayerVersions(ctx context.Context, meta schema.ClientMeta, paren
 	return nil
 }
 func fetchLambdaLayerVersionPolicies(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.LayerVersionsListItem)
-	if !ok {
-		return fmt.Errorf("wrong type assertion: got %T instead of LayerVersionsListItem", p)
-	}
+	p := parent.Item.(types.LayerVersionsListItem)
 
-	pp, ok := parent.Parent.Item.(types.LayersListItem)
-	if !ok {
-		return fmt.Errorf("wrong type assertion: got %T instead of LayersListItem", p)
-	}
+	pp := parent.Parent.Item.(types.LayersListItem)
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
 
@@ -233,7 +224,7 @@ func fetchLambdaLayerVersionPolicies(ctx context.Context, meta schema.ClientMeta
 
 	output, err := svc.GetLayerVersionPolicy(ctx, &config)
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "ResourceNotFoundException") {
 			return nil
 		}
 		return err

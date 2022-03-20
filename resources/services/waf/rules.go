@@ -2,13 +2,13 @@ package waf
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -102,14 +102,14 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, ruleSum := range output.Rules {
 			rule, err := service.GetRule(ctx, &waf.GetRuleInput{RuleId: ruleSum.RuleId}, func(options *waf.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- rule.Rule
 		}
@@ -122,10 +122,7 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 	return nil
 }
 func resolveWafRuleArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(*types.Rule)
-	if !ok {
-		return fmt.Errorf("not a Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(*types.Rule)
 	usedClient := meta.(*client.Client)
 
 	// Generate arn
@@ -139,10 +136,7 @@ func resolveWafRuleArn(ctx context.Context, meta schema.ClientMeta, resource *sc
 	return resource.Set(c.Name, arnStr)
 }
 func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(*types.Rule)
-	if !ok {
-		return fmt.Errorf("not a Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(*types.Rule)
 
 	// Resolve tags for resource
 	usedClient := meta.(*client.Client)
@@ -164,7 +158,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 			options.Region = "us-east-1"
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -177,10 +171,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 	return resource.Set("tags", outputTags)
 }
 func fetchWafRulePredicates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	rule, ok := parent.Item.(*types.Rule)
-	if !ok {
-		return fmt.Errorf("not an Rule instance: %#v", rule)
-	}
+	rule := parent.Item.(*types.Rule)
 	res <- rule.Predicates
 	return nil
 }

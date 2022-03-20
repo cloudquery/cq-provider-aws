@@ -2,10 +2,10 @@ package iam
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -63,23 +63,20 @@ func fetchIamSamlIdentityProviders(ctx context.Context, meta schema.ClientMeta, 
 	svc := meta.(*client.Client).Services().IAM
 	response, err := svc.ListSAMLProviders(ctx, &iam.ListSAMLProvidersInput{})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	for _, p := range response.SAMLProviderList {
 		providerResponse, err := svc.GetSAMLProvider(ctx, &iam.GetSAMLProviderInput{SAMLProviderArn: p.Arn})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- IamSamlIdentityProviderWrapper{GetSAMLProviderOutput: providerResponse, Arn: *p.Arn}
 	}
 	return nil
 }
 func resolveIamSamlIdentityProviderTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(IamSamlIdentityProviderWrapper)
-	if !ok {
-		return fmt.Errorf("not iam identity provider")
-	}
+	r := resource.Item.(IamSamlIdentityProviderWrapper)
 	response := make(map[string]interface{}, len(r.Tags))
 	for _, t := range r.Tags {
 		response[*t.Key] = t.Value

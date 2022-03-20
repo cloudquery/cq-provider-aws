@@ -2,12 +2,12 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -88,7 +88,7 @@ func fetchIotThings(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Things
 		if aws.ToString(response.NextToken) == "" {
@@ -99,10 +99,7 @@ func fetchIotThings(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	return nil
 }
 func ResolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.ThingAttribute)
-	if !ok {
-		return fmt.Errorf("expected types.ThingAttribute but got %T", resource.Item)
-	}
+	i := resource.Item.(types.ThingAttribute)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListThingPrincipalsInput{
@@ -117,7 +114,7 @@ func ResolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, reso
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		principals = append(principals, response.Principals...)
 

@@ -2,12 +2,12 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -172,7 +172,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, ct := range response.Certificates {
@@ -182,7 +182,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 				options.Region = client.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- cert.CertificateDescription
 		}
@@ -195,10 +195,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 	return nil
 }
 func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*types.CertificateDescription)
-	if !ok {
-		return fmt.Errorf("expected *types.CertificateDescription but got %T", resource.Item)
-	}
+	i := resource.Item.(*types.CertificateDescription)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListAttachedPoliciesInput{
@@ -212,7 +209,7 @@ func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, 
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, p := range response.Policies {

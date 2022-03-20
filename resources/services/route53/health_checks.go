@@ -2,13 +2,13 @@ package route53
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -245,7 +245,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 		}
 		tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, h := range healthChecks {
 			tags := getRoute53tagsByResourceID(*h.Id, tagsResponse.ResourceTagSets)
@@ -268,7 +268,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	for {
 		response, err := svc.ListHealthChecks(ctx, &config)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for i := 0; i < len(response.HealthChecks); i += 10 {
@@ -280,7 +280,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 			zones := response.HealthChecks[i:end]
 			err := processHealthChecksBundle(zones)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 		}
 
@@ -292,10 +292,7 @@ func fetchRoute53HealthChecks(ctx context.Context, meta schema.ClientMeta, paren
 	return nil
 }
 func resolveRoute53healthCheckCloudWatchAlarmConfigurationDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(Route53HealthCheckWrapper)
-	if !ok {
-		return fmt.Errorf("not route53 healch check")
-	}
+	r := resource.Item.(Route53HealthCheckWrapper)
 
 	if r.CloudWatchAlarmConfiguration == nil {
 		return nil

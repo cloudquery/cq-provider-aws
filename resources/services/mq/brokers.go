@@ -3,12 +3,12 @@ package mq
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -339,14 +339,14 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, bs := range response.BrokerSummaries {
 			output, err := svc.DescribeBroker(ctx, &mq.DescribeBrokerInput{BrokerId: bs.BrokerId}, func(options *mq.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- output
 		}
@@ -359,61 +359,46 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 }
 
 func resolveMqBrokerBrokerInstances(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
-	}
+	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.BrokerInstances)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 
 func resolveMqBrokerLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
-	}
+	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.LdapServerMetadata)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 
 func resolveMqBrokerLogs(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
-	}
+	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.Logs)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 
 func resolveMqBrokerMaintenanceWindowStartTime(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
-	}
+	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.MaintenanceWindowStartTime)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 
 func resolveMqBrokerPendingLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)
-	}
+	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.PendingLdapServerMetadata)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
@@ -450,7 +435,7 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output
 	}
@@ -470,7 +455,7 @@ func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output
 	}
@@ -478,13 +463,10 @@ func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *sch
 }
 
 func resolveMqBrokerUserPending(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	user, ok := resource.Item.(*mq.DescribeUserOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeUserOutput instance: %#v", resource.Item)
-	}
+	user := resource.Item.(*mq.DescribeUserOutput)
 	data, err := json.Marshal(user.Pending)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }

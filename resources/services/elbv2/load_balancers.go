@@ -3,7 +3,6 @@ package elbv2
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -13,6 +12,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/mitchellh/mapstructure"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -301,7 +301,7 @@ func fetchElbv2LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.LoadBalancers
 		if aws.ToString(response.NextMarker) == "" {
@@ -312,10 +312,7 @@ func fetchElbv2LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 	return nil
 }
 func resolveElbv2loadBalancerWebACLArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.LoadBalancer)
-	if !ok {
-		return fmt.Errorf("expected to have types.LoadBalancer but got %T", resource.Item)
-	}
+	p := resource.Item.(types.LoadBalancer)
 	// only application load balancer can have web acl arn
 	if p.Type != types.LoadBalancerTypeEnumApplication {
 		return nil
@@ -342,10 +339,7 @@ func resolveElbv2loadBalancerWebACLArn(ctx context.Context, meta schema.ClientMe
 func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ELBv2
-	loadBalancer, ok := resource.Item.(types.LoadBalancer)
-	if !ok {
-		return fmt.Errorf("expected to have types.LoadBalancer but got %T", resource.Item)
-	}
+	loadBalancer := resource.Item.(types.LoadBalancer)
 	tagsOutput, err := svc.DescribeTags(ctx, &elbv2.DescribeTagsInput{
 		ResourceArns: []string{
 			*loadBalancer.LoadBalancerArn,
@@ -354,7 +348,7 @@ func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, r
 		o.Region = region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	if len(tagsOutput.TagDescriptions) == 0 {
 		return nil
@@ -399,17 +393,14 @@ type lbAttributes struct {
 }
 
 func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	lb, ok := parent.Item.(types.LoadBalancer)
-	if !ok {
-		return fmt.Errorf("not a LoadBalancer instance: %T", parent.Item)
-	}
+	lb := parent.Item.(types.LoadBalancer)
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv2
 	result, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv2.DescribeLoadBalancerAttributesInput{LoadBalancerArn: lb.LoadBalancerArn}, func(options *elbv2.Options) {
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	m := make(map[string]interface{})
 	for _, a := range result.Attributes {
@@ -418,7 +409,7 @@ func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMet
 	var attrs lbAttributes
 	dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{WeaklyTypedInput: true, Result: &attrs})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	if err := dec.Decode(m); err != nil {
 		return err

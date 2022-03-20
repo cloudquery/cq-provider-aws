@@ -2,13 +2,13 @@ package apigateway
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -207,7 +207,7 @@ func fetchApigatewayUsagePlans(ctx context.Context, meta schema.ClientMeta, pare
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -218,18 +218,12 @@ func fetchApigatewayUsagePlans(ctx context.Context, meta schema.ClientMeta, pare
 	return nil
 }
 func fetchApigatewayUsagePlanApiStages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.UsagePlan)
-	if !ok {
-		return fmt.Errorf("expected UsagePlan but got %T", r)
-	}
+	r := parent.Item.(types.UsagePlan)
 	res <- r.ApiStages
 	return nil
 }
 func fetchApigatewayUsagePlanKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.UsagePlan)
-	if !ok {
-		return fmt.Errorf("expected UsagePlan but got %T", r)
-	}
+	r := parent.Item.(types.UsagePlan)
 	c := meta.(*client.Client)
 	svc := c.Services().Apigateway
 	config := apigateway.GetUsagePlanKeysInput{UsagePlanId: r.Id}
@@ -238,7 +232,7 @@ func fetchApigatewayUsagePlanKeys(ctx context.Context, meta schema.ClientMeta, p
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {

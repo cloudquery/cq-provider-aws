@@ -2,13 +2,13 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -398,7 +398,7 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGateways
 		if aws.ToString(output.NextToken) == "" {
@@ -410,10 +410,7 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 }
 
 func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TransitGateway)
-	if !ok {
-		return fmt.Errorf("expected TransitGateway but got %T", r)
-	}
+	r := parent.Item.(types.TransitGateway)
 
 	config := ec2.DescribeTransitGatewayAttachmentsInput{
 		Filters: []types.Filter{
@@ -430,7 +427,7 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGatewayAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -442,10 +439,7 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 }
 
 func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TransitGateway)
-	if !ok {
-		return fmt.Errorf("expected TransitGateway but got %T", r)
-	}
+	r := parent.Item.(types.TransitGateway)
 
 	config := ec2.DescribeTransitGatewayRouteTablesInput{
 		Filters: []types.Filter{
@@ -462,7 +456,7 @@ func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGatewayRouteTables
 		if aws.ToString(output.NextToken) == "" {
@@ -475,10 +469,7 @@ func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMe
 
 func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 
-	r, ok := parent.Item.(types.TransitGateway)
-	if !ok {
-		return fmt.Errorf("expected TransitGateway but got %T", r)
-	}
+	r := parent.Item.(types.TransitGateway)
 
 	config := ec2.DescribeTransitGatewayVpcAttachmentsInput{
 		Filters: []types.Filter{
@@ -495,7 +486,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGatewayVpcAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -507,10 +498,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 }
 
 func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TransitGateway)
-	if !ok {
-		return fmt.Errorf("expected TransitGateway but got %T", r)
-	}
+	r := parent.Item.(types.TransitGateway)
 
 	config := ec2.DescribeTransitGatewayPeeringAttachmentsInput{
 		Filters: []types.Filter{
@@ -528,7 +516,7 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGatewayPeeringAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -540,10 +528,7 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 }
 
 func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TransitGateway)
-	if !ok {
-		return fmt.Errorf("expected TransitGateway but got %T", r)
-	}
+	r := parent.Item.(types.TransitGateway)
 
 	config := ec2.DescribeTransitGatewayMulticastDomainsInput{
 		Filters: []types.Filter{
@@ -561,7 +546,7 @@ func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.Cli
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.TransitGatewayMulticastDomains
 		if aws.ToString(output.NextToken) == "" {

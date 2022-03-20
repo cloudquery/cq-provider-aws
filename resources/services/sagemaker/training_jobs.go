@@ -3,12 +3,12 @@ package sagemaker
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -571,7 +571,7 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		// get more details about the notebook instance
@@ -584,7 +584,7 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 
 			res <- response
@@ -599,10 +599,7 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 }
 
 func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.AlgorithmSpecification == nil {
 		return nil
 	}
@@ -610,10 +607,7 @@ func fetchSagemakerTrainingJobAlgorithmSpecifications(_ context.Context, _ schem
 	return nil
 }
 func resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*types.AlgorithmSpecification)
-	if !ok {
-		return fmt.Errorf("expected AlgorithmSpecification but got %T", resource.Item)
-	}
+	r := resource.Item.(*types.AlgorithmSpecification)
 	if len(r.MetricDefinitions) == 0 {
 		return nil
 	}
@@ -628,15 +622,12 @@ func resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions(_ conte
 	}
 	b, err := json.Marshal(metricDefinitions)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.DebugHookConfig == nil {
 		return nil
 	}
@@ -645,10 +636,7 @@ func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.Clien
 	return nil
 }
 func resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*types.DebugHookConfig)
-	if !ok {
-		return fmt.Errorf("expected DebugHookConfig but got %T", resource.Item)
-	}
+	r := resource.Item.(*types.DebugHookConfig)
 	if len(r.CollectionConfigurations) == 0 {
 		return nil
 	}
@@ -663,55 +651,37 @@ func resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations(_ conte
 	}
 	b, err := json.Marshal(collectionConfigurations)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 func fetchSagemakerTrainingJobDebugRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	res <- r.DebugRuleConfigurations
 	return nil
 }
 func fetchSagemakerTrainingJobDebugRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	res <- r.DebugRuleEvaluationStatuses
 	return nil
 }
 func fetchSagemakerTrainingJobInputDataConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	res <- r.InputDataConfig
 	return nil
 }
 func fetchSagemakerTrainingJobProfilerRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	res <- r.ProfilerRuleConfigurations
 	return nil
 }
 func fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", parent.Item)
-	}
+	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
 	res <- r.ProfilerRuleEvaluationStatuses
 	return nil
 }
 func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.CheckpointConfig == nil {
 		return nil
 	}
@@ -723,10 +693,8 @@ func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.Cli
 	return resource.Set(c.Name, checkpointConfig)
 }
 func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	} else if r.ExperimentConfig == nil {
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
+	if r.ExperimentConfig == nil {
 		return nil
 	}
 
@@ -738,10 +706,7 @@ func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.Cli
 	return resource.Set(c.Name, experimentConfig)
 }
 func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.ModelArtifacts == nil {
 		return nil
 	}
@@ -752,10 +717,7 @@ func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.Clie
 	return resource.Set(c.Name, modelArtifacts)
 }
 func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.OutputDataConfig == nil {
 		return nil
 	}
@@ -767,10 +729,7 @@ func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.Cli
 	return resource.Set(c.Name, outputDataConfig)
 }
 func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.ProfilerConfig == nil {
 		return nil
 	}
@@ -783,10 +742,7 @@ func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.Clien
 	return resource.Set(c.Name, profilerConfig)
 }
 func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.ResourceConfig == nil {
 		return nil
 	}
@@ -800,10 +756,7 @@ func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.Clien
 	return resource.Set(c.Name, resourceConfig)
 }
 func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.StoppingCondition == nil {
 		return nil
 	}
@@ -815,10 +768,7 @@ func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.Cl
 	return resource.Set(c.Name, stoppingCondition)
 }
 func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.TensorBoardOutputConfig == nil {
 		return nil
 	}
@@ -830,10 +780,7 @@ func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ sch
 	return resource.Set(c.Name, tensorBoardOutputConfig)
 }
 func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r.VpcConfig == nil {
 		return nil
 	}
@@ -845,10 +792,7 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 	return resource.Set(c.Name, vpcConfig)
 }
 func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeTrainingJobOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if r == nil {
 		return nil
 	}
@@ -862,7 +806,7 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))
@@ -873,10 +817,7 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 	return resource.Set("tags", tags)
 }
 func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if len(r.SecondaryStatusTransitions) == 0 {
 		return nil
 	}
@@ -893,15 +834,12 @@ func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ 
 	}
 	b, err := json.Marshal(secondaryStatusTransitions)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", resource.Item)
-	}
+	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
 	if len(r.FinalMetricDataList) == 0 {
 		return nil
 	}
@@ -916,7 +854,7 @@ func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.
 	}
 	b, err := json.Marshal(finalMetricDataList)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }

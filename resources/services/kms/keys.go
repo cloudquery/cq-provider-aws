@@ -2,13 +2,13 @@ package kms
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -152,7 +152,7 @@ func fetchKmsKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Keys
 		if aws.ToString(response.NextMarker) == "" {
@@ -163,17 +163,14 @@ func fetchKmsKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	return nil
 }
 func resolveKmsKey(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	r, ok := resource.Item.(types.KeyListEntry)
-	if !ok {
-		return fmt.Errorf("expected types.KeyListEntry but got %T", resource.Item)
-	}
+	r := resource.Item.(types.KeyListEntry)
 	c := meta.(*client.Client)
 	svc := c.Services().KMS
 	output, err := svc.DescribeKey(ctx, &kms.DescribeKeyInput{KeyId: r.KeyId}, func(options *kms.Options) {
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	if output.KeyMetadata != nil {
 		if err := resource.Set("cloud_hsm_cluster_id", output.KeyMetadata.CloudHsmClusterId); err != nil {
@@ -237,7 +234,7 @@ func resolveKmsKey(ctx context.Context, meta schema.ClientMeta, resource *schema
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		if err := resource.Set("rotation_enabled", output.KeyRotationEnabled); err != nil {
 			return err
@@ -249,7 +246,7 @@ func resolveKmsKey(ctx context.Context, meta schema.ClientMeta, resource *schema
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		tags := make(map[string]interface{})

@@ -2,12 +2,12 @@ package sns
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sns/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/spf13/cast"
 )
@@ -113,7 +113,7 @@ func fetchSnsTopics(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			o.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.Topics
 
@@ -125,10 +125,7 @@ func fetchSnsTopics(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	return nil
 }
 func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	topic, ok := resource.Item.(types.Topic)
-	if !ok {
-		return fmt.Errorf("%T is not topic", resource.Item)
-	}
+	topic := resource.Item.(types.Topic)
 	c := meta.(*client.Client)
 	svc := c.Services().SNS
 	// All topic attributes are returned as a string; we have to handle type conversion
@@ -139,7 +136,7 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 		o.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	// Set all attributes
 	if err := resource.Set("subscriptions_confirmed", cast.ToInt(output.Attributes["SubscriptionsConfirmed"])); err != nil {

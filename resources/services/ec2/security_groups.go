@@ -2,13 +2,13 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -232,7 +232,7 @@ func fetchEc2SecurityGroups(ctx context.Context, meta schema.ClientMeta, parent 
 		o.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- response.SecurityGroups
 	return nil
@@ -247,10 +247,7 @@ func resolveEc2securityGroupTags(ctx context.Context, meta schema.ClientMeta, re
 }
 func fetchEc2SecurityGroupIpPermissions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 
-	securityGroup, ok := parent.Item.(types.SecurityGroup)
-	if !ok {
-		return fmt.Errorf("not ec2 security group")
-	}
+	securityGroup := parent.Item.(types.SecurityGroup)
 
 	capacity := len(securityGroup.IpPermissionsEgress) + len(securityGroup.IpPermissions)
 
@@ -268,10 +265,7 @@ func fetchEc2SecurityGroupIpPermissions(ctx context.Context, meta schema.ClientM
 
 func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 
-	securityGroupIpPermission, ok := parent.Item.(ipPermission)
-	if !ok {
-		return fmt.Errorf("not ec2 security group ip permission")
-	}
+	securityGroupIpPermission := parent.Item.(ipPermission)
 
 	type customIpRange struct {
 		Cidr        string
@@ -293,18 +287,12 @@ func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionPrefixListIds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission, ok := parent.Item.(ipPermission)
-	if !ok {
-		return fmt.Errorf("not ec2 security group ip permission in ip range")
-	}
+	securityGroupIpPermission := parent.Item.(ipPermission)
 	res <- securityGroupIpPermission.PrefixListIds
 	return nil
 }
 func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission, ok := parent.Item.(ipPermission)
-	if !ok {
-		return fmt.Errorf("not ec2 security group ip permission in user id group pair")
-	}
+	securityGroupIpPermission := parent.Item.(ipPermission)
 	res <- securityGroupIpPermission.UserIdGroupPairs
 	return nil
 }
