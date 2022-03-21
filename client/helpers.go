@@ -99,11 +99,11 @@ func getAvailableRegions() (map[string]bool, error) {
 	regionsSet := make(map[string]bool)
 
 	if supportedServiceRegion == nil {
-		return nil, fmt.Errorf("cloud not get AWS regions/services data")
+		return nil, fmt.Errorf("could not get AWS regions/services data")
 	}
 
 	if supportedServiceRegion.Partitions == nil {
-		return nil, fmt.Errorf("cloud not found any AWS partitions")
+		return nil, fmt.Errorf("could not found any AWS partitions")
 	}
 
 	currentPartition := supportedServiceRegion.Partitions[defaultPartition]
