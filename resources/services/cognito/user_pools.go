@@ -3,25 +3,26 @@ package cognito
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 func CognitoUserPools() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_cognito_user_pools",
-		Description:  "A container for information about the user pool.",
-		Resolver:     fetchCognitoUserPools,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("cognito-idp"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_cognito_user_pools",
+		Description:   "A container for information about the user pool.",
+		Resolver:      fetchCognitoUserPools,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("cognito-idp"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -599,12 +600,12 @@ func fetchCognitoUserPools(ctx context.Context, meta schema.ClientMeta, parent *
 	for {
 		out, err := svc.ListUserPools(ctx, &params, optsFunc)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, item := range out.UserPools {
 			upo, err := svc.DescribeUserPool(ctx, &cognitoidentityprovider.DescribeUserPoolInput{UserPoolId: item.Id}, optsFunc)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- upo.UserPool
 		}
@@ -617,31 +618,22 @@ func fetchCognitoUserPools(ctx context.Context, meta schema.ClientMeta, parent *
 }
 
 func resolveCognitoUserPoolAccountRecoverySetting(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	pool, ok := resource.Item.(*types.UserPoolType)
-	if !ok {
-		return fmt.Errorf("not a UserPoolType instance: %#v", resource.Item)
-	}
+	pool := resource.Item.(*types.UserPoolType)
 	data, err := json.Marshal(pool.AccountRecoverySetting)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 
 func fetchCognitoUserPoolSchemaAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	pool, ok := parent.Item.(*types.UserPoolType)
-	if !ok {
-		return fmt.Errorf("not a UserPoolType instance: %#v", parent.Item)
-	}
+	pool := parent.Item.(*types.UserPoolType)
 	res <- pool.SchemaAttributes
 	return nil
 }
 
 func fetchCognitoUserPoolIdentityProviders(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	pool, ok := parent.Item.(*types.UserPoolType)
-	if !ok {
-		return fmt.Errorf("not a UserPoolType instance: %#v", parent.Item)
-	}
+	pool := parent.Item.(*types.UserPoolType)
 	c := meta.(*client.Client)
 	svc := c.Services().CognitoUserPools
 	optsFunc := func(options *cognitoidentityprovider.Options) { options.Region = c.Region }
@@ -649,7 +641,7 @@ func fetchCognitoUserPoolIdentityProviders(ctx context.Context, meta schema.Clie
 	for {
 		out, err := svc.ListIdentityProviders(ctx, &params, optsFunc)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, item := range out.Providers {
 			pd, err := svc.DescribeIdentityProvider(ctx, &cognitoidentityprovider.DescribeIdentityProviderInput{
@@ -657,7 +649,7 @@ func fetchCognitoUserPoolIdentityProviders(ctx context.Context, meta schema.Clie
 				UserPoolId:   pool.Id,
 			}, optsFunc)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- pd.IdentityProvider
 		}

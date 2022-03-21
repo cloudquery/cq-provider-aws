@@ -2,12 +2,12 @@ package apigateway
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -206,7 +206,7 @@ func fetchApigatewayDomainNames(ctx context.Context, meta schema.ClientMeta, par
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -217,10 +217,7 @@ func fetchApigatewayDomainNames(ctx context.Context, meta schema.ClientMeta, par
 	return nil
 }
 func fetchApigatewayDomainNameBasePathMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.DomainName)
-	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
-	}
+	r := parent.Item.(types.DomainName)
 	c := meta.(*client.Client)
 	svc := c.Services().Apigateway
 	config := apigateway.GetBasePathMappingsInput{DomainName: r.DomainName}
@@ -229,7 +226,7 @@ func fetchApigatewayDomainNameBasePathMappings(ctx context.Context, meta schema.
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {

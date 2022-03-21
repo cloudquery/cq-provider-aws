@@ -3,12 +3,12 @@ package iot
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -1315,7 +1315,7 @@ func fetchIotTopicRules(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, s := range response.Rules {
@@ -1325,7 +1325,7 @@ func fetchIotTopicRules(ctx context.Context, meta schema.ClientMeta, parent *sch
 				options.Region = client.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- rule
 		}
@@ -1338,10 +1338,7 @@ func fetchIotTopicRules(ctx context.Context, meta schema.ClientMeta, parent *sch
 	return nil
 }
 func ResolveIotTopicRuleTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.GetTopicRuleOutput)
-	if !ok {
-		return fmt.Errorf("expected  *iot.GetTopicRuleOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.GetTopicRuleOutput)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListTagsForResourceInput{
@@ -1355,7 +1352,7 @@ func ResolveIotTopicRuleTags(ctx context.Context, meta schema.ClientMeta, resour
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range response.Tags {
 			tags[*t.Key] = t.Value
@@ -1368,10 +1365,7 @@ func ResolveIotTopicRuleTags(ctx context.Context, meta schema.ClientMeta, resour
 	return resource.Set(c.Name, tags)
 }
 func resolveIotTopicRulesErrorActionHttpHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.GetTopicRuleOutput)
-	if !ok {
-		return fmt.Errorf("expected  *iot.GetTopicRuleOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.GetTopicRuleOutput)
 	if i.Rule == nil || i.Rule.ErrorAction == nil || i.Rule.ErrorAction.Http == nil {
 		return nil
 	}
@@ -1382,24 +1376,18 @@ func resolveIotTopicRulesErrorActionHttpHeaders(ctx context.Context, meta schema
 	return resource.Set(c.Name, j)
 }
 func resolveIotTopicRulesErrorActionIotSiteWise(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.GetTopicRuleOutput)
-	if !ok {
-		return fmt.Errorf("expected  *types.Action but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.GetTopicRuleOutput)
 	if i.Rule == nil || i.Rule.ErrorAction == nil || i.Rule.ErrorAction.IotSiteWise == nil {
 		return nil
 	}
 	b, err := json.Marshal(i.Rule.ErrorAction.IotSiteWise)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 func resolveIotTopicRulesErrorActionTimestreamDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.GetTopicRuleOutput)
-	if !ok {
-		return fmt.Errorf("expected  *iot.GetTopicRuleOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.GetTopicRuleOutput)
 	if i.Rule == nil || i.Rule.ErrorAction == nil || i.Rule.ErrorAction.Timestream == nil {
 		return nil
 	}
@@ -1410,10 +1398,7 @@ func resolveIotTopicRulesErrorActionTimestreamDimensions(ctx context.Context, me
 	return resource.Set(c.Name, j)
 }
 func fetchIotTopicRuleActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	i, ok := parent.Item.(*iot.GetTopicRuleOutput)
-	if !ok {
-		return fmt.Errorf("expected  *iot.GetTopicRuleOutput but got %T", parent.Item)
-	}
+	i := parent.Item.(*iot.GetTopicRuleOutput)
 	if i.Rule == nil {
 		return nil
 	}
@@ -1421,10 +1406,7 @@ func fetchIotTopicRuleActions(ctx context.Context, meta schema.ClientMeta, paren
 	return nil
 }
 func resolveIotTopicRuleActionsHttpHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.Action)
-	if !ok {
-		return fmt.Errorf("expected  *types.Action but got %T", resource.Item)
-	}
+	i := resource.Item.(types.Action)
 	if i.Http == nil {
 		return nil
 	}
@@ -1435,24 +1417,18 @@ func resolveIotTopicRuleActionsHttpHeaders(ctx context.Context, meta schema.Clie
 	return resource.Set(c.Name, j)
 }
 func resolveIotTopicRuleActionsIotSiteWise(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.Action)
-	if !ok {
-		return fmt.Errorf("expected  *types.Action but got %T", resource.Item)
-	}
+	i := resource.Item.(types.Action)
 	if i.IotSiteWise == nil {
 		return nil
 	}
 	b, err := json.Marshal(i.IotSiteWise)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 func resolveIotTopicRuleActionsTimestreamDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.Action)
-	if !ok {
-		return fmt.Errorf("expected  *types.Action but got %T", resource.Item)
-	}
+	i := resource.Item.(types.Action)
 	if i.Timestream == nil {
 		return nil
 	}

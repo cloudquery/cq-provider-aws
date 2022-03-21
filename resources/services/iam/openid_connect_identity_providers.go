@@ -2,11 +2,11 @@ package iam
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -70,23 +70,20 @@ func fetchIamOpenidConnectIdentityProviders(ctx context.Context, meta schema.Cli
 	svc := meta.(*client.Client).Services().IAM
 	response, err := svc.ListOpenIDConnectProviders(ctx, &iam.ListOpenIDConnectProvidersInput{})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	for _, p := range response.OpenIDConnectProviderList {
 		providerResponse, err := svc.GetOpenIDConnectProvider(ctx, &iam.GetOpenIDConnectProviderInput{OpenIDConnectProviderArn: p.Arn})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- IamOpenIdIdentityProviderWrapper{providerResponse, *p.Arn}
 	}
 	return nil
 }
 func resolveIamOpenidConnectIdentityProviderTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(IamOpenIdIdentityProviderWrapper)
-	if !ok {
-		return fmt.Errorf("not iam IamOpenIdIdentityProviderWrapper")
-	}
+	r := resource.Item.(IamOpenIdIdentityProviderWrapper)
 	response := make(map[string]interface{}, len(r.Tags))
 	for _, t := range r.Tags {
 		response[*t.Key] = t.Value

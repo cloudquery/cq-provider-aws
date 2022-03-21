@@ -2,11 +2,11 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -96,7 +96,7 @@ func fetchIotPolicies(ctx context.Context, meta schema.ClientMeta, parent *schem
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, s := range response.Policies {
@@ -106,7 +106,7 @@ func fetchIotPolicies(ctx context.Context, meta schema.ClientMeta, parent *schem
 				options.Region = client.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- profile
 		}
@@ -119,10 +119,7 @@ func fetchIotPolicies(ctx context.Context, meta schema.ClientMeta, parent *schem
 	return nil
 }
 func ResolveIotPolicyTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.GetPolicyOutput)
-	if !ok {
-		return fmt.Errorf("expected *iot.DescribeSecurityProfileOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.GetPolicyOutput)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListTagsForResourceInput{
@@ -136,7 +133,7 @@ func ResolveIotPolicyTags(ctx context.Context, meta schema.ClientMeta, resource 
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range response.Tags {
 			tags[*t.Key] = t.Value

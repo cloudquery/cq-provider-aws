@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -232,7 +233,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	})
 
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	getBundledTrailsWithTags := func(trails []types.Trail, region string) ([]CloudTrailWrapper, error) {
@@ -292,7 +293,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	// since api returns all the cloudtrails despite region we aggregate trails by region to get tags.
 	aggregatedTrails, err := aggregateCloudTrails(response.TrailList)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	for region, trails := range aggregatedTrails {
 		for i := 0; i < len(trails); i += 20 {
@@ -304,7 +305,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 			t := trails[i:end]
 			processed, err := getBundledTrailsWithTags(t, region)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- processed
 		}
@@ -316,16 +317,13 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
-	r, ok := resource.Item.(CloudTrailWrapper)
-	if !ok {
-		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
-	}
+	r := resource.Item.(CloudTrailWrapper)
 	response, err := svc.GetTrailStatus(ctx,
 		&cloudtrail.GetTrailStatusInput{Name: r.TrailARN}, func(o *cloudtrail.Options) {
 			o.Region = *r.HomeRegion
 		})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	if err := resource.Set("is_logging", response.IsLogging); err != nil {
 		return err
@@ -366,10 +364,7 @@ func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, re
 func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	groupName := ""
 	log := meta.(*client.Client).Logger()
-	r, ok := resource.Item.(CloudTrailWrapper)
-	if !ok {
-		return fmt.Errorf("expected CloudTrailWrapper but got %T", resource.Item)
-	}
+	r := resource.Item.(CloudTrailWrapper)
 	if r.CloudWatchLogsLogGroupArn != nil {
 		matches := client.GroupNameRegex.FindStringSubmatch(*r.CloudWatchLogsLogGroupArn)
 		if len(matches) < 2 {
@@ -385,17 +380,14 @@ func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta 
 }
 
 func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(CloudTrailWrapper)
-	if !ok {
-		return fmt.Errorf("expected CloudTrailWrapper but got %T", parent.Item)
-	}
+	r := parent.Item.(CloudTrailWrapper)
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudtrail
 	response, err := svc.GetEventSelectors(ctx, &cloudtrail.GetEventSelectorsInput{TrailName: r.TrailARN}, func(options *cloudtrail.Options) {
 		options.Region = *r.HomeRegion
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- response.EventSelectors
 	return nil

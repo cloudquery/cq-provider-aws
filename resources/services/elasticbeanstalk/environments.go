@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -404,7 +405,7 @@ func fetchElasticbeanstalkEnvironments(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Environments
 		if aws.ToString(response.NextToken) == "" {
@@ -415,10 +416,7 @@ func fetchElasticbeanstalkEnvironments(ctx context.Context, meta schema.ClientMe
 	return nil
 }
 func resolveElasticbeanstalkEnvironmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.EnvironmentDescription)
-	if !ok {
-		return fmt.Errorf("expected types.EnvironmentDescription but got %T", resource.Item)
-	}
+	p := resource.Item.(types.EnvironmentDescription)
 	if p.Resources == nil || p.Resources.LoadBalancer == nil {
 		return nil
 	}
@@ -429,16 +427,13 @@ func resolveElasticbeanstalkEnvironmentTags(ctx context.Context, meta schema.Cli
 	return resource.Set(c.Name, listeners)
 }
 func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.EnvironmentDescription)
-	if !ok {
-		return fmt.Errorf("expected types.EnvironmentDescription but got %T", resource.Item)
-	}
+	p := resource.Item.(types.EnvironmentDescription)
 	svc := meta.(*client.Client).Services().ElasticBeanstalk
 	tagsOutput, err := svc.ListTagsForResource(ctx, &elasticbeanstalk.ListTagsForResourceInput{
 		ResourceArn: p.EnvironmentArn,
 	}, func(o *elasticbeanstalk.Options) {})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	if len(tagsOutput.ResourceTags) == 0 {
 		return nil
@@ -450,19 +445,13 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 	return resource.Set(c.Name, tags)
 }
 func fetchElasticbeanstalkEnvironmentLinks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.EnvironmentDescription)
-	if !ok {
-		return fmt.Errorf("expected types.EnvironmentDescription but got %T", parent.Item)
-	}
+	p := parent.Item.(types.EnvironmentDescription)
 	res <- p.EnvironmentLinks
 	return nil
 }
 
 func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.EnvironmentDescription)
-	if !ok {
-		return fmt.Errorf("expected types.EnvironmentDescription but got %T", parent.Item)
-	}
+	p := parent.Item.(types.EnvironmentDescription)
 	c := meta.(*client.Client)
 	svc := c.Services().ElasticBeanstalk
 	configOptionsIn := elasticbeanstalk.DescribeConfigurationOptionsInput{
@@ -473,7 +462,7 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	for _, option := range output.Options {
@@ -491,10 +480,7 @@ type ConfigOptions struct {
 }
 
 func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.EnvironmentDescription)
-	if !ok {
-		return fmt.Errorf("expected types.EnvironmentDescription but got %T", parent.Item)
-	}
+	p := parent.Item.(types.EnvironmentDescription)
 	c := meta.(*client.Client)
 	svc := c.Services().ElasticBeanstalk
 
@@ -506,7 +492,7 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	for _, option := range output.ConfigurationSettings {

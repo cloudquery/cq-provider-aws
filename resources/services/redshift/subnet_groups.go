@@ -2,12 +2,12 @@ package redshift
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -121,7 +121,7 @@ func fetchRedshiftSubnetGroups(ctx context.Context, meta schema.ClientMeta, pare
 			o.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.ClusterSubnetGroups
 		if aws.ToString(response.Marker) == "" {
@@ -140,10 +140,7 @@ func resolveRedshiftSubnetGroupTags(ctx context.Context, meta schema.ClientMeta,
 	return resource.Set("tags", tags)
 }
 func fetchRedshiftSubnetGroupSubnets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	clusterSubnetGroup, ok := parent.Item.(types.ClusterSubnetGroup)
-	if !ok {
-		return fmt.Errorf("not redshift cluster subnet group")
-	}
+	clusterSubnetGroup := parent.Item.(types.ClusterSubnetGroup)
 	res <- clusterSubnetGroup.Subnets
 	return nil
 }

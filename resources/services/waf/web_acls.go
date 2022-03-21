@@ -3,13 +3,13 @@ package waf
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -135,7 +135,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, webAcl := range output.WebACLs {
 			webAclConfig := waf.GetWebACLInput{WebACLId: webAcl.WebACLId}
@@ -143,7 +143,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- webAclOutput.WebACL
 		}
@@ -156,10 +156,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 	return nil
 }
 func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	webACL, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WEBACL instance: %#v", resource.Item)
-	}
+	webACL := resource.Item.(*types.WebACL)
 
 	// Resolve tags for resource
 	awsClient := meta.(*client.Client)
@@ -171,7 +168,7 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 			options.Region = awsClient.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -184,18 +181,12 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 	return resource.Set("tags", outputTags)
 }
 func fetchWafWebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	webACL, ok := parent.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
-	}
+	webACL := parent.Item.(*types.WebACL)
 	res <- webACL.Rules
 	return nil
 }
 func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(types.ActivatedRule)
-	if !ok {
-		return fmt.Errorf("not an ActivatedRule instance")
-	}
+	rule := resource.Item.(types.ActivatedRule)
 	excludedRules := make([]string, len(rule.ExcludedRules))
 	for i := range rule.ExcludedRules {
 		excludedRules[i] = aws.ToString(rule.ExcludedRules[i].RuleId)
@@ -203,10 +194,7 @@ func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMe
 	return resource.Set(c.Name, excludedRules)
 }
 func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance")
-	}
+	rule := resource.Item.(*types.WebACL)
 
 	cl := meta.(*client.Client)
 	svc := cl.Services().Waf

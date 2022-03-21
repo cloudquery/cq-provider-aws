@@ -2,13 +2,13 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -195,7 +195,7 @@ func fetchEc2VpcEndpoints(ctx context.Context, meta schema.ClientMeta, parent *s
 			o.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.VpcEndpoints
 		if aws.ToString(output.NextToken) == "" {
@@ -214,19 +214,13 @@ func resolveEc2vpcEndpointTags(ctx context.Context, meta schema.ClientMeta, reso
 	return resource.Set("tags", tags)
 }
 func fetchEc2VpcEndpointDnsEntries(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	endpoint, ok := parent.Item.(types.VpcEndpoint)
-	if !ok {
-		return fmt.Errorf("not vpc endpoint")
-	}
+	endpoint := parent.Item.(types.VpcEndpoint)
 	res <- endpoint.DnsEntries
 
 	return nil
 }
 func fetchEc2VpcEndpointGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	endpoint, ok := parent.Item.(types.VpcEndpoint)
-	if !ok {
-		return fmt.Errorf("not vpc endpoint")
-	}
+	endpoint := parent.Item.(types.VpcEndpoint)
 	res <- endpoint.Groups
 
 	return nil

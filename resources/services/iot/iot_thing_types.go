@@ -2,12 +2,12 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -104,7 +104,7 @@ func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		res <- response.ThingTypes
@@ -117,10 +117,7 @@ func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *sch
 	return nil
 }
 func ResolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(types.ThingTypeDefinition)
-	if !ok {
-		return fmt.Errorf("expected types.ThingTypeDefinition but got %T", resource.Item)
-	}
+	i := resource.Item.(types.ThingTypeDefinition)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListTagsForResourceInput{
@@ -134,7 +131,7 @@ func ResolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resour
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range response.Tags {
 			tags[*t.Key] = t.Value

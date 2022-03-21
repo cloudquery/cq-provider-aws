@@ -3,12 +3,12 @@ package ecs
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -601,7 +601,7 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 			o.Region = region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		if len(listClustersOutput.TaskDefinitionArns) == 0 {
 			return nil
@@ -611,7 +611,7 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 				o.Region = region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			if describeClusterOutput.TaskDefinition == nil {
 				continue
@@ -627,10 +627,7 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 	return nil
 }
 func resolveEcsTaskDefinitionsInferenceAccelerators(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.TaskDefinition)
 	j := map[string]interface{}{}
 	for _, a := range r.InferenceAccelerators {
 		j[*a.DeviceName] = *a.DeviceType
@@ -638,10 +635,7 @@ func resolveEcsTaskDefinitionsInferenceAccelerators(ctx context.Context, meta sc
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsPlacementConstraints(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.TaskDefinition)
 	j := map[string]interface{}{}
 	for _, p := range r.PlacementConstraints {
 		j[*p.Expression] = p.Type
@@ -649,10 +643,7 @@ func resolveEcsTaskDefinitionsPlacementConstraints(ctx context.Context, meta sch
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsProxyConfigurationProperties(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.TaskDefinition)
 	j := map[string]interface{}{}
 	if r.ProxyConfiguration == nil {
 		return nil
@@ -663,29 +654,20 @@ func resolveEcsTaskDefinitionsProxyConfigurationProperties(ctx context.Context, 
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsRequiresAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.TaskDefinition)
 	data, err := json.Marshal(r.RequiresAttributes)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func fetchEcsTaskDefinitionContainerDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", parent.Item)
-	}
+	r := parent.Item.(types.TaskDefinition)
 	res <- r.ContainerDefinitions
 	return nil
 }
 func resolveEcsTaskDefinitionContainerDefinitionsDependsOn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	for _, p := range r.DependsOn {
 		j[*p.ContainerName] = p.Condition
@@ -693,10 +675,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsDependsOn(ctx context.Context, 
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsEnvironment(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	for _, p := range r.Environment {
 		j[*p.Name] = p.Value
@@ -704,10 +683,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsEnvironment(ctx context.Context
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsEnvironmentFiles(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	for _, p := range r.EnvironmentFiles {
 		j[string(p.Type)] = p.Value
@@ -715,10 +691,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsEnvironmentFiles(ctx context.Co
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsExtraHosts(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	for _, h := range r.ExtraHosts {
 		j[*h.Hostname] = h.IpAddress
@@ -726,40 +699,31 @@ func resolveEcsTaskDefinitionContainerDefinitionsExtraHosts(ctx context.Context,
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsLinuxParametersDevices(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	if r.LinuxParameters == nil {
 		return nil
 	}
 
 	data, err := json.Marshal(r.LinuxParameters.Devices)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsLinuxParametersTmpfs(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	if r.LinuxParameters == nil {
 		return nil
 	}
 
 	data, err := json.Marshal(r.LinuxParameters.Tmpfs)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsLogConfigurationSecretOptions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	if r.LogConfiguration == nil {
 		return nil
@@ -770,33 +734,24 @@ func resolveEcsTaskDefinitionContainerDefinitionsLogConfigurationSecretOptions(c
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsMountPoints(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 
 	data, err := json.Marshal(r.MountPoints)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsPortMappings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	data, err := json.Marshal(r.PortMappings)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsResourceRequirements(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	if r.LogConfiguration == nil {
 		return nil
@@ -807,10 +762,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsResourceRequirements(ctx contex
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsSecrets(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	if r.LogConfiguration == nil {
 		return nil
@@ -821,10 +773,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsSecrets(ctx context.Context, me
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsSystemControls(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	if r.LogConfiguration == nil {
 		return nil
@@ -835,22 +784,16 @@ func resolveEcsTaskDefinitionContainerDefinitionsSystemControls(ctx context.Cont
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsUlimits(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 
 	data, err := json.Marshal(r.Ulimits)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveEcsTaskDefinitionContainerDefinitionsVolumesFrom(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.ContainerDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.ContainerDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.ContainerDefinition)
 	j := map[string]interface{}{}
 	if r.LogConfiguration == nil {
 		return nil
@@ -861,19 +804,13 @@ func resolveEcsTaskDefinitionContainerDefinitionsVolumesFrom(ctx context.Context
 	return resource.Set(c.Name, j)
 }
 func fetchEcsTaskDefinitionVolumes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", parent.Item)
-	}
+	r := parent.Item.(types.TaskDefinition)
 	res <- r.Volumes
 	return nil
 }
 
 func resolveEcsTaskDefinitionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(types.TaskDefinition)
-	if !ok {
-		return fmt.Errorf("expected to have types.TaskDefinition but got %T", resource.Item)
-	}
+	r := resource.Item.(types.TaskDefinition)
 
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ECS
@@ -884,7 +821,7 @@ func resolveEcsTaskDefinitionTags(ctx context.Context, meta schema.ClientMeta, r
 		options.Region = region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	j := map[string]interface{}{}

@@ -2,12 +2,12 @@ package guardduty
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -172,14 +172,14 @@ func fetchGuarddutyDetectors(ctx context.Context, meta schema.ClientMeta, parent
 			o.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, dId := range output.DetectorIds {
 			d, err := svc.GetDetector(ctx, &guardduty.GetDetectorInput{DetectorId: aws.String(dId)}, func(o *guardduty.Options) {
 				o.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- Detector{d, dId}
 		}
@@ -191,10 +191,7 @@ func fetchGuarddutyDetectors(ctx context.Context, meta schema.ClientMeta, parent
 }
 
 func fetchGuarddutyDetectorMembers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	detector, ok := parent.Item.(Detector)
-	if !ok {
-		return fmt.Errorf("expected type *guardduty.GetDetectorOutput got %T", parent.Item)
-	}
+	detector := parent.Item.(Detector)
 	c := meta.(*client.Client)
 	svc := c.Services().GuardDuty
 	config := &guardduty.ListMembersInput{DetectorId: aws.String(detector.Id)}
@@ -203,7 +200,7 @@ func fetchGuarddutyDetectorMembers(ctx context.Context, meta schema.ClientMeta, 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- output.Members
 		if output.NextToken == nil {

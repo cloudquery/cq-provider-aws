@@ -2,12 +2,12 @@ package rds
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -117,7 +117,7 @@ func fetchRdsSubnetGroups(ctx context.Context, meta schema.ClientMeta, parent *s
 			o.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.DBSubnetGroups
 		if aws.ToString(response.Marker) == "" {
@@ -128,10 +128,7 @@ func fetchRdsSubnetGroups(ctx context.Context, meta schema.ClientMeta, parent *s
 	return nil
 }
 func fetchRdsSubnetGroupSubnets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	subnetGroup, ok := parent.Item.(types.DBSubnetGroup)
-	if !ok {
-		return fmt.Errorf("not db cluster")
-	}
+	subnetGroup := parent.Item.(types.DBSubnetGroup)
 	res <- subnetGroup.Subnets
 	return nil
 }

@@ -3,13 +3,13 @@ package codebuild
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -696,7 +696,7 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		if len(response.Projects) == 0 {
 			break
@@ -705,7 +705,7 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		res <- projectsOutput.Projects
@@ -717,10 +717,7 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 	return nil
 }
 func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", resource.Item)
-	}
+	p := resource.Item.(types.Project)
 	j := map[string]interface{}{}
 	for _, v := range p.SecondarySourceVersions {
 		j[*v.SourceIdentifier] = *v.SourceVersion
@@ -728,10 +725,7 @@ func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta s
 	return resource.Set(c.Name, j)
 }
 func resolveCodebuildProjectsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", resource.Item)
-	}
+	p := resource.Item.(types.Project)
 	j := map[string]interface{}{}
 	for _, v := range p.Tags {
 		j[*v.Key] = *v.Value
@@ -739,24 +733,18 @@ func resolveCodebuildProjectsTags(ctx context.Context, meta schema.ClientMeta, r
 	return resource.Set(c.Name, j)
 }
 func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p, ok := resource.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", resource.Item)
-	}
+	p := resource.Item.(types.Project)
 	if p.Webhook == nil {
 		return nil
 	}
 	data, err := json.Marshal(p.Webhook.FilterGroups)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func fetchCodebuildProjectEnvironmentVariables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", parent.Item)
-	}
+	p := parent.Item.(types.Project)
 	if p.Environment == nil {
 		return nil
 	}
@@ -764,26 +752,17 @@ func fetchCodebuildProjectEnvironmentVariables(ctx context.Context, meta schema.
 	return nil
 }
 func fetchCodebuildProjectFileSystemLocations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", parent.Item)
-	}
+	p := parent.Item.(types.Project)
 	res <- p.FileSystemLocations
 	return nil
 }
 func fetchCodebuildProjectSecondaryArtifacts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", parent.Item)
-	}
+	p := parent.Item.(types.Project)
 	res <- p.SecondaryArtifacts
 	return nil
 }
 func fetchCodebuildProjectSecondarySources(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p, ok := parent.Item.(types.Project)
-	if !ok {
-		return fmt.Errorf("not a types.Project instance: %T", parent.Item)
-	}
+	p := parent.Item.(types.Project)
 	res <- p.SecondarySources
 	return nil
 }

@@ -2,12 +2,12 @@ package directconnect
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -237,7 +237,7 @@ func fetchDirectconnectVirtualInterfaces(ctx context.Context, meta schema.Client
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- output.VirtualInterfaces
 	return nil
@@ -259,10 +259,7 @@ func resolveDirectconnectVirtualInterfaceTags(ctx context.Context, meta schema.C
 	return resource.Set("tags", tags)
 }
 func fetchDirectconnectVirtualInterfaceBgpPeers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	virtualInterface, ok := parent.Item.(types.VirtualInterface)
-	if !ok {
-		return fmt.Errorf("not a direct connect virtual interface")
-	}
+	virtualInterface := parent.Item.(types.VirtualInterface)
 	res <- virtualInterface.BgpPeers
 	return nil
 }

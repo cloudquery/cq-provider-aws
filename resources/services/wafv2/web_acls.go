@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -12,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -321,7 +321,7 @@ func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *sche
 			options.Region = region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, webAcl := range output.WebACLs {
 			webAclConfig := wafv2.GetWebACLInput{Id: webAcl.Id, Name: webAcl.Name, Scope: scope}
@@ -329,7 +329,7 @@ func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *sche
 				options.Region = region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- webAclOutput.WebACL
 		}
@@ -342,10 +342,7 @@ func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *sche
 	return nil
 }
 func resolveWafv2webACLResourcesForWebACL(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	webACL, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
-	}
+	webACL := resource.Item.(*types.WebACL)
 
 	client := meta.(*client.Client)
 	service := client.Services().WafV2
@@ -355,15 +352,12 @@ func resolveWafv2webACLResourcesForWebACL(ctx context.Context, meta schema.Clien
 		options.Region = client.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, resourceArns.ResourceArns)
 }
 func resolveWafv2webACLTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	webACL, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
-	}
+	webACL := resource.Item.(*types.WebACL)
 
 	client := meta.(*client.Client)
 	service := client.Services().WafV2
@@ -376,7 +370,7 @@ func resolveWafv2webACLTags(ctx context.Context, meta schema.ClientMeta, resourc
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -389,74 +383,56 @@ func resolveWafv2webACLTags(ctx context.Context, meta schema.ClientMeta, resourc
 	return resource.Set(c.Name, outputTags)
 }
 func resolveWafv2webACLDefaultAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	webACL, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", resource.Item)
-	}
+	webACL := resource.Item.(*types.WebACL)
 	if webACL.DefaultAction == nil {
 		return nil
 	}
 	data, err := json.Marshal(webACL.DefaultAction)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func fetchWafv2WebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	webACL, ok := parent.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
-	}
+	webACL := parent.Item.(*types.WebACL)
 	res <- webACL.Rules
 	return nil
 }
 func resolveWafv2webACLRuleStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(types.Rule)
-	if !ok {
-		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(types.Rule)
 	if rule.Statement == nil {
 		return nil
 	}
 	data, err := json.Marshal(rule.Statement)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafv2webACLRuleAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(types.Rule)
-	if !ok {
-		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(types.Rule)
 	if rule.Action == nil {
 		return nil
 	}
 	data, err := json.Marshal(rule.Action)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafv2webACLRuleOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(types.Rule)
-	if !ok {
-		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(types.Rule)
 	if rule.OverrideAction == nil {
 		return nil
 	}
 	data, err := json.Marshal(rule.OverrideAction)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafv2webACLRuleLabels(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(types.Rule)
-	if !ok {
-		return fmt.Errorf("not an Rule instance: %#v", resource.Item)
-	}
+	rule := resource.Item.(types.Rule)
 	labels := make([]string, len(rule.RuleLabels))
 	for i := range rule.RuleLabels {
 		labels[i] = aws.ToString(rule.RuleLabels[i].Name)
@@ -464,82 +440,61 @@ func resolveWafv2webACLRuleLabels(ctx context.Context, meta schema.ClientMeta, r
 	return resource.Set(c.Name, labels)
 }
 func fetchWafv2WebAclPostProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	webACL, ok := parent.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
-	}
+	webACL := parent.Item.(*types.WebACL)
 	res <- webACL.PostProcessFirewallManagerRuleGroups
 	return nil
 }
 func resolveWafv2webACLPostProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
-	if !ok {
-		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
-	}
+	firewallManagerRuleGroup := resource.Item.(types.FirewallManagerRuleGroup)
 	if firewallManagerRuleGroup.FirewallManagerStatement == nil {
 		return nil
 	}
 	data, err := json.Marshal(firewallManagerRuleGroup.FirewallManagerStatement)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafv2webACLPostProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
-	if !ok {
-		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
-	}
+	firewallManagerRuleGroup := resource.Item.(types.FirewallManagerRuleGroup)
 	if firewallManagerRuleGroup.OverrideAction == nil {
 		return nil
 	}
 	data, err := json.Marshal(firewallManagerRuleGroup.OverrideAction)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func fetchWafv2WebAclPreProcessFirewallManagerRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	webACL, ok := parent.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance: %#v", parent.Item)
-	}
+	webACL := parent.Item.(*types.WebACL)
 	res <- webACL.PreProcessFirewallManagerRuleGroups
 	return nil
 }
 func resolveWafv2webACLPreProcessFirewallManagerRuleGroupStatement(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
-	if !ok {
-		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
-	}
+	firewallManagerRuleGroup := resource.Item.(types.FirewallManagerRuleGroup)
 	if firewallManagerRuleGroup.FirewallManagerStatement == nil {
 		return nil
 	}
 	data, err := json.Marshal(firewallManagerRuleGroup.FirewallManagerStatement)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafv2webACLPreProcessFirewallManagerRuleGroupOverrideAction(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	firewallManagerRuleGroup, ok := resource.Item.(types.FirewallManagerRuleGroup)
-	if !ok {
-		return fmt.Errorf("not an FirewallManagerRuleGroup instance: %#v", resource.Item)
-	}
+	firewallManagerRuleGroup := resource.Item.(types.FirewallManagerRuleGroup)
 	if firewallManagerRuleGroup.OverrideAction == nil {
 		return nil
 	}
 	data, err := json.Marshal(firewallManagerRuleGroup.OverrideAction)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
 }
 func resolveWafV2WebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rule, ok := resource.Item.(*types.WebACL)
-	if !ok {
-		return fmt.Errorf("not an WebACL instance")
-	}
+	rule := resource.Item.(*types.WebACL)
 	cl := meta.(*client.Client)
 	svc := cl.Services().WafV2
 	cfg := wafv2.GetLoggingConfigurationInput{

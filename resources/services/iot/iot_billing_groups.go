@@ -2,11 +2,11 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -100,7 +100,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, g := range response.BillingGroups {
 			group, err := svc.DescribeBillingGroup(ctx, &iot.DescribeBillingGroupInput{
@@ -109,7 +109,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- group
 		}
@@ -122,10 +122,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 	return nil
 }
 func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.DescribeBillingGroupOutput)
-	if !ok {
-		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.DescribeBillingGroupOutput)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListThingsInBillingGroupInput{
@@ -139,7 +136,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		things = append(things, response.Things...)
@@ -152,10 +149,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 	return resource.Set(c.Name, things)
 }
 func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*iot.DescribeBillingGroupOutput)
-	if !ok {
-		return fmt.Errorf("expected *iot.DescribeBillingGroupOutput but got %T", resource.Item)
-	}
+	i := resource.Item.(*iot.DescribeBillingGroupOutput)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListTagsForResourceInput{
@@ -169,7 +163,7 @@ func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, res
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range response.Tags {
 			tags[*t.Key] = t.Value

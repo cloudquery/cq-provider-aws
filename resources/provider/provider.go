@@ -3,9 +3,6 @@ package provider
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/resources/services/cloudformation"
-
-	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -17,6 +14,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/cloudformation"
 	"github.com/cloudquery/cq-provider-aws/resources/services/cloudfront"
 	"github.com/cloudquery/cq-provider-aws/resources/services/cloudtrail"
 	"github.com/cloudquery/cq-provider-aws/resources/services/cloudwatch"
@@ -41,6 +39,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/fsx"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iam"
+	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-aws/resources/services/kms"
 	"github.com/cloudquery/cq-provider-aws/resources/services/lambda"
 	"github.com/cloudquery/cq-provider-aws/resources/services/mq"
@@ -77,7 +76,7 @@ func Provider() *provider.Provider {
 		Migrations:       awsMigrations,
 		ModuleInfoReader: module.EmbeddedReader(moduleData, "moduledata"),
 		ResourceMap: map[string]*schema.Table{
-			"accessanalyzer.analyzers":              accessanalyzer.AccessAnalyzerAnalyzer(),
+			"accessanalyzer.analyzers":              accessanalyzer.AccessAnalyzerAnalyzers(),
 			"acm.certificates":                      acm.AcmCertificates(),
 			"apigateway.api_keys":                   apigateway.ApigatewayAPIKeys(),
 			"apigateway.client_certificates":        apigateway.ApigatewayClientCertificates(),
