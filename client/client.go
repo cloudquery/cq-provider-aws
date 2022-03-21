@@ -256,6 +256,11 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 }
 
 func verifyRegions(regions []string) error {
+	availableRegions, err := getAvailableRegions()
+	if err != nil {
+		return err
+	}
+
 	// validate regions values
 	var hasWildcard bool
 	for i, region := range regions {
@@ -267,6 +272,9 @@ func verifyRegions(regions []string) error {
 		}
 		if i > 0 && hasWildcard {
 			return errInvalidRegion
+		}
+		if ok, _ := availableRegions[region]; !ok {
+			return fmt.Errorf("unknow region: %s", region)
 		}
 	}
 	return nil
