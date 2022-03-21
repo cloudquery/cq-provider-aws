@@ -3,13 +3,13 @@ package ssm
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -229,13 +229,13 @@ func fetchSsmDocuments(ctx context.Context, meta schema.ClientMeta, parent *sche
 	for {
 		output, err := svc.ListDocuments(ctx, &params, optsFn)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, d := range output.DocumentIdentifiers {
 			dd, err := svc.DescribeDocument(ctx, &ssm.DescribeDocumentInput{Name: d.Name}, optsFn)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- dd.Document
 		}
@@ -249,23 +249,17 @@ func fetchSsmDocuments(ctx context.Context, meta schema.ClientMeta, parent *sche
 
 func resolveSSMDocumentJSONField(getter func(d *types.DocumentDescription) interface{}) func(context.Context, schema.ClientMeta, *schema.Resource, schema.Column) error {
 	return func(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-		d, ok := resource.Item.(*types.DocumentDescription)
-		if !ok {
-			return fmt.Errorf("not a %T instance: %T", d, resource.Item)
-		}
+		d := resource.Item.(*types.DocumentDescription)
 		b, err := json.Marshal(getter(d))
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		return resource.Set(c.Name, b)
 	}
 }
 
 func resolveSSMDocumentTags(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	d, ok := resource.Item.(*types.DocumentDescription)
-	if !ok {
-		return fmt.Errorf("not a %T instance: %T", d, resource.Item)
-	}
+	d := resource.Item.(*types.DocumentDescription)
 	tags := make(map[string]string)
 	for _, t := range d.Tags {
 		tags[aws.ToString(t.Key)] = aws.ToString(t.Value)
@@ -274,10 +268,7 @@ func resolveSSMDocumentTags(_ context.Context, meta schema.ClientMeta, resource 
 }
 
 func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) (exitErr error) {
-	d, ok := resource.Item.(*types.DocumentDescription)
-	if !ok {
-		return fmt.Errorf("not a %T instance: %T", d, resource.Item)
-	}
+	d := resource.Item.(*types.DocumentDescription)
 	client := meta.(*client.Client)
 	svc := client.Services().SSM
 	optsFn := func(o *ssm.Options) {
@@ -292,7 +283,7 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 	for {
 		output, err := svc.DescribeDocumentPermission(ctx, &input, optsFn)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		accountIDs = append(accountIDs, output.AccountIds...)
 		infoList = append(infoList, output.AccountSharingInfoList...)
@@ -306,16 +297,13 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 	}
 	b, err := json.Marshal(infoList)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set("account_sharing_info_list", b)
 }
 
 func resolveSSMDocumentARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	d, ok := resource.Item.(*types.DocumentDescription)
-	if !ok {
-		return fmt.Errorf("not a %T instance: %T", d, resource.Item)
-	}
+	d := resource.Item.(*types.DocumentDescription)
 	cl := meta.(*client.Client)
 	return resource.Set(c.Name, client.GenerateResourceARN("ssm", "document", *d.Name, cl.Region, cl.AccountID))
 }

@@ -2,13 +2,13 @@ package waf
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -76,14 +76,14 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, rG := range output.RuleGroups {
 			ruleGroup, err := service.GetRuleGroup(ctx, &waf.GetRuleGroupInput{RuleGroupId: rG.RuleGroupId}, func(options *waf.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- ruleGroup.RuleGroup
 		}
@@ -96,10 +96,7 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 	return nil
 }
 func resolveWafRuleGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ruleGroup, ok := resource.Item.(*types.RuleGroup)
-	if !ok {
-		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
-	}
+	ruleGroup := resource.Item.(*types.RuleGroup)
 	usedClient := meta.(*client.Client)
 
 	// Generate arn
@@ -113,10 +110,7 @@ func resolveWafRuleGroupArn(ctx context.Context, meta schema.ClientMeta, resourc
 	return resource.Set(c.Name, arnStr)
 }
 func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ruleGroup, ok := resource.Item.(*types.RuleGroup)
-	if !ok {
-		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
-	}
+	ruleGroup := resource.Item.(*types.RuleGroup)
 
 	// Resolves rule group rules
 	awsClient := meta.(*client.Client)
@@ -128,7 +122,7 @@ func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, res
 			options.Region = awsClient.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, rule := range rules.ActivatedRules {
 			ruleIDs = append(ruleIDs, aws.ToString(rule.RuleId))
@@ -142,10 +136,7 @@ func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, res
 	return resource.Set("rule_ids", ruleIDs)
 }
 func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ruleGroup, ok := resource.Item.(*types.RuleGroup)
-	if !ok {
-		return fmt.Errorf("not a RuleGroup instance: %#v", resource.Item)
-	}
+	ruleGroup := resource.Item.(*types.RuleGroup)
 
 	// Resolve tags for resource
 	usedClient := meta.(*client.Client)
@@ -167,7 +158,7 @@ func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resour
 			options.Region = "us-east-1"
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value

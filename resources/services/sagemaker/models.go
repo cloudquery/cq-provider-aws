@@ -9,6 +9,7 @@ import (
 
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -183,7 +184,7 @@ func fetchSagemakerModels(ctx context.Context, meta schema.ClientMeta, _ *schema
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		// get more details about the notebook instance
@@ -196,7 +197,7 @@ func fetchSagemakerModels(ctx context.Context, meta schema.ClientMeta, _ *schema
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 
 			model := WrappedSageMakerModel{
@@ -232,7 +233,7 @@ func resolveSagemakerModelTags(ctx context.Context, meta schema.ClientMeta, reso
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))
@@ -244,19 +245,13 @@ func resolveSagemakerModelTags(ctx context.Context, meta schema.ClientMeta, reso
 }
 
 func fetchSagemakerModelContainers(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(WrappedSageMakerModel)
-	if !ok {
-		return fmt.Errorf("expected WrappedModel but got %T", r)
-	}
+	r := parent.Item.(WrappedSageMakerModel)
 	res <- r.Containers
 	return nil
 }
 
 func fetchSagemakerModelVpcConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(WrappedSageMakerModel)
-	if !ok {
-		return fmt.Errorf("expected WrappedModel but got %T", r)
-	}
+	r := parent.Item.(WrappedSageMakerModel)
 	res <- r.VpcConfig
 	return nil
 }

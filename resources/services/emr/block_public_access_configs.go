@@ -3,11 +3,11 @@ package emr
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -110,32 +110,26 @@ func fetchEmrBlockPublicAccessConfigs(ctx context.Context, meta schema.ClientMet
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- out
 	return nil
 }
 
 func resolveEmrBlockPublicAccessConfigConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	out, ok := resource.Item.(*emr.GetBlockPublicAccessConfigurationOutput)
-	if !ok {
-		return fmt.Errorf("not an *emr.GetBlockPublicAccessConfigurationOutput: %T", resource.Item)
-	}
+	out := resource.Item.(*emr.GetBlockPublicAccessConfigurationOutput)
 	if out.BlockPublicAccessConfiguration == nil {
 		return nil
 	}
 	b, err := json.Marshal(out.BlockPublicAccessConfiguration.Configurations)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, b)
 }
 
 func fetchEmrBlockPublicAccessConfigPermittedPublicSecurityGroupRuleRanges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	out, ok := parent.Item.(*emr.GetBlockPublicAccessConfigurationOutput)
-	if !ok {
-		return fmt.Errorf("not an *emr.GetBlockPublicAccessConfigurationOutput: %T", parent.Item)
-	}
+	out := parent.Item.(*emr.GetBlockPublicAccessConfigurationOutput)
 	if out.BlockPublicAccessConfiguration == nil {
 		return nil
 	}

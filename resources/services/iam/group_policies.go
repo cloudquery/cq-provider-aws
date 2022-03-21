@@ -3,7 +3,6 @@ package iam
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -83,7 +83,7 @@ func fetchIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, parent *
 		for _, p := range output.PolicyNames {
 			policyResult, err := svc.GetGroupPolicy(ctx, &iam.GetGroupPolicyInput{PolicyName: &p, GroupName: group.GroupName})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- policyResult
 		}
@@ -95,20 +95,17 @@ func fetchIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, parent *
 	return nil
 }
 func resolveIamGroupPolicyPolicyDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r, ok := resource.Item.(*iam.GetGroupPolicyOutput)
-	if !ok {
-		return fmt.Errorf("not group policy")
-	}
+	r := resource.Item.(*iam.GetGroupPolicyOutput)
 
 	decodedDocument, err := url.QueryUnescape(*r.PolicyDocument)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	var document map[string]interface{}
 	err = json.Unmarshal([]byte(decodedDocument), &document)
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, document)
 }

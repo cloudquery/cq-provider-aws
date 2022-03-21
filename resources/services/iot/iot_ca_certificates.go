@@ -2,12 +2,12 @@ package iot
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -125,7 +125,7 @@ func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, ca := range response.Certificates {
 			cert, err := svc.DescribeCACertificate(ctx, &iot.DescribeCACertificateInput{
@@ -134,7 +134,7 @@ func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent 
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- cert.CertificateDescription
 		}
@@ -146,10 +146,7 @@ func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent 
 	return nil
 }
 func ResolveIotCaCertificateCertificates(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i, ok := resource.Item.(*types.CACertificateDescription)
-	if !ok {
-		return fmt.Errorf("expected types.CACertificateDescription but got %T", resource.Item)
-	}
+	i := resource.Item.(*types.CACertificateDescription)
 	client := meta.(*client.Client)
 	svc := client.Services().IOT
 	input := iot.ListCertificatesByCAInput{
@@ -163,7 +160,7 @@ func ResolveIotCaCertificateCertificates(ctx context.Context, meta schema.Client
 			options.Region = client.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		for _, ct := range response.Certificates {

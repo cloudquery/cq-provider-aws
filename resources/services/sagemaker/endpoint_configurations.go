@@ -9,6 +9,7 @@ import (
 
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -142,7 +143,7 @@ func fetchSagemakerEndpointConfigurations(ctx context.Context, meta schema.Clien
 			options.Region = c.Region
 		})
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 
 		// get more details about the notebook instance
@@ -155,7 +156,7 @@ func fetchSagemakerEndpointConfigurations(ctx context.Context, meta schema.Clien
 				options.Region = c.Region
 			})
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 
 			res <- response
@@ -169,10 +170,7 @@ func fetchSagemakerEndpointConfigurations(ctx context.Context, meta schema.Clien
 	return nil
 }
 func fetchSagemakerEndpointConfigurationProductionVariants(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(*sagemaker.DescribeEndpointConfigOutput)
-	if !ok {
-		return fmt.Errorf("expected DescribeEndpointConfigOutput but got %T", r)
-	}
+	r := parent.Item.(*sagemaker.DescribeEndpointConfigOutput)
 	res <- r.ProductionVariants
 	return nil
 }
@@ -192,7 +190,7 @@ func resolveSagemakerEndpointConfigurationTags(ctx context.Context, meta schema.
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))

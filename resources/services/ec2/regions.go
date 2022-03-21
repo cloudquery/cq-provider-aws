@@ -2,12 +2,12 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -62,17 +62,14 @@ func fetchRegions(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 		options.Region = c.Region
 	})
 	if err != nil {
-		return err
+		return diag.WrapError(err)
 	}
 	res <- output.Regions
 	return nil
 }
 func resolveRegionEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 
-	region, ok := resource.Item.(types.Region)
-	if !ok {
-		return fmt.Errorf("expected types.Region got %T", resource.Item)
-	}
+	region := resource.Item.(types.Region)
 	switch *region.OptInStatus {
 	case "opt-in-not-required", "opted-in":
 		return resource.Set(c.Name, true)

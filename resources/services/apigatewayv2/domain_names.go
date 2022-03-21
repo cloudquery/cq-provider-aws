@@ -2,11 +2,11 @@ package apigatewayv2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2/types"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -203,7 +203,7 @@ func fetchApigatewayv2DomainNames(ctx context.Context, meta schema.ClientMeta, _
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.NextToken) == "" {
@@ -215,19 +215,13 @@ func fetchApigatewayv2DomainNames(ctx context.Context, meta schema.ClientMeta, _
 }
 
 func fetchApigatewayv2DomainNameConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.DomainName)
-	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
-	}
+	r := parent.Item.(types.DomainName)
 	res <- r.DomainNameConfigurations
 	return nil
 }
 
 func fetchApigatewayv2DomainNameRestApiMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r, ok := parent.Item.(types.DomainName)
-	if !ok {
-		return fmt.Errorf("expected DomainName but got %T", r)
-	}
+	r := parent.Item.(types.DomainName)
 	config := apigatewayv2.GetApiMappingsInput{
 		DomainName: r.DomainName,
 	}
@@ -239,7 +233,7 @@ func fetchApigatewayv2DomainNameRestApiMappings(ctx context.Context, meta schema
 		})
 
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.NextToken) == "" {

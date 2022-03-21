@@ -2,12 +2,12 @@ package cognito
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 	"github.com/cloudquery/cq-provider-aws/client"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -147,12 +147,12 @@ func fetchCognitoIdentityPools(ctx context.Context, meta schema.ClientMeta, pare
 	for {
 		out, err := svc.ListIdentityPools(ctx, &params, optsFunc)
 		if err != nil {
-			return err
+			return diag.WrapError(err)
 		}
 		for _, item := range out.IdentityPools {
 			ipo, err := svc.DescribeIdentityPool(ctx, &cognitoidentity.DescribeIdentityPoolInput{IdentityPoolId: item.IdentityPoolId}, optsFunc)
 			if err != nil {
-				return err
+				return diag.WrapError(err)
 			}
 			res <- ipo
 		}
@@ -165,10 +165,7 @@ func fetchCognitoIdentityPools(ctx context.Context, meta schema.ClientMeta, pare
 }
 
 func fetchCognitoIdentityPoolCognitoIdentityProviders(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	pool, ok := parent.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
-	if !ok {
-		return fmt.Errorf("not a DescribeIdentityPoolOutput instance: %#v", parent.Item)
-	}
+	pool := parent.Item.(*cognitoidentity.DescribeIdentityPoolOutput)
 	res <- pool.CognitoIdentityProviders
 	return nil
 }
