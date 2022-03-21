@@ -273,7 +273,7 @@ func verifyRegions(regions []string) error {
 		if i > 0 && hasWildcard {
 			return errInvalidRegion
 		}
-		if ok, _ := availableRegions[region]; !ok {
+		if ok := availableRegions[region]; !ok {
 			return fmt.Errorf("unknow region: %s", region)
 		}
 	}
