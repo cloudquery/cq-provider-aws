@@ -2,7 +2,6 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 
@@ -66,8 +65,9 @@ func Ec2EbsVolumes() *schema.Table {
 				Type: schema.TypeInt,
 			},
 			{
-				Name: "kms_key_id",
-				Type: schema.TypeString,
+				Name:          "kms_key_id",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name: "multi_attach_enabled",
@@ -96,8 +96,9 @@ func Ec2EbsVolumes() *schema.Table {
 				Resolver: resolveEc2EbsVolumeTags,
 			},
 			{
-				Name: "throughput",
-				Type: schema.TypeInt,
+				Name:          "throughput",
+				Type:          schema.TypeInt,
+				IgnoreInTests: true,
 			},
 			{
 				Name: "volume_type",
@@ -176,19 +177,13 @@ func resolveEc2EbsVolumeTags(_ context.Context, _ schema.ClientMeta, resource *s
 	return resource.Set("tags", tags)
 }
 func fetchEc2EbsVolumeAttachments(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	volume, ok := parent.Item.(types.Volume)
-	if !ok {
-		return fmt.Errorf("not ec2 ebs volume")
-	}
+	volume := parent.Item.(types.Volume)
 	res <- volume.Attachments
 	return nil
 }
 
 func resolveEbsVolumeArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	ebs, ok := resource.Item.(types.Volume)
-	if !ok {
-		return fmt.Errorf("not ec2 ebs volume")
-	}
+	ebs := resource.Item.(types.Volume)
 	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "volume", *ebs.VolumeId, cl.Region, cl.AccountID))
 }

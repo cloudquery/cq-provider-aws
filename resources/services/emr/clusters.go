@@ -3,7 +3,6 @@ package emr
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
@@ -16,13 +15,14 @@ import (
 
 func EmrClusters() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_emr_clusters",
-		Description:  "The detailed description of the cluster.",
-		Resolver:     fetchEmrClusters,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_emr_clusters",
+		Description:   "The detailed description of the cluster.",
+		Resolver:      fetchEmrClusters,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -360,10 +360,7 @@ func fetchEmrClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 
 func resolveEMRClusterJSONField(getter func(c *types.Cluster) interface{}) func(context.Context, schema.ClientMeta, *schema.Resource, schema.Column) error {
 	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-		cl, ok := resource.Item.(*types.Cluster)
-		if !ok {
-			return fmt.Errorf("not a %T instance: %T", c, resource.Item)
-		}
+		cl := resource.Item.(*types.Cluster)
 		b, err := json.Marshal(getter(cl))
 		if err != nil {
 			return diag.WrapError(err)

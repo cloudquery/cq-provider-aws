@@ -415,7 +415,8 @@ func resolveBrokersMaintenanceWindowStartTime(ctx context.Context, meta schema.C
 	}
 	return resource.Set(c.Name, data)
 }
-func resolveBrokersPendingLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+
+func resolveMqBrokerPendingLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	broker, ok := resource.Item.(*mq.DescribeBrokerOutput)
 	if !ok {
 		return fmt.Errorf("not a DescribeBrokerOutput instance: %#v", resource.Item)

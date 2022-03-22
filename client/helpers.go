@@ -91,6 +91,32 @@ func isSupportedServiceForRegion(service string, region string) bool {
 	return true
 }
 
+func getAvailableRegions() (map[string]bool, error) {
+	readOnce.Do(func() {
+		supportedServiceRegion = readSupportedServiceRegions()
+	})
+
+	regionsSet := make(map[string]bool)
+
+	if supportedServiceRegion == nil {
+		return nil, fmt.Errorf("could not get AWS regions/services data")
+	}
+
+	if supportedServiceRegion.Partitions == nil {
+		return nil, fmt.Errorf("could not found any AWS partitions")
+	}
+
+	currentPartition := supportedServiceRegion.Partitions[defaultPartition]
+
+	for _, service := range currentPartition.Services {
+		for region := range service.Regions {
+			regionsSet[region] = true
+		}
+	}
+
+	return regionsSet, nil
+}
+
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
@@ -237,6 +263,27 @@ func (c *Client) IsNotFoundError(err error) bool {
 	for _, s := range notFoundErrorPrefixes {
 		if strings.Contains(errorCode, s) {
 			c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
+			return true
+		}
+	}
+	return false
+}
+
+func IsAWSError(err error, code string) bool {
+	var ae smithy.APIError
+	if !errors.As(err, &ae) {
+		return false
+	}
+	return strings.Contains(ae.ErrorCode(), code)
+}
+
+func IsAWSErrors(err error, code []string) bool {
+	var ae smithy.APIError
+	if !errors.As(err, &ae) {
+		return false
+	}
+	for _, c := range code {
+		if strings.Contains(ae.ErrorCode(), c) {
 			return true
 		}
 	}

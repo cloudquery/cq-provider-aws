@@ -59,8 +59,9 @@ func S3Buckets() *schema.Table {
 				IgnoreInTests: true,
 			},
 			{
-				Name: "tags",
-				Type: schema.TypeJSON,
+				Name:          "tags",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "creation_date",
@@ -539,7 +540,7 @@ func fetchS3BucketCorsRules(ctx context.Context, meta schema.ClientMeta, parent 
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchCORSConfiguration") {
 			return nil
 		}
 		return err
@@ -557,7 +558,7 @@ func fetchS3BucketEncryptionRules(ctx context.Context, meta schema.ClientMeta, p
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "ServerSideEncryptionConfigurationNotFoundError") {
 			return nil
 		}
 		return err
@@ -591,7 +592,7 @@ func fetchS3BucketLifecycles(ctx context.Context, meta schema.ClientMeta, parent
 		options.Region = parent.Get("region").(string)
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchLifecycleConfiguration") {
 			return nil
 		}
 		return err
@@ -676,7 +677,7 @@ func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *
 	// check if we got an error but its access denied we can continue
 	if err != nil {
 		// if we got an error and its not a NoSuchBucketError, return err
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "NoSuchBucketPolicy") {
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
@@ -754,7 +755,7 @@ func resolveBucketReplication(ctx context.Context, meta schema.ClientMeta, resou
 
 	if err != nil {
 		// If we received any error other than ReplicationConfigurationNotFoundError, we return and error
-		if c.IsNotFoundError(err) {
+		if client.IsAWSError(err, "ReplicationConfigurationNotFoundError") {
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
@@ -781,7 +782,8 @@ func resolveBucketTagging(ctx context.Context, meta schema.ClientMeta, resource 
 		options.Region = bucketRegion
 	})
 	if err != nil {
-		if c.IsNotFoundError(err) {
+		// If buckets tags are not set it will return an error instead of empty result
+		if client.IsAWSError(err, "NoSuchTagSet") {
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
@@ -809,12 +811,13 @@ func resolveBucketOwnershipControls(ctx context.Context, meta schema.ClientMeta,
 	})
 
 	if err != nil {
-		if c.IsNotFoundError(err) { // Not all buckets have ownership controls
+		// If buckets ownership controls are not set it will return an error instead of empty result
+		if client.IsAWSError(err, "OwnershipControlsNotFoundError") {
 			return nil
 		}
 
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketTagging", "bucket", bucketName, "err", err)
+			meta.Logger().Warn("received access denied on GetBucketOwnershipControls", "bucket", bucketName, "err", err)
 			return nil
 		}
 

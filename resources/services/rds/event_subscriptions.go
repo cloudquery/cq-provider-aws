@@ -2,7 +2,6 @@ package rds
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -66,9 +65,10 @@ func RdsEventSubscriptions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "source_ids_list",
-				Description: "A list of source IDs for the RDS event notification subscription.",
-				Type:        schema.TypeStringArray,
+				Name:          "source_ids_list",
+				Description:   "A list of source IDs for the RDS event notification subscription.",
+				Type:          schema.TypeStringArray,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "source_type",
@@ -119,10 +119,7 @@ func fetchRdsEventSubscriptions(ctx context.Context, meta schema.ClientMeta, par
 }
 
 func resolveRDSEventSubscriptionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	s, ok := resource.Item.(types.EventSubscription)
-	if !ok {
-		return fmt.Errorf("not a %T: %T", s, resource.Item)
-	}
+	s := resource.Item.(types.EventSubscription)
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
 	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: s.EventSubscriptionArn}, func(o *rds.Options) {
