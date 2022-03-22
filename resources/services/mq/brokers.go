@@ -154,7 +154,7 @@ func Brokers() *schema.Table {
 				Name:          "pending_ldap_server_metadata",
 				Description:   "The metadata of the LDAP server that will be used to authenticate and authorize connections to the broker after it is rebooted.",
 				Type:          schema.TypeJSON,
-				Resolver:      resolveBrokersPendingLdapServerMetadata,
+				Resolver:      resolveBrokersLdapServerMetadata,
 				IgnoreInTests: true,
 			},
 			{
