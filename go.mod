@@ -59,6 +59,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/smithy-go v1.11.1
+	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.3
 	github.com/cloudquery/cq-provider-sdk v0.8.13
@@ -87,7 +88,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.5.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
-	github.com/basgys/goxml2json v1.1.0 // indirect
 	github.com/creasty/defaults v1.5.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/doug-martin/goqu/v9 v9.17.0 // indirect

@@ -1,3 +1,4 @@
+-- Resource: accessanalyzer.analyzers
 CREATE TABLE IF NOT EXISTS "aws_access_analyzer_analyzer_archive_rules"
 (
     "cq_id"          uuid                        NOT NULL,
