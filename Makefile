@@ -24,17 +24,17 @@ pg-connect:
 # build the cq aws provider
 .PHONY: build
 build:
-	go build -o cq-provider-aws -ldflags="-X 'github.com/cloudquery/cq-provider-aws/resources.Version=LocalDevelopmentMakefile'"
+	go build -o cq-provider
 
-# build and run the cq aws provider
+# build and run the cq provider
 .PHONY: run
 run: build
-	CQ_REATTACH_PROVIDERS=.cq_reattach ./cq-provider-aws
+	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach ./cq-provider
 
 # Run a fetch command
 .PHONY: fetch
 fetch:
-	CQ_PROVIDER_DEBUG=1 ./cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v
+	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach ./cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v
 
 # Generate mocks for mock/unit testing 
 .PHONY: generate-mocks
@@ -50,9 +50,3 @@ test-unit:
 .PHONY: test-integration
 test-integration:
 	@if [[ "$(tableName)" == "" ]]; then go test -run=TestIntegration -timeout 3m -tags=integration ./...; else go test -run="TestIntegration/$(tableName)" -timeout 3m -tags=integration ./...; fi
-
-
-
-
-
-
