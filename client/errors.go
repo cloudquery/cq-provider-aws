@@ -19,24 +19,19 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 	resIdOverride := func(_ *diag.BaseError) {} // no-op option
 
 	if d, ok := err.(diag.Diagnostic); ok && len(d.Description().ResourceID) > 0 {
-		idsFromDiag := d.Description().ResourceID
-		// remove accountID and region from PK list as we always prepend them
-		i := 0
-		for _, val := range idsFromDiag {
-			if val == client.AccountID || val == client.Region {
-				continue
-			}
-			idsFromDiag[i] = val
-			i++
+		resIdList := []string{
+			client.AccountID,
+			client.Region,
 		}
 
-		resIdOverride = diag.WithResourceId(append(
-			[]string{
-				client.AccountID,
-				client.Region,
-			},
-			idsFromDiag[:i]...,
-		))
+		// remove accountID and region from PK list as we always prepend them
+		for _, val := range d.Description().ResourceID {
+			if val != client.AccountID && val != client.Region {
+				resIdList = append(resIdList, val)
+			}
+		}
+
+		resIdOverride = diag.WithResourceId(resIdList)
 	}
 
 	var ae smithy.APIError
