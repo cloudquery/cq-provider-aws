@@ -16,24 +16,6 @@ import (
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
 
-	resIdOverride := func(_ *diag.BaseError) {} // no-op option
-
-	if d, ok := err.(diag.Diagnostic); ok && len(d.Description().ResourceID) > 0 {
-		resIdList := []string{
-			client.AccountID,
-			client.Region,
-		}
-
-		// remove accountID and region from PK list as we always prepend them
-		for _, val := range d.Description().ResourceID {
-			if val != client.AccountID && val != client.Region {
-				resIdList = append(resIdList, val)
-			}
-		}
-
-		resIdOverride = diag.WithResourceId(resIdList)
-	}
-
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
@@ -45,7 +27,7 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 					diag.WithSeverity(diag.WARNING),
 					ParseSummaryMessage(err),
 					diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]),
-					resIdOverride,
+					includeResourceIdWithAccount(client, err),
 				)),
 			}
 		case "InvalidAction":
@@ -56,7 +38,7 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 					diag.WithSeverity(diag.IGNORE),
 					ParseSummaryMessage(err),
 					diag.WithDetails("The action is invalid for the service."),
-					resIdOverride,
+					includeResourceIdWithAccount(client, err),
 				)),
 			}
 		}
@@ -69,7 +51,7 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 				diag.WithSeverity(diag.WARNING),
 				ParseSummaryMessage(err),
 				diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."),
-				resIdOverride,
+				includeResourceIdWithAccount(client, err),
 			)),
 		}
 	}
@@ -77,7 +59,7 @@ func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) dia
 	// Take over from SDK and always return diagnostics, redacting PII
 	if d, ok := err.(diag.Diagnostic); ok {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, diag.NewBaseError(d, d.Type(), resIdOverride)),
+			RedactError(client.Accounts, diag.NewBaseError(d, d.Type(), includeResourceIdWithAccount(client, err))),
 		}
 	}
 
@@ -189,4 +171,25 @@ func removePII(aa []Account, msg string) string {
 	msg = accountObfusactor(aa, msg)
 
 	return msg
+}
+
+func includeResourceIdWithAccount(client *Client, err error) diag.BaseErrorOption {
+	d, ok := err.(diag.Diagnostic)
+	if !ok || len(d.Description().ResourceID) == 0 {
+		return func(_ *diag.BaseError) {} // no-op option
+	}
+
+	resIdList := []string{
+		client.AccountID,
+		client.Region,
+	}
+
+	// remove accountID and region from PK list as we always prepend them
+	for _, val := range d.Description().ResourceID {
+		if val != client.AccountID && val != client.Region {
+			resIdList = append(resIdList, val)
+		}
+	}
+
+	return diag.WithResourceId(resIdList)
 }
