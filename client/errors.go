@@ -16,37 +16,81 @@ import (
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
 
+	resIdOverride := func(_ *diag.BaseError) {} // no-op option
+
+	if d, ok := err.(diag.Diagnostic); ok && len(d.Description().ResourceID) > 0 {
+		idsFromDiag := d.Description().ResourceID
+		// remove accountID and region from PK list as we always prepend them
+		i := 0
+		for _, val := range idsFromDiag {
+			if val == client.AccountID || val == client.Region {
+				continue
+			}
+			idsFromDiag[i] = val
+			i++
+		}
+
+		resIdOverride = diag.WithResourceId(append(
+			[]string{
+				client.AccountID,
+				client.Region,
+			},
+			idsFromDiag[:i]...,
+		))
+	}
+
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
 		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err, diag.ACCESS, diag.WithType(diag.ACCESS), ParseSummaryMessage(err),
-					diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]), diag.WithNoOverwrite(), diag.WithSeverity(diag.WARNING))),
+				RedactError(client.Accounts, diag.NewBaseError(err,
+					diag.ACCESS,
+					diag.WithType(diag.ACCESS),
+					diag.WithSeverity(diag.WARNING),
+					ParseSummaryMessage(err),
+					diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]),
+					resIdOverride,
+				)),
 			}
 		case "InvalidAction":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err, diag.RESOLVING, diag.WithType(diag.RESOLVING), diag.WithSeverity(diag.IGNORE), ParseSummaryMessage(err),
-					diag.WithDetails("The action is invalid for the service."))),
+				RedactError(client.Accounts, diag.NewBaseError(err,
+					diag.RESOLVING,
+					diag.WithType(diag.RESOLVING),
+					diag.WithSeverity(diag.IGNORE),
+					ParseSummaryMessage(err),
+					diag.WithDetails("The action is invalid for the service."),
+					resIdOverride,
+				)),
 			}
 		}
 	}
 	if IsErrorThrottle(err) {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, diag.NewBaseError(err, diag.THROTTLE, diag.WithType(diag.THROTTLE), diag.WithSeverity(diag.WARNING), ParseSummaryMessage(err),
-				diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."))),
+			RedactError(client.Accounts, diag.NewBaseError(err,
+				diag.THROTTLE,
+				diag.WithType(diag.THROTTLE),
+				diag.WithSeverity(diag.WARNING),
+				ParseSummaryMessage(err),
+				diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."),
+				resIdOverride,
+			)),
 		}
 	}
 
 	// Take over from SDK and always return diagnostics, redacting PII
 	if d, ok := err.(diag.Diagnostic); ok {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, d),
+			RedactError(client.Accounts, diag.NewBaseError(d, d.Type(), resIdOverride)),
 		}
 	}
 
 	return diag.Diagnostics{
-		RedactError(client.Accounts, diag.NewBaseError(err, diag.RESOLVING, diag.WithResourceName(resourceName))),
+		RedactError(client.Accounts, diag.NewBaseError(err,
+			diag.RESOLVING,
+			diag.WithResourceName(resourceName),
+		)),
 	}
 }
 
