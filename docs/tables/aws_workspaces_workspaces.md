@@ -6,6 +6,7 @@ Describes a WorkSpace.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|arn|text|The Amazon Resource Name (ARN) for the workspaces workspace|
 |bundle_id|text|The identifier of the bundle used to create the WorkSpace.|
 |computer_name|text|The name of the WorkSpace, as seen by the operating system|
 |directory_id|text|The identifier of the Directory Service directory for the WorkSpace.|

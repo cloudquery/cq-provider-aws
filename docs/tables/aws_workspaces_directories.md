@@ -6,6 +6,7 @@ Describes a directory that is used with Amazon WorkSpaces.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|arn|text|The Amazon Resource Name (ARN) for the workspaces directory|
 |alias|text|The directory alias.|
 |customer_user_name|text|The user name for the service account.|
 |id|text|The directory identifier.|
