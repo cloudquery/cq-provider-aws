@@ -29,6 +29,20 @@ provider "aws" {
     }
   }
 
+  resource "acm.certificates" {
+    ignore_attributes = [ "created_at", "imported_at" ]
+
+    iac {
+      terraform {
+        type = "aws_acm_certificate"
+        identifiers = [ "arn" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
+
   resource "apigateway.api_keys" {
     iac {
       terraform {
@@ -331,7 +345,20 @@ provider "aws" {
     }
   }
 
-  # TODO: apigatewayv2.domain_names (no data in tests)
+  resource "apigatewayv2.domain_names" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created_at", "imported_at" ]
+
+    iac {
+      terraform {
+        type = "aws_apigatewayv2_domain_name"
+        identifiers = [ "arn" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
 
   # TODO: aws_apigatewayv2_domain_name_configurations (no data in tests)
 
@@ -341,6 +368,21 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_apigatewayv2_vpc_link"
+      }
+    }
+  }
+
+  resource "autoscaling.groups" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created_time" ]
+
+    iac {
+      terraform {
+        type = "aws_autoscaling_group"
+        identifiers = [ "arn" ]
+
+        attribute_map = [
+        ]
       }
     }
   }
@@ -519,6 +561,21 @@ provider "aws" {
     }
   }
 
+  resource "codebuild.projects" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created" ]
+
+    iac {
+      terraform {
+        type = "aws_codebuild_project"
+        identifiers = [ "arn" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
+
   resource "cognito.identity_pools" {
     iac {
       terraform {
@@ -610,12 +667,72 @@ provider "aws" {
 
   # TODO: aws_directconnect_virtual_interface_bgp_peers (no data in tests)
 
+  resource "dms.replication_instances" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "instance_create_time" ]
+
+    iac {
+      terraform {
+        type = "aws_dms_replication_instance"
+        identifiers = [ "replication_instance_arn" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
+
+  resource "dynamodb.tables" {
+    identifiers = [ "name", "region" ]
+    ignore_attributes = [ "creation_date_time" ]
+    // filter by global_table_version to be null/empty or != V1 (version 2017.11.29)
+
+    iac {
+      terraform {
+        type = "aws_dynamodb_table"
+        identifiers = [ "name", "region" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
+
+  resource "dynamodb.tables" {
+    identifiers = [ "name" ]
+    ignore_attributes = [ "creation_date_time" ]
+    // filter by global_table_version to be == V1 (version 2017.11.29)
+
+    iac {
+      terraform {
+        type = "aws_dynamodb_global_table"
+        identifiers = [ "replication_instance_arn" ]
+
+        attribute_map = [
+        ]
+      }
+    }
+  }
+
   # TODO: ec2.byoip_cidrs (no data in tests)
 
   resource "ec2.customer_gateways" {
     iac {
       terraform {
         type = "aws_customer_gateway"
+      }
+    }
+  }
+
+  resource "ec2.ebs_snapshots" {
+    ignore_attributes = [ "start_time" ]
+
+    iac {
+      terraform {
+        type = "aws_ebs_snapshot"
+
+        attribute_map = [
+        ]
       }
     }
   }
@@ -635,6 +752,15 @@ provider "aws" {
         type = "aws_instance"
         path = "root_block_device"
         identifiers =  [ "root.id", "volume_id", "device_name" ]
+      }
+    }
+  }
+
+  resource "ec2.eips" {
+    iac {
+      terraform {
+        type = "aws_eip"
+        identifiers = [ "allocation_id" ]
       }
     }
   }
@@ -724,7 +850,7 @@ provider "aws" {
   #            }
   #        }
 
-  # Unmatched: ec2.regional_config (needed?)
+  # Unmatched: ec2.regional_config (aws_ebs_default_kms_key AND aws_ebs_encryption_by_default, by region)
 
   resource "ec2.route_tables" {
     filters = [
@@ -821,6 +947,17 @@ provider "aws" {
     }
   }
 
+  resource "ecs.task_definitions" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "registered_at", "registered_by", "deregistered_at" ]
+
+    iac {
+      terraform {
+        type = "aws_ecs_task_definition"
+      }
+    }
+  }
+
   resource "efs.filesystems" {
     iac {
       terraform {
@@ -838,6 +975,19 @@ provider "aws" {
       }
     }
   }
+
+  resource "elasticbeanstalk.applications" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "date_created", "date_updated", "versions" ]
+
+    iac {
+      terraform {
+        type = "aws_elastic_beanstalk_application"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
 
   resource "elasticbeanstalk.environments" {
     iac {
@@ -897,6 +1047,28 @@ provider "aws" {
       }
     }
   }
+
+  resource "guardduty.detectors" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created_at", "updated_at" ]
+
+    iac {
+      terraform {
+        type = "aws_guardduty_detector"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+#  resource "iam.accounts" {
+#    identifiers = [ "aliases" ]
+#    iac {
+#      terraform {
+#        type = "aws_iam_account_alias"
+#        identifiers = [ "aliases" ]
+#      }
+#    }
+#  }
 
   resource "iam.groups" {
     identifiers = [ "name" ]
@@ -1223,7 +1395,7 @@ provider "aws" {
     }
   }
 
-  # Unmatched: organizations.accounts
+  # TODO: organizations.accounts (no data in tests)
 
   # Unmatched: rds.certificates (mode: data)
 
@@ -1236,6 +1408,84 @@ provider "aws" {
     }
   }
 
+  resource "rds.cluster_parameter_groups" {
+    iac {
+      terraform {
+        type = "aws_rds_cluster_parameter_group"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+#  resource "aws_rds_cluster_parameters" {
+#    iac {
+#      terraform {
+#        type = "aws_rds_cluster_parameter_group"
+#        identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
+#        attribute_map = [
+#          "parameter_name=parameter.#.name|@flatten|0",
+#          "parameter_value=parameter.#.value|@flatten|0",
+#        ]
+#      }
+#    }
+#  }
+
+  resource "rds.cluster_snapshots" {
+    identifiers = [ "db_cluster_identifier", "arn" ]
+    ignore_attributes = [ "snapshot_create_time" ]
+    iac {
+      terraform {
+        type = "aws_db_cluster_snapshot"
+        identifiers = [ "db_cluster_identifier", "db_cluster_snapshot_arn" ]
+      }
+    }
+  }
+
+  resource "rds.db_parameter_groups" {
+    identifiers = [ "arn" ]
+    iac {
+      terraform {
+        type = "aws_db_parameter_group"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+#  resource "aws_rds_db_parameters" {
+#    identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
+#    iac {
+#      terraform {
+#        type = "aws_db_parameter_group"
+#        identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
+#        attribute_map = [
+#          "parameter_name=parameter.#.name|@flatten|0",
+#          "parameter_value=parameter.#.value|@flatten|0",
+#        ]
+#      }
+#    }
+#  }
+
+  resource "rds.db_security_groups" {
+    identifiers = [ "arn" ]
+    iac {
+      terraform {
+        type = "aws_db_security_group"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+  resource "rds.db_snapshots" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "db_instance_identifier", "snapshot_create_time" ]
+    iac {
+      terraform {
+        type = "aws_db_snapshot"
+        identifiers = [ "db_instance_identifier", "db_snapshot_arn" ]
+      }
+    }
+  }
+
   resource "rds.db_subnet_groups" {
     identifiers = [ "name" ]
     filters = [
@@ -1244,6 +1494,16 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_db_subnet_group"
+      }
+    }
+  }
+
+  resource "rds.event_subscriptions" {
+    identifiers = [ "arn" ]
+    iac {
+      terraform {
+        type = "aws_db_event_subscription"
+        identifiers = [ "arn" ]
       }
     }
   }
@@ -1292,7 +1552,14 @@ provider "aws" {
     }
   }
 
-  # TODO: route53.domains ("aws_route53_record" but no data in tests)
+  resource "route53.domains" {
+    iac {
+      terraform {
+        type = "aws_route53domains_registered_domain"
+        identifiers = [ "domain_name" ]
+      }
+    }
+  }
 
   resource "route53.health_checks" {
     iac {
@@ -1321,12 +1588,62 @@ provider "aws" {
 
   # TODO: route53.traffic_policies (no data in tests)
 
+#  resource "s3.accounts" {
+#    ignore_attributes = [ "config_exists" ]
+#
+#    iac {
+#      terraform {
+#        type = "aws_s3_account_public_access_block"
+#      }
+#    }
+#  }
+
   resource "s3.buckets" {
     ignore_attributes = [ "name" ]
 
     iac {
       terraform {
         type = "aws_s3_bucket"
+      }
+    }
+  }
+
+  resource "sagemaker.endpoint_configurations" {
+    ignore_attributes = [ "creation_time" ]
+    iac {
+      terraform {
+        type = "aws_sagemaker_endpoint_configuration"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+  resource "sagemaker.models" {
+    ignore_attributes = [ "creation_time" ]
+    iac {
+      terraform {
+        type = "aws_sagemaker_model"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
+  resource "sagemaker.notebook_instances" {
+    ignore_attributes = ["creation_time", "last_modified_time"]
+    iac {
+      terraform {
+        type        = "aws_sagemaker_notebook_instance"
+        identifiers = ["arn"]
+      }
+    }
+  }
+
+  resource "secretsmanager.secrets" {
+    ignore_attributes = [ "created_date", "deleted_date", "last_accessed_date", "last_changed_date", "last_rotated_date" ]
+    iac {
+      terraform {
+        type = "aws_secretsmanager_secret"
+        identifiers = ["arn"]
       }
     }
   }
@@ -1354,6 +1671,16 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_sqs_queue"
+      }
+    }
+  }
+
+  resource "ssm.documents" {
+    ignore_attributes = [ "created_date" ]
+    iac {
+      terraform {
+        type = "aws_ssm_document"
+        identifiers = ["arn"]
       }
     }
   }
