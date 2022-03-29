@@ -3,6 +3,7 @@ package workspaces
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces/types"
@@ -33,6 +34,12 @@ func Workspaces() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the workspaces workspace",
+				Type:        schema.TypeString,
+				Resolver:    ResolveWorkspacesWorkspaceArn,
 			},
 			{
 				Name:        "bundle_id",
@@ -174,4 +181,9 @@ func resolveWorkspacesModificationStates(_ context.Context, _ schema.ClientMeta,
 		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
+}
+func ResolveWorkspacesWorkspaceArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	workspace := resource.Item.(types.Workspace)
+	return resource.Set(c.Name, client.GenerateResourceARN("workspaces", "workspace", *workspace.WorkspaceId, cl.Region, cl.AccountID))
 }

@@ -2,8 +2,10 @@ package workspaces
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
+	"github.com/aws/aws-sdk-go-v2/service/workspaces/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -31,6 +33,12 @@ func Directories() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) for the workspaces directory",
+				Type:        schema.TypeString,
+				Resolver:    ResolveWorkspacesDirectoryArn,
 			},
 			{
 				Name:        "alias",
@@ -240,4 +248,9 @@ func fetchWorkspacesDirectories(ctx context.Context, meta schema.ClientMeta, _ *
 		input.NextToken = output.NextToken
 	}
 	return nil
+}
+func ResolveWorkspacesDirectoryArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	dir := resource.Item.(types.WorkspaceDirectory)
+	return resource.Set(c.Name, client.GenerateResourceARN("workspaces", "directory", *dir.DirectoryId, cl.Region, cl.AccountID))
 }

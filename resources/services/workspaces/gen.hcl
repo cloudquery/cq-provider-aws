@@ -47,6 +47,12 @@ resource "aws" "workspaces" "workspaces" {
     type              = "JSON"
     generate_resolver = true
   }
+
+  userDefinedColumn "arn" {
+    type        = "string"
+    description = "The Amazon Resource Name (ARN) for the workspaces workspace"
+    generate_resolver = true
+  }
 }
 
 resource "aws" "workspaces" "directories" {
@@ -104,5 +110,11 @@ resource "aws" "workspaces" "directories" {
 
   column "selfservice_permissions" {
     skip_prefix = true
+  }
+
+  userDefinedColumn "arn" {
+    type        = "string"
+    description = "The Amazon Resource Name (ARN) for the workspaces directory"
+    generate_resolver = true
   }
 }
