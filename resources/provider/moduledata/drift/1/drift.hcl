@@ -1451,18 +1451,23 @@ provider "aws" {
     }
   }
 
-#  resource "aws_rds_cluster_parameters" {
-#    iac {
-#      terraform {
-#        type = "aws_rds_cluster_parameter_group"
-#        identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
-#        attribute_map = [
-#          "parameter_name=parameter.#.name|@flatten|0",
-#          "parameter_value=parameter.#.value|@flatten|0",
-#        ]
-#      }
-#    }
-#  }
+  resource "aws_rds_cluster_parameters" {
+    identifiers = [ "parent.arn", "c.parameter_name" ]
+    ignore_attributes = [ "allowed_values", "apply_type", "data_type", "description", "is_modifiable", "minimum_engine_version", "source", "supported_engine_modes" ]
+    filters = [ "c.source NOT IN ('engine-default', 'system')" ]
+
+    iac {
+      terraform {
+        type = "aws_rds_cluster_parameter_group"
+        identifiers = [ "arn", "parameter.#.name" ]
+        attribute_map = [
+          "parameter_name=parameter.#.name",
+          "parameter_value=parameter.#.value",
+          "apply_method=parameter.#.apply_method",
+        ]
+      }
+    }
+  }
 
   resource "rds.cluster_snapshots" {
     identifiers = [ "db_cluster_identifier", "arn" ]
@@ -1485,19 +1490,24 @@ provider "aws" {
     }
   }
 
-#  resource "aws_rds_db_parameters" {
-#    identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
-#    iac {
-#      terraform {
-#        type = "aws_db_parameter_group"
-#        identifiers = [ "parent.arn", "c.parameter_name", "c.parameter_value" ]
-#        attribute_map = [
-#          "parameter_name=parameter.#.name|@flatten|0",
-#          "parameter_value=parameter.#.value|@flatten|0",
-#        ]
-#      }
-#    }
-#  }
+  resource "aws_rds_db_parameters" {
+    identifiers = [ "parent.arn", "c.parameter_name" ]
+    ignore_attributes = [ "allowed_values", "apply_type", "data_type", "description", "is_modifiable", "minimum_engine_version", "source", "supported_engine_modes" ]
+    filters = [ "c.source NOT IN ('engine-default', 'system')" ]
+
+    iac {
+      terraform {
+        type = "aws_db_parameter_group"
+        identifiers = [ "arn", "parameter.#.name" ]
+        attribute_map = [
+          "parameter_name=parameter.#.name",
+          "parameter_value=parameter.#.value",
+          "apply_method=parameter.#.apply_method",
+        ]
+      }
+    }
+  }
+
 
   resource "rds.db_security_groups" {
     identifiers = [ "arn" ]
