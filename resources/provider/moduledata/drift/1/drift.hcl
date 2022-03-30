@@ -30,7 +30,30 @@ provider "aws" {
   }
 
   resource "acm.certificates" {
-    ignore_attributes = [ "created_at", "imported_at" ]
+    ignore_attributes = [
+      "created_at",
+      "extended_key_usages",
+      "failure_reason",
+      "imported_at",
+      "in_use_by",
+      "issued_at",
+      "issuer",
+      "key_algorithm",
+      "key_usages",
+      "not_after",
+      "not_before",
+      "renewal_eligibility",
+      "renewal_summary_domain_validation_options",
+      "renewal_summary_status",
+      "renewal_summary_updated_at",
+      "renewal_summary_failure_reason",
+      "revocation_reason",
+      "revoked_at",
+      "serial",
+      "signature_algorithm",
+      "subject",
+      "type"
+    ]
 
     iac {
       terraform {
@@ -38,6 +61,7 @@ provider "aws" {
         identifiers = [ "arn" ]
 
         attribute_map = [
+          "certificate_transparency_logging_preference=options.0.certificate_transparency_logging_preference"
         ]
       }
     }
@@ -347,7 +371,7 @@ provider "aws" {
 
   resource "apigatewayv2.domain_names" {
     identifiers = [ "arn" ]
-    ignore_attributes = [ "created_at", "imported_at" ]
+    ignore_attributes = [ "mutual_tls_authentication_truststore_warnings" ]
 
     iac {
       terraform {
@@ -355,6 +379,8 @@ provider "aws" {
         identifiers = [ "arn" ]
 
         attribute_map = [
+          "mutual_tls_authentication_truststore_uri=mutual_tls_authentication.0.truststore_uri",
+          "mutual_tls_authentication_truststore_version=mutual_tls_authentication.0.truststore_version"
         ]
       }
     }
@@ -374,7 +400,8 @@ provider "aws" {
 
   resource "autoscaling.groups" {
     identifiers = [ "arn" ]
-    ignore_attributes = [ "created_time" ]
+    ignore_attributes = [ "created_time", "load_balancers", "notifications_configurations", "metrics", "status" ]
+    sets = [ "availability_zones" ]
 
     iac {
       terraform {
@@ -382,6 +409,16 @@ provider "aws" {
         identifiers = [ "arn" ]
 
         attribute_map = [
+#          "load_balancer_target_groups=target_group_arns", # object keys to array? TODO
+#          "suspended_processes=suspended_processes", # object keys to array? TODO
+#          "vpc_zone_identifier=vpc_zone_identifier", # comma-separated string to array? TODO
+          "load_balancer_names=load_balancers",
+          "launch_configuration_name=launch_configuration",
+          "launch_template_id=launch_template.0.id",
+          "launch_template_name=launch_template.0.name",
+          "launch_template_version=launch_template.0.version",
+          "new_instances_protected_from_scale_in=protect_from_scale_in",
+          "mixed_instances_policy=mixed_instances_policy.0"
         ]
       }
     }
@@ -569,9 +606,6 @@ provider "aws" {
       terraform {
         type = "aws_codebuild_project"
         identifiers = [ "arn" ]
-
-        attribute_map = [
-        ]
       }
     }
   }
@@ -675,9 +709,6 @@ provider "aws" {
       terraform {
         type = "aws_dms_replication_instance"
         identifiers = [ "replication_instance_arn" ]
-
-        attribute_map = [
-        ]
       }
     }
   }
@@ -685,34 +716,32 @@ provider "aws" {
   resource "dynamodb.tables" {
     identifiers = [ "name", "region" ]
     ignore_attributes = [ "creation_date_time" ]
-    // filter by global_table_version to be null/empty or != V1 (version 2017.11.29)
+    filters = [
+      "c.global_table_version IS NULL OR c.global_table_version != '2017.11.29'"
+    ]
 
     iac {
       terraform {
         type = "aws_dynamodb_table"
         identifiers = [ "name", "region" ]
-
-        attribute_map = [
-        ]
       }
     }
   }
 
-  resource "dynamodb.tables" {
-    identifiers = [ "name" ]
-    ignore_attributes = [ "creation_date_time" ]
-    // filter by global_table_version to be == V1 (version 2017.11.29)
-
-    iac {
-      terraform {
-        type = "aws_dynamodb_global_table"
-        identifiers = [ "replication_instance_arn" ]
-
-        attribute_map = [
-        ]
-      }
-    }
-  }
+#  resource "dynamodb.tables" {
+#    identifiers = [ "name" ]
+#    ignore_attributes = [ "creation_date_time" ]
+#    filters = [
+#      "c.global_table_version='2017.11.29'"
+#    ]
+#
+#    iac {
+#      terraform {
+#        type = "aws_dynamodb_global_table"
+#        identifiers = [ "replication_instance_arn" ]
+#      }
+#    }
+#  }
 
   # TODO: ec2.byoip_cidrs (no data in tests)
 
@@ -730,9 +759,6 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_ebs_snapshot"
-
-        attribute_map = [
-        ]
       }
     }
   }
@@ -757,10 +783,15 @@ provider "aws" {
   }
 
   resource "ec2.eips" {
+    ignore_attributes = [ "network_interface_owner_id" ]
     iac {
       terraform {
         type = "aws_eip"
         identifiers = [ "allocation_id" ]
+        attribute_map = [
+          "network_interface_id=network_interface",
+          "private_ip_address=private_ip"
+        ]
       }
     }
   }
@@ -949,11 +980,14 @@ provider "aws" {
 
   resource "ecs.task_definitions" {
     identifiers = [ "arn" ]
-    ignore_attributes = [ "registered_at", "registered_by", "deregistered_at" ]
+    ignore_attributes = [ "registered_at", "registered_by", "deregistered_at", "requires_attributes" ]
 
     iac {
       terraform {
         type = "aws_ecs_task_definition"
+        attribute_map = [
+          "compatibilities=requires_compatibilities"
+        ]
       }
     }
   }
@@ -1476,8 +1510,8 @@ provider "aws" {
   }
 
   resource "rds.db_snapshots" {
-    identifiers = [ "arn" ]
-    ignore_attributes = [ "db_instance_identifier", "snapshot_create_time" ]
+    identifiers = [ "db_instance_identifier", "arn" ]
+    ignore_attributes = [ "snapshot_create_time" ]
     iac {
       terraform {
         type = "aws_db_snapshot"
@@ -1500,10 +1534,18 @@ provider "aws" {
 
   resource "rds.event_subscriptions" {
     identifiers = [ "arn" ]
+    ignore_attributes = [ "cust_subscription_id", "subscription_creation_time" ]
+    sets = [ "event_categories_list", "source_id_list" ]
     iac {
       terraform {
         type = "aws_db_event_subscription"
         identifiers = [ "arn" ]
+        attribute_map = [
+          "event_categories_list=event_categories",
+          "sns_topic_arn=sns_topic",
+          "source_id_list=source_ids",
+          "status=enabled|@iftrue:active"
+        ]
       }
     }
   }
@@ -1629,11 +1671,16 @@ provider "aws" {
   }
 
   resource "sagemaker.notebook_instances" {
-    ignore_attributes = ["creation_time", "last_modified_time"]
+    ignore_attributes = ["creation_time", "last_modified_time", "notebook_instance_status", "accelerator_types" ]
     iac {
       terraform {
         type        = "aws_sagemaker_notebook_instance"
         identifiers = ["arn"]
+        attribute_map = [
+          "volume_size_in_gb=volume_size",
+          "direct_internet_access=direct_internet_access|@if:Enabled,true",
+          "notebook_instance_lifecycle_config_name=lifecycle_config_name"
+        ]
       }
     }
   }
@@ -1677,6 +1724,7 @@ provider "aws" {
 
   resource "ssm.documents" {
     ignore_attributes = [ "created_date" ]
+    sets = [ "platform_types" ]
     iac {
       terraform {
         type = "aws_ssm_document"
