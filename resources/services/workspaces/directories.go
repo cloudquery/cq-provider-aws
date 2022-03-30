@@ -38,7 +38,9 @@ func Directories() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the workspaces directory",
 				Type:        schema.TypeString,
-				Resolver:    ResolveWorkspacesDirectoryArn,
+				Resolver:    client.ResolveARN(client.WorkspacesService, func(resource *schema.Resource) ([]string, error) {
+					return []string{"directory", *resource.Item.(types.WorkspaceDirectory).DirectoryId}, nil
+				}),
 			},
 			{
 				Name:        "alias",
@@ -248,9 +250,4 @@ func fetchWorkspacesDirectories(ctx context.Context, meta schema.ClientMeta, _ *
 		input.NextToken = output.NextToken
 	}
 	return nil
-}
-func ResolveWorkspacesDirectoryArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	cl := meta.(*client.Client)
-	dir := resource.Item.(types.WorkspaceDirectory)
-	return resource.Set(c.Name, client.GenerateResourceARN("workspaces", "directory", *dir.DirectoryId, cl.Region, cl.AccountID))
 }

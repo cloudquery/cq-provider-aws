@@ -51,7 +51,7 @@ resource "aws" "workspaces" "workspaces" {
   userDefinedColumn "arn" {
     type        = "string"
     description = "The Amazon Resource Name (ARN) for the workspaces workspace"
-    generate_resolver = true
+    generate_resolver = false
   }
 }
 
@@ -115,6 +115,6 @@ resource "aws" "workspaces" "directories" {
   userDefinedColumn "arn" {
     type        = "string"
     description = "The Amazon Resource Name (ARN) for the workspaces directory"
-    generate_resolver = true
+    generate_resolver = false
   }
 }

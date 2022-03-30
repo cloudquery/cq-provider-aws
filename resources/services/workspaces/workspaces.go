@@ -39,7 +39,9 @@ func Workspaces() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the workspaces workspace",
 				Type:        schema.TypeString,
-				Resolver:    ResolveWorkspacesWorkspaceArn,
+				Resolver: client.ResolveARN(client.WorkspacesService, func(resource *schema.Resource) ([]string, error) {
+					return []string{"workspace", *resource.Item.(types.Workspace).WorkspaceId}, nil
+				}),
 			},
 			{
 				Name:        "bundle_id",
@@ -181,9 +183,4 @@ func resolveWorkspacesModificationStates(_ context.Context, _ schema.ClientMeta,
 		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, data)
-}
-func ResolveWorkspacesWorkspaceArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	cl := meta.(*client.Client)
-	workspace := resource.Item.(types.Workspace)
-	return resource.Set(c.Name, client.GenerateResourceARN("workspaces", "workspace", *workspace.WorkspaceId, cl.Region, cl.AccountID))
 }
