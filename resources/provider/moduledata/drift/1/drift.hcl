@@ -1459,11 +1459,11 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_rds_cluster_parameter_group"
-        identifiers = [ "arn", "parameter.#.name" ]
+        path = "parameter"
+        identifiers = [ "root.arn", "name" ]
         attribute_map = [
-          "parameter_name=parameter.#.name",
-          "parameter_value=parameter.#.value",
-          "apply_method=parameter.#.apply_method",
+          "parameter_name=name",
+          "parameter_value=value"
         ]
       }
     }
@@ -1498,11 +1498,11 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_db_parameter_group"
-        identifiers = [ "arn", "parameter.#.name" ]
+        path = "parameter"
+        identifiers = [ "root.arn", "name" ]
         attribute_map = [
-          "parameter_name=parameter.#.name",
-          "parameter_value=parameter.#.value",
-          "apply_method=parameter.#.apply_method",
+          "parameter_name=name",
+          "parameter_value=value"
         ]
       }
     }
