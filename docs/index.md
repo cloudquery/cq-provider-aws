@@ -164,7 +164,7 @@ Using AWS Organization:
     ```
 
     2. Sourcing credentials from a named profile in the shared configuration or credentials file
-      
+
     ```hcl
         org {
           member_role_name = "OrganizationAccountAccessRole"
@@ -174,7 +174,8 @@ Using AWS Organization:
         }
     ```
 
-    3. Assuming a role in admin account using credentials in the shared configuration or credentials file: 
+    3. Assuming a role in admin account using credentials in the shared configuration or credentials file:
+
     ```hcl
         org {
           member_role_name = "OrganizationAccountAccessRole"
