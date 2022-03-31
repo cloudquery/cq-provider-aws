@@ -38,7 +38,7 @@ func Directories() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) for the workspaces directory",
 				Type:        schema.TypeString,
-				Resolver:    client.ResolveARN(client.WorkspacesService, func(resource *schema.Resource) ([]string, error) {
+				Resolver: client.ResolveARN(client.WorkspacesService, func(resource *schema.Resource) ([]string, error) {
 					return []string{"directory", *resource.Item.(types.WorkspaceDirectory).DirectoryId}, nil
 				}),
 			},
@@ -81,9 +81,10 @@ func Directories() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "ip_group_ids",
-				Description: "The identifiers of the IP access control groups associated with the directory.",
-				Type:        schema.TypeStringArray,
+				Name:          "ip_group_ids",
+				Description:   "The identifiers of the IP access control groups associated with the directory.",
+				Type:          schema.TypeStringArray,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "registration_code",
@@ -184,16 +185,18 @@ func Directories() *schema.Table {
 				Resolver:    schema.PathResolver("WorkspaceAccessProperties.DeviceTypeZeroClient"),
 			},
 			{
-				Name:        "custom_security_group_id",
-				Description: "The identifier of the default security group to apply to WorkSpaces when they are created",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("WorkspaceCreationProperties.CustomSecurityGroupId"),
+				Name:          "custom_security_group_id",
+				Description:   "The identifier of the default security group to apply to WorkSpaces when they are created",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("WorkspaceCreationProperties.CustomSecurityGroupId"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "default_ou",
-				Description: "The organizational unit (OU) in the directory for the WorkSpace machine accounts.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("WorkspaceCreationProperties.DefaultOu"),
+				Name:          "default_ou",
+				Description:   "The organizational unit (OU) in the directory for the WorkSpace machine accounts.",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("WorkspaceCreationProperties.DefaultOu"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "enable_internet_access",
