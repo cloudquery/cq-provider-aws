@@ -136,10 +136,11 @@ By default, CloudQuery will fetch all configuration from **all** supported resou
 CloudQuery supports discovery of AWS Accounts via AWS Organizations. This means that as Accounts get added or removed from your organization CloudQuery will be able to handle new or removed accounts without any configuration changes.
 
 Prerequisites for using AWS Org functionality:
-1. Have a role (or user) in an Admin account with the following access 
-  `organizations:ListAccounts`
-  `organizations:ListAccountsForParent`
-  `organizations:ListChildren`
+1. Have a role (or user) in an Admin account with the following access:
+
+  - `organizations:ListAccounts`
+  - `organizations:ListAccountsForParent`
+  - `organizations:ListChildren`
 
 2. Have a role in each child account that has a trust policy with a single principal. The default profile name is `OrganizationAccountAccessRole`. More information can be found [here](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_create-cross-account-role), including how to create the role if it doesn't already exist in your account.
 
@@ -154,6 +155,7 @@ Using AWS Organization:
 ```
 
 2. Getting credentials that have  the necessary `organizations` permissions:
+
     1. Sourcing Credentials from the default credential tool chain:
     ```hcl
         org {
@@ -171,6 +173,7 @@ Using AWS Organization:
           }
         }
     ```
+
     3. Assuming a role in admin account using credentials in the shared configuration or credentials file: 
     ```hcl
         org {
