@@ -131,7 +131,9 @@ By default, CloudQuery will fetch all configuration from **all** supported resou
 - `aws_debug` **(Optional)** - This will print very verbose/debug output from AWS SDK. Defaults to false.
 
 
-### Multi Account Configuration- AWS Organizations:
+## Multi Account Configuration
+
+### AWS Organizations:
 
 CloudQuery supports discovery of AWS Accounts via AWS Organizations. This means that as Accounts get added or removed from your organization CloudQuery will be able to handle new or removed accounts without any configuration changes.
 
@@ -244,7 +246,7 @@ Using AWS Organization:
 
 
 
-### Multi Account Configuration
+## Multi Account- Specific Accounts
 
 CloudQuery can fetch from multiple accounts in parallel by using AssumeRole (You will need to use credentials that can AssumeRole to all other specified account. Following is an example configuration:
 
