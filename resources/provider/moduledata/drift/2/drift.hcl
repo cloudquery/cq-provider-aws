@@ -881,7 +881,27 @@ provider "aws" {
   #            }
   #        }
 
-  # Unmatched: ec2.regional_config (aws_ebs_default_kms_key AND aws_ebs_encryption_by_default, by region)
+  resource "ec2.regional_config#key" { # TODO: add account/region support
+    identifiers = [ "ebs_default_kms_key_id" ]
+    ignore_attributes = [ "ebs_encryption_enabled_by_default" ]
+    iac {
+      terraform {
+        type = "aws_ebs_default_kms_key"
+        identifiers = [ "key_arn" ]
+      }
+    }
+  }
+
+  resource "ec2.regional_config#ebs" { # TODO: add account/region support
+    identifiers = [ sql("ebs_encryption_enabled_by_default::varchar") ]
+    ignore_attributes = [ "ebs_default_kms_key_id" ]
+    iac {
+      terraform {
+        type = "aws_ebs_default_kms_key"
+        identifiers = [ "enabled" ]
+      }
+    }
+  }
 
   resource "ec2.route_tables" {
     filters = [
