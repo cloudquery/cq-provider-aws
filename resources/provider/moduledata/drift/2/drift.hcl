@@ -728,20 +728,20 @@ provider "aws" {
     }
   }
 
-#  resource "dynamodb.tables" {
-#    identifiers = [ "name" ]
-#    ignore_attributes = [ "creation_date_time" ]
-#    filters = [
-#      "c.global_table_version='2017.11.29'"
-#    ]
-#
-#    iac {
-#      terraform {
-#        type = "aws_dynamodb_global_table"
-#        identifiers = [ "replication_instance_arn" ]
-#      }
-#    }
-#  }
+  resource "dynamodb.tables#globalv1" {
+    identifiers = [ "name" ]
+    ignore_attributes = [ "creation_date_time" ]
+    filters = [
+      "c.global_table_version='2017.11.29'"
+    ]
+
+    iac {
+      terraform {
+        type = "aws_dynamodb_global_table"
+        identifiers = [ "replication_instance_arn" ]
+      }
+    }
+  }
 
   # TODO: ec2.byoip_cidrs (no data in tests)
 
