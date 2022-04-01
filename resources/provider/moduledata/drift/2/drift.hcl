@@ -409,9 +409,9 @@ provider "aws" {
         identifiers = [ "arn" ]
 
         attribute_map = [
-          "load_balancer_target_groups|@keys=target_group_arns", # object keys to array? TODO
-          "suspended_processes|@keys=suspended_processes", # object keys to array? TODO
-          "vpc_zone_identifier|@split:,=vpc_zone_identifier", # comma-separated string to array? TODO
+          "load_balancer_target_groups|@keys=target_group_arns", # object keys to array
+          "suspended_processes|@keys=suspended_processes", # object keys to array
+          "vpc_zone_identifier|@split:,=vpc_zone_identifier", # comma-separated string to array
           "load_balancer_names=load_balancers",
           "launch_configuration_name=launch_configuration",
           "launch_template_id=launch_template.0.id",
