@@ -400,11 +400,8 @@ provider "aws" {
 
   resource "autoscaling.groups" {
     identifiers = [ "arn" ]
-    ignore_attributes = [
-      "created_time", "load_balancers", "notifications_configurations", "metrics", "status",
-      "load_balancer_target_groups", "suspended_processes", "vpc_zone_identifier" # These are supported in v2
-    ]
-    sets = [ "availability_zones" ]
+    ignore_attributes = [ "created_time", "load_balancers", "notifications_configurations", "metrics", "status" ]
+    sets = [ "availability_zones", "load_balancer_target_groups", "suspended_processes", "vpc_zone_identifier" ]
 
     iac {
       terraform {
@@ -412,6 +409,9 @@ provider "aws" {
         identifiers = [ "arn" ]
 
         attribute_map = [
+          "load_balancer_target_groups|@keys=target_group_arns", # object keys to array? TODO
+          "suspended_processes|@keys=suspended_processes", # object keys to array? TODO
+          "vpc_zone_identifier|@split:,=vpc_zone_identifier", # comma-separated string to array? TODO
           "load_balancer_names=load_balancers",
           "launch_configuration_name=launch_configuration",
           "launch_template_id=launch_template.0.id",
