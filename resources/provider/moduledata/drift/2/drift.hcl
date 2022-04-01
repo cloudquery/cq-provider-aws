@@ -1114,15 +1114,32 @@ provider "aws" {
     }
   }
 
-#  resource "iam.accounts" {
-#    identifiers = [ "aliases" ]
-#    iac {
-#      terraform {
-#        type = "aws_iam_account_alias"
-#        identifiers = [ "aliases" ]
-#      }
-#    }
-#  }
+  resource "iam.accounts#aliases" {
+    identifiers = [ sql("array_to_string(aliases,',')") ]
+    ignore_attributes = [
+      "users", "users_quota",
+      "groups", "groups_quota",
+      "server_certificates", "server_certificates_quota",
+      "user_policy_size_quota", "group_policy_size_quota", "groups_per_user_quota",
+      "signing_certificates_per_user_quota", "access_keys_per_user_quota",
+      "mfa_devices", "mfa_devices_in_use", "account_mfa_enabled",
+      "account_access_keys_present", "account_signing_certificates_present",
+      "attached_policies_per_group_quota", "policies", "policies_quota", "policy_size_quota", "policy_versions_in_use", "policy_versions_in_use_quota",
+      "versions_per_policy_quota", "global_endpoint_token_version"
+    ]
+    filters = [
+      "aliases IS NOT NULL"
+    ]
+    iac {
+      terraform {
+        type = "aws_iam_account_alias"
+        identifiers = [ "account_alias" ]
+        attribute_map = [
+          "aliases|0=account_alias"
+        ]
+      }
+    }
+  }
 
   resource "iam.groups" {
     identifiers = [ "name" ]
