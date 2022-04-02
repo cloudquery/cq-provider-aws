@@ -40,9 +40,10 @@ func Clusters() *schema.Table {
 				Type:        schema.TypeInt,
 			},
 			{
-				Name:        "attachments_status",
-				Description: "The status of the capacity providers associated with the cluster",
-				Type:        schema.TypeString,
+				Name:          "attachments_status",
+				Description:   "The status of the capacity providers associated with the cluster",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "capacity_providers",
@@ -62,10 +63,11 @@ func Clusters() *schema.Table {
 				Resolver:    schema.PathResolver("ClusterName"),
 			},
 			{
-				Name:        "execute_config_kms_key_id",
-				Description: "Specify an Key Management Service key ID to encrypt the data between the local client and the container.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.KmsKeyId"),
+				Name:          "execute_config_kms_key_id",
+				Description:   "Specify an Key Management Service key ID to encrypt the data between the local client and the container.",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("Configuration.ExecuteCommandConfiguration.KmsKeyId"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "execute_config_logs_cloud_watch_encryption_enabled",
@@ -74,16 +76,18 @@ func Clusters() *schema.Table {
 				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.CloudWatchEncryptionEnabled"),
 			},
 			{
-				Name:        "execute_config_log_cloud_watch_log_group_name",
-				Description: "The name of the CloudWatch log group to send logs to",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.CloudWatchLogGroupName"),
+				Name:          "execute_config_log_cloud_watch_log_group_name",
+				Description:   "The name of the CloudWatch log group to send logs to",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.CloudWatchLogGroupName"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "execute_config_log_s3_bucket_name",
-				Description: "The name of the S3 bucket to send logs to",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.S3BucketName"),
+				Name:          "execute_config_log_s3_bucket_name",
+				Description:   "The name of the S3 bucket to send logs to",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.S3BucketName"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "execute_config_log_s3_encryption_enabled",
@@ -92,10 +96,11 @@ func Clusters() *schema.Table {
 				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.S3EncryptionEnabled"),
 			},
 			{
-				Name:        "execute_config_log_s3_key_prefix",
-				Description: "An optional folder in the S3 bucket to place logs in.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.S3KeyPrefix"),
+				Name:          "execute_config_log_s3_key_prefix",
+				Description:   "An optional folder in the S3 bucket to place logs in.",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("Configuration.ExecuteCommandConfiguration.LogConfiguration.S3KeyPrefix"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "execute_config_logging",
@@ -150,10 +155,11 @@ func Clusters() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_ecs_cluster_attachments",
-				Description: "An object representing a container instance or task attachment.",
-				Resolver:    fetchEcsClusterAttachments,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"cluster_cq_id", "id"}},
+				Name:          "aws_ecs_cluster_attachments",
+				Description:   "An object representing a container instance or task attachment.",
+				Resolver:      fetchEcsClusterAttachments,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"cluster_cq_id", "id"}},
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
@@ -522,10 +528,11 @@ func Clusters() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:        "capacity_provider_strategy",
-						Description: "The capacity provider strategy the service uses",
-						Type:        schema.TypeJSON,
-						Resolver:    resolveClusterServicesCapacityProviderStrategy,
+						Name:          "capacity_provider_strategy",
+						Description:   "The capacity provider strategy the service uses",
+						Type:          schema.TypeJSON,
+						Resolver:      resolveClusterServicesCapacityProviderStrategy,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "cluster_arn",
@@ -634,14 +641,16 @@ func Clusters() *schema.Table {
 						Resolver:    resolveClusterServicesPlacementStrategy,
 					},
 					{
-						Name:        "platform_family",
-						Description: "The operating system that your tasks in the service run on",
-						Type:        schema.TypeString,
+						Name:          "platform_family",
+						Description:   "The operating system that your tasks in the service run on",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
-						Name:        "platform_version",
-						Description: "The platform version to run your service on",
-						Type:        schema.TypeString,
+						Name:          "platform_version",
+						Description:   "The platform version to run your service on",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "propagate_tags",
@@ -862,9 +871,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_service_service_registries",
-						Description: "The details for the service registry",
-						Resolver:    fetchEcsClusterServiceServiceRegistries,
+						Name:          "aws_ecs_cluster_service_service_registries",
+						Description:   "The details for the service registry",
+						Resolver:      fetchEcsClusterServiceServiceRegistries,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_service_cq_id",
@@ -895,9 +905,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_service_task_sets",
-						Description: "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
-						Resolver:    fetchEcsClusterServiceTaskSets,
+						Name:          "aws_ecs_cluster_service_task_sets",
+						Description:   "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
+						Resolver:      fetchEcsClusterServiceTaskSets,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_service_cq_id",
@@ -906,10 +917,11 @@ func Clusters() *schema.Table {
 								Resolver:    schema.ParentIdResolver,
 							},
 							{
-								Name:        "capacity_provider_strategy",
-								Description: "The capacity provider strategy that are associated with the task set.",
-								Type:        schema.TypeJSON,
-								Resolver:    resolveClusterServiceTaskSetsCapacityProviderStrategy,
+								Name:          "capacity_provider_strategy",
+								Description:   "The capacity provider strategy that are associated with the task set.",
+								Type:          schema.TypeJSON,
+								Resolver:      resolveClusterServiceTaskSetsCapacityProviderStrategy,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "cluster_arn",
@@ -965,14 +977,16 @@ func Clusters() *schema.Table {
 								Type:        schema.TypeInt,
 							},
 							{
-								Name:        "platform_family",
-								Description: "The operating system that your tasks in the set are running on",
-								Type:        schema.TypeString,
+								Name:          "platform_family",
+								Description:   "The operating system that your tasks in the set are running on",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
-								Name:        "platform_version",
-								Description: "The Fargate platform version where the tasks in the task set are running",
-								Type:        schema.TypeString,
+								Name:          "platform_version",
+								Description:   "The Fargate platform version where the tasks in the task set are running",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "running_count",
@@ -1041,9 +1055,10 @@ func Clusters() *schema.Table {
 						},
 						Relations: []*schema.Table{
 							{
-								Name:        "aws_ecs_cluster_service_task_set_load_balancers",
-								Description: "The load balancer configuration to use with a service or task set",
-								Resolver:    fetchEcsClusterServiceTaskSetLoadBalancers,
+								Name:          "aws_ecs_cluster_service_task_set_load_balancers",
+								Description:   "The load balancer configuration to use with a service or task set",
+								Resolver:      fetchEcsClusterServiceTaskSetLoadBalancers,
+								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
 										Name:        "cluster_service_task_set_cq_id",
@@ -1062,9 +1077,10 @@ func Clusters() *schema.Table {
 										Type:        schema.TypeInt,
 									},
 									{
-										Name:        "load_balancer_name",
-										Description: "The name of the load balancer to associate with the Amazon ECS service or task set",
-										Type:        schema.TypeString,
+										Name:          "load_balancer_name",
+										Description:   "The name of the load balancer to associate with the Amazon ECS service or task set",
+										Type:          schema.TypeString,
+										IgnoreInTests: true,
 									},
 									{
 										Name:        "target_group_arn",
@@ -1074,9 +1090,10 @@ func Clusters() *schema.Table {
 								},
 							},
 							{
-								Name:        "aws_ecs_cluster_service_task_set_service_registries",
-								Description: "The details for the service registry",
-								Resolver:    fetchEcsClusterServiceTaskSetServiceRegistries,
+								Name:          "aws_ecs_cluster_service_task_set_service_registries",
+								Description:   "The details for the service registry",
+								Resolver:      fetchEcsClusterServiceTaskSetServiceRegistries,
+								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
 										Name:        "cluster_service_task_set_cq_id",
@@ -1112,9 +1129,10 @@ func Clusters() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_ecs_cluster_container_instances",
-				Description: "An EC2 instance that's running the Amazon ECS agent and has been registered with a cluster.",
-				Resolver:    fetchEcsClusterContainerInstances,
+				Name:          "aws_ecs_cluster_container_instances",
+				Description:   "An EC2 instance that's running the Amazon ECS agent and has been registered with a cluster.",
+				Resolver:      fetchEcsClusterContainerInstances,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
@@ -1210,9 +1228,10 @@ func Clusters() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_ecs_cluster_container_instance_attachments",
-						Description: "An object representing a container instance or task attachment.",
-						Resolver:    fetchEcsClusterContainerInstanceAttachments,
+						Name:          "aws_ecs_cluster_container_instance_attachments",
+						Description:   "An object representing a container instance or task attachment.",
+						Resolver:      fetchEcsClusterContainerInstanceAttachments,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
@@ -1244,9 +1263,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_container_instance_attributes",
-						Description: "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
-						Resolver:    fetchEcsClusterContainerInstanceAttributes,
+						Name:          "aws_ecs_cluster_container_instance_attributes",
+						Description:   "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
+						Resolver:      fetchEcsClusterContainerInstanceAttributes,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
@@ -1310,9 +1330,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_container_instance_registered_resources",
-						Description: "Describes the resources available for a container instance.",
-						Resolver:    fetchEcsClusterContainerInstanceRegisteredResources,
+						Name:          "aws_ecs_cluster_container_instance_registered_resources",
+						Description:   "Describes the resources available for a container instance.",
+						Resolver:      fetchEcsClusterContainerInstanceRegisteredResources,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
@@ -1353,9 +1374,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_container_instance_remaining_resources",
-						Description: "Describes the resources available for a container instance.",
-						Resolver:    fetchEcsClusterContainerInstanceRemainingResources,
+						Name:          "aws_ecs_cluster_container_instance_remaining_resources",
+						Description:   "Describes the resources available for a container instance.",
+						Resolver:      fetchEcsClusterContainerInstanceRemainingResources,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
