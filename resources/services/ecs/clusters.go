@@ -191,9 +191,10 @@ func Clusters() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_ecs_cluster_tasks",
-				Description: "Details on a task in a cluster.",
-				Resolver:    fetchEcsClusterTasks,
+				Name:          "aws_ecs_cluster_tasks",
+				Description:   "Details on a task in a cluster.",
+				Resolver:      fetchEcsClusterTasks,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
@@ -596,9 +597,10 @@ func Clusters() *schema.Table {
 						Type:        schema.TypeBool,
 					},
 					{
-						Name:        "health_check_grace_period_seconds",
-						Description: "The period of time, in seconds, that the Amazon ECS service scheduler ignores unhealthy Elastic Load Balancing target health checks after a task has first started.",
-						Type:        schema.TypeInt,
+						Name:          "health_check_grace_period_seconds",
+						Description:   "The period of time, in seconds, that the Amazon ECS service scheduler ignores unhealthy Elastic Load Balancing target health checks after a task has first started.",
+						Type:          schema.TypeInt,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "launch_type",
@@ -714,10 +716,11 @@ func Clusters() *schema.Table {
 								Resolver:    schema.ParentIdResolver,
 							},
 							{
-								Name:        "capacity_provider_strategy",
-								Description: "The capacity provider strategy that the deployment is using.",
-								Type:        schema.TypeJSON,
-								Resolver:    resolveClusterServiceDeploymentsCapacityProviderStrategy,
+								Name:          "capacity_provider_strategy",
+								Description:   "The capacity provider strategy that the deployment is using.",
+								Type:          schema.TypeJSON,
+								Resolver:      resolveClusterServiceDeploymentsCapacityProviderStrategy,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "created_at",
@@ -838,9 +841,10 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_service_load_balancers",
-						Description: "The load balancer configuration to use with a service or task set",
-						Resolver:    fetchEcsClusterServiceLoadBalancers,
+						Name:          "aws_ecs_cluster_service_load_balancers",
+						Description:   "The load balancer configuration to use with a service or task set",
+						Resolver:      fetchEcsClusterServiceLoadBalancers,
+						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_service_cq_id",
