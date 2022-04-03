@@ -771,14 +771,16 @@ func Clusters() *schema.Table {
 								Type:        schema.TypeInt,
 							},
 							{
-								Name:        "platform_family",
-								Description: "The operating system that your tasks in the service, or tasks are running on",
-								Type:        schema.TypeString,
+								Name:          "platform_family",
+								Description:   "The operating system that your tasks in the service, or tasks are running on",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
-								Name:        "platform_version",
-								Description: "The platform version that your tasks in the service run on",
-								Type:        schema.TypeString,
+								Name:          "platform_version",
+								Description:   "The platform version that your tasks in the service run on",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "rollout_state",
