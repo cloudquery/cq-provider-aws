@@ -279,9 +279,8 @@ func Brokers() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:          "aws_mq_broker_configuration_revisions",
-						Resolver:      fetchMqBrokerConfigurationRevisions,
-						IgnoreInTests: true,
+						Name:     "aws_mq_broker_configuration_revisions",
+						Resolver: fetchMqBrokerConfigurationRevisions,
 						Columns: []schema.Column{
 							{
 								Name:        "broker_configuration_cq_id",
@@ -468,6 +467,7 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 
 	// History might contain same Id multiple times (maybe with different revisions) but we're only interested in the latest revision of each
 	dupes := make(map[string]struct{}, len(list))
+	configurations := make([]mq.DescribeConfigurationOutput, 0, len(list))
 	for _, cfg := range list {
 		if cfg.Id == nil {
 			continue
@@ -485,8 +485,9 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		res <- output
+		configurations = append(configurations, *output)
 	}
+	res <- configurations
 	return nil
 }
 func fetchMqBrokerConfigurationRevisions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
