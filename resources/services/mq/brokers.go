@@ -202,6 +202,18 @@ func Brokers() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
+						Name:        "account_id",
+						Description: "The AWS Account ID of the resource.",
+						Type:        schema.TypeString,
+						Resolver:    client.ResolveAWSAccount,
+					},
+					{
+						Name:        "region",
+						Description: "The AWS Region of the resource.",
+						Type:        schema.TypeString,
+						Resolver:    client.ResolveAWSRegion,
+					},
+					{
 						Name:        "arn",
 						Description: "The ARN of the configuration.",
 						Type:        schema.TypeString,
@@ -311,6 +323,18 @@ func Brokers() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_mq_brokers table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "account_id",
+						Description: "The AWS Account ID of the resource.",
+						Type:        schema.TypeString,
+						Resolver:    client.ResolveAWSAccount,
+					},
+					{
+						Name:        "region",
+						Description: "The AWS Region of the resource.",
+						Type:        schema.TypeString,
+						Resolver:    client.ResolveAWSRegion,
 					},
 					{
 						Name:        "console_access",
