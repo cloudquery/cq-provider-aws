@@ -5,6 +5,8 @@
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |broker_cq_id|uuid|Unique CloudQuery ID of aws_mq_brokers table (FK)|
+|account_id|text|The AWS Account ID of the resource.|
+|region|text|The AWS Region of the resource.|
 |arn|text|The ARN of the configuration.|
 |authentication_strategy|text|The authentication strategy associated with the configuration.|
 |created|timestamp without time zone|The date and time of the configuration revision.|

@@ -491,7 +491,7 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 	return nil
 }
 func fetchMqBrokerConfigurationRevisions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	cfg, ok := parent.Item.(*mq.DescribeConfigurationOutput)
+	cfg, ok := parent.Item.(mq.DescribeConfigurationOutput)
 	if !ok {
 		return fmt.Errorf("not a DescribeConfigurationOutput instance: %T", parent.Item)
 	}
