@@ -6,6 +6,16 @@ install-cq:
 	curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_${OS}_${ARCH} -o cloudquery
 	chmod a+x cloudquery
 
+# start a timescale db running in a local container
+.PHONY: ts-start
+ts-start:
+	docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -d timescale/timescaledb:latest-pg14
+
+# stop the timescale db running in a local container
+.PHONY: ts-stop
+ts-stop:
+	docker stop $$(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
+
 # start a running docker container
 .PHONY: start-pg
 start-pg:
@@ -26,15 +36,15 @@ pg-connect:
 build:
 	go build -o cq-provider
 
-# build and run the cq aws provider
+# build and run the cq provider
 .PHONY: run
 run: build
-	CQ_REATTACH_PROVIDERS=.cq_reattach ./cq-provider
+	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach ./cq-provider
 
 # Run a fetch command
 .PHONY: fetch
 fetch:
-	CQ_PROVIDER_DEBUG=1 ./cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v
+	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach ./cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v
 
 # Generate mocks for mock/unit testing 
 .PHONY: generate-mocks
