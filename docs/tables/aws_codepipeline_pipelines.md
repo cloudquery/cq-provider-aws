@@ -6,6 +6,7 @@ Represents the output of a GetPipeline action.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb||
 |created|timestamp without time zone|The date and time the pipeline was created, in timestamp format.|
 |arn|text|The Amazon Resource Name (ARN) of the pipeline.|
 |updated|timestamp without time zone|The date and time the pipeline was last updated, in timestamp format.|

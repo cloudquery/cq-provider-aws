@@ -5,10 +5,10 @@ Represents information about an action declaration.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |pipeline_stage_cq_id|uuid|Unique CloudQuery ID of aws_codepipeline_pipeline_stages table (FK)|
-|action_type_id_category|text|A category defines what kind of action can be taken in the stage, and constrains the provider type for the action|
-|action_type_id_owner|text|The creator of the action being called|
-|action_type_id_provider|text|The provider of the service being called by the action|
-|action_type_id_version|text|A string that describes the action version.  This member is required.|
+|category|text|A category defines what kind of action can be taken in the stage, and constrains the provider type for the action|
+|owner|text|The creator of the action being called|
+|provider|text|The provider of the service being called by the action|
+|version|text|A string that describes the action version.  This member is required.|
 |name|text|The action declaration's name.  This member is required.|
 |configuration|jsonb|The action's configuration|
 |input_artifacts|text[]|The name or ID of the artifact consumed by the action, such as a test or build artifact.|

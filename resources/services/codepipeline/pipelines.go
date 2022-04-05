@@ -36,6 +36,11 @@ func Pipelines() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: ResolveCodepipelinePipelineTags,
+			},
+			{
 				Name:        "created",
 				Description: "The date and time the pipeline was created, in timestamp format.",
 				Type:        schema.TypeTimestamp,
@@ -141,25 +146,25 @@ func Pipelines() *schema.Table {
 								Resolver:    schema.ParentIdResolver,
 							},
 							{
-								Name:        "action_type_id_category",
+								Name:        "category",
 								Description: "A category defines what kind of action can be taken in the stage, and constrains the provider type for the action",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("ActionTypeId.Category"),
 							},
 							{
-								Name:        "action_type_id_owner",
+								Name:        "owner",
 								Description: "The creator of the action being called",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("ActionTypeId.Owner"),
 							},
 							{
-								Name:        "action_type_id_provider",
+								Name:        "provider",
 								Description: "The provider of the service being called by the action",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("ActionTypeId.Provider"),
 							},
 							{
-								Name:        "action_type_id_version",
+								Name:        "version",
 								Description: "A string that describes the action version.  This member is required.",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("ActionTypeId.Version"),
@@ -251,6 +256,26 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 		config.NextToken = response.NextToken
 	}
 	return nil
+}
+func ResolveCodepipelinePipelineTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	pipeline := resource.Item.(*codepipeline.GetPipelineOutput)
+
+	client := meta.(*client.Client)
+	svc := client.Services().CodePipeline
+	response, err := svc.ListTagsForResource(ctx, &codepipeline.ListTagsForResourceInput{
+		ResourceArn: pipeline.Metadata.PipelineArn,
+	}, func(options *codepipeline.Options) {
+		options.Region = client.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+
+	tags := make(map[string]interface{})
+	for _, t := range response.Tags {
+		tags[*t.Key] = t.Value
+	}
+	return resource.Set(c.Name, tags)
 }
 func fetchCodepipelinePipelineStages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*codepipeline.GetPipelineOutput)

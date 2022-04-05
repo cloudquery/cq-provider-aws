@@ -40,6 +40,15 @@ func buildPipelines(t *testing.T, ctrl *gomock.Controller) client.Services {
 		nil,
 	)
 
+	tags := &codepipeline.ListTagsForResourceOutput{}
+	if err := faker.FakeData(&tags); err != nil {
+		t.Fatal(err)
+	}
+	mock.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		tags,
+		nil,
+	)
+
 	return client.Services{CodePipeline: mock}
 }
 

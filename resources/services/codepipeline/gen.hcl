@@ -55,23 +55,32 @@ resource "aws" "codepipeline" "pipelines" {
   relation "aws" "codepipeline" "stages" {
 
     column "blockers" {
-      type = "JSON"
+      type              = "JSON"
       generate_resolver = true
     }
 
     relation "aws" "codepipeline" "actions" {
       path = "github.com/aws/aws-sdk-go-v2/service/codepipeline/types.ActionDeclaration"
 
+      column "action_type_id" {
+        skip_prefix = true
+      }
+
       column "input_artifacts" {
-        type = "stringarray"
+        type              = "stringarray"
         generate_resolver = true
       }
 
       column "output_artifacts" {
-        type = "stringarray"
+        type              = "stringarray"
         generate_resolver = true
       }
     }
+  }
+
+  userDefinedColumn "tags" {
+    type              = "json"
+    generate_resolver = true
   }
 
 }
