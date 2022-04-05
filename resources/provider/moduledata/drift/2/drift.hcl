@@ -83,7 +83,14 @@ provider "aws" {
     }
   }
 
-  # TODO: apigateway.domain_names (no data in tests)
+  resource "apigateway.domain_names" {
+    iac {
+      terraform {
+        type = "aws_api_gateway_domain_name"
+        identifiers = [ "domain_name" ]
+      }
+    }
+  }
 
   resource "apigateway.rest_apis" {
     iac {
@@ -398,6 +405,15 @@ provider "aws" {
     }
   }
 
+  resource "applicationautoscaling.policies" {
+    iac {
+      terraform {
+        type = "aws_appautoscaling_policy"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
   resource "autoscaling.groups" {
     identifiers = [ "arn" ]
     ignore_attributes = [ "created_time", "load_balancers", "notifications_configurations", "metrics", "status" ]
@@ -660,6 +676,15 @@ provider "aws" {
     iac {
       terraform {
         type = "aws_config_conformance_pack"
+      }
+    }
+  }
+
+  resource "dax.clusters" {
+    iac {
+      terraform {
+        type = "aws_dax_cluster"
+        identifiers = [ "arn" ]
       }
     }
   }
@@ -1480,7 +1505,18 @@ provider "aws" {
     }
   }
 
-  # TODO: organizations.accounts (no data in tests)
+  resource "organizations.accounts" {
+    #    identifiers = [ "account_id", "id" ]
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "joined_timestamp", "joined_method" ]
+    iac {
+      terraform {
+        type = "aws_organizations_account"
+        #        identifiers = [ "parent_id", "id" ]
+        identifiers = [ "arn" ]
+      }
+    }
+  }
 
   # Unmatched: rds.certificates (mode: data)
 
@@ -1704,7 +1740,16 @@ provider "aws" {
     }
   }
 
-  # TODO: route53.traffic_policies (no data in tests)
+  resource "aws_route53_traffic_policy_versions" {
+    identifiers = [ "id", "version" ]
+    ignore_attributes = [ "comment" ]
+    iac {
+      terraform {
+        type = "aws_route53_traffic_policy"
+        identifiers = [ "id", "version" ]
+      }
+    }
+  }
 
 #  resource "s3.accounts" {
 #    ignore_attributes = [ "config_exists" ]
