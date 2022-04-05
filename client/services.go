@@ -53,6 +53,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
+	"github.com/aws/aws-sdk-go-v2/service/workspaces"
 )
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_acm.go . ACMClient
@@ -210,6 +211,7 @@ type Ec2Client interface {
 	DescribeByoipCidrs(ctx context.Context, params *ec2.DescribeByoipCidrsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeByoipCidrsOutput, error)
 	DescribeCustomerGateways(ctx context.Context, params *ec2.DescribeCustomerGatewaysInput, optFns ...func(*ec2.Options)) (*ec2.DescribeCustomerGatewaysOutput, error)
 	DescribeFlowLogs(ctx context.Context, params *ec2.DescribeFlowLogsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeFlowLogsOutput, error)
+	DescribeImageAttribute(ctx context.Context, params *ec2.DescribeImageAttributeInput, optFns ...func(*ec2.Options)) (*ec2.DescribeImageAttributeOutput, error)
 	DescribeImages(ctx context.Context, params *ec2.DescribeImagesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeImagesOutput, error)
 	DescribeInstances(ctx context.Context, params *ec2.DescribeInstancesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeInstancesOutput, error)
 	DescribeInstanceStatus(ctx context.Context, params *ec2.DescribeInstanceStatusInput, optFns ...func(*ec2.Options)) (*ec2.DescribeInstanceStatusOutput, error)
@@ -335,6 +337,8 @@ type KmsClient interface {
 type MQClient interface {
 	DescribeBroker(ctx context.Context, params *mq.DescribeBrokerInput, optFns ...func(*mq.Options)) (*mq.DescribeBrokerOutput, error)
 	DescribeConfiguration(ctx context.Context, params *mq.DescribeConfigurationInput, optFns ...func(*mq.Options)) (*mq.DescribeConfigurationOutput, error)
+	ListConfigurationRevisions(ctx context.Context, params *mq.ListConfigurationRevisionsInput, optFns ...func(*mq.Options)) (*mq.ListConfigurationRevisionsOutput, error)
+	DescribeConfigurationRevision(ctx context.Context, params *mq.DescribeConfigurationRevisionInput, optFns ...func(*mq.Options)) (*mq.DescribeConfigurationRevisionOutput, error)
 	DescribeUser(ctx context.Context, params *mq.DescribeUserInput, optFns ...func(*mq.Options)) (*mq.DescribeUserOutput, error)
 	ListBrokers(ctx context.Context, params *mq.ListBrokersInput, optFns ...func(*mq.Options)) (*mq.ListBrokersOutput, error)
 }
@@ -421,9 +425,11 @@ type EksClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_redshift.go . RedshiftClient
 type RedshiftClient interface {
-	DescribeClusters(ctx context.Context, params *redshift.DescribeClustersInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClustersOutput, error)
-	DescribeClusterSubnetGroups(ctx context.Context, params *redshift.DescribeClusterSubnetGroupsInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClusterSubnetGroupsOutput, error)
 	DescribeClusterParameters(ctx context.Context, params *redshift.DescribeClusterParametersInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClusterParametersOutput, error)
+	DescribeClusters(ctx context.Context, params *redshift.DescribeClustersInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClustersOutput, error)
+	DescribeClusterSnapshots(ctx context.Context, params *redshift.DescribeClusterSnapshotsInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClusterSnapshotsOutput, error)
+	DescribeClusterSubnetGroups(ctx context.Context, params *redshift.DescribeClusterSubnetGroupsInput, optFns ...func(*redshift.Options)) (*redshift.DescribeClusterSubnetGroupsOutput, error)
+	DescribeEventSubscriptions(ctx context.Context, params *redshift.DescribeEventSubscriptionsInput, optFns ...func(*redshift.Options)) (*redshift.DescribeEventSubscriptionsOutput, error)
 	DescribeLoggingStatus(ctx context.Context, params *redshift.DescribeLoggingStatusInput, optFns ...func(*redshift.Options)) (*redshift.DescribeLoggingStatusOutput, error)
 }
 
@@ -587,4 +593,10 @@ type IOTClient interface {
 	DescribeJob(ctx context.Context, params *iot.DescribeJobInput, optFns ...func(*iot.Options)) (*iot.DescribeJobOutput, error)
 	GetTopicRule(ctx context.Context, params *iot.GetTopicRuleInput, optFns ...func(*iot.Options)) (*iot.GetTopicRuleOutput, error)
 	ListTopicRules(ctx context.Context, params *iot.ListTopicRulesInput, optFns ...func(*iot.Options)) (*iot.ListTopicRulesOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_workspaces.go . WorkspacesClient
+type WorkspacesClient interface {
+	DescribeWorkspaces(ctx context.Context, params *workspaces.DescribeWorkspacesInput, optFns ...func(*workspaces.Options)) (*workspaces.DescribeWorkspacesOutput, error)
+	DescribeWorkspaceDirectories(ctx context.Context, params *workspaces.DescribeWorkspaceDirectoriesInput, optFns ...func(*workspaces.Options)) (*workspaces.DescribeWorkspaceDirectoriesOutput, error)
 }

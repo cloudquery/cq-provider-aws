@@ -2,12 +2,11 @@ package ec2
 
 import (
 	"context"
-	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -178,6 +177,12 @@ func Ec2Images() *schema.Table {
 				Description: "The type of virtualization of the AMI.",
 				Type:        schema.TypeString,
 			},
+			{
+				Name:        "last_launched_time",
+				Description: "The timestamp of the last time the AMI was used for an EC2 instance launch.",
+				Type:        schema.TypeTimestamp,
+				Resolver:    resolveEc2ImageLastLaunchedTime,
+			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -276,7 +281,6 @@ func fetchEc2Images(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	svc := c.Services().EC2
 	response, err := svc.DescribeImages(ctx, &ec2.DescribeImagesInput{Owners: []string{"self"}}, func(options *ec2.Options) {
 		options.Region = c.Region
-		options.EndpointResolver = ec2.EndpointResolverFromURL(fmt.Sprintf("https://ec2.%s.amazonaws.com", c.Region))
 	})
 	if err != nil {
 		return diag.WrapError(err)
@@ -304,4 +308,28 @@ func fetchEc2ImageBlockDeviceMappings(ctx context.Context, meta schema.ClientMet
 	r := parent.Item.(types.Image)
 	res <- r.BlockDeviceMappings
 	return nil
+}
+
+func resolveEc2ImageLastLaunchedTime(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	image := resource.Item.(types.Image)
+	svc := cl.Services().EC2
+	opts := ec2.DescribeImageAttributeInput{
+		Attribute: types.ImageAttributeNameLastLaunchedTime,
+		ImageId:   image.ImageId,
+	}
+	result, err := svc.DescribeImageAttribute(ctx, &opts, func(options *ec2.Options) {
+		options.Region = cl.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	if result.LastLaunchedTime == nil || result.LastLaunchedTime.Value == nil {
+		return nil
+	}
+	t, err := time.Parse(time.RFC3339, *result.LastLaunchedTime.Value)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, t))
 }
