@@ -144,8 +144,6 @@ provider "aws" {
     }
   }
 
-  # Unmatched: aws_apigateway_rest_api_gateway_responses
-
   resource "aws_apigateway_rest_api_models" {
     identifiers = [ "rest_api_id", "id" ]
     ignore_attributes = [ "arn", "model_template" ]
@@ -393,10 +391,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_apigatewayv2_domain_name_configurations (no data in tests)
-
-  # TODO: aws_apigatewayv2_domain_name_rest_api_mappings (no data in tests)
-
   resource "apigatewayv2.vpc_links" {
     iac {
       terraform {
@@ -507,8 +501,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_cloudfront_distribution_default_cache_behavior_lambda_functions (no data in tests)
-
   resource "aws_cloudfront_distribution_custom_error_responses" {
     identifiers = [ "parent.id", "error_code", "response_code", "response_page_path" ]
 
@@ -549,11 +541,7 @@ provider "aws" {
     }
   }
 
-  # Unmatched: aws_cloudfront_origin_access_identity (contained in aws_cloudfront_distribution_origins)
-
-  # Unmatched: aws_cloudfront_distribution_alias_icp_recordals (no data in tests)
-
-  # TODO: aws_cloudfront_distribution_origin_groups (tf row with type="aws_cloudfront_distribution".attributes->"origin_group"), no data in tests
+  # TODO: aws_cloudfront_distribution_origin_groups (tf res type: "aws_cloudfront_distribution".attributes->"origin_group")
 
   resource "cloudtrail.trails" {
     identifiers = [ "name" ]
@@ -648,8 +636,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_cognito_identity_pool_cognito_identity_providers (aws_cognito_identity_provider but no data in tests)
-
   resource "cognito.user_pools" {
     iac {
       terraform {
@@ -657,8 +643,6 @@ provider "aws" {
       }
     }
   }
-
-  # Unmatched: aws_cognito_user_pool_schema_attributess
 
   resource "config.configuration_recorders" {
     identifiers = [ "name" ]
@@ -697,8 +681,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_directconnect_connection_mac_sec_keys (no data in tests)
-
   resource "directconnect.gateways" {
     iac {
       terraform {
@@ -716,8 +698,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_directconnect_gateway_attachments (no data in tests)
-
   resource "directconnect.lags" {
     iac {
       terraform {
@@ -726,10 +706,6 @@ provider "aws" {
     }
   }
 
-  # TODO: aws_directconnect_lag_mac_sec_keys (no data in tests)
-
-  # Unmatched: directconnect.virtual_gateways (aws_dx_gateway but IDs don't match)
-
   resource "directconnect.virtual_interfaces" {
     iac {
       terraform {
@@ -737,8 +713,6 @@ provider "aws" {
       }
     }
   }
-
-  # TODO: aws_directconnect_virtual_interface_bgp_peers (no data in tests)
 
   resource "dms.replication_instances" {
     identifiers = [ "arn" ]
@@ -781,8 +755,6 @@ provider "aws" {
       }
     }
   }
-
-  # TODO: ec2.byoip_cidrs (no data in tests)
 
   resource "ec2.customer_gateways" {
     iac {
@@ -1197,8 +1169,6 @@ provider "aws" {
     }
   }
 
-  # TODO: iam.password_policies (no data in tests)
-
   resource "iam.policies" {
     identifiers = [ "arn" ]
 
@@ -1291,12 +1261,6 @@ provider "aws" {
     }
   }
 
-  # TODO: iam.virtual_mfa_devices (no data in tests)
-
-  # TODO: iot.billing_groups (no data in tests)
-
-  # TODO: iot.ca_certificates (no data in tests)
-
   resource "iot.certificates" {
     identifiers = [ "id" ]
 
@@ -1329,8 +1293,6 @@ provider "aws" {
       }
     }
   }
-
-  # TODO: iot.streams (no data in tests)
 
   resource "iot.thing_groups" {
     identifiers = [ "name" ]
@@ -1517,8 +1479,6 @@ provider "aws" {
       }
     }
   }
-
-  # Unmatched: rds.certificates (mode: data)
 
   resource "rds.clusters" {
     identifiers = [ "db_cluster_identifier" ]
@@ -1874,8 +1834,6 @@ provider "aws" {
     }
   }
 
-  # TODO: waf.subscribed_rule_groups (no data in tests)
-
   resource "waf.web_acls" {
     iac {
       terraform {
@@ -1883,8 +1841,6 @@ provider "aws" {
       }
     }
   }
-
-  # Unmatched: wafv2.managed_rule_groups
 
   resource "wafv2.rule_groups" {
     iac {
