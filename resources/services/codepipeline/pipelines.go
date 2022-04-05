@@ -61,7 +61,7 @@ func Pipelines() *schema.Table {
 			},
 			{
 				Name:        "role_arn",
-				Description: "The Amazon Resource Name (ARN) for AWS CodePipeline to use to either perform actions with no actionRoleArn, or to use to assume roles for actions with an actionRoleArn.  This member is required.",
+				Description: "The Amazon Resource Name (ARN) for AWS CodePipeline to use to either perform actions with no actionRoleArn, or to use to assume roles for actions with an actionRoleArn.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Pipeline.RoleArn"),
 			},
@@ -85,15 +85,16 @@ func Pipelines() *schema.Table {
 			},
 			{
 				Name:        "artifact_store_encryption_key_type",
-				Description: "The type of encryption key, such as an AWS Key Management Service (AWS KMS) key. When creating or updating a pipeline, the value must be set to 'KMS'.  This member is required.",
+				Description: "The type of encryption key, such as an AWS Key Management Service (AWS KMS) key. When creating or updating a pipeline, the value must be set to 'KMS'.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Pipeline.ArtifactStore.EncryptionKey.Type"),
 			},
 			{
-				Name:        "artifact_stores",
-				Description: "A mapping of artifactStore objects and their corresponding AWS Regions",
-				Type:        schema.TypeJSON,
-				Resolver:    schema.PathResolver("Pipeline.ArtifactStores"),
+				Name:          "artifact_stores",
+				Description:   "A mapping of artifactStore objects and their corresponding AWS Regions",
+				Type:          schema.TypeJSON,
+				Resolver:      schema.PathResolver("Pipeline.ArtifactStores"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "version",
@@ -120,10 +121,11 @@ func Pipelines() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "blockers",
-						Description: "Reserved for future use.",
-						Type:        schema.TypeJSON,
-						Resolver:    resolvePipelineStagesBlockers,
+						Name:          "blockers",
+						Description:   "Reserved for future use.",
+						Type:          schema.TypeJSON,
+						Resolver:      resolvePipelineStagesBlockers,
+						IgnoreInTests: true,
 					},
 				},
 				Relations: []*schema.Table{
@@ -179,9 +181,10 @@ func Pipelines() *schema.Table {
 								Resolver:    resolvePipelineStageActionsInputArtifacts,
 							},
 							{
-								Name:        "namespace",
-								Description: "The variable namespace associated with the action",
-								Type:        schema.TypeString,
+								Name:          "namespace",
+								Description:   "The variable namespace associated with the action",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "output_artifacts",
@@ -190,14 +193,16 @@ func Pipelines() *schema.Table {
 								Resolver:    resolvePipelineStageActionsOutputArtifacts,
 							},
 							{
-								Name:        "region",
-								Description: "The action declaration's AWS Region, such as us-east-1.",
-								Type:        schema.TypeString,
+								Name:          "region",
+								Description:   "The action declaration's AWS Region, such as us-east-1.",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
-								Name:        "role_arn",
-								Description: "The ARN of the IAM service role that performs the declared action",
-								Type:        schema.TypeString,
+								Name:          "role_arn",
+								Description:   "The ARN of the IAM service role that performs the declared action",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "run_order",
@@ -227,17 +232,13 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		if len(response.Pipelines) == 0 {
-			break
-		}
-
 		for i := range response.Pipelines {
 			response, err := svc.GetPipeline(ctx, &codepipeline.GetPipelineInput{Name: response.Pipelines[i].Name}, func(o *codepipeline.Options) {
 				o.Region = c.Region
 			})
 			if err != nil {
 				if c.IsNotFoundError(err) {
-					return nil
+					continue
 				}
 				return diag.WrapError(err)
 			}
@@ -262,7 +263,7 @@ func resolvePipelineStagesBlockers(ctx context.Context, meta schema.ClientMeta, 
 	if err != nil {
 		return diag.WrapError(err)
 	}
-	return resource.Set(c.Name, data)
+	return diag.WrapError(resource.Set(c.Name, data))
 }
 func fetchCodepipelinePipelineStageActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.StageDeclaration)
@@ -275,7 +276,7 @@ func resolvePipelineStageActionsInputArtifacts(ctx context.Context, meta schema.
 	for _, a := range r.InputArtifacts {
 		artifacts = append(artifacts, a.Name)
 	}
-	return resource.Set(c.Name, artifacts)
+	return diag.WrapError(resource.Set(c.Name, artifacts))
 }
 func resolvePipelineStageActionsOutputArtifacts(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ActionDeclaration)
@@ -283,5 +284,5 @@ func resolvePipelineStageActionsOutputArtifacts(ctx context.Context, meta schema
 	for _, a := range r.OutputArtifacts {
 		artifacts = append(artifacts, a.Name)
 	}
-	return resource.Set(c.Name, artifacts)
+	return diag.WrapError(resource.Set(c.Name, artifacts))
 }

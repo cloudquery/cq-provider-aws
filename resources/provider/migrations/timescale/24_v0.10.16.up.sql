@@ -3,57 +3,57 @@
 
 -- Resource: codepipeline.pipelines
 CREATE TABLE IF NOT EXISTS "aws_codepipeline_pipelines" (
-                                                            "cq_id" uuid NOT NULL,
-                                                            "cq_meta" jsonb,
-                                                            "cq_fetch_date" timestamp without time zone NOT NULL,
-                                                            "account_id" text,
-                                                            "region" text,
-                                                            "created" timestamp without time zone,
-                                                            "arn" text,
-                                                            "updated" timestamp without time zone,
-                                                            "name" text,
-                                                            "role_arn" text,
-                                                            "artifact_store_location" text,
-                                                            "artifact_store_type" text,
-                                                            "artifact_store_encryption_key_id" text,
-                                                            "artifact_store_encryption_key_type" text,
-                                                            "artifact_stores" jsonb,
-                                                            "version" integer,
-                                                            CONSTRAINT aws_codepipeline_pipelines_pk PRIMARY KEY(cq_fetch_date,arn),
-                                                            UNIQUE(cq_fetch_date,cq_id)
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "cq_fetch_date" timestamp without time zone NOT NULL,
+    "account_id" text,
+    "region" text,
+    "created" timestamp without time zone,
+    "arn" text,
+    "updated" timestamp without time zone,
+    "name" text,
+    "role_arn" text,
+    "artifact_store_location" text,
+    "artifact_store_type" text,
+    "artifact_store_encryption_key_id" text,
+    "artifact_store_encryption_key_type" text,
+    "artifact_stores" jsonb,
+    "version" integer,
+    CONSTRAINT aws_codepipeline_pipelines_pk PRIMARY KEY(cq_fetch_date,arn),
+    UNIQUE(cq_fetch_date,cq_id)
 );
 SELECT setup_tsdb_parent('aws_codepipeline_pipelines');
 CREATE TABLE IF NOT EXISTS "aws_codepipeline_pipeline_stages" (
-                                                                  "cq_id" uuid NOT NULL,
-                                                                  "cq_meta" jsonb,
-                                                                  "cq_fetch_date" timestamp without time zone NOT NULL,
-                                                                  "pipeline_cq_id" uuid,
-                                                                  "name" text,
-                                                                  "blockers" jsonb,
-                                                                  CONSTRAINT aws_codepipeline_pipeline_stages_pk PRIMARY KEY(cq_fetch_date,cq_id),
-                                                                  UNIQUE(cq_fetch_date,cq_id)
+      "cq_id" uuid NOT NULL,
+      "cq_meta" jsonb,
+      "cq_fetch_date" timestamp without time zone NOT NULL,
+      "pipeline_cq_id" uuid,
+      "name" text,
+      "blockers" jsonb,
+      CONSTRAINT aws_codepipeline_pipeline_stages_pk PRIMARY KEY(cq_fetch_date,cq_id),
+      UNIQUE(cq_fetch_date,cq_id)
 );
 CREATE INDEX ON aws_codepipeline_pipeline_stages (cq_fetch_date, pipeline_cq_id);
 SELECT setup_tsdb_child('aws_codepipeline_pipeline_stages', 'pipeline_cq_id', 'aws_codepipeline_pipelines', 'cq_id');
 CREATE TABLE IF NOT EXISTS "aws_codepipeline_pipeline_stage_actions" (
-                                                                         "cq_id" uuid NOT NULL,
-                                                                         "cq_meta" jsonb,
-                                                                         "cq_fetch_date" timestamp without time zone NOT NULL,
-                                                                         "pipeline_stage_cq_id" uuid,
-                                                                         "action_type_id_category" text,
-                                                                         "action_type_id_owner" text,
-                                                                         "action_type_id_provider" text,
-                                                                         "action_type_id_version" text,
-                                                                         "name" text,
-                                                                         "configuration" jsonb,
-                                                                         "input_artifacts" text[],
-                                                                         "namespace" text,
-                                                                         "output_artifacts" text[],
-                                                                         "region" text,
-                                                                         "role_arn" text,
-                                                                         "run_order" integer,
-                                                                         CONSTRAINT aws_codepipeline_pipeline_stage_actions_pk PRIMARY KEY(cq_fetch_date,cq_id),
-                                                                         UNIQUE(cq_fetch_date,cq_id)
+     "cq_id" uuid NOT NULL,
+     "cq_meta" jsonb,
+     "cq_fetch_date" timestamp without time zone NOT NULL,
+     "pipeline_stage_cq_id" uuid,
+     "action_type_id_category" text,
+     "action_type_id_owner" text,
+     "action_type_id_provider" text,
+     "action_type_id_version" text,
+     "name" text,
+     "configuration" jsonb,
+     "input_artifacts" text[],
+     "namespace" text,
+     "output_artifacts" text[],
+     "region" text,
+     "role_arn" text,
+     "run_order" integer,
+     CONSTRAINT aws_codepipeline_pipeline_stage_actions_pk PRIMARY KEY(cq_fetch_date,cq_id),
+     UNIQUE(cq_fetch_date,cq_id)
 );
 CREATE INDEX ON aws_codepipeline_pipeline_stage_actions (cq_fetch_date, pipeline_stage_cq_id);
 SELECT setup_tsdb_child('aws_codepipeline_pipeline_stage_actions', 'pipeline_stage_cq_id', 'aws_codepipeline_pipeline_stages', 'cq_id');
