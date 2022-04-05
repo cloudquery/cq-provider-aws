@@ -446,6 +446,20 @@ provider "aws" {
     }
   }
 
+  resource "cloudformation.stacks" {
+    identifiers = [ "id" ]
+    ignore_attributes = [ "status", "stack_drift_status" ]
+    iac {
+      terraform {
+        type = "aws_cloudformation_stack"
+        attribute_map = [
+          "arn=id",
+          "stack=name"
+        ]
+      }
+    }
+  }
+
   resource "cloudfront.cache_policies" {
     iac {
       terraform {
@@ -1593,6 +1607,20 @@ provider "aws" {
     }
   }
 
+  resource "redshift.event_subscriptions" {
+    identifiers = [ "id" ]
+    ignore_attributes = [ "subscription_creation_time", "status" ]
+    iac {
+      terraform {
+        type = "aws_redshift_event_subscription"
+        attribute_map = [
+          "source_ids_list=source_ids",
+          "event_categories_list=event_categories"
+        ]
+      }
+    }
+  }
+
   resource "redshift.subnet_groups" {
     filters = [
       "NOT EXISTS (SELECT 1 FROM aws_ec2_vpcs WHERE id=c.vpc_id AND is_default)",
@@ -1791,16 +1819,54 @@ provider "aws" {
     }
   }
 
-
-  resource "cloudformation.stacks" {
+  resource "workspaces.directories" {
     identifiers = [ "id" ]
-    ignore_attributes = [ "status", "stack_drift_status" ]
+    ignore_attributes = [ "arn", "state", "tenancy" ]
+    sets = [ "subnet_ids" ]
     iac {
       terraform {
-        type = "aws_cloudformation_stack"
+        type = "aws_workspaces_directory"
+        identifiers = [ "id" ]
         attribute_map = [
-          "arn=id",
-          "stack=name"
+          "name=directory_name",
+          "type=directory_type",
+          "change_compute_type=self_service_permissions.0.change_compute_type|@iftrue:ENABLED",
+          "increase_volume_size=self_service_permissions.0.increase_volume_size|@iftrue:ENABLED",
+          "rebuild_workspace=self_service_permissions.0.rebuild_workspace|@iftrue:ENABLED",
+          "restart_workspace=self_service_permissions.0.restart_workspace|@iftrue:ENABLED",
+          "switch_running_mode=self_service_permissions.0.switch_running_mode|@iftrue:ENABLED",
+          "device_type_android=workspace_access_properties.0.device_type_android",
+          "device_type_chrome_os=workspace_access_properties.0.device_type_chromeos",
+          "device_type_ios=workspace_access_properties.0.device_type_ios",
+          "device_type_linux=workspace_access_properties.0.device_type_linux",
+          "device_type_osx=workspace_access_properties.0.device_type_osx",
+          "device_type_web=workspace_access_properties.0.device_type_web",
+          "device_type_windows=workspace_access_properties.0.device_type_windows",
+          "device_type_zero_client=workspace_access_properties.0.device_type_zeroclient",
+          "custom_security_group_id=workspace_creation_properties.0.custom_security_group_id",
+          "default_ou=workspace_creation_properties.0.default_ou",
+          "enable_internet_access=workspace_creation_properties.0|@getbool:enable_internet_access",
+          "enable_maintenance_mode=workspace_creation_properties.0|@getbool:enable_maintenance_mode",
+          "enable_work_docs=workspace_creation_properties.0|@getbool:enable_work_docs",
+          "user_enabled_as_local_administrator=workspace_creation_properties.0|@getbool:user_enabled_as_local_administrator"
+        ]
+      }
+    }
+  }
+
+  resource "workspaces.workspaces" {
+    identifiers = [ "id" ]
+    ignore_attributes = [ "arn", "subnet_id" ]
+    iac {
+      terraform {
+        type = "aws_workspaces_workspace"
+        identifiers = [ "id" ]
+        attribute_map = [
+          "compute_type_name=workspace_properties.0.compute_type_name",
+          "root_volume_size_gib=workspace_properties.0.root_volume_size_gib",
+          "running_mode=workspace_properties.0.running_mode",
+          "running_mode_auto_stop_timeout_in_minutes=workspace_properties.0.running_mode_auto_stop_timeout_in_minutes",
+          "user_volume_size_gib=workspace_properties.0.user_volume_size_gib",
         ]
       }
     }
