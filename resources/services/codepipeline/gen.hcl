@@ -77,7 +77,7 @@ resource "aws" "codepipeline" "pipelines" {
       }
     }
 
-    userDefinedColumn "order" {
+    userDefinedColumn "stage_order" {
       type              = "int"
       generate_resolver = false
       description       = "The stage order in the pipeline."

@@ -5,6 +5,6 @@ Represents information about a stage and its definition.
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |pipeline_cq_id|uuid|Unique CloudQuery ID of aws_codepipeline_pipelines table (FK)|
-|order|integer|The stage order in the pipeline.|
+|stage_order|integer|The stage order in the pipeline.|
 |name|text|The name of the stage.  This member is required.|
 |blockers|jsonb|Reserved for future use.|

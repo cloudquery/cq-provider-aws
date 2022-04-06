@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "aws_codepipeline_pipeline_stages" (
     "cq_id" uuid NOT NULL,
     "cq_meta" jsonb,
     "pipeline_cq_id" uuid,
-    "order" integer,
+    "stage_order" integer,
     "name" text,
     "blockers" jsonb,
     CONSTRAINT aws_codepipeline_pipeline_stages_pk PRIMARY KEY(cq_id),

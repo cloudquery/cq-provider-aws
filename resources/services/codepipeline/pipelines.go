@@ -122,7 +122,7 @@ func Pipelines() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:        "order",
+						Name:        "stage_order",
 						Description: "The stage order in the pipeline.",
 						Type:        schema.TypeInt,
 					},
@@ -234,7 +234,7 @@ func Pipelines() *schema.Table {
 
 type StageWrapper struct {
 	types.StageDeclaration
-	Order int32
+	StageOrder int32
 }
 
 func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -293,7 +293,7 @@ func fetchCodepipelinePipelineStages(ctx context.Context, meta schema.ClientMeta
 	for i, stage := range r.Pipeline.Stages {
 		res <- StageWrapper{
 			StageDeclaration: stage,
-			Order:            int32(i),
+			StageOrder:       int32(i),
 		}
 	}
 	return nil

@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS "aws_codepipeline_pipeline_stages" (
     "cq_meta" jsonb,
     "cq_fetch_date" timestamp without time zone NOT NULL,
     "pipeline_cq_id" uuid,
-    "order" integer,
+    "stage_order" integer,
     "name" text,
     "blockers" jsonb,
     CONSTRAINT aws_codepipeline_pipeline_stages_pk PRIMARY KEY(cq_fetch_date,cq_id),
