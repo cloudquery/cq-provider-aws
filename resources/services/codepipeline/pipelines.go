@@ -36,9 +36,10 @@ func Pipelines() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveCodepipelinePipelineTags,
+				Name:        "tags",
+				Description: "The tags associated with the pipeline.",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveCodepipelinePipelineTags,
 			},
 			{
 				Name:        "created",
@@ -119,6 +120,11 @@ func Pipelines() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_codepipeline_pipelines table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "order",
+						Description: "The stage order in the pipeline.",
+						Type:        schema.TypeInt,
 					},
 					{
 						Name:        "name",
@@ -226,6 +232,11 @@ func Pipelines() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
+type StageWrapper struct {
+	types.StageDeclaration
+	Order int32
+}
+
 func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().CodePipeline
@@ -279,11 +290,16 @@ func ResolveCodepipelinePipelineTags(ctx context.Context, meta schema.ClientMeta
 }
 func fetchCodepipelinePipelineStages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*codepipeline.GetPipelineOutput)
-	res <- r.Pipeline.Stages
+	for i, stage := range r.Pipeline.Stages {
+		res <- StageWrapper{
+			StageDeclaration: stage,
+			Order:            int32(i),
+		}
+	}
 	return nil
 }
 func resolvePipelineStagesBlockers(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.StageDeclaration)
+	r := resource.Item.(StageWrapper)
 	data, err := json.Marshal(r.Blockers)
 	if err != nil {
 		return diag.WrapError(err)
@@ -291,7 +307,7 @@ func resolvePipelineStagesBlockers(ctx context.Context, meta schema.ClientMeta, 
 	return diag.WrapError(resource.Set(c.Name, data))
 }
 func fetchCodepipelinePipelineStageActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.StageDeclaration)
+	r := parent.Item.(StageWrapper)
 	res <- r.Actions
 	return nil
 }

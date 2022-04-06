@@ -76,11 +76,18 @@ resource "aws" "codepipeline" "pipelines" {
         generate_resolver = true
       }
     }
+
+    userDefinedColumn "order" {
+      type              = "int"
+      generate_resolver = false
+      description       = "The stage order in the pipeline."
+    }
   }
 
   userDefinedColumn "tags" {
     type              = "json"
     generate_resolver = true
+    description       = "The tags associated with the pipeline."
   }
 
 }
