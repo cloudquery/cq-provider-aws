@@ -3,6 +3,8 @@ package provider
 import (
 	"embed"
 
+	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
+
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -174,6 +176,7 @@ func Provider() *provider.Provider {
 			"lambda.runtimes":                       lambda.LambdaRuntimes(),
 			"mq.brokers":                            mq.Brokers(),
 			"organizations.accounts":                organizations.OrganizationsAccounts(),
+			"qldb.ledgers":                          qldb.Ledgers(),
 			"rds.certificates":                      rds.RdsCertificates(),
 			"rds.cluster_parameter_groups":          rds.RdsClusterParameterGroups(),
 			"rds.cluster_snapshots":                 rds.RdsClusterSnapshots(),

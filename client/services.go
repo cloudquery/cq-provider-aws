@@ -3,6 +3,8 @@ package client
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/service/qldb"
+
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
@@ -607,4 +609,13 @@ type CodePipelineClient interface {
 	ListPipelines(ctx context.Context, params *codepipeline.ListPipelinesInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListPipelinesOutput, error)
 	GetPipeline(ctx context.Context, params *codepipeline.GetPipelineInput, optFns ...func(*codepipeline.Options)) (*codepipeline.GetPipelineOutput, error)
 	ListTagsForResource(ctx context.Context, params *codepipeline.ListTagsForResourceInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListTagsForResourceOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_qldb.go . QldbClient
+type QLDBClient interface {
+	qldb.ListLedgersAPIClient
+	qldb.ListJournalKinesisStreamsForLedgerAPIClient
+	qldb.ListJournalS3ExportsForLedgerAPIClient
+	DescribeLedger(ctx context.Context, params *qldb.DescribeLedgerInput, optFns ...func(*qldb.Options)) (*qldb.DescribeLedgerOutput, error)
+	ListTagsForResource(ctx context.Context, params *qldb.ListTagsForResourceInput, optFns ...func(*qldb.Options)) (*qldb.ListTagsForResourceOutput, error)
 }
