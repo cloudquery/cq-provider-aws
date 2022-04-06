@@ -45,6 +45,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/organizations v1.2.1
+	github.com/aws/aws-sdk-go-v2/service/qldb v1.14.3
 	github.com/aws/aws-sdk-go-v2/service/rds v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/redshift v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.4.0
@@ -90,7 +91,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.3.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/qldb v1.14.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
 	github.com/creasty/defaults v1.5.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
