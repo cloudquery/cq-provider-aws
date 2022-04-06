@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/qldb"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -136,6 +138,7 @@ type Services struct {
 	Lambda                 LambdaClient
 	MQ                     MQClient
 	Organizations          OrganizationsClient
+	QLDB                   QLDBClient
 	RDS                    RdsClient
 	Redshift               RedshiftClient
 	Route53                Route53Client
@@ -525,6 +528,7 @@ func initServices(region string, c aws.Config) Services {
 		Lambda:                 lambda.NewFromConfig(awsCfg),
 		MQ:                     mq.NewFromConfig(awsCfg),
 		Organizations:          organizations.NewFromConfig(awsCfg),
+		QLDB:                   qldb.NewFromConfig(awsCfg),
 		RDS:                    rds.NewFromConfig(awsCfg),
 		Redshift:               redshift.NewFromConfig(awsCfg),
 		Route53:                route53.NewFromConfig(awsCfg),
