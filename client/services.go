@@ -611,7 +611,7 @@ type CodePipelineClient interface {
 	ListTagsForResource(ctx context.Context, params *codepipeline.ListTagsForResourceInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListTagsForResourceOutput, error)
 }
 
-//go:generate mockgen -package=mocks -destination=./mocks/mock_qldb.go . QldbClient
+//go:generate mockgen -package=mocks -destination=./mocks/mock_qldb.go . QLDBClient
 type QLDBClient interface {
 	qldb.ListLedgersAPIClient
 	qldb.ListJournalKinesisStreamsForLedgerAPIClient

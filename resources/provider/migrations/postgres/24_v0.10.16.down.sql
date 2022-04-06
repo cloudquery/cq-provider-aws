@@ -20,3 +20,7 @@ DROP TABLE IF EXISTS aws_mq_broker_configuration_revisions;
 ALTER TABLE IF EXISTS aws_mq_broker_users DROP CONSTRAINT aws_mq_broker_users_pk;
 ALTER TABLE IF EXISTS aws_mq_broker_users ADD CONSTRAINT aws_mq_broker_users_pk PRIMARY KEY (broker_cq_id,username);
 
+-- Resource: qldb.ledgers
+DROP TABLE IF EXISTS aws_qldb_ledger_journal_kinesis_streams;
+DROP TABLE IF EXISTS aws_qldb_ledger_journal_s3_exports;
+DROP TABLE IF EXISTS aws_qldb_ledgers;
