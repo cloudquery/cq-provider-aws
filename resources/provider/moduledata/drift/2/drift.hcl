@@ -628,6 +628,37 @@ provider "aws" {
     }
   }
 
+  resource "codepipeline.pipelines" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created", "updated", "artifact_stores", "version" ]
+
+    iac {
+      terraform {
+        type = "aws_codepipeline"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "artifact_store_location=artifact_store.0.location",
+          "artifact_store_type=artifact_store.0.type",
+          "artifact_store_encryption_key_id=artifact_store.0.encryption_key.0.id",
+          "artifact_store_encryption_key_type=artifact_store.0.encryption_key.0.type"
+        ]
+      }
+    }
+  }
+
+  resource "aws_codepipeline_pipeline_stages" {
+    identifiers = [ "parent.arn", "c.name" ]
+    ignore_attributes = [ "blockers", "stage_order" ]
+
+    iac {
+      terraform {
+        type = "aws_codepipeline"
+        identifiers = [ "root.arn", "name" ]
+        path = "stage"
+      }
+    }
+  }
+
   resource "cognito.identity_pools" {
     iac {
       terraform {
