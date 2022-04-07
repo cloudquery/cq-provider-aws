@@ -19,3 +19,18 @@ ALTER TABLE IF EXISTS aws_mq_broker_configurations ADD CONSTRAINT aws_mq_broker_
 DROP TABLE IF EXISTS aws_mq_broker_configuration_revisions;
 ALTER TABLE IF EXISTS aws_mq_broker_users DROP CONSTRAINT aws_mq_broker_users_pk;
 ALTER TABLE IF EXISTS aws_mq_broker_users ADD CONSTRAINT aws_mq_broker_users_pk PRIMARY KEY (broker_cq_id,username);
+
+-- Resource: ecs.clusters
+DROP TABLE IF EXISTS aws_ecs_cluster_task_attachments;
+DROP TABLE IF EXISTS aws_ecs_cluster_task_containers;
+DROP TABLE IF EXISTS aws_ecs_cluster_tasks;
+ALTER TABLE IF EXISTS "aws_ecs_cluster_service_deployments"
+    DROP COLUMN IF EXISTS "platform_family";
+ALTER TABLE IF EXISTS "aws_ecs_cluster_service_task_sets"
+    DROP COLUMN IF EXISTS "platform_family";
+ALTER TABLE IF EXISTS "aws_ecs_cluster_services"
+    DROP COLUMN IF EXISTS "platform_family";
+DROP TABLE IF EXISTS aws_ecs_cluster_container_instance_health_status_details;
+ALTER TABLE IF EXISTS "aws_ecs_cluster_container_instances"
+    DROP COLUMN IF EXISTS "health_status_overall_status";
+
