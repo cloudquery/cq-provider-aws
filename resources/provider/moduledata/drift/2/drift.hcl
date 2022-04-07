@@ -659,6 +659,31 @@ provider "aws" {
     }
   }
 
+  resource "aws_codepipeline_pipeline_stage_actions" {
+    identifiers = [ "parent1.arn", "parent.name", "c.name" ]
+    ignore_attributes = [ "run_order" ]
+
+    iac {
+      terraform {
+        type = "aws_codepipeline"
+        path = "stage"
+        identifiers = [ "root.arn", "name", "action.#.name" ]
+        attribute_map = [
+          "category=action.#.category|0",
+          "configuration=action.#.configuration|0",
+          "provider=action.#.provider|0",
+          "version=action.#.version|0",
+          "owner=action.#.owner|0",
+          "region=action.#.region|0",
+          "role_arn=action.#.role_arn|0",
+          "namespace=action.#.namespace|0",
+          "input_artifacts=action.#.input_artifacts|0",
+          "output_artifacts=action.#.output_artifacts|0"
+        ]
+      }
+    }
+  }
+
   resource "cognito.identity_pools" {
     iac {
       terraform {
