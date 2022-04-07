@@ -865,9 +865,10 @@ func Clusters() *schema.Table {
 								Type:        schema.TypeInt,
 							},
 							{
-								Name:        "load_balancer_name",
-								Description: "The name of the load balancer to associate with the Amazon ECS service or task set",
-								Type:        schema.TypeString,
+								Name:          "load_balancer_name",
+								Description:   "The name of the load balancer to associate with the Amazon ECS service or task set",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "target_group_arn",
@@ -1083,10 +1084,9 @@ func Clusters() *schema.Table {
 										Type:        schema.TypeInt,
 									},
 									{
-										Name:          "load_balancer_name",
-										Description:   "The name of the load balancer to associate with the Amazon ECS service or task set",
-										Type:          schema.TypeString,
-										IgnoreInTests: true,
+										Name:        "load_balancer_name",
+										Description: "The name of the load balancer to associate with the Amazon ECS service or task set",
+										Type:        schema.TypeString,
 									},
 									{
 										Name:        "target_group_arn",
