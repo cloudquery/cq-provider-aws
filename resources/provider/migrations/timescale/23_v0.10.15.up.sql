@@ -23,303 +23,159 @@ ALTER TABLE IF EXISTS aws_ec2_security_group_ip_permission_user_id_group_pairs D
 ALTER TABLE IF EXISTS aws_ec2_security_group_ip_permission_user_id_group_pairs ADD CONSTRAINT aws_ec2_security_group_ip_permission_user_id_group_pairs_pk PRIMARY KEY (cq_fetch_date,cq_id);
 
 
--- Resource: ecs.clusters
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_tasks"
-(
-    "cq_id"                         uuid                        NOT NULL,
-    "cq_meta"                       jsonb,
-    "cq_fetch_date"                 timestamp without time zone NOT NULL,
-    "cluster_cq_id"                 uuid,
-    "attributes"                    jsonb,
-    "availability_zone"             text,
-    "capacity_provider_name"        text,
-    "cluster_arn"                   text,
-    "connectivity"                  text,
-    "connectivity_at"               timestamp without time zone,
-    "container_instance_arn"        text,
-    "cpu"                           text,
-    "created_at"                    timestamp without time zone,
-    "desired_status"                text,
-    "enable_execute_command"        boolean,
-    "ephemeral_storage_size_in_gib" integer,
-    "execution_stopped_at"          timestamp without time zone,
-    "group"                         text,
-    "health_status"                 text,
-    "inference_accelerators"        jsonb,
-    "last_status"                   text,
-    "launch_type"                   text,
-    "memory"                        text,
-    "overrides"                     jsonb,
-    "platform_family"               text,
-    "platform_version"              text,
-    "pull_started_at"               timestamp without time zone,
-    "pull_stopped_at"               timestamp without time zone,
-    "started_at"                    timestamp without time zone,
-    "started_by"                    text,
-    "stop_code"                     text,
-    "stopped_at"                    timestamp without time zone,
-    "stopped_reason"                text,
-    "stopping_at"                   timestamp without time zone,
-    "tags"                          jsonb,
-    "arn"                           text,
-    "task_definition_arn"           text,
-    "version"                       bigint,
-    CONSTRAINT aws_ecs_cluster_tasks_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
+
+-- Resource: workspaces.directories
+CREATE TABLE IF NOT EXISTS "aws_workspaces_directories" (
+	"cq_id" uuid NOT NULL,
+	"cq_meta" jsonb,
+	"cq_fetch_date" timestamp without time zone NOT NULL,
+	"account_id" text,
+	"region" text,
+	"alias" text,
+	"customer_user_name" text,
+	"id" text,
+	"name" text,
+	"type" text,
+    "arn" text,
+	"dns_ip_addresses" text[],
+	"iam_role_id" text,
+	"ip_group_ids" text[],
+	"registration_code" text,
+	"change_compute_type" text,
+	"increase_volume_size" text,
+	"rebuild_workspace" text,
+	"restart_workspace" text,
+	"switch_running_mode" text,
+	"state" text,
+	"subnet_ids" text[],
+	"tenancy" text,
+	"device_type_android" text,
+	"device_type_chrome_os" text,
+	"device_type_ios" text,
+	"device_type_linux" text,
+	"device_type_osx" text,
+	"device_type_web" text,
+	"device_type_windows" text,
+	"device_type_zero_client" text,
+	"custom_security_group_id" text,
+	"default_ou" text,
+	"enable_internet_access" boolean,
+	"enable_maintenance_mode" boolean,
+	"enable_work_docs" boolean,
+	"user_enabled_as_local_administrator" boolean,
+	"workspace_security_group_id" text,
+	CONSTRAINT aws_workspaces_directories_pk PRIMARY KEY(cq_fetch_date,id),
+	UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ecs_cluster_tasks (cq_fetch_date, cluster_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_tasks', 'cluster_cq_id', 'aws_ecs_clusters', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_task_attachments"
-(
-    "cq_id"              uuid                        NOT NULL,
-    "cq_meta"            jsonb,
-    "cq_fetch_date"      timestamp without time zone NOT NULL,
-    "cluster_task_cq_id" uuid,
-    "details"            jsonb,
-    "id"                 text,
-    "status"             text,
-    "type"               text,
-    CONSTRAINT aws_ecs_cluster_task_attachments_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
+SELECT setup_tsdb_parent('aws_workspaces_directories');
+
+-- Resource: workspaces.workspaces
+CREATE TABLE IF NOT EXISTS "aws_workspaces_workspaces" (
+	"cq_id" uuid NOT NULL,
+	"cq_meta" jsonb,
+	"cq_fetch_date" timestamp without time zone NOT NULL,
+	"account_id" text,
+	"region" text,
+    "arn" text,
+	"bundle_id" text,
+	"computer_name" text,
+	"directory_id" text,
+	"error_code" text,
+	"error_message" text,
+	"ip_address" text,
+	"modification_states" jsonb,
+	"root_volume_encryption_enabled" boolean,
+	"state" text,
+	"subnet_id" text,
+	"user_name" text,
+	"user_volume_encryption_enabled" boolean,
+	"volume_encryption_key" text,
+	"id" text,
+	"compute_type_name" text,
+	"root_volume_size_gib" integer,
+	"running_mode" text,
+	"running_mode_auto_stop_timeout_in_minutes" integer,
+	"user_volume_size_gib" integer,
+	CONSTRAINT aws_workspaces_workspaces_pk PRIMARY KEY(cq_fetch_date,id),
+	UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ecs_cluster_task_attachments (cq_fetch_date, cluster_task_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_task_attachments', 'cluster_task_cq_id', 'aws_ecs_cluster_tasks', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_task_containers"
-(
-    "cq_id"              uuid                        NOT NULL,
-    "cq_meta"            jsonb,
-    "cq_fetch_date"      timestamp without time zone NOT NULL,
-    "cluster_task_cq_id" uuid,
-    "container_arn"      text,
-    "cpu"                text,
-    "exit_code"          integer,
-    "gpu_ids"            text[],
-    "health_status"      text,
-    "image"              text,
-    "image_digest"       text,
-    "last_status"        text,
-    "managed_agents"     jsonb,
-    "memory"             text,
-    "memory_reservation" text,
-    "name"               text,
-    "network_bindings"   jsonb,
-    "network_interfaces" jsonb,
-    "reason"             text,
-    "runtime_id"         text,
-    "task_arn"           text,
-    CONSTRAINT aws_ecs_cluster_task_containers_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
+SELECT setup_tsdb_parent('aws_workspaces_workspaces');
+
+
+-- Resource: redshift.event_subscriptions
+CREATE TABLE IF NOT EXISTS "aws_redshift_event_subscriptions" (
+	"cq_id" uuid NOT NULL,
+	"cq_meta" jsonb,
+	"cq_fetch_date" timestamp without time zone NOT NULL,
+	"account_id" text,
+	"region" text,
+	"id" text,
+	"customer_aws_id" text,
+	"enabled" boolean,
+	"event_categories_list" text[],
+	"severity" text,
+	"sns_topic_arn" text,
+	"source_ids_list" text[],
+	"source_type" text,
+	"status" text,
+	"subscription_creation_time" timestamp without time zone,
+	"tags" jsonb,
+	CONSTRAINT aws_redshift_event_subscriptions_pk PRIMARY KEY(cq_fetch_date,account_id,id),
+	UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ecs_cluster_task_containers (cq_fetch_date, cluster_task_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_task_containers', 'cluster_task_cq_id', 'aws_ecs_cluster_tasks', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_services"
-(
-    "cq_id"                                                        uuid                        NOT NULL,
-    "cq_meta"                                                      jsonb,
-    "cq_fetch_date"                                                timestamp without time zone NOT NULL,
-    "cluster_cq_id"                                                uuid,
-    "capacity_provider_strategy"                                   jsonb,
-    "cluster_arn"                                                  text,
-    "created_at"                                                   timestamp without time zone,
-    "created_by"                                                   text,
-    "deployment_configuration_deployment_circuit_breaker_enable"   boolean,
-    "deployment_configuration_deployment_circuit_breaker_rollback" boolean,
-    "deployment_configuration_maximum_percent"                     integer,
-    "deployment_configuration_minimum_healthy_percent"             integer,
-    "deployment_controller_type"                                   text,
-    "desired_count"                                                integer,
-    "enable_ecs_managed_tags"                                      boolean,
-    "enable_execute_command"                                       boolean,
-    "health_check_grace_period_seconds"                            integer,
-    "launch_type"                                                  text,
-    "network_configuration_awsvpc_configuration_subnets"           text[],
-    "network_configuration_awsvpc_configuration_assign_public_ip"  text,
-    "network_configuration_awsvpc_configuration_security_groups"   text[],
-    "pending_count"                                                integer,
-    "placement_constraints"                                        jsonb,
-    "placement_strategy"                                           jsonb,
-    "platform_family"                                              text,
-    "platform_version"                                             text,
-    "propagate_tags"                                               text,
-    "role_arn"                                                     text,
-    "running_count"                                                integer,
-    "scheduling_strategy"                                          text,
-    "arn"                                                          text,
-    "name"                                                         text,
-    "status"                                                       text,
-    "tags"                                                         jsonb,
-    "task_definition"                                              text,
-    CONSTRAINT aws_ecs_cluster_services_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
+SELECT setup_tsdb_parent('aws_redshift_event_subscriptions');
+
+-- Resource: redshift.clusters
+CREATE TABLE IF NOT EXISTS "aws_redshift_snapshots" (
+	"cq_id" uuid NOT NULL,
+	"cq_meta" jsonb,
+	"cq_fetch_date" timestamp without time zone NOT NULL,
+	"actual_incremental_backup_size" float,
+	"availability_zone" text,
+	"backup_progress" float,
+	"cluster_create_time" timestamp without time zone,
+	"cluster_identifier" text,
+	"cluster_version" text,
+	"current_backup_rate" float,
+	"db_name" text,
+	"elapsed_time" bigint,
+	"encrypted" boolean,
+	"encrypted_with_hsm" boolean,
+	"engine_full_version" text,
+	"enhanced_vpc_routing" boolean,
+	"estimated_seconds_to_completion" bigint,
+	"kms_key_id" text,
+	"maintenance_track_name" text,
+	"manual_snapshot_remaining_days" integer,
+	"manual_snapshot_retention_period" integer,
+	"master_username" text,
+	"node_type" text,
+	"number_of_nodes" integer,
+	"owner_account" text,
+	"port" integer,
+	"restorable_node_types" text[],
+	"snapshot_create_time" timestamp without time zone,
+	"snapshot_identifier" text,
+	"snapshot_retention_start_time" timestamp without time zone,
+	"snapshot_type" text,
+	"source_region" text,
+	"status" text,
+	"total_backup_size_in_mega_bytes" float,
+	"vpc_id" text,
+	"tags" jsonb,
+	CONSTRAINT aws_redshift_snapshots_pk PRIMARY KEY(cq_fetch_date,cluster_identifier,cluster_create_time),
+	UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ecs_cluster_services (cq_fetch_date, cluster_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_services', 'cluster_cq_id', 'aws_ecs_clusters', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_deployments"
-(
-    "cq_id"                                                       uuid                        NOT NULL,
-    "cq_meta"                                                     jsonb,
-    "cq_fetch_date"                                               timestamp without time zone NOT NULL,
-    "cluster_service_cq_id"                                       uuid,
-    "capacity_provider_strategy"                                  jsonb,
-    "created_at"                                                  timestamp without time zone,
-    "desired_count"                                               integer,
-    "failed_tasks"                                                integer,
-    "id"                                                          text,
-    "launch_type"                                                 text,
-    "network_configuration_awsvpc_configuration_subnets"          text[],
-    "network_configuration_awsvpc_configuration_assign_public_ip" text,
-    "network_configuration_awsvpc_configuration_security_groups"  text[],
-    "pending_count"                                               integer,
-    "platform_family"                                             text,
-    "platform_version"                                            text,
-    "rollout_state"                                               text,
-    "rollout_state_reason"                                        text,
-    "running_count"                                               integer,
-    "status"                                                      text,
-    "task_definition"                                             text,
-    "updated_at"                                                  timestamp without time zone,
-    CONSTRAINT aws_ecs_cluster_service_deployments_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
+SELECT setup_tsdb_parent('aws_redshift_snapshots');
+CREATE TABLE IF NOT EXISTS "aws_redshift_snapshot_accounts_with_restore_access" (
+	"cq_id" uuid NOT NULL,
+	"cq_meta" jsonb,
+	"cq_fetch_date" timestamp without time zone NOT NULL,
+	"snapshot_cq_id" uuid,
+	"account_alias" text,
+	"account_id" text,
+	CONSTRAINT aws_redshift_snapshot_accounts_with_restore_access_pk PRIMARY KEY(cq_fetch_date,cq_id),
+	UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ecs_cluster_service_deployments (cq_fetch_date, cluster_service_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_deployments', 'cluster_service_cq_id', 'aws_ecs_cluster_services',
-                        'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_events"
-(
-    "cq_id"                 uuid                        NOT NULL,
-    "cq_meta"               jsonb,
-    "cq_fetch_date"         timestamp without time zone NOT NULL,
-    "cluster_service_cq_id" uuid,
-    "created_at"            timestamp without time zone,
-    "id"                    text,
-    "message"               text,
-    CONSTRAINT aws_ecs_cluster_service_events_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_events (cq_fetch_date, cluster_service_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_events', 'cluster_service_cq_id', 'aws_ecs_cluster_services', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_load_balancers"
-(
-    "cq_id"                 uuid                        NOT NULL,
-    "cq_meta"               jsonb,
-    "cq_fetch_date"         timestamp without time zone NOT NULL,
-    "cluster_service_cq_id" uuid,
-    "container_name"        text,
-    "container_port"        integer,
-    "load_balancer_name"    text,
-    "target_group_arn"      text,
-    CONSTRAINT aws_ecs_cluster_service_load_balancers_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_load_balancers (cq_fetch_date, cluster_service_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_load_balancers', 'cluster_service_cq_id', 'aws_ecs_cluster_services',
-                        'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_service_registries"
-(
-    "cq_id"                 uuid                        NOT NULL,
-    "cq_meta"               jsonb,
-    "cq_fetch_date"         timestamp without time zone NOT NULL,
-    "cluster_service_cq_id" uuid,
-    "container_name"        text,
-    "container_port"        integer,
-    "port"                  integer,
-    "registry_arn"          text,
-    CONSTRAINT aws_ecs_cluster_service_service_registries_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_service_registries (cq_fetch_date, cluster_service_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_service_registries', 'cluster_service_cq_id',
-                        'aws_ecs_cluster_services', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_task_sets"
-(
-    "cq_id"                                                       uuid                        NOT NULL,
-    "cq_meta"                                                     jsonb,
-    "cq_fetch_date"                                               timestamp without time zone NOT NULL,
-    "cluster_service_cq_id"                                       uuid,
-    "capacity_provider_strategy"                                  jsonb,
-    "cluster_arn"                                                 text,
-    "computed_desired_count"                                      integer,
-    "created_at"                                                  timestamp without time zone,
-    "external_id"                                                 text,
-    "id"                                                          text,
-    "launch_type"                                                 text,
-    "network_configuration_awsvpc_configuration_subnets"          text[],
-    "network_configuration_awsvpc_configuration_assign_public_ip" text,
-    "network_configuration_awsvpc_configuration_security_groups"  text[],
-    "pending_count"                                               integer,
-    "platform_family"                                             text,
-    "platform_version"                                            text,
-    "running_count"                                               integer,
-    "scale_unit"                                                  text,
-    "scale_value"                                                 float,
-    "service_arn"                                                 text,
-    "stability_status"                                            text,
-    "stability_status_at"                                         timestamp without time zone,
-    "started_by"                                                  text,
-    "status"                                                      text,
-    "tags"                                                        jsonb,
-    "task_definition"                                             text,
-    "arn"                                                         text,
-    "updated_at"                                                  timestamp without time zone,
-    CONSTRAINT aws_ecs_cluster_service_task_sets_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_task_sets (cq_fetch_date, cluster_service_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_task_sets', 'cluster_service_cq_id', 'aws_ecs_cluster_services',
-                        'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_task_set_load_balancers"
-(
-    "cq_id"                          uuid                        NOT NULL,
-    "cq_meta"                        jsonb,
-    "cq_fetch_date"                  timestamp without time zone NOT NULL,
-    "cluster_service_task_set_cq_id" uuid,
-    "container_name"                 text,
-    "container_port"                 integer,
-    "load_balancer_name"             text,
-    "target_group_arn"               text,
-    CONSTRAINT aws_ecs_cluster_service_task_set_load_balancers_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_task_set_load_balancers (cq_fetch_date, cluster_service_task_set_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_task_set_load_balancers', 'cluster_service_task_set_cq_id',
-                        'aws_ecs_cluster_service_task_sets', 'cq_id');
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_service_task_set_service_registries"
-(
-    "cq_id"                          uuid                        NOT NULL,
-    "cq_meta"                        jsonb,
-    "cq_fetch_date"                  timestamp without time zone NOT NULL,
-    "cluster_service_task_set_cq_id" uuid,
-    "container_name"                 text,
-    "container_port"                 integer,
-    "port"                           integer,
-    "arn"                            text,
-    CONSTRAINT aws_ecs_cluster_service_task_set_service_registries_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_service_task_set_service_registries (cq_fetch_date, cluster_service_task_set_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_service_task_set_service_registries', 'cluster_service_task_set_cq_id',
-                        'aws_ecs_cluster_service_task_sets', 'cq_id');
-ALTER TABLE IF EXISTS "aws_ecs_cluster_services"
-    ADD COLUMN IF NOT EXISTS "platform_family" text;
-ALTER TABLE IF EXISTS "aws_ecs_cluster_service_deployments"
-    ADD COLUMN IF NOT EXISTS "platform_family" text;
-ALTER TABLE IF EXISTS "aws_ecs_cluster_service_task_sets"
-    ADD COLUMN IF NOT EXISTS "platform_family" text;
-ALTER TABLE IF EXISTS "aws_ecs_cluster_container_instances"
-    ADD COLUMN IF NOT EXISTS "health_status_overall_status" text;
-CREATE TABLE IF NOT EXISTS "aws_ecs_cluster_container_instance_health_status_details"
-(
-    "cq_id"                            uuid                        NOT NULL,
-    "cq_meta"                          jsonb,
-    "cq_fetch_date"                    timestamp without time zone NOT NULL,
-    "cluster_container_instance_cq_id" uuid,
-    "last_status_change"               timestamp without time zone,
-    "last_updated"                     timestamp without time zone,
-    "status"                           text,
-    "type"                             text,
-    CONSTRAINT aws_ecs_cluster_container_instance_health_status_details_pk PRIMARY KEY (cq_fetch_date, cq_id),
-    UNIQUE (cq_fetch_date, cq_id)
-);
-CREATE INDEX ON aws_ecs_cluster_container_instance_health_status_details (cq_fetch_date, cluster_container_instance_cq_id);
-SELECT setup_tsdb_child('aws_ecs_cluster_container_instance_health_status_details', 'cluster_container_instance_cq_id',
-                        'aws_ecs_cluster_container_instances', 'cq_id');
+CREATE INDEX ON aws_redshift_snapshot_accounts_with_restore_access (cq_fetch_date, snapshot_cq_id);
+SELECT setup_tsdb_child('aws_redshift_snapshot_accounts_with_restore_access', 'snapshot_cq_id', 'aws_redshift_snapshots', 'cq_id');

@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild"
+	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
@@ -337,6 +338,8 @@ type KmsClient interface {
 type MQClient interface {
 	DescribeBroker(ctx context.Context, params *mq.DescribeBrokerInput, optFns ...func(*mq.Options)) (*mq.DescribeBrokerOutput, error)
 	DescribeConfiguration(ctx context.Context, params *mq.DescribeConfigurationInput, optFns ...func(*mq.Options)) (*mq.DescribeConfigurationOutput, error)
+	ListConfigurationRevisions(ctx context.Context, params *mq.ListConfigurationRevisionsInput, optFns ...func(*mq.Options)) (*mq.ListConfigurationRevisionsOutput, error)
+	DescribeConfigurationRevision(ctx context.Context, params *mq.DescribeConfigurationRevisionInput, optFns ...func(*mq.Options)) (*mq.DescribeConfigurationRevisionOutput, error)
 	DescribeUser(ctx context.Context, params *mq.DescribeUserInput, optFns ...func(*mq.Options)) (*mq.DescribeUserOutput, error)
 	ListBrokers(ctx context.Context, params *mq.ListBrokersInput, optFns ...func(*mq.Options)) (*mq.ListBrokersOutput, error)
 }
@@ -599,4 +602,11 @@ type IOTClient interface {
 type WorkspacesClient interface {
 	DescribeWorkspaces(ctx context.Context, params *workspaces.DescribeWorkspacesInput, optFns ...func(*workspaces.Options)) (*workspaces.DescribeWorkspacesOutput, error)
 	DescribeWorkspaceDirectories(ctx context.Context, params *workspaces.DescribeWorkspaceDirectoriesInput, optFns ...func(*workspaces.Options)) (*workspaces.DescribeWorkspaceDirectoriesOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_codepipeline.go . CodePipelineClient
+type CodePipelineClient interface {
+	ListPipelines(ctx context.Context, params *codepipeline.ListPipelinesInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListPipelinesOutput, error)
+	GetPipeline(ctx context.Context, params *codepipeline.GetPipelineInput, optFns ...func(*codepipeline.Options)) (*codepipeline.GetPipelineOutput, error)
+	ListTagsForResource(ctx context.Context, params *codepipeline.ListTagsForResourceInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListTagsForResourceOutput, error)
 }
