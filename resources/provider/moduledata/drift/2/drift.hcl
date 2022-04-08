@@ -456,6 +456,88 @@ provider "aws" {
     }
   }
 
+  resource "backup.plans" {
+    ignore_attributes = [ "creation_date", "creator_request_id", "last_execution_date" ]
+    iac {
+      terraform {
+        type = "aws_backup_plan"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "advanced_backup_settings=advanced_backup_setting|0",
+          "version_id=version"
+        ]
+      }
+    }
+  }
+
+  resource "aws_backup_plan_rules" {
+    identifiers = [ "parent.arn", "c.name" ]
+    ignore_attributes = [ "id", "name" ]
+    iac {
+      terraform {
+        type = "aws_backup_plan"
+        path = "rule"
+        identifiers = [ "root.arn", "rule_name" ]
+        attribute_map = [
+          "completion_window_minutes=completion_window",
+          "schedule_expression=schedule",
+          "start_window_minutes=start_window",
+          "target_backup_vault_name=target_vault_name"
+        ]
+      }
+    }
+  }
+
+  resource "aws_backup_plan_selections" {
+    identifiers = [ "parent.id", "c.selection_id" ]
+    ignore_attributes = [ "creation_date", "creator_request_id", "conditions", "list_of_tags" ]
+#    sets = [ "conditions", "list_of_tags" ] # TODO CamelCase vs snake_case in keys of map
+    iac {
+      terraform {
+        type = "aws_backup_selection"
+        identifiers = [ "plan_id", "id" ]
+        attribute_map = [
+          "selection_id=id",
+          "selection_name=name"
+#          "conditions=condition",
+#          "list_of_tags=selection_tag"
+        ]
+      }
+    }
+  }
+
+  resource "backup.vaults" {
+    ignore_attributes = [ "creation_date", "creator_request_id", "locked", "notification_events", "notification_sns_topic_arn", "lock_date", "max_retention_days", "min_retention_days", "access_policy" ]
+    iac {
+      terraform {
+        type = "aws_backup_vault"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "encryption_key_arn=kms_key_arn",
+          "number_of_recovery_points=recovery_points"
+        ]
+      }
+    }
+  }
+
+  resource "backup.vaults#notif" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "creation_date", "creator_request_id", "locked", "encryption_key_arn", "number_of_recovery_points", "lock_date", "max_retention_days", "min_retention_days", "tags", "access_policy" ]
+    sets = [ "notification_events" ]
+    iac {
+      terraform {
+        type = "aws_backup_vault_notifications"
+        identifiers = [ "backup_vault_arn" ]
+        attribute_map = [
+          "arn=backup_vault_arn",
+          "name=backup_vault_name",
+          "notification_events=backup_vault_events",
+          "notification_sns_topic_arn=sns_topic_arn"
+        ]
+      }
+    }
+  }
+
   resource "cloudformation.stacks" {
     identifiers = [ "id" ]
     ignore_attributes = [ "status", "stack_drift_status" ]
