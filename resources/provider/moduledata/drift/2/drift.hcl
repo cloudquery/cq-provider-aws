@@ -1317,6 +1317,18 @@ provider "aws" {
     }
   }
 
+  resource "iam.virtual_mfa_devices" {
+    identifiers = [ "serial_number" ]
+    ignore_attributes = [ "enable_date" ]
+
+    iac {
+      terraform {
+        type = "aws_iam_virtual_mfa_device"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
   resource "iot.certificates" {
     identifiers = [ "id" ]
 
