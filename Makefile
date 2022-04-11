@@ -9,12 +9,12 @@ install-cq:
 # start a timescale db running in a local container
 .PHONY: ts-start
 ts-start:
-	docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -d timescale/timescaledb:latest-pg14
+	docker run -p 5433:5432 -e POSTGRES_PASSWORD=pass -d timescale/timescaledb:latest-pg14
 
 # stop the timescale db running in a local container
 .PHONY: ts-stop
 ts-stop:
-	docker stop $$(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
+	docker stop $(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
 
 # start a running docker container
 .PHONY: start-pg

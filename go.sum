@@ -179,6 +179,8 @@ github.com/aws/aws-sdk-go-v2/service/applicationautoscaling v1.10.2 h1:GJsq/y3pe
 github.com/aws/aws-sdk-go-v2/service/applicationautoscaling v1.10.2/go.mod h1:JRrNjpM1qIFI25ikEvad6g8Q5qw0B1S8G0di/9kU7DY=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0 h1:7dqTi+BP80MdTWZdnYDJwkl7t/4fD51+uuTPXZ0LhE0=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0/go.mod h1:F9sOgLk8RCWpkJ9DgH5LQCDqHnJzW1e28ShymxCM7Cw=
+github.com/aws/aws-sdk-go-v2/service/backup v1.15.4 h1:PVlUfQeHFHPRuOvhLzUZtN87pW+PS3nEN26HafySdmU=
+github.com/aws/aws-sdk-go-v2/service/backup v1.15.4/go.mod h1:DWsfYG0l7yjp5J93bZgX0/CfAgq8flHHtaVlgZL1z4w=
 github.com/aws/aws-sdk-go-v2/service/cloudformation v1.20.0 h1:3FtUNwTg7GSvSwuZzLqOwGaCB1+cARw+Q00bwolCC60=
 github.com/aws/aws-sdk-go-v2/service/cloudformation v1.20.0/go.mod h1:ap2TY1qPxT8TlKoBgG+FYAr/JYJrYuDMmTyZfajTsX8=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.3.0 h1:8fOeCj6bb2JtkWvxP6McS4RR/CV20IG4JzZWYz4Z12E=
@@ -213,6 +215,8 @@ github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0 h1:6ExOoVgntAVuVARounLgbXnMLWjy0
 github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0/go.mod h1:fxAA3GE+slgrsFyA3bsN0lknZ+egpPdvu7GosNGoVT4=
 github.com/aws/aws-sdk-go-v2/service/ecs v1.2.0 h1:LlnxkpvIugxKNMjANn4KsD4/Vxs2yc7KHqtmGCwY+5w=
 github.com/aws/aws-sdk-go-v2/service/ecs v1.2.0/go.mod h1:t2Lhvr7z1eoNmVILjyAdhL8iElYeLeGSEK559gzbAVk=
+github.com/aws/aws-sdk-go-v2/service/ecs v1.18.1 h1:MZKnNbcKEoHIhGEcsybTjc7yNsKlZr5Fyu3XjVS1/ug=
+github.com/aws/aws-sdk-go-v2/service/ecs v1.18.1/go.mod h1:IMFY+VG/R/8MXaShcrlq7M8gfySqc7IIQTUWxJEw/FQ=
 github.com/aws/aws-sdk-go-v2/service/efs v1.2.0 h1:PCLM4aShavpVcyXqUoUsQpMJ+Z/PLOFjQuV3NKxitmg=
 github.com/aws/aws-sdk-go-v2/service/efs v1.2.0/go.mod h1:6ZQj15y/BJWGzjbc7JIjD9K4QEINDR5Es/2OW9frZ7I=
 github.com/aws/aws-sdk-go-v2/service/eks v1.2.1 h1:eNSGiZZKcrjT1/UlxOSL/v1gjR5bePJk4xMdGBZXd1o=
@@ -347,8 +351,8 @@ github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58/go.mod h1:EOBUe0h
 github.com/cloudquery/cq-gen v0.0.3 h1:8SUghTX6M5z2LbUizn4WhzbRO6Mq1YDO++4wubC59xc=
 github.com/cloudquery/cq-gen v0.0.3/go.mod h1:1UY0w0cm8uC3DwCUO5GNClB6pOztnbBvbOQOkSm6X7Y=
 github.com/cloudquery/cq-provider-sdk v0.8.2/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
-github.com/cloudquery/cq-provider-sdk v0.8.15 h1:w86XjJ+y9+HxGdltVdwdiDUe77bNKA7kgZcGAPZfh1w=
-github.com/cloudquery/cq-provider-sdk v0.8.15/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
+github.com/cloudquery/cq-provider-sdk v0.8.16 h1:Jv341XVoVKBOLPKJ72pSHXe6xK5ehYJ3B88s3+NEEZU=
+github.com/cloudquery/cq-provider-sdk v0.8.16/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
 github.com/cloudquery/faker/v3 v3.7.4/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=
 github.com/cloudquery/faker/v3 v3.7.5 h1:G7ANdEEcm8TvAAjIwNWSLrYK36CFCiSlrCqOTGCccL0=
 github.com/cloudquery/faker/v3 v3.7.5/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=

@@ -29,7 +29,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.10.0
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.32.1
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.0
-	github.com/aws/aws-sdk-go-v2/service/ecs v1.2.0
+	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.1
 	github.com/aws/aws-sdk-go-v2/service/efs v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/eks v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.9.1
@@ -64,7 +64,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.3
-	github.com/cloudquery/cq-provider-sdk v0.8.15
+	github.com/cloudquery/cq-provider-sdk v0.8.16
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -85,6 +85,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.9 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/backup v1.15.4
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.5.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.3.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.1 // indirect

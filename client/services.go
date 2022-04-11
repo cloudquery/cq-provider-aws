@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
@@ -409,6 +410,8 @@ type EcsClient interface {
 	ListContainerInstances(ctx context.Context, params *ecs.ListContainerInstancesInput, optFns ...func(*ecs.Options)) (*ecs.ListContainerInstancesOutput, error)
 	ListTaskDefinitions(ctx context.Context, params *ecs.ListTaskDefinitionsInput, optFns ...func(*ecs.Options)) (*ecs.ListTaskDefinitionsOutput, error)
 	DescribeTaskDefinition(ctx context.Context, params *ecs.DescribeTaskDefinitionInput, optFns ...func(*ecs.Options)) (*ecs.DescribeTaskDefinitionOutput, error)
+	ListTasks(ctx context.Context, params *ecs.ListTasksInput, optFns ...func(*ecs.Options)) (*ecs.ListTasksOutput, error)
+	DescribeTasks(ctx context.Context, params *ecs.DescribeTasksInput, optFns ...func(*ecs.Options)) (*ecs.DescribeTasksOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_elasticsearch.go . ElasticSearch
@@ -608,4 +611,17 @@ type CodePipelineClient interface {
 	GetPipeline(ctx context.Context, params *codepipeline.GetPipelineInput, optFns ...func(*codepipeline.Options)) (*codepipeline.GetPipelineOutput, error)
 	ListTagsForResource(ctx context.Context, params *codepipeline.ListTagsForResourceInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListTagsForResourceOutput, error)
 	ListWebhooks(ctx context.Context, params *codepipeline.ListWebhooksInput, optFns ...func(*codepipeline.Options)) (*codepipeline.ListWebhooksOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/backup.go . BackupClient
+type BackupClient interface {
+	GetBackupPlan(ctx context.Context, params *backup.GetBackupPlanInput, optFns ...func(*backup.Options)) (*backup.GetBackupPlanOutput, error)
+	GetBackupSelection(ctx context.Context, params *backup.GetBackupSelectionInput, optFns ...func(*backup.Options)) (*backup.GetBackupSelectionOutput, error)
+	GetBackupVaultAccessPolicy(ctx context.Context, params *backup.GetBackupVaultAccessPolicyInput, optFns ...func(*backup.Options)) (*backup.GetBackupVaultAccessPolicyOutput, error)
+	GetBackupVaultNotifications(ctx context.Context, params *backup.GetBackupVaultNotificationsInput, optFns ...func(*backup.Options)) (*backup.GetBackupVaultNotificationsOutput, error)
+	ListBackupPlans(ctx context.Context, params *backup.ListBackupPlansInput, optFns ...func(*backup.Options)) (*backup.ListBackupPlansOutput, error)
+	ListBackupSelections(ctx context.Context, params *backup.ListBackupSelectionsInput, optFns ...func(*backup.Options)) (*backup.ListBackupSelectionsOutput, error)
+	ListBackupVaults(ctx context.Context, params *backup.ListBackupVaultsInput, optFns ...func(*backup.Options)) (*backup.ListBackupVaultsOutput, error)
+	ListRecoveryPointsByBackupVault(ctx context.Context, params *backup.ListRecoveryPointsByBackupVaultInput, optFns ...func(*backup.Options)) (*backup.ListRecoveryPointsByBackupVaultOutput, error)
+	ListTags(ctx context.Context, params *backup.ListTagsInput, optFns ...func(*backup.Options)) (*backup.ListTagsOutput, error)
 }
