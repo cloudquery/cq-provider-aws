@@ -272,16 +272,15 @@ func resolveVaultTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 	tags := make(map[string]string)
 	for {
 		result, err := svc.ListTags(ctx, &params, func(o *backup.Options) { o.Region = cl.Region })
-		if err != nil {
-			return diag.WrapError(err)
-		}
-
 		if result == nil {
 			break
 		}
-
-		client.TagsIntoMap(result.Tags, tags)
-
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for k, v := range result.Tags {
+			tags[k] = v
+		}
 		if aws.ToString(result.NextToken) == "" {
 			break
 		}
@@ -380,7 +379,9 @@ func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resou
 			break
 		}
 
-		client.TagsIntoMap(result.Tags, tags)
+		for k, v := range result.Tags {
+			tags[k] = v
+		}
 
 		if aws.ToString(result.NextToken) == "" {
 			break
