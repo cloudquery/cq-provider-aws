@@ -136,7 +136,7 @@ resource "aws" "codepipeline" "webhooks" {
 
   column "tags" {
     type = "JSON"
-    generate_resolver = false
+    generate_resolver = true
     description = "The tags associated with the webhook."
   }
 
