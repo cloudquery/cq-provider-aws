@@ -10,10 +10,6 @@ DROP TABLE IF EXISTS aws_codepipeline_pipelines;
 ALTER TABLE IF EXISTS aws_iam_virtual_mfa_devices DROP CONSTRAINT aws_iam_virtual_mfa_devices_pk;
 ALTER TABLE IF EXISTS aws_iam_virtual_mfa_devices ADD CONSTRAINT aws_iam_virtual_mfa_devices_pk PRIMARY KEY (cq_fetch_date,cq_id);
 
--- Resource: codepipeline.webhooks
-DROP TABLE IF EXISTS aws_codepipeline_webhook_filters;
-DROP TABLE IF EXISTS aws_codepipeline_webhooks;
-
 -- Resource: mq.brokers
 ALTER TABLE IF EXISTS aws_mq_brokers DROP CONSTRAINT aws_mq_brokers_pk;
 ALTER TABLE IF EXISTS "aws_mq_brokers" RENAME COLUMN id TO broker_id;
@@ -41,4 +37,3 @@ ALTER TABLE IF EXISTS "aws_ecs_cluster_services"
 DROP TABLE IF EXISTS aws_ecs_cluster_container_instance_health_status_details;
 ALTER TABLE IF EXISTS "aws_ecs_cluster_container_instances"
     DROP COLUMN IF EXISTS "health_status_overall_status";
-

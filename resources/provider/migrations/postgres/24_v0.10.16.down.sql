@@ -6,10 +6,6 @@ DROP TABLE IF EXISTS aws_codepipeline_pipeline_stage_actions;
 DROP TABLE IF EXISTS aws_codepipeline_pipeline_stages;
 DROP TABLE IF EXISTS aws_codepipeline_pipelines;
 
--- Resource: codepipeline.webhooks
-DROP TABLE IF EXISTS aws_codepipeline_webhook_filters;
-DROP TABLE IF EXISTS aws_codepipeline_webhooks;
-
 -- Resource: sns.subscriptions
 ALTER TABLE IF EXISTS aws_sns_subscriptions DROP CONSTRAINT aws_sns_subscriptions_pk;
 ALTER TABLE IF EXISTS aws_sns_subscriptions ADD CONSTRAINT aws_sns_subscriptions_pk PRIMARY KEY (arn);

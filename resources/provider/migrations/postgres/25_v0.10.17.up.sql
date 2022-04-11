@@ -103,3 +103,35 @@ CREATE TABLE IF NOT EXISTS "aws_backup_vault_recovery_points" (
 	UNIQUE(cq_id),
 	FOREIGN KEY (vault_cq_id) REFERENCES aws_backup_vaults(cq_id) ON DELETE CASCADE
 );
+
+-- Resource: codepipeline.webhooks
+CREATE TABLE IF NOT EXISTS "aws_codepipeline_webhooks" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "account_id" text,
+    "region" text,
+    "authentication" text,
+    "authentication_allowed_ip_range" text,
+    "authentication_secret_token" text,
+    "name" text,
+    "target_action" text,
+    "target_pipeline" text,
+    "url" text,
+    "arn" text,
+    "error_code" text,
+    "error_message" text,
+    "last_triggered" timestamp without time zone,
+    "tags" jsonb,
+    CONSTRAINT aws_codepipeline_webhooks_pk PRIMARY KEY(arn),
+    UNIQUE(cq_id)
+);
+CREATE TABLE IF NOT EXISTS "aws_codepipeline_webhook_filters" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "webhook_cq_id" uuid,
+    "json_path" text,
+    "match_equals" text,
+    CONSTRAINT aws_codepipeline_webhook_filters_pk PRIMARY KEY(cq_id),
+    UNIQUE(cq_id),
+    FOREIGN KEY (webhook_cq_id) REFERENCES aws_codepipeline_webhooks(cq_id) ON DELETE CASCADE
+);
