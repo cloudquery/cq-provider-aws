@@ -7,8 +7,10 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	ttypes "github.com/aws/aws-sdk-go-v2/service/acm/types"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -65,5 +67,44 @@ func TestResolveARN(t *testing.T) {
 			require.Equal(t, tt.resource.Get(tt.columnName), tt.want)
 			require.Equal(t, err != nil, tt.wantErr)
 		})
+	}
+}
+
+func TestTagsToMap(t *testing.T) {
+	type randomType struct {
+		Key   *string
+		Value *string
+	}
+
+	tests := []struct {
+		Input    interface{}
+		Expected map[string]string
+	}{
+		{
+			Input: []randomType{
+				{
+					Key:   aws.String("k"),
+					Value: aws.String("v"),
+				},
+			},
+			Expected: map[string]string{"k": "v"},
+		},
+		{
+			Input: []ttypes.Tag{
+				{
+					Key:   aws.String("k"),
+					Value: aws.String("v"),
+				},
+				{
+					Key:   aws.String("k2"),
+					Value: aws.String("v2"),
+				},
+			},
+			Expected: map[string]string{"k": "v", "k2": "v2"},
+		},
+	}
+	for _, tc := range tests {
+		res := TagsToMap(tc.Input)
+		assert.Equal(t, tc.Expected, res)
 	}
 }
