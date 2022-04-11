@@ -284,14 +284,12 @@ func IsAWSError(err error, code ...string) bool {
 	return false
 }
 
-// TagsToMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type *string) and returns a map
-func TagsToMap(tagSlice interface{}) map[string]string {
+// TagsIntoMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type *string) and writes them into the given map
+func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 	if k := reflect.TypeOf(tagSlice).Kind(); k != reflect.Slice {
 		panic("invalid usage: Only slices are supported as input: " + k.String())
 	}
 	slc := reflect.ValueOf(tagSlice)
-
-	ret := make(map[string]string, slc.Len())
 
 	for i := 0; i < slc.Len(); i++ {
 		val := slc.Index(i)
@@ -310,8 +308,18 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 			panic("Value field is not a ptr of string: " + valField.Type().String())
 		}
 
-		ret[keyField.Elem().String()] = valField.Elem().String()
+		dst[keyField.Elem().String()] = valField.Elem().String()
 	}
+}
 
+// TagsToMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type *string) and returns a map
+func TagsToMap(tagSlice interface{}) map[string]string {
+	if k := reflect.TypeOf(tagSlice).Kind(); k != reflect.Slice {
+		panic("invalid usage: Only slices are supported as input: " + k.String())
+	}
+	slc := reflect.ValueOf(tagSlice)
+
+	ret := make(map[string]string, slc.Len())
+	TagsIntoMap(tagSlice, ret)
 	return ret
 }

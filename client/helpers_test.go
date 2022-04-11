@@ -108,3 +108,28 @@ func TestTagsToMap(t *testing.T) {
 		assert.Equal(t, tc.Expected, res)
 	}
 }
+
+func TestTagsIntoMap(t *testing.T) {
+	type randomType struct {
+		Key   *string
+		Value *string
+	}
+
+	res := TagsToMap([]randomType{
+		{
+			Key:   aws.String("k"),
+			Value: aws.String("v"),
+		},
+	})
+
+	assert.Equal(t, map[string]string{"k": "v"}, res)
+
+	TagsIntoMap([]randomType{
+		{
+			Key:   aws.String("k2"),
+			Value: aws.String("v2"),
+		},
+	}, res)
+
+	assert.Equal(t, map[string]string{"k": "v", "k2": "v2"}, res)
+}
