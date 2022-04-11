@@ -260,11 +260,7 @@ func resolveSSMDocumentJSONField(getter func(d *types.DocumentDescription) inter
 
 func resolveSSMDocumentTags(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	d := resource.Item.(*types.DocumentDescription)
-	tags := make(map[string]string)
-	for _, t := range d.Tags {
-		tags[aws.ToString(t.Key)] = aws.ToString(t.Value)
-	}
-	return resource.Set(c.Name, tags)
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(d.Tags)))
 }
 
 func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) (exitErr error) {

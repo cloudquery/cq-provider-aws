@@ -290,15 +290,16 @@ func resolvePlanTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 	tags := make(map[string]string)
 	for {
 		result, err := svc.ListTags(ctx, &params, func(o *backup.Options) { o.Region = cl.Region })
-		if result == nil {
-			break
-		}
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		for k, v := range result.Tags {
-			tags[k] = v
+
+		if result == nil {
+			break
 		}
+
+		client.TagsIntoMap(result.Tags, tags)
+
 		if aws.ToString(result.NextToken) == "" {
 			break
 		}

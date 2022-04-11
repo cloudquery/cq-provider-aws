@@ -84,12 +84,7 @@ func fetchIamOpenidConnectIdentityProviders(ctx context.Context, meta schema.Cli
 }
 func resolveIamOpenidConnectIdentityProviderTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(IamOpenIdIdentityProviderWrapper)
-	response := make(map[string]interface{}, len(r.Tags))
-	for _, t := range r.Tags {
-		response[*t.Key] = t.Value
-	}
-
-	return resource.Set(c.Name, response)
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
 
 type IamOpenIdIdentityProviderWrapper struct {

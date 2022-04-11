@@ -77,12 +77,7 @@ func fetchIamSamlIdentityProviders(ctx context.Context, meta schema.ClientMeta, 
 }
 func resolveIamSamlIdentityProviderTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(IamSamlIdentityProviderWrapper)
-	response := make(map[string]interface{}, len(r.Tags))
-	for _, t := range r.Tags {
-		response[*t.Key] = t.Value
-	}
-
-	return resource.Set(c.Name, response)
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
 
 type IamSamlIdentityProviderWrapper struct {

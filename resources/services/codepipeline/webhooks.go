@@ -166,10 +166,5 @@ func fetchCodepipelineWebhookFilters(ctx context.Context, meta schema.ClientMeta
 }
 func ResolveCodepipelineWebhookTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	pipeline := resource.Item.(types.ListWebhookItem)
-
-	tags := make(map[string]interface{})
-	for _, t := range pipeline.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return resource.Set(c.Name, tags)
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(pipeline.Tags)))
 }
