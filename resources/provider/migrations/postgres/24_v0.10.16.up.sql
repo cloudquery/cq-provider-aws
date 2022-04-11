@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_kinesis_streams" (
      "exclusive_end_time" timestamp without time zone,
      "inclusive_start_time" timestamp without time zone,
      CONSTRAINT aws_qldb_ledger_journal_kinesis_streams_pk PRIMARY KEY(cq_id),
-     UNIQUE(cq_fetch_date,cq_id)
+     UNIQUE(cq_id)
     );
 CREATE INDEX ON aws_qldb_ledger_journal_kinesis_streams (ledger_cq_id);
 CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_s3_exports" (

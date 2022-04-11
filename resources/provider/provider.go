@@ -3,8 +3,6 @@ package provider
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
-
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -47,6 +45,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/lambda"
 	"github.com/cloudquery/cq-provider-aws/resources/services/mq"
 	"github.com/cloudquery/cq-provider-aws/resources/services/organizations"
+	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
 	"github.com/cloudquery/cq-provider-aws/resources/services/rds"
 	"github.com/cloudquery/cq-provider-aws/resources/services/redshift"
 	"github.com/cloudquery/cq-provider-aws/resources/services/route53"
