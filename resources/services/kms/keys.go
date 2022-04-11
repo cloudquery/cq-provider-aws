@@ -249,7 +249,11 @@ func resolveKmsKey(ctx context.Context, meta schema.ClientMeta, resource *schema
 			return diag.WrapError(err)
 		}
 
-		return diag.WrapError(resource.Set("tags", client.TagsToMap(tagsResponse.Tags)))
+		tags := make(map[string]interface{})
+		for _, t := range tagsResponse.Tags {
+			tags[*t.TagKey] = *t.TagValue
+		}
+		return resource.Set("tags", tags)
 	}
 	return nil
 }
