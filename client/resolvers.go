@@ -46,7 +46,7 @@ func resolveTagField(fieldName string) func(context.Context, schema.ClientMeta, 
 		}
 		f := val.FieldByName(fieldName)
 		if f.IsNil() {
-			return diag.WrapError(r.Set(c.Name, nil))
+			return diag.WrapError(r.Set(c.Name, map[string]string{})) // can't have nil or the integration test will make a fuss
 		} else if f.IsZero() {
 			panic("no such field " + fieldName)
 		}
