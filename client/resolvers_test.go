@@ -43,7 +43,7 @@ func TestResolveTags(t *testing.T) {
 			InputItem: types1.ListWebhookItem{ // non-ptr, nil
 				Tags: nil,
 			},
-			ExpectedTags: nil,
+			ExpectedTags: map[string]string{},
 		},
 	}
 
@@ -59,10 +59,6 @@ func TestResolveTags(t *testing.T) {
 		r := schema.NewResourceData(schema.PostgresDialect{}, ta, nil, tc.InputItem, nil, time.Now())
 		err := ResolveTags(context.Background(), nil, r, ta.Columns[0])
 		assert.NoError(t, err)
-		if tc.ExpectedTags == nil {
-			assert.Nil(t, r.Get(ta.Columns[0].Name))
-		} else {
-			assert.Equal(t, tc.ExpectedTags, r.Get(ta.Columns[0].Name))
-		}
+		assert.Equal(t, tc.ExpectedTags, r.Get(ta.Columns[0].Name))
 	}
 }
