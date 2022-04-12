@@ -298,6 +298,10 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 		}
 
 		keyField, valField := val.FieldByName("Key"), val.FieldByName("Value")
+		if keyField.IsNil() || valField.IsNil() {
+			continue
+		}
+
 		if keyField.IsZero() || valField.IsZero() {
 			panic("slice member is missing Key or Value fields")
 		}

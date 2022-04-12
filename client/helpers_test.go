@@ -92,8 +92,30 @@ func TestTagsToMap(t *testing.T) {
 		{
 			Input: []ttypes.Tag{
 				{
+					Key:   nil,
+					Value: nil,
+				},
+			},
+			Expected: map[string]string{},
+		},
+		{
+			Input: []ttypes.Tag{
+				{
+					Key:   aws.String(""),
+					Value: aws.String(""),
+				},
+			},
+			Expected: map[string]string{"": ""},
+		},
+		{
+			Input: []ttypes.Tag{
+				{
 					Key:   aws.String("k"),
 					Value: aws.String("v"),
+				},
+				{
+					Key:   nil,
+					Value: nil,
 				},
 				{
 					Key:   aws.String("k2"),
