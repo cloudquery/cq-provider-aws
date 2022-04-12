@@ -588,13 +588,11 @@ func EcsTaskDefinitions() *schema.Table {
 	}
 }
 
-// func fetchEcsTaskDefinitions(ctx)
-
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config ecs.ListTaskDefinitionsInput
 
 	region := meta.(*client.Client).Region
