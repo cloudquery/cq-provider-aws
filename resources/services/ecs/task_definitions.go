@@ -594,7 +594,7 @@ type TaskDefinitionWrapper struct {
 	Tags []types.Tag
 }
 
-func fetchEcsTaskDefinitions(ctx context.Context, res chan<- interface{}, svc client.EcsClient, region, taskArn string) error {
+func fetchEcsTaskDefinition(ctx context.Context, res chan<- interface{}, svc client.EcsClient, region, taskArn string) error {
 	describeClusterOutput, err := svc.DescribeTaskDefinition(ctx, &ecs.DescribeTaskDefinitionInput{
 		TaskDefinition: aws.String(taskArn),
 		Include:        []types.TaskDefinitionField{types.TaskDefinitionFieldTags},
@@ -635,7 +635,7 @@ func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent 
 		}
 
 		for _, t := range listClustersOutput.TaskDefinitionArns {
-			err := fetchEcsTaskDefinitions(ctx, res, svc, region, t)
+			err := fetchEcsTaskDefinition(ctx, res, svc, region, t)
 			if err != nil {
 				return err
 			}
