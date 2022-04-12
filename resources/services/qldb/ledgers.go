@@ -60,16 +60,18 @@ func Ledgers() *schema.Table {
 				Resolver:    schema.PathResolver("EncryptionDescription.EncryptionStatus"),
 			},
 			{
-				Name:        "kms_key_arn",
-				Description: "The Amazon Resource Name (ARN) of the customer managed KMS key that the ledger uses for encryption at rest",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("EncryptionDescription.KmsKeyArn"),
+				Name:          "kms_key_arn",
+				Description:   "The Amazon Resource Name (ARN) of the customer managed KMS key that the ledger uses for encryption at rest",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
+				Resolver:      schema.PathResolver("EncryptionDescription.KmsKeyArn"),
 			},
 			{
-				Name:        "inaccessible_kms_key_date_time",
-				Description: "The date and time, in epoch time format, when the KMS key first became inaccessible, in the case of an error",
-				Type:        schema.TypeTimestamp,
-				Resolver:    schema.PathResolver("EncryptionDescription.InaccessibleKmsKeyDateTime"),
+				Name:          "inaccessible_kms_key_date_time",
+				Description:   "The date and time, in epoch time format, when the KMS key first became inaccessible, in the case of an error",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
+				Resolver:      schema.PathResolver("EncryptionDescription.InaccessibleKmsKeyDateTime"),
 			},
 			{
 				Name:        "name",
@@ -89,9 +91,10 @@ func Ledgers() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_qldb_ledger_journal_kinesis_streams",
-				Description: "Information about an Amazon QLDB journal stream, including the Amazon Resource Name (ARN), stream name, creation time, current status, and the parameters of the original stream creation request.",
-				Resolver:    fetchQldbLedgerJournalKinesisStreams,
+				Name:          "aws_qldb_ledger_journal_kinesis_streams",
+				Description:   "Information about an Amazon QLDB journal stream, including the Amazon Resource Name (ARN), stream name, creation time, current status, and the parameters of the original stream creation request.",
+				Resolver:      fetchQldbLedgerJournalKinesisStreams,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "ledger_cq_id",
@@ -164,9 +167,10 @@ func Ledgers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_qldb_ledger_journal_s3_exports",
-				Description: "Information about a journal export job, including the ledger name, export ID, creation time, current status, and the parameters of the original export creation request.",
-				Resolver:    fetchQldbLedgerJournalS3Exports,
+				Name:          "aws_qldb_ledger_journal_s3_exports",
+				Description:   "Information about a journal export job, including the ledger name, export ID, creation time, current status, and the parameters of the original export creation request.",
+				Resolver:      fetchQldbLedgerJournalS3Exports,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "ledger_cq_id",
