@@ -588,12 +588,15 @@ func EcsTaskDefinitions() *schema.Table {
 	}
 }
 
+// func fetchEcsTaskDefinitions(ctx)
+
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config ecs.ListTaskDefinitionsInput
+
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ECS
 	for {
@@ -607,7 +610,10 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 			return nil
 		}
 		for _, t := range listClustersOutput.TaskDefinitionArns {
-			describeClusterOutput, err := svc.DescribeTaskDefinition(ctx, &ecs.DescribeTaskDefinitionInput{TaskDefinition: &t}, func(o *ecs.Options) {
+			describeClusterOutput, err := svc.DescribeTaskDefinition(ctx, &ecs.DescribeTaskDefinitionInput{
+				TaskDefinition: &t,
+				Include:        []types.TaskDefinitionField{types.TaskDefinitionFieldTags},
+			}, func(o *ecs.Options) {
 				o.Region = region
 			})
 			if err != nil {
