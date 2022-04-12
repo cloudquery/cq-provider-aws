@@ -190,7 +190,7 @@ func Snapshots() *schema.Table {
 				Name:        "tags",
 				Description: "Tags consisting of a name/value pair for a resource.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveSnapshotTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 		Relations: []*schema.Table{
@@ -254,9 +254,4 @@ func fetchRedshiftSnapshotAccountsWithRestoreAccesses(ctx context.Context, meta 
 	s := parent.Item.(types.Snapshot)
 	res <- s.AccountsWithRestoreAccess
 	return nil
-}
-
-func resolveSnapshotTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	s := resource.Item.(types.Snapshot)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(s.Tags)))
 }

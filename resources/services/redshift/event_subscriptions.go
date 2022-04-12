@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
-	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -88,7 +87,7 @@ func EventSubscriptions() *schema.Table {
 				Name:        "tags",
 				Description: "Tags",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveRedshiftEventSubscriptionTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 	}
@@ -117,9 +116,4 @@ func fetchRedshiftEventSubscriptions(ctx context.Context, meta schema.ClientMeta
 		params.Marker = result.Marker
 	}
 	return nil
-}
-
-func resolveRedshiftEventSubscriptionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	sub := resource.Item.(types.EventSubscription)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(sub.Tags)))
 }
