@@ -12,7 +12,7 @@ resource "aws" "ec2" "egress_only_internet_gateways" {
   }
   multiplex "AwsAccountRegion" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
-    params = ["codepipeline"]
+    params = ["ec2"]
   }
 
 

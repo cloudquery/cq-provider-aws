@@ -18,7 +18,7 @@ func EgressOnlyInternetGateways() *schema.Table {
 		Name:         "aws_ec2_egress_only_internet_gateways",
 		Description:  "Describes an egress-only internet gateway.",
 		Resolver:     fetchEc2EgressOnlyInternetGateways,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("codepipeline"),
+		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
