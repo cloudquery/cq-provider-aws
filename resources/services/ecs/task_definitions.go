@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -16,7 +17,7 @@ func EcsTaskDefinitions() *schema.Table {
 	return &schema.Table{
 		Name:          "aws_ecs_task_definitions",
 		Description:   "The details of a task definition which describes the container and volume definitions of an Amazon Elastic Container Service task",
-		Resolver:      fetchEcsTaskDefinitions,
+		Resolver:      listEcsTaskDefinitions,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("ecs"),
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
@@ -588,11 +589,36 @@ func EcsTaskDefinitions() *schema.Table {
 	}
 }
 
+type TaskDefinitionWrapper struct {
+	*types.TaskDefinition
+	Tags []types.Tag
+}
+
+func fetchEcsTaskDefinitions(ctx context.Context, res chan<- interface{}, svc client.EcsClient, region, taskArn string) error {
+	describeClusterOutput, err := svc.DescribeTaskDefinition(ctx, &ecs.DescribeTaskDefinitionInput{
+		TaskDefinition: aws.String(taskArn),
+		Include:        []types.TaskDefinitionField{types.TaskDefinitionFieldTags},
+	}, func(o *ecs.Options) {
+		o.Region = region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	if describeClusterOutput.TaskDefinition == nil {
+		return nil
+	}
+	res <- TaskDefinitionWrapper{
+		TaskDefinition: describeClusterOutput.TaskDefinition,
+		Tags:           describeClusterOutput.Tags,
+	}
+	return nil
+}
+
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config ecs.ListTaskDefinitionsInput
 
 	region := meta.(*client.Client).Region
@@ -607,20 +633,12 @@ func fetchEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent
 		if len(listClustersOutput.TaskDefinitionArns) == 0 {
 			return nil
 		}
+
 		for _, t := range listClustersOutput.TaskDefinitionArns {
-			describeClusterOutput, err := svc.DescribeTaskDefinition(ctx, &ecs.DescribeTaskDefinitionInput{
-				TaskDefinition: &t,
-				Include:        []types.TaskDefinitionField{types.TaskDefinitionFieldTags},
-			}, func(o *ecs.Options) {
-				o.Region = region
-			})
+			err := fetchEcsTaskDefinitions(ctx, res, svc, region, t)
 			if err != nil {
-				return diag.WrapError(err)
+				return err
 			}
-			if describeClusterOutput.TaskDefinition == nil {
-				continue
-			}
-			res <- *describeClusterOutput.TaskDefinition
 		}
 
 		if listClustersOutput.NextToken == nil {
@@ -814,22 +832,9 @@ func fetchEcsTaskDefinitionVolumes(ctx context.Context, meta schema.ClientMeta, 
 }
 
 func resolveEcsTaskDefinitionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TaskDefinition)
-
-	region := meta.(*client.Client).Region
-	svc := meta.(*client.Client).Services().ECS
-
-	tags, err := svc.ListTagsForResource(ctx, &ecs.ListTagsForResourceInput{
-		ResourceArn: r.TaskDefinitionArn,
-	}, func(options *ecs.Options) {
-		options.Region = region
-	})
-	if err != nil {
-		return diag.WrapError(err)
-	}
-
+	r := resource.Item.(TaskDefinitionWrapper)
 	j := map[string]interface{}{}
-	for _, a := range tags.Tags {
+	for _, a := range r.Tags {
 		j[*a.Key] = *a.Value
 	}
 	return resource.Set(c.Name, j)
