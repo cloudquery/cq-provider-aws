@@ -642,10 +642,13 @@ func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent 
 			if err := sem.Acquire(ctx, 1); err != nil {
 				return diag.WrapError(err)
 			}
-			errs.Go(func() error {
-				defer sem.Release(1)
-				return fetchEcsTaskDefinition(ctx, res, svc, region, t)
-			})
+			func(arn string) {
+				errs.Go(func() error {
+					defer sem.Release(1)
+					return fetchEcsTaskDefinition(ctx, res, svc, region, arn)
+				})
+			}(t)
+
 		}
 		err = errs.Wait()
 		if err != nil {
