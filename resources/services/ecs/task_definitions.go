@@ -649,7 +649,7 @@ func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent 
 	return nil
 }
 func resolveEcsTaskDefinitionsInferenceAccelerators(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TaskDefinition)
+	r := resource.Item.(TaskDefinitionWrapper)
 	j := map[string]interface{}{}
 	for _, a := range r.InferenceAccelerators {
 		j[*a.DeviceName] = *a.DeviceType
@@ -657,7 +657,7 @@ func resolveEcsTaskDefinitionsInferenceAccelerators(ctx context.Context, meta sc
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsPlacementConstraints(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TaskDefinition)
+	r := resource.Item.(TaskDefinitionWrapper)
 	j := map[string]interface{}{}
 	for _, p := range r.PlacementConstraints {
 		j[*p.Expression] = p.Type
@@ -665,7 +665,7 @@ func resolveEcsTaskDefinitionsPlacementConstraints(ctx context.Context, meta sch
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsProxyConfigurationProperties(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TaskDefinition)
+	r := resource.Item.(TaskDefinitionWrapper)
 	j := map[string]interface{}{}
 	if r.ProxyConfiguration == nil {
 		return nil
@@ -676,7 +676,7 @@ func resolveEcsTaskDefinitionsProxyConfigurationProperties(ctx context.Context, 
 	return resource.Set(c.Name, j)
 }
 func resolveEcsTaskDefinitionsRequiresAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TaskDefinition)
+	r := resource.Item.(TaskDefinitionWrapper)
 	data, err := json.Marshal(r.RequiresAttributes)
 	if err != nil {
 		return diag.WrapError(err)
@@ -684,7 +684,7 @@ func resolveEcsTaskDefinitionsRequiresAttributes(ctx context.Context, meta schem
 	return resource.Set(c.Name, data)
 }
 func fetchEcsTaskDefinitionContainerDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.TaskDefinition)
+	r := parent.Item.(TaskDefinitionWrapper)
 	res <- r.ContainerDefinitions
 	return nil
 }
@@ -826,7 +826,7 @@ func resolveEcsTaskDefinitionContainerDefinitionsVolumesFrom(ctx context.Context
 	return resource.Set(c.Name, j)
 }
 func fetchEcsTaskDefinitionVolumes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.TaskDefinition)
+	r := parent.Item.(TaskDefinitionWrapper)
 	res <- r.Volumes
 	return nil
 }
