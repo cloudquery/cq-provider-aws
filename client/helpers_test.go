@@ -72,6 +72,10 @@ func TestResolveARN(t *testing.T) {
 
 func TestTagsToMap(t *testing.T) {
 	type randomType struct {
+		Key   string
+		Value string
+	}
+	type randomTypePtr struct {
 		Key   *string
 		Value *string
 	}
@@ -82,6 +86,15 @@ func TestTagsToMap(t *testing.T) {
 	}{
 		{
 			Input: []randomType{
+				{
+					Key:   "k",
+					Value: "v",
+				},
+			},
+			Expected: map[string]string{"k": "v"},
+		},
+		{
+			Input: []randomTypePtr{
 				{
 					Key:   aws.String("k"),
 					Value: aws.String("v"),

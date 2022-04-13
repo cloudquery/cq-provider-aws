@@ -284,8 +284,20 @@ func IsAWSError(err error, code ...string) bool {
 	return false
 }
 
-// TagsIntoMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type *string) and writes them into the given map
+// TagsIntoMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type string or *string) and writes them into the given map
 func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
+	stringify := func(v reflect.Value) string {
+		vt := v.Type()
+		if vt.Kind() == reflect.String {
+			return v.String()
+		}
+		if vt.Kind() != reflect.Pointer || vt.Elem().Kind() != reflect.String {
+			panic("field is not string or *string")
+		}
+
+		return v.Elem().String()
+	}
+
 	if k := reflect.TypeOf(tagSlice).Kind(); k != reflect.Slice {
 		panic("invalid usage: Only slices are supported as input: " + k.String())
 	}
@@ -298,25 +310,19 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 		}
 
 		keyField, valField := val.FieldByName("Key"), val.FieldByName("Value")
-		if keyField.IsNil() || valField.IsNil() {
+		if (keyField.Type().Kind() == reflect.Pointer && keyField.IsNil()) || (valField.Type().Kind() == reflect.Pointer && valField.IsNil()) {
 			continue
 		}
 
 		if keyField.IsZero() || valField.IsZero() {
 			panic("slice member is missing Key or Value fields")
 		}
-		if keyField.Type().Kind() != reflect.Pointer || keyField.Type().Elem().Kind() != reflect.String {
-			panic("Key field is not a ptr of string: " + keyField.Type().String())
-		}
-		if valField.Type().Kind() != reflect.Pointer || valField.Type().Elem().Kind() != reflect.String {
-			panic("Value field is not a ptr of string: " + valField.Type().String())
-		}
 
-		dst[keyField.Elem().String()] = valField.Elem().String()
+		dst[stringify(keyField)] = stringify(valField)
 	}
 }
 
-// TagsToMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type *string) and returns a map
+// TagsToMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type string or *string) and returns a map
 func TagsToMap(tagSlice interface{}) map[string]string {
 	if k := reflect.TypeOf(tagSlice).Kind(); k != reflect.Slice {
 		panic("invalid usage: Only slices are supported as input: " + k.String())
