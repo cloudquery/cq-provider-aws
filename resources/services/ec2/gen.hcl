@@ -57,7 +57,7 @@ resource "aws" "ec2" "hosts" {
 
   column "tags" {
     type              = "json"
-    generate_resolver = true
+    generate_resolver = false
     description       = "Any tags assigned to the Dedicated Host."
   }
 

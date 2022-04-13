@@ -149,7 +149,7 @@ func Hosts() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the Dedicated Host.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveHostsTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 		Relations: []*schema.Table{
@@ -235,14 +235,6 @@ func fetchEc2Hosts(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 		input.NextToken = output.NextToken
 	}
 	return nil
-}
-func resolveHostsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	host := resource.Item.(types.Host)
-	tags := make(map[string]interface{})
-	for _, t := range host.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return resource.Set(c.Name, tags)
 }
 func fetchEc2HostAvailableCapacityAvailableInstanceCapacities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	host := parent.Item.(types.Host)
