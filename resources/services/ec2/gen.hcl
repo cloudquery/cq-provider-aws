@@ -81,7 +81,7 @@ resource "aws" "ec2" "network_interfaces" {
   userDefinedColumn "tags" {
     type        = "json"
     description = "Any tags assigned to the network interface."
-    generate_resolver = true
+    generate_resolver = false
   }
 
 }

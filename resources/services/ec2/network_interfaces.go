@@ -47,7 +47,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the network interface.",
 				Type:        schema.TypeJSON,
-				Resolver:    ResolveEc2NetworkInterfaceTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "association_allocation_id",
@@ -361,14 +361,6 @@ func fetchEc2NetworkInterfaces(ctx context.Context, meta schema.ClientMeta, pare
 	}
 	return nil
 }
-func ResolveEc2NetworkInterfaceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ni := resource.Item.(types.NetworkInterface)
-	tags := make(map[string]interface{})
-	for _, t := range ni.TagSet {
-		tags[*t.Key] = t.Value
-	}
-	return resource.Set(c.Name, tags)
-}
 func resolveNetworkInterfacesGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ni := resource.Item.(types.NetworkInterface)
 	b, err := json.Marshal(ni.Groups)
@@ -389,16 +381,16 @@ func resolveNetworkInterfacesIpv4Prefixes(ctx context.Context, meta schema.Clien
 func resolveNetworkInterfacesIpv6Addresses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ni := resource.Item.(types.NetworkInterface)
 	ipv6 := make([]*string, 0)
-	for _, i := range ni.Ipv4Prefixes {
-		ipv6 = append(ipv6, i.Ipv4Prefix)
+	for _, i := range ni.Ipv6Addresses {
+		ipv6 = append(ipv6, i.Ipv6Address)
 	}
 	return resource.Set(c.Name, ipv6)
 }
 func resolveNetworkInterfacesIpv6Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ni := resource.Item.(types.NetworkInterface)
 	ipv6 := make([]*string, 0)
-	for _, i := range ni.Ipv4Prefixes {
-		ipv6 = append(ipv6, i.Ipv4Prefix)
+	for _, i := range ni.Ipv6Prefixes {
+		ipv6 = append(ipv6, i.Ipv6Prefix)
 	}
 	return resource.Set(c.Name, ipv6)
 }
