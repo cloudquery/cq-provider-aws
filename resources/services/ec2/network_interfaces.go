@@ -47,7 +47,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the network interface.",
 				Type:        schema.TypeJSON,
-				Resolver:    client.ResolveTags,
+				Resolver:    client.ResolveTagField("TagSet"),
 			},
 			{
 				Name:        "association_allocation_id",
