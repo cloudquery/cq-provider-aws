@@ -47,7 +47,7 @@ resource "aws" "ec2" "egress_only_internet_gateways" {
 
   column "tags" {
     type              = "json"
-    generate_resolver = true
+    generate_resolver = false
     description       = "The tags assigned to the egress-only internet gateway."
   }
 

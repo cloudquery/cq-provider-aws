@@ -59,7 +59,7 @@ func EgressOnlyInternetGateways() *schema.Table {
 				Name:        "tags",
 				Description: "The tags assigned to the egress-only internet gateway.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEgressOnlyInternetGatewaysTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 	}
@@ -96,12 +96,4 @@ func resolveEgressOnlyInternetGatewaysAttachments(ctx context.Context, meta sche
 	}
 
 	return resource.Set(c.Name, b)
-}
-func resolveEgressOnlyInternetGatewaysTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	egress := resource.Item.(types.EgressOnlyInternetGateway)
-	tags := make(map[string]interface{})
-	for _, t := range egress.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return resource.Set(c.Name, tags)
 }
