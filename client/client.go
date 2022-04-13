@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"os"
 	"strings"
 	"time"
@@ -150,6 +151,7 @@ type Services struct {
 	Waf                    WafClient
 	WafV2                  WafV2Client
 	Workspaces             WorkspacesClient
+	Xray                   XrayClient
 }
 
 type ServicesAccountRegionMap map[string]map[string]*Services
@@ -540,6 +542,7 @@ func initServices(region string, c aws.Config) Services {
 		WafV2:                  wafv2.NewFromConfig(awsCfg),
 		Workspaces:             workspaces.NewFromConfig(awsCfg),
 		IOT:                    iot.NewFromConfig(awsCfg),
+		Xray:                   xray.NewFromConfig(awsCfg),
 	}
 }
 

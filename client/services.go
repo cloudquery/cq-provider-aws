@@ -56,6 +56,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
+	"github.com/aws/aws-sdk-go-v2/service/xray"
 )
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_acm.go . ACMClient
@@ -628,4 +629,9 @@ type BackupClient interface {
 	ListBackupVaults(ctx context.Context, params *backup.ListBackupVaultsInput, optFns ...func(*backup.Options)) (*backup.ListBackupVaultsOutput, error)
 	ListRecoveryPointsByBackupVault(ctx context.Context, params *backup.ListRecoveryPointsByBackupVaultInput, optFns ...func(*backup.Options)) (*backup.ListRecoveryPointsByBackupVaultOutput, error)
 	ListTags(ctx context.Context, params *backup.ListTagsInput, optFns ...func(*backup.Options)) (*backup.ListTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/xray.go . XrayClient
+type XrayClient interface {
+	GetEncryptionConfig(ctx context.Context, params *xray.GetEncryptionConfigInput, optFns ...func(*xray.Options)) (*xray.GetEncryptionConfigOutput, error)
 }

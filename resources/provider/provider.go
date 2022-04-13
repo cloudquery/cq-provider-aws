@@ -58,6 +58,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/waf"
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
+	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
 )
 
 var (
@@ -219,6 +220,7 @@ func Provider() *provider.Provider {
 			"wafv2.web_acls":                        wafv2.Wafv2WebAcls(),
 			"workspaces.workspaces":                 workspaces.Workspaces(),
 			"workspaces.directories":                workspaces.Directories(),
+			"xray.encryption_config":                xray.EncryptionConfigs(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
 		Config: func() provider.Config {

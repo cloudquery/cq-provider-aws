@@ -75,6 +75,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 )
 
+require github.com/aws/aws-sdk-go-v2/service/xray v1.13.4 // indirect
+
 require (
 	github.com/Masterminds/squirrel v1.5.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect

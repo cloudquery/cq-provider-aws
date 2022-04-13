@@ -40,3 +40,19 @@ SELECT setup_tsdb_parent('aws_wafv2_regex_pattern_sets');
 -- Resource: iam.virtual_mfa_devices
 ALTER TABLE IF EXISTS aws_iam_virtual_mfa_devices DROP CONSTRAINT aws_iam_virtual_mfa_devices_pk;
 ALTER TABLE IF EXISTS aws_iam_virtual_mfa_devices ADD CONSTRAINT aws_iam_virtual_mfa_devices_pk PRIMARY KEY (cq_fetch_date,serial_number);
+
+-- Resource: xray.encryption_config
+CREATE TABLE IF NOT EXISTS "aws_xray_encryption_config" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "cq_fetch_date" timestamp without time zone NOT NULL,
+    "account_id" text,
+    "region" text,
+    "key_id" text,
+    "status" text,
+    "type" text,
+    CONSTRAINT aws_xray_encryption_config_pk PRIMARY KEY(cq_fetch_date,account_id,region),
+    UNIQUE(cq_fetch_date,cq_id)
+);
+SELECT setup_tsdb_parent('aws_xray_encryption_config');
+
