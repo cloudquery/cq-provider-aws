@@ -642,12 +642,3 @@ type QLDBClient interface {
 	DescribeLedger(ctx context.Context, params *qldb.DescribeLedgerInput, optFns ...func(*qldb.Options)) (*qldb.DescribeLedgerOutput, error)
 	ListTagsForResource(ctx context.Context, params *qldb.ListTagsForResourceInput, optFns ...func(*qldb.Options)) (*qldb.ListTagsForResourceOutput, error)
 }
-
-//go:generate mockgen -package=mocks -destination=./mocks/mock_qldb.go . QLDBClient
-type QLDBClient interface {
-	qldb.ListLedgersAPIClient
-	qldb.ListJournalKinesisStreamsForLedgerAPIClient
-	qldb.ListJournalS3ExportsForLedgerAPIClient
-	DescribeLedger(ctx context.Context, params *qldb.DescribeLedgerInput, optFns ...func(*qldb.Options)) (*qldb.DescribeLedgerOutput, error)
-	ListTagsForResource(ctx context.Context, params *qldb.ListTagsForResourceInput, optFns ...func(*qldb.Options)) (*qldb.ListTagsForResourceOutput, error)
-}

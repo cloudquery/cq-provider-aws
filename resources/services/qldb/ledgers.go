@@ -298,7 +298,7 @@ func ResolveQldbLedgerTags(ctx context.Context, meta schema.ClientMeta, resource
 	if err != nil {
 		return diag.WrapError(err)
 	}
-	return resource.Set(c.Name, response.Tags)
+	return diag.WrapError(resource.Set(c.Name, response.Tags))
 }
 func fetchQldbLedgerJournalKinesisStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	ledger := parent.Item.(*qldb.DescribeLedgerOutput)
