@@ -218,6 +218,7 @@ func SsmInstances() *schema.Table {
 					},
 				},
 			},
+			InstancePatches(),
 		},
 	}
 }

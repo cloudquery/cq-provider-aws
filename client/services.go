@@ -552,11 +552,17 @@ type GuardDutyClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_ssm.go . SSMClient
 type SSMClient interface {
+	DescribeAssociation(ctx context.Context, params *ssm.DescribeAssociationInput, optFns ...func(*ssm.Options)) (*ssm.DescribeAssociationOutput, error)
 	DescribeDocument(ctx context.Context, params *ssm.DescribeDocumentInput, optFns ...func(*ssm.Options)) (*ssm.DescribeDocumentOutput, error)
 	DescribeDocumentPermission(ctx context.Context, params *ssm.DescribeDocumentPermissionInput, optFns ...func(*ssm.Options)) (*ssm.DescribeDocumentPermissionOutput, error)
 	DescribeInstanceInformation(ctx context.Context, params *ssm.DescribeInstanceInformationInput, optFns ...func(*ssm.Options)) (*ssm.DescribeInstanceInformationOutput, error)
+	DescribeInstancePatches(ctx context.Context, params *ssm.DescribeInstancePatchesInput, optFns ...func(*ssm.Options)) (*ssm.DescribeInstancePatchesOutput, error)
+	DescribePatchBaselines(ctx context.Context, params *ssm.DescribePatchBaselinesInput, optFns ...func(*ssm.Options)) (*ssm.DescribePatchBaselinesOutput, error)
+	GetPatchBaseline(ctx context.Context, params *ssm.GetPatchBaselineInput, optFns ...func(*ssm.Options)) (*ssm.GetPatchBaselineOutput, error)
+	ListAssociations(ctx context.Context, params *ssm.ListAssociationsInput, optFns ...func(*ssm.Options)) (*ssm.ListAssociationsOutput, error)
 	ListComplianceItems(ctx context.Context, params *ssm.ListComplianceItemsInput, optFns ...func(*ssm.Options)) (*ssm.ListComplianceItemsOutput, error)
 	ListDocuments(ctx context.Context, params *ssm.ListDocumentsInput, optFns ...func(*ssm.Options)) (*ssm.ListDocumentsOutput, error)
+	ListTagsForResource(ctx context.Context, params *ssm.ListTagsForResourceInput, optFns ...func(*ssm.Options)) (*ssm.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_sagemaker.go . SageMakerClient

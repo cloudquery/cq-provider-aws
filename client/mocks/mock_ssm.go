@@ -35,6 +35,26 @@ func (m *MockSSMClient) EXPECT() *MockSSMClientMockRecorder {
 	return m.recorder
 }
 
+// DescribeAssociation mocks base method.
+func (m *MockSSMClient) DescribeAssociation(arg0 context.Context, arg1 *ssm.DescribeAssociationInput, arg2 ...func(*ssm.Options)) (*ssm.DescribeAssociationOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeAssociation", varargs...)
+	ret0, _ := ret[0].(*ssm.DescribeAssociationOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeAssociation indicates an expected call of DescribeAssociation.
+func (mr *MockSSMClientMockRecorder) DescribeAssociation(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeAssociation", reflect.TypeOf((*MockSSMClient)(nil).DescribeAssociation), varargs...)
+}
+
 // DescribeDocument mocks base method.
 func (m *MockSSMClient) DescribeDocument(arg0 context.Context, arg1 *ssm.DescribeDocumentInput, arg2 ...func(*ssm.Options)) (*ssm.DescribeDocumentOutput, error) {
 	m.ctrl.T.Helper()
@@ -95,6 +115,86 @@ func (mr *MockSSMClientMockRecorder) DescribeInstanceInformation(arg0, arg1 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeInstanceInformation", reflect.TypeOf((*MockSSMClient)(nil).DescribeInstanceInformation), varargs...)
 }
 
+// DescribeInstancePatches mocks base method.
+func (m *MockSSMClient) DescribeInstancePatches(arg0 context.Context, arg1 *ssm.DescribeInstancePatchesInput, arg2 ...func(*ssm.Options)) (*ssm.DescribeInstancePatchesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeInstancePatches", varargs...)
+	ret0, _ := ret[0].(*ssm.DescribeInstancePatchesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeInstancePatches indicates an expected call of DescribeInstancePatches.
+func (mr *MockSSMClientMockRecorder) DescribeInstancePatches(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeInstancePatches", reflect.TypeOf((*MockSSMClient)(nil).DescribeInstancePatches), varargs...)
+}
+
+// DescribePatchBaselines mocks base method.
+func (m *MockSSMClient) DescribePatchBaselines(arg0 context.Context, arg1 *ssm.DescribePatchBaselinesInput, arg2 ...func(*ssm.Options)) (*ssm.DescribePatchBaselinesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribePatchBaselines", varargs...)
+	ret0, _ := ret[0].(*ssm.DescribePatchBaselinesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribePatchBaselines indicates an expected call of DescribePatchBaselines.
+func (mr *MockSSMClientMockRecorder) DescribePatchBaselines(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribePatchBaselines", reflect.TypeOf((*MockSSMClient)(nil).DescribePatchBaselines), varargs...)
+}
+
+// GetPatchBaseline mocks base method.
+func (m *MockSSMClient) GetPatchBaseline(arg0 context.Context, arg1 *ssm.GetPatchBaselineInput, arg2 ...func(*ssm.Options)) (*ssm.GetPatchBaselineOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetPatchBaseline", varargs...)
+	ret0, _ := ret[0].(*ssm.GetPatchBaselineOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPatchBaseline indicates an expected call of GetPatchBaseline.
+func (mr *MockSSMClientMockRecorder) GetPatchBaseline(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPatchBaseline", reflect.TypeOf((*MockSSMClient)(nil).GetPatchBaseline), varargs...)
+}
+
+// ListAssociations mocks base method.
+func (m *MockSSMClient) ListAssociations(arg0 context.Context, arg1 *ssm.ListAssociationsInput, arg2 ...func(*ssm.Options)) (*ssm.ListAssociationsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListAssociations", varargs...)
+	ret0, _ := ret[0].(*ssm.ListAssociationsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAssociations indicates an expected call of ListAssociations.
+func (mr *MockSSMClientMockRecorder) ListAssociations(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAssociations", reflect.TypeOf((*MockSSMClient)(nil).ListAssociations), varargs...)
+}
+
 // ListComplianceItems mocks base method.
 func (m *MockSSMClient) ListComplianceItems(arg0 context.Context, arg1 *ssm.ListComplianceItemsInput, arg2 ...func(*ssm.Options)) (*ssm.ListComplianceItemsOutput, error) {
 	m.ctrl.T.Helper()
@@ -133,4 +233,24 @@ func (mr *MockSSMClientMockRecorder) ListDocuments(arg0, arg1 interface{}, arg2 
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListDocuments", reflect.TypeOf((*MockSSMClient)(nil).ListDocuments), varargs...)
+}
+
+// ListTagsForResource mocks base method.
+func (m *MockSSMClient) ListTagsForResource(arg0 context.Context, arg1 *ssm.ListTagsForResourceInput, arg2 ...func(*ssm.Options)) (*ssm.ListTagsForResourceOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTagsForResource", varargs...)
+	ret0, _ := ret[0].(*ssm.ListTagsForResourceOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTagsForResource indicates an expected call of ListTagsForResource.
+func (mr *MockSSMClientMockRecorder) ListTagsForResource(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockSSMClient)(nil).ListTagsForResource), varargs...)
 }
