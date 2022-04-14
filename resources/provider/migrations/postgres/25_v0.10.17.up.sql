@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_kinesis_streams" (
     "exclusive_end_time" timestamp without time zone,
     "inclusive_start_time" timestamp without time zone,
     CONSTRAINT aws_qldb_ledger_journal_kinesis_streams_pk PRIMARY KEY(cq_id),
-    UNIQUE(cq_id)
+    UNIQUE(cq_id),
     FOREIGN KEY (ledger_cq_id) REFERENCES aws_qldb_ledgers(cq_id) ON DELETE CASCADE
     );
 
@@ -110,6 +110,6 @@ CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_s3_exports" (
     "status" text,
     "output_format" text,
     CONSTRAINT aws_qldb_ledger_journal_s3_exports_pk PRIMARY KEY(cq_id),
-    UNIQUE(cq_id)
+    UNIQUE(cq_id),
     FOREIGN KEY (ledger_cq_id) REFERENCES aws_qldb_ledgers(cq_id) ON DELETE CASCADE
     );
