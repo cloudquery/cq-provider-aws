@@ -50,4 +50,3 @@ DROP TABLE IF EXISTS aws_backup_vaults;
 -- Resource: codepipeline.webhooks
 DROP TABLE IF EXISTS aws_codepipeline_webhook_filters;
 DROP TABLE IF EXISTS aws_codepipeline_webhooks;
-
