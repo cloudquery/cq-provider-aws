@@ -177,7 +177,7 @@ func Provider() *provider.Provider {
 			"iot.things":                            iot.IotThings(),
 			"iot.topic_rules":                       iot.IotTopicRules(),
 			"kms.keys":                              kms.KmsKeys(),
-			"lambda.functions":                      lambda.LambdaFunctions(),
+			"lambda.functions":                      lambda.Functions(),
 			"lambda.layers":                         lambda.LambdaLayers(),
 			"lambda.runtimes":                       lambda.LambdaRuntimes(),
 			"mq.brokers":                            mq.Brokers(),

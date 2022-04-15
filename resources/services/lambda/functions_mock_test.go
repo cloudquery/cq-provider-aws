@@ -107,11 +107,19 @@ func buildLambdaFunctionsMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 			Versions: []types.FunctionConfiguration{fc},
 		}, nil)
 
+	urlConfig := lambda.GetFunctionUrlConfigOutput{}
+	err = faker.FakeData(&urlConfig)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().GetFunctionUrlConfig(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+		&urlConfig, nil)
+
 	return client.Services{
 		Lambda: m,
 	}
 }
 
 func TestLambdaFunctions(t *testing.T) {
-	client.AwsMockTestHelper(t, LambdaFunctions(), buildLambdaFunctionsMock, client.TestOptions{})
+	client.AwsMockTestHelper(t, Functions(), buildLambdaFunctionsMock, client.TestOptions{})
 }
