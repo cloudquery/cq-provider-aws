@@ -177,7 +177,7 @@ func Functions() *schema.Table {
 				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.FunctionArn"),
 			},
 			{
-				Name:        "function_name",
+				Name:        "name",
 				Description: "The name of the function.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.FunctionName"),
@@ -1110,7 +1110,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			}
 
 			urlConfig, err := svc.GetFunctionUrlConfig(ctx, &config)
-			if err != nil {
+			if err != nil && c.IsNotFoundError(err) {
 				return diag.WrapError(err)
 			}
 
