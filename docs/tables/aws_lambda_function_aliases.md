@@ -1,6 +1,6 @@
 
 # Table: aws_lambda_function_aliases
-Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html). 
+Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
