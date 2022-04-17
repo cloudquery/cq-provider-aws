@@ -446,95 +446,6 @@ func Functions() *schema.Table {
 				},
 			},
 			{
-				Name:          "aws_lambda_function_aliases",
-				Description:   "Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).",
-				Resolver:      fetchLambdaFunctionAliases,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"function_cq_id", "arn"}},
-				IgnoreInTests: true,
-				Columns: []schema.Column{
-					{
-						Name:        "function_cq_id",
-						Description: "Unique CloudQuery ID of aws_lambda_functions table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "function_arn",
-						Description: "The Amazon Resource Name (ARN) of the lambda function",
-						Type:        schema.TypeString,
-						Resolver:    schema.ParentResourceFieldResolver("arn"),
-					},
-					{
-						Name:        "arn",
-						Description: "The Amazon Resource Name (ARN) of the alias.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("AliasArn"),
-					},
-					{
-						Name:        "description",
-						Description: "A description of the alias.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "function_version",
-						Description: "The function version that the alias invokes.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "name",
-						Description: "The name of the alias.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "revision_id",
-						Description: "A unique identifier that changes when you update the alias.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "routing_config_additional_version_weights",
-						Description: "The second version, and the percentage of traffic that's routed to it.",
-						Type:        schema.TypeJSON,
-						Resolver:    schema.PathResolver("RoutingConfig.AdditionalVersionWeights"),
-					},
-					{
-						Name:        "url_config_auth_type",
-						Description: "The type of authentication that your function URL uses",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("UrlConfig.AuthType"),
-					},
-					{
-						Name:        "url_config_creation_time",
-						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("UrlConfig.CreationTime"),
-					},
-					{
-						Name:        "url_config_function_arn",
-						Description: "The Amazon Resource Name (ARN) of your function.  This member is required.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("UrlConfig.FunctionArn"),
-					},
-					{
-						Name:        "url_config_function_url",
-						Description: "The HTTP URL endpoint for your function.  This member is required.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("UrlConfig.FunctionUrl"),
-					},
-					{
-						Name:        "url_config_last_modified_time",
-						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
-						Type:        schema.TypeString,
-						Resolver:    schema.PathResolver("UrlConfig.LastModifiedTime"),
-					},
-					{
-						Name:        "url_config_cors",
-						Description: "The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.",
-						Type:        schema.TypeJSON,
-						Resolver:    resolveFunctionAliasUrlConfigCors,
-					},
-				},
-			},
-			{
 				Name:          "aws_lambda_function_event_invoke_configs",
 				Description:   "A configuration object that specifies the destination of an event after Lambda processes it. ",
 				Resolver:      fetchLambdaFunctionEventInvokeConfigs,
@@ -577,6 +488,99 @@ func Functions() *schema.Table {
 						Name:        "maximum_retry_attempts",
 						Description: "The maximum number of times to retry when the function returns an error.",
 						Type:        schema.TypeInt,
+					},
+				},
+			},
+			{
+				Name:          "aws_lambda_function_aliases",
+				Description:   "Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).",
+				Resolver:      fetchLambdaFunctionAliases,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"function_cq_id", "arn"}},
+				IgnoreInTests: true,
+				Columns: []schema.Column{
+					{
+						Name:        "function_cq_id",
+						Description: "Unique CloudQuery ID of aws_lambda_functions table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "function_arn",
+						Description: "The Amazon Resource Name (ARN) of the lambda function",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentResourceFieldResolver("arn"),
+					},
+					{
+						Name:        "arn",
+						Description: "The Amazon Resource Name (ARN) of the alias.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AliasConfiguration.AliasArn"),
+					},
+					{
+						Name:        "description",
+						Description: "A description of the alias.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AliasConfiguration.Description"),
+					},
+					{
+						Name:        "function_version",
+						Description: "The function version that the alias invokes.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AliasConfiguration.FunctionVersion"),
+					},
+					{
+						Name:        "name",
+						Description: "The name of the alias.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AliasConfiguration.Name"),
+					},
+					{
+						Name:        "revision_id",
+						Description: "A unique identifier that changes when you update the alias.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("AliasConfiguration.RevisionId"),
+					},
+					{
+						Name:        "routing_config_additional_version_weights",
+						Description: "The second version, and the percentage of traffic that's routed to it.",
+						Type:        schema.TypeJSON,
+						Resolver:    schema.PathResolver("AliasConfiguration.RoutingConfig.AdditionalVersionWeights"),
+					},
+					{
+						Name:        "url_config_auth_type",
+						Description: "The type of authentication that your function URL uses",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.AuthType"),
+					},
+					{
+						Name:        "url_config_creation_time",
+						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.CreationTime"),
+					},
+					{
+						Name:        "url_config_function_arn",
+						Description: "The Amazon Resource Name (ARN) of your function.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.FunctionArn"),
+					},
+					{
+						Name:        "url_config_function_url",
+						Description: "The HTTP URL endpoint for your function.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.FunctionUrl"),
+					},
+					{
+						Name:        "url_config_last_modified_time",
+						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.LastModifiedTime"),
+					},
+					{
+						Name:        "url_config_cors",
+						Description: "The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveFunctionAliasesUrlConfigCors,
 					},
 				},
 			},
@@ -712,10 +716,9 @@ func Functions() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:          "last_update_status_reason",
-						Description:   "The reason for the last update that was performed on the function.",
-						Type:          schema.TypeString,
-						IgnoreInTests: true,
+						Name:        "last_update_status_reason",
+						Description: "The reason for the last update that was performed on the function.",
+						Type:        schema.TypeString,
 					},
 					{
 						Name:        "last_update_status_reason_code",
@@ -1211,17 +1214,6 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 
 	return nil
 }
-func resolveFunctionAliasUrlConfigCors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Item.(*AliasWrapper)
-	if p.UrlConfig == nil || p.UrlConfig.Cors == nil {
-		return nil
-	}
-	data, err := json.Marshal(p.UrlConfig.Cors)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return resource.Set(c.Name, data)
-}
 func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*lambda.GetFunctionOutput)
 	if r.Configuration == nil {
@@ -1287,15 +1279,12 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 			return err
 		}
 		aliases := make([]AliasWrapper, 0, len(output.Aliases))
-
 		for _, a := range output.Aliases {
-			config := lambda.GetFunctionUrlConfigInput{
+			urlConfig, err := svc.GetFunctionUrlConfig(ctx, &lambda.GetFunctionUrlConfigInput{
 				FunctionName: p.Configuration.FunctionName,
 				Qualifier:    a.Name,
-			}
-
-			urlConfig, err := svc.GetFunctionUrlConfig(ctx, &config)
-			if err != nil && c.IsNotFoundError(err) {
+			})
+			if err != nil && !c.IsNotFoundError(err) {
 				return diag.WrapError(err)
 			}
 			aliases = append(aliases, AliasWrapper{&a, urlConfig})
@@ -1307,6 +1296,17 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 		config.Marker = output.NextMarker
 	}
 	return nil
+}
+func resolveFunctionAliasesUrlConfigCors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p := resource.Item.(AliasWrapper)
+	if p.UrlConfig == nil || p.UrlConfig.Cors == nil {
+		return nil
+	}
+	data, err := json.Marshal(p.UrlConfig.Cors)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return resource.Set(c.Name, data)
 }
 func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(*lambda.GetFunctionOutput)
@@ -1392,7 +1392,6 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 	}
 	return nil
 }
-
 func resolveFunctionEventSourceMappingsCriteriaFilters(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.EventSourceMappingConfiguration)
 	if p.FilterCriteria == nil {
@@ -1406,7 +1405,6 @@ func resolveFunctionEventSourceMappingsCriteriaFilters(ctx context.Context, meta
 
 	return resource.Set(c.Name, filters)
 }
-
 func resolveFunctionEventSourceMappingsSourceAccessConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.EventSourceMappingConfiguration)
 	if len(p.SourceAccessConfigurations) == 0 {
