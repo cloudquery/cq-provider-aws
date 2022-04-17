@@ -716,9 +716,10 @@ func Functions() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "last_update_status_reason",
-						Description: "The reason for the last update that was performed on the function.",
-						Type:        schema.TypeString,
+						Name:          "last_update_status_reason",
+						Description:   "The reason for the last update that was performed on the function.",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "last_update_status_reason_code",
