@@ -2,10 +2,11 @@ package client
 
 import (
 	"context"
-	"github.com/spf13/cast"
-	"github.com/thoas/go-funk"
 	"reflect"
 	"time"
+
+	"github.com/spf13/cast"
+	"github.com/thoas/go-funk"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
