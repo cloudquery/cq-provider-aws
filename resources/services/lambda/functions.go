@@ -86,325 +86,289 @@ func Functions() *schema.Table {
 				Name:          "code_image_uri",
 				Description:   "URI of a container image in the Amazon ECR registry.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Code.ImageUri"),
+				Resolver:      schema.PathResolver("Code.ImageUri"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "code_location",
 				Description: "A presigned URL that you can use to download the deployment package.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Code.Location"),
+				Resolver:    schema.PathResolver("Code.Location"),
 			},
 			{
 				Name:        "code_repository_type",
 				Description: "The service that's hosting the file.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Code.RepositoryType"),
+				Resolver:    schema.PathResolver("Code.RepositoryType"),
 			},
 			{
 				Name:          "code_resolved_image_uri",
 				Description:   "The resolved URI for the image.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Code.ResolvedImageUri"),
+				Resolver:      schema.PathResolver("Code.ResolvedImageUri"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "concurrency_reserved_concurrent_executions",
 				Description:   "The number of concurrent executions that are reserved for this function",
 				Type:          schema.TypeInt,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Concurrency.ReservedConcurrentExecutions"),
+				Resolver:      schema.PathResolver("Concurrency.ReservedConcurrentExecutions"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "architectures",
 				Description: "The instruction set architecture that the function supports",
 				Type:        schema.TypeStringArray,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Architectures"),
+				Resolver:    schema.PathResolver("Configuration.Architectures"),
 			},
 			{
 				Name:        "code_sha256",
 				Description: "The SHA256 hash of the function's deployment package.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.CodeSha256"),
+				Resolver:    schema.PathResolver("Configuration.CodeSha256"),
 			},
 			{
 				Name:        "code_size",
 				Description: "The size of the function's deployment package, in bytes.",
 				Type:        schema.TypeBigInt,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.CodeSize"),
+				Resolver:    schema.PathResolver("Configuration.CodeSize"),
 			},
 			{
 				Name:        "dead_letter_config_target_arn",
 				Description: "The Amazon Resource Name (ARN) of an Amazon SQS queue or Amazon SNS topic.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.DeadLetterConfig.TargetArn"),
+				Resolver:    schema.PathResolver("Configuration.DeadLetterConfig.TargetArn"),
 			},
 			{
 				Name:        "description",
 				Description: "The function's description.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Description"),
+				Resolver:    schema.PathResolver("Configuration.Description"),
 			},
 			{
 				Name:          "environment_error_code",
 				Description:   "The error code.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.Environment.Error.ErrorCode"),
+				Resolver:      schema.PathResolver("Configuration.Environment.Error.ErrorCode"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "environment_error_message",
 				Description:   "The error message.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.Environment.Error.Message"),
+				Resolver:      schema.PathResolver("Configuration.Environment.Error.Message"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "environment_variables",
 				Description: "Environment variable key-value pairs.",
 				Type:        schema.TypeJSON,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Environment.Variables"),
+				Resolver:    schema.PathResolver("Configuration.Environment.Variables"),
 			},
 			{
 				Name:        "ephemeral_storage_size",
 				Description: "The size of the function’s /tmp directory.  This member is required.",
 				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.EphemeralStorage.Size"),
+				Resolver:    schema.PathResolver("Configuration.EphemeralStorage.Size"),
 			},
 			{
 				Name:        "arn",
 				Description: "The function's Amazon Resource Name (ARN).",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.FunctionArn"),
+				Resolver:    schema.PathResolver("Configuration.FunctionArn"),
 			},
 			{
 				Name:        "name",
 				Description: "The name of the function.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.FunctionName"),
+				Resolver:    schema.PathResolver("Configuration.FunctionName"),
 			},
 			{
 				Name:        "handler",
 				Description: "The function that Lambda calls to begin executing your function.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Handler"),
+				Resolver:    schema.PathResolver("Configuration.Handler"),
 			},
 			{
 				Name:          "error_code",
 				Description:   "Error code.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.ImageConfigResponse.Error.ErrorCode"),
+				Resolver:      schema.PathResolver("Configuration.ImageConfigResponse.Error.ErrorCode"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "error_message",
 				Description:   "Error message.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.ImageConfigResponse.Error.Message"),
+				Resolver:      schema.PathResolver("Configuration.ImageConfigResponse.Error.Message"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "image_config_command",
 				Description:   "Specifies parameters that you want to pass in with ENTRYPOINT.",
 				Type:          schema.TypeStringArray,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.ImageConfigResponse.ImageConfig.Command"),
+				Resolver:      schema.PathResolver("Configuration.ImageConfigResponse.ImageConfig.Command"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "image_config_entry_point",
 				Description:   "Specifies the entry point to their application, which is typically the location of the runtime executable.",
 				Type:          schema.TypeStringArray,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.ImageConfigResponse.ImageConfig.EntryPoint"),
+				Resolver:      schema.PathResolver("Configuration.ImageConfigResponse.ImageConfig.EntryPoint"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "image_config_working_directory",
 				Description: "Specifies the working directory.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.ImageConfigResponse.ImageConfig.WorkingDirectory"),
+				Resolver:    schema.PathResolver("Configuration.ImageConfigResponse.ImageConfig.WorkingDirectory"),
 			},
 			{
 				Name:        "kms_key_arn",
 				Description: "The KMS key that's used to encrypt the function's environment variables",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.KMSKeyArn"),
+				Resolver:    schema.PathResolver("Configuration.KMSKeyArn"),
 			},
 			{
 				Name:        "last_modified",
 				Description: "The date and time that the function was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.LastModified"),
+				Resolver:    schema.PathResolver("Configuration.LastModified"),
 			},
 			{
 				Name:        "last_update_status",
 				Description: "The status of the last update that was performed on the function",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.LastUpdateStatus"),
+				Resolver:    schema.PathResolver("Configuration.LastUpdateStatus"),
 			},
 			{
 				Name:          "last_update_status_reason",
 				Description:   "The reason for the last update that was performed on the function.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.LastUpdateStatusReason"),
+				Resolver:      schema.PathResolver("Configuration.LastUpdateStatusReason"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "last_update_status_reason_code",
 				Description: "The reason code for the last update that was performed on the function.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.LastUpdateStatusReasonCode"),
+				Resolver:    schema.PathResolver("Configuration.LastUpdateStatusReasonCode"),
 			},
 			{
 				Name:          "master_arn",
 				Description:   "For Lambda@Edge functions, the ARN of the main function.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.MasterArn"),
+				Resolver:      schema.PathResolver("Configuration.MasterArn"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "memory_size",
 				Description: "The amount of memory available to the function at runtime.",
 				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.MemorySize"),
+				Resolver:    schema.PathResolver("Configuration.MemorySize"),
 			},
 			{
 				Name:        "package_type",
 				Description: "The type of deployment package",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.PackageType"),
+				Resolver:    schema.PathResolver("Configuration.PackageType"),
 			},
 			{
 				Name:        "revision_id",
 				Description: "The latest updated revision of the function or alias.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.RevisionId"),
+				Resolver:    schema.PathResolver("Configuration.RevisionId"),
 			},
 			{
 				Name:        "role",
 				Description: "The function's execution role.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Role"),
+				Resolver:    schema.PathResolver("Configuration.Role"),
 			},
 			{
 				Name:        "runtime",
 				Description: "The runtime environment for the Lambda function.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Runtime"),
+				Resolver:    schema.PathResolver("Configuration.Runtime"),
 			},
 			{
 				Name:          "signing_job_arn",
 				Description:   "The ARN of the signing job.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.SigningJobArn"),
+				Resolver:      schema.PathResolver("Configuration.SigningJobArn"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "signing_profile_version_arn",
 				Description:   "The ARN of the signing profile version.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.SigningProfileVersionArn"),
+				Resolver:      schema.PathResolver("Configuration.SigningProfileVersionArn"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "state",
 				Description: "The current state of the function",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.State"),
+				Resolver:    schema.PathResolver("Configuration.State"),
 			},
 			{
 				Name:          "state_reason",
 				Description:   "The reason for the function's current state.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.StateReason"),
+				Resolver:      schema.PathResolver("Configuration.StateReason"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:        "state_reason_code",
 				Description: "The reason code for the function's current state",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.StateReasonCode"),
+				Resolver:    schema.PathResolver("Configuration.StateReasonCode"),
 			},
 			{
 				Name:        "timeout",
 				Description: "The amount of time in seconds that Lambda allows a function to run before stopping it.",
 				Type:        schema.TypeInt,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Timeout"),
+				Resolver:    schema.PathResolver("Configuration.Timeout"),
 			},
 			{
 				Name:        "tracing_config_mode",
 				Description: "The tracing mode.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.TracingConfig.Mode"),
+				Resolver:    schema.PathResolver("Configuration.TracingConfig.Mode"),
 			},
 			{
 				Name:        "version",
 				Description: "The version of the Lambda function.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GetFunctionOutput.Configuration.Version"),
+				Resolver:    schema.PathResolver("Configuration.Version"),
 			},
 			{
 				Name:          "vpc_config_security_group_ids",
 				Description:   "A list of VPC security groups IDs.",
 				Type:          schema.TypeStringArray,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.VpcConfig.SecurityGroupIds"),
+				Resolver:      schema.PathResolver("Configuration.VpcConfig.SecurityGroupIds"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "vpc_config_subnet_ids",
 				Description:   "A list of VPC subnet IDs.",
 				Type:          schema.TypeStringArray,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.VpcConfig.SubnetIds"),
+				Resolver:      schema.PathResolver("Configuration.VpcConfig.SubnetIds"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "vpc_config_vpc_id",
 				Description:   "The ID of the VPC.",
 				Type:          schema.TypeString,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Configuration.VpcConfig.VpcId"),
+				Resolver:      schema.PathResolver("Configuration.VpcConfig.VpcId"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "tags",
 				Description:   "The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).",
 				Type:          schema.TypeJSON,
-				Resolver:      schema.PathResolver("GetFunctionOutput.Tags"),
+				Resolver:      schema.PathResolver("Tags"),
 				IgnoreInTests: true,
-			},
-			{
-				Name:        "url_config_auth_type",
-				Description: "The type of authentication that your function URL uses",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("UrlConfig.AuthType"),
-			},
-			{
-				Name:        "url_config_creation_time",
-				Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("UrlConfig.CreationTime"),
-			},
-			{
-				Name:        "url_config_function_arn",
-				Description: "The Amazon Resource Name (ARN) of your function.  This member is required.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("UrlConfig.FunctionArn"),
-			},
-			{
-				Name:        "url_config_function_url",
-				Description: "The HTTP URL endpoint for your function.  This member is required.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("UrlConfig.FunctionUrl"),
-			},
-			{
-				Name:        "url_config_last_modified_time",
-				Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("UrlConfig.LastModifiedTime"),
-			},
-			{
-				Name:        "url_config_cors",
-				Description: "The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.",
-				Type:        schema.TypeJSON,
-				Resolver:    resolveFunctionsUrlConfigCors,
 			},
 		},
 		Relations: []*schema.Table{
@@ -531,6 +495,42 @@ func Functions() *schema.Table {
 						Description: "The second version, and the percentage of traffic that's routed to it.",
 						Type:        schema.TypeJSON,
 						Resolver:    schema.PathResolver("RoutingConfig.AdditionalVersionWeights"),
+					},
+					{
+						Name:        "url_config_auth_type",
+						Description: "The type of authentication that your function URL uses",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.AuthType"),
+					},
+					{
+						Name:        "url_config_creation_time",
+						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.CreationTime"),
+					},
+					{
+						Name:        "url_config_function_arn",
+						Description: "The Amazon Resource Name (ARN) of your function.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.FunctionArn"),
+					},
+					{
+						Name:        "url_config_function_url",
+						Description: "The HTTP URL endpoint for your function.  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.FunctionUrl"),
+					},
+					{
+						Name:        "url_config_last_modified_time",
+						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("UrlConfig.LastModifiedTime"),
+					},
+					{
+						Name:        "url_config_cors",
+						Description: "The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveFunctionAliasUrlConfigCors,
 					},
 				},
 			},
@@ -1106,18 +1106,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 				return err
 			}
 
-			config := lambda.GetFunctionUrlConfigInput{
-				FunctionName: funcResponse.Configuration.FunctionName,
-			}
-
-			urlConfig, err := svc.GetFunctionUrlConfig(ctx, &config)
-			if err != nil && c.IsNotFoundError(err) {
-				return diag.WrapError(err)
-			}
-
-			res <- FunctionWrapper{
-				funcResponse, urlConfig,
-			}
+			res <- funcResponse
 		}
 
 		if aws.ToString(response.NextMarker) == "" {
@@ -1128,7 +1117,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 	return nil
 }
 func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	r := resource.Item.(FunctionWrapper)
+	r := resource.Item.(*lambda.GetFunctionOutput)
 	if r.Configuration == nil {
 		return nil
 	}
@@ -1222,8 +1211,8 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 
 	return nil
 }
-func resolveFunctionsUrlConfigCors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Item.(FunctionWrapper)
+func resolveFunctionAliasUrlConfigCors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p := resource.Item.(*AliasWrapper)
 	if p.UrlConfig == nil || p.UrlConfig.Cors == nil {
 		return nil
 	}
@@ -1234,7 +1223,7 @@ func resolveFunctionsUrlConfigCors(ctx context.Context, meta schema.ClientMeta, 
 	return resource.Set(c.Name, data)
 }
 func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(FunctionWrapper)
+	r := parent.Item.(*lambda.GetFunctionOutput)
 	if r.Configuration == nil {
 		return nil
 	}
@@ -1243,7 +1232,7 @@ func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.Clien
 	return nil
 }
 func fetchLambdaFunctionLayers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(FunctionWrapper)
+	r := parent.Item.(*lambda.GetFunctionOutput)
 	if r.Configuration == nil {
 		return nil
 	}
@@ -1252,7 +1241,7 @@ func fetchLambdaFunctionLayers(ctx context.Context, meta schema.ClientMeta, pare
 	return nil
 }
 func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(FunctionWrapper)
+	p := parent.Item.(*lambda.GetFunctionOutput)
 	if p.Configuration == nil {
 		return nil
 	}
@@ -1275,7 +1264,7 @@ func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.Clie
 	return nil
 }
 func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(FunctionWrapper)
+	p := parent.Item.(*lambda.GetFunctionOutput)
 	if p.Configuration == nil {
 		return nil
 	}
@@ -1297,7 +1286,21 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 			}
 			return err
 		}
-		res <- output.Aliases
+		aliases := make([]AliasWrapper, 0, len(output.Aliases))
+
+		for _, a := range output.Aliases {
+			config := lambda.GetFunctionUrlConfigInput{
+				FunctionName: p.Configuration.FunctionName,
+				Qualifier:    a.Name,
+			}
+
+			urlConfig, err := svc.GetFunctionUrlConfig(ctx, &config)
+			if err != nil && c.IsNotFoundError(err) {
+				return diag.WrapError(err)
+			}
+			aliases = append(aliases, AliasWrapper{&a, urlConfig})
+		}
+		res <- aliases
 		if output.NextMarker == nil {
 			break
 		}
@@ -1306,7 +1309,7 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 	return nil
 }
 func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(FunctionWrapper)
+	p := parent.Item.(*lambda.GetFunctionOutput)
 	if p.Configuration == nil {
 		return nil
 	}
@@ -1342,7 +1345,7 @@ func fetchLambdaFunctionVersionLayers(ctx context.Context, meta schema.ClientMet
 	return nil
 }
 func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(FunctionWrapper)
+	p := parent.Item.(*lambda.GetFunctionOutput)
 	if p.Configuration == nil {
 		return nil
 	}
@@ -1366,7 +1369,7 @@ func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.Clie
 	return nil
 }
 func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(FunctionWrapper)
+	p := parent.Item.(*lambda.GetFunctionOutput)
 	if p.Configuration == nil {
 		return nil
 	}
@@ -1421,7 +1424,7 @@ func resolveFunctionEventSourceMappingsSourceAccessConfigurations(ctx context.Co
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-type FunctionWrapper struct {
-	*lambda.GetFunctionOutput
+type AliasWrapper struct {
+	*types.AliasConfiguration
 	UrlConfig *lambda.GetFunctionUrlConfigOutput
 }

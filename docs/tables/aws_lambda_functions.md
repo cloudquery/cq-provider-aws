@@ -59,9 +59,3 @@ AWS Lambda is a serverless compute service that lets you run code without provis
 |vpc_config_subnet_ids|text[]|A list of VPC subnet IDs.|
 |vpc_config_vpc_id|text|The ID of the VPC.|
 |tags|jsonb|The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).|
-|url_config_auth_type|text|The type of authentication that your function URL uses|
-|url_config_creation_time|text|When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.|
-|url_config_function_arn|text|The Amazon Resource Name (ARN) of your function.  This member is required.|
-|url_config_function_url|text|The HTTP URL endpoint for your function.  This member is required.|
-|url_config_last_modified_time|text|When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.|
-|url_config_cors|jsonb|The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.|

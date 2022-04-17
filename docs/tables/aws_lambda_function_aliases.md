@@ -12,3 +12,9 @@ Provides configuration information about a Lambda function alias (https://docs.a
 |name|text|The name of the alias.|
 |revision_id|text|A unique identifier that changes when you update the alias.|
 |routing_config_additional_version_weights|jsonb|The second version, and the percentage of traffic that's routed to it.|
+|url_config_auth_type|text|The type of authentication that your function URL uses|
+|url_config_creation_time|text|When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.|
+|url_config_function_arn|text|The Amazon Resource Name (ARN) of your function.  This member is required.|
+|url_config_function_url|text|The HTTP URL endpoint for your function.  This member is required.|
+|url_config_last_modified_time|text|When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.|
+|url_config_cors|jsonb|The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) settings for your function URL.|
