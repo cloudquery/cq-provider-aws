@@ -1,6 +1,7 @@
 package lambda
 
 import (
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -112,6 +113,8 @@ func buildLambdaFunctionsMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 	if err != nil {
 		t.Fatal(err)
 	}
+	urlConfig.CreationTime = aws.String("2012-07-14T01:00:00+01:00")
+	urlConfig.LastModifiedTime = aws.String("2012-07-14T01:00:00+01:00")
 	m.EXPECT().GetFunctionUrlConfig(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&urlConfig, nil)
 
