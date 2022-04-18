@@ -53,6 +53,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
+	"github.com/aws/aws-sdk-go-v2/service/qldb"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -66,12 +67,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
+	"github.com/aws/aws-sdk-go-v2/service/wafregional"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	wafv2types "github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
 	"github.com/aws/smithy-go/logging"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/hashicorp/go-hclog"
+
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 var envVarsToCheck = []string{
@@ -135,6 +138,7 @@ type Services struct {
 	Lambda                 LambdaClient
 	MQ                     MQClient
 	Organizations          OrganizationsClient
+	QLDB                   QLDBClient
 	RDS                    RdsClient
 	Redshift               RedshiftClient
 	Route53                Route53Client
@@ -149,6 +153,7 @@ type Services struct {
 	SecretsManager         SecretsManagerClient
 	Waf                    WafClient
 	WafV2                  WafV2Client
+	WafRegional            WafRegionalClient
 	Workspaces             WorkspacesClient
 }
 
@@ -524,6 +529,7 @@ func initServices(region string, c aws.Config) Services {
 		Lambda:                 lambda.NewFromConfig(awsCfg),
 		MQ:                     mq.NewFromConfig(awsCfg),
 		Organizations:          organizations.NewFromConfig(awsCfg),
+		QLDB:                   qldb.NewFromConfig(awsCfg),
 		RDS:                    rds.NewFromConfig(awsCfg),
 		Redshift:               redshift.NewFromConfig(awsCfg),
 		Route53:                route53.NewFromConfig(awsCfg),
@@ -538,6 +544,7 @@ func initServices(region string, c aws.Config) Services {
 		SQS:                    sqs.NewFromConfig(awsCfg),
 		Waf:                    waf.NewFromConfig(awsCfg),
 		WafV2:                  wafv2.NewFromConfig(awsCfg),
+		WafRegional:            wafregional.NewFromConfig(awsCfg),
 		Workspaces:             workspaces.NewFromConfig(awsCfg),
 		IOT:                    iot.NewFromConfig(awsCfg),
 	}
@@ -596,7 +603,7 @@ func obfuscateAccountId(accountId string) string {
 	return accountId[:4] + "xxxxxxxx"
 }
 
-//checkEnvVariables checks which aws environment variables are set
+// checkEnvVariables checks which aws environment variables are set
 func checkEnvVariables() string {
 	var result []string
 	for _, v := range envVarsToCheck {

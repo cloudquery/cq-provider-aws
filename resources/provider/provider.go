@@ -46,6 +46,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/lambda"
 	"github.com/cloudquery/cq-provider-aws/resources/services/mq"
 	"github.com/cloudquery/cq-provider-aws/resources/services/organizations"
+	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
 	"github.com/cloudquery/cq-provider-aws/resources/services/rds"
 	"github.com/cloudquery/cq-provider-aws/resources/services/redshift"
 	"github.com/cloudquery/cq-provider-aws/resources/services/route53"
@@ -56,6 +57,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/sqs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/ssm"
 	"github.com/cloudquery/cq-provider-aws/resources/services/waf"
+	"github.com/cloudquery/cq-provider-aws/resources/services/wafregional"
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 )
@@ -93,6 +95,7 @@ func Provider() *provider.Provider {
 			"applicationautoscaling.policies":       applicationautoscaling.ApplicationautoscalingPolicies(),
 			"autoscaling.groups":                    autoscaling.AutoscalingGroups(),
 			"autoscaling.launch_configurations":     autoscaling.AutoscalingLaunchConfigurations(),
+			"autoscaling.scheduled_actions":         autoscaling.AutoscalingScheduledActions(),
 			"aws.regions":                           ec2.AwsRegions(),
 			"backup.plans":                          backup.Plans(),
 			"backup.vaults":                         backup.Vaults(),
@@ -121,6 +124,7 @@ func Provider() *provider.Provider {
 			"ec2.customer_gateways":                 ec2.Ec2CustomerGateways(),
 			"ec2.ebs_snapshots":                     ec2.Ec2EbsSnapshots(),
 			"ec2.ebs_volumes":                       ec2.Ec2EbsVolumes(),
+			"ec2.egress_only_internet_gateways":     ec2.EgressOnlyInternetGateways(),
 			"ec2.eips":                              ec2.Ec2Eips(),
 			"ec2.hosts":                             ec2.Hosts(),
 			"ec2.flow_logs":                         ec2.Ec2FlowLogs(),
@@ -128,6 +132,7 @@ func Provider() *provider.Provider {
 			"ec2.instance_statuses":                 ec2.Ec2InstanceStatuses(),
 			"ec2.instances":                         ec2.Ec2Instances(),
 			"ec2.internet_gateways":                 ec2.Ec2InternetGateways(),
+			"ec2.network_interfaces":                ec2.NetworkInterfaces(),
 			"ec2.nat_gateways":                      ec2.Ec2NatGateways(),
 			"ec2.network_acls":                      ec2.Ec2NetworkAcls(),
 			"ec2.regional_config":                   ec2.Ec2RegionalConfig(),
@@ -179,6 +184,7 @@ func Provider() *provider.Provider {
 			"lambda.runtimes":                       lambda.LambdaRuntimes(),
 			"mq.brokers":                            mq.Brokers(),
 			"organizations.accounts":                organizations.OrganizationsAccounts(),
+			"qldb.ledgers":                          qldb.Ledgers(),
 			"rds.certificates":                      rds.RdsCertificates(),
 			"rds.cluster_parameter_groups":          rds.RdsClusterParameterGroups(),
 			"rds.cluster_snapshots":                 rds.RdsClusterSnapshots(),
@@ -218,9 +224,13 @@ func Provider() *provider.Provider {
 			"wafv2.regex_pattern_sets":              wafv2.RegexPatternSets(),
 			"wafv2.rule_groups":                     wafv2.Wafv2RuleGroups(),
 			"wafv2.web_acls":                        wafv2.Wafv2WebAcls(),
+			"wafregional.rate_based_rules":          wafregional.RateBasedRules(),
+			"wafregional.rule_groups":               wafregional.RuleGroups(),
+			"wafregional.rules":                     wafregional.Rules(),
+			"wafregional.web_acls":                  wafregional.WebAcls(),
 			"workspaces.workspaces":                 workspaces.Workspaces(),
 			"workspaces.directories":                workspaces.Directories(),
-			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
+			// "iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
