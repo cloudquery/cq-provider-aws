@@ -33,9 +33,10 @@ func EncryptionConfigs() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:        "key_id",
-				Description: "The ID of the KMS key used for encryption, if applicable.",
-				Type:        schema.TypeString,
+				Name:          "key_id",
+				Description:   "The ID of the KMS key used for encryption, if applicable.",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "status",
