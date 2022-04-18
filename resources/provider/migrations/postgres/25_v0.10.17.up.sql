@@ -182,6 +182,20 @@ CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_s3_exports" (
     FOREIGN KEY (ledger_cq_id) REFERENCES aws_qldb_ledgers(cq_id) ON DELETE CASCADE
     );
 
+-- Resource: xray.encryption_config
+CREATE TABLE IF NOT EXISTS "aws_xray_encryption_config" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "account_id" text,
+    "region" text,
+    "key_id" text,
+    "status" text,
+    "type" text,
+    CONSTRAINT aws_xray_encryption_config_pk PRIMARY KEY(account_id,region),
+    UNIQUE(cq_id)
+);
+
+
 -- Resource: ec2.hosts
 CREATE TABLE IF NOT EXISTS "aws_ec2_hosts" (
     "cq_id" uuid NOT NULL,

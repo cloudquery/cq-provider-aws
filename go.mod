@@ -61,11 +61,12 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/aws-sdk-go-v2/service/workspaces v1.16.0
+	github.com/aws/aws-sdk-go-v2/service/xray v1.13.4
 	github.com/aws/smithy-go v1.11.2
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.3
-	github.com/cloudquery/cq-provider-sdk v0.8.17
+	github.com/cloudquery/cq-provider-sdk v0.8.18
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0

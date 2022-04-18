@@ -23,6 +23,10 @@ DROP TABLE IF EXISTS aws_qldb_ledger_journal_kinesis_streams;
 DROP TABLE IF EXISTS aws_qldb_ledger_journal_s3_exports;
 DROP TABLE IF EXISTS aws_qldb_ledgers;
 
+-- Resource: xray.encryption_config
+DROP TABLE IF EXISTS aws_xray_encryption_config;
+
+
 -- Resource: ec2.hosts
 DROP TABLE IF EXISTS aws_ec2_host_available_capacity_available_instance_capacity;
 DROP TABLE IF EXISTS aws_ec2_host_instances;
