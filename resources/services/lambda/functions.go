@@ -13,6 +13,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+//go:generate cq-gen --resource ledgers --config gen.hcl --output .
 func Functions() *schema.Table {
 	return &schema.Table{
 		Name:                 "aws_lambda_functions",
