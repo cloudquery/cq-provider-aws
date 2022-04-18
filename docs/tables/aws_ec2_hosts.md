@@ -12,7 +12,7 @@ Describes the properties of the Dedicated Host.
 |auto_placement|text|Whether auto-placement is on or off.|
 |availability_zone|text|The Availability Zone of the Dedicated Host.|
 |availability_zone_id|text|The ID of the Availability Zone in which the Dedicated Host is allocated.|
-|available_capacity_available_vcpus|integer|The number of vCPUs available for launching instances onto the Dedicated Host.|
+|available_vcpus|integer|The number of vCPUs available for launching instances onto the Dedicated Host.|
 |client_token|text|Unique, case-sensitive identifier that you provide to ensure the idempotency of the request|
 |id|text|The ID of the Dedicated Host.|
 |cores|integer|The number of cores on the Dedicated Host.|

@@ -202,8 +202,12 @@ resource "aws" "ec2" "hosts" {
     description       = "Any tags assigned to the Dedicated Host."
   }
 
-  column "available_capacity_available_instance_capacity" {
-    rename = "available_instance_capacity"
+  column "available_capacity" {
+    skip_prefix = true
+  }
+
+  column "available_v_cpus" {
+    rename = "available_vcpus"
   }
 
   userDefinedColumn "arn" {

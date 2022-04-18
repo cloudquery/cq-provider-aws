@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_hosts" (
     "auto_placement" text,
     "availability_zone" text,
     "availability_zone_id" text,
-    "available_capacity_available_vcpus" integer,
+    "available_vcpus" integer,
     "client_token" text,
     "id" text,
     "cores" integer,

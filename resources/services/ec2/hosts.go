@@ -69,7 +69,7 @@ func Hosts() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "available_capacity_available_vcpus",
+				Name:        "available_vcpus",
 				Description: "The number of vCPUs available for launching instances onto the Dedicated Host.",
 				Type:        schema.TypeInt,
 				Resolver:    schema.PathResolver("AvailableCapacity.AvailableVCpus"),
@@ -157,7 +157,7 @@ func Hosts() *schema.Table {
 			{
 				Name:        "aws_ec2_host_available_instance_capacity",
 				Description: "Information about the number of instances that can be launched onto the Dedicated Host.",
-				Resolver:    fetchEc2HostAvailableCapacityAvailableInstanceCapacities,
+				Resolver:    fetchEc2HostAvailableInstanceCapacities,
 				Columns: []schema.Column{
 					{
 						Name:        "host_cq_id",
@@ -237,7 +237,7 @@ func fetchEc2Hosts(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 	}
 	return nil
 }
-func fetchEc2HostAvailableCapacityAvailableInstanceCapacities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchEc2HostAvailableInstanceCapacities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	host := parent.Item.(types.Host)
 	res <- host.AvailableCapacity.AvailableInstanceCapacity
 	return nil
