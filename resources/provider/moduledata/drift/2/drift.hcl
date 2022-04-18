@@ -1090,10 +1090,15 @@ provider "aws" {
   #        }
 
   resource "ec2.network_interfaces" {
+    ignore_attributes = [ "availability_zone", "requester_id", "requester_managed", "status", "vpc_id" ]
     iac {
       terraform {
         type = "aws_network_interface"
         identifiers = [ "arn" ]
+        attribute_map = [
+          "groups|#.GroupId=security_groups",
+          "private_ip_address=private_ip"
+        ]
       }
     }
   }
