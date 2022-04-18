@@ -121,8 +121,6 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_egress_only_internet_gateways" (
     UNIQUE(cq_id)
     );
 
-
-
 -- Resource: qldb.ledgers
 CREATE TABLE IF NOT EXISTS "aws_qldb_ledgers" (
     "cq_id" uuid NOT NULL,
@@ -183,3 +181,56 @@ CREATE TABLE IF NOT EXISTS "aws_qldb_ledger_journal_s3_exports" (
     UNIQUE(cq_id),
     FOREIGN KEY (ledger_cq_id) REFERENCES aws_qldb_ledgers(cq_id) ON DELETE CASCADE
     );
+
+-- Resource: ec2.hosts
+CREATE TABLE IF NOT EXISTS "aws_ec2_hosts" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "account_id" text,
+    "region" text,
+    "arn" text,
+    "allocation_time" timestamp without time zone,
+    "allows_multiple_instance_types" text,
+    "auto_placement" text,
+    "availability_zone" text,
+    "availability_zone_id" text,
+    "available_capacity_available_vcpus" integer,
+    "client_token" text,
+    "id" text,
+    "cores" integer,
+    "instance_family" text,
+    "instance_type" text,
+    "sockets" integer,
+    "total_vcpus" integer,
+    "host_recovery" text,
+    "reservation_id" text,
+    "member_of_service_linked_resource_group" boolean,
+    "owner_id" text,
+    "release_time" timestamp without time zone,
+    "state" text,
+    "tags" jsonb,
+    CONSTRAINT aws_ec2_hosts_pk PRIMARY KEY(arn),
+    UNIQUE(cq_id)
+);
+CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_capacity_available_instance_capacity" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "host_cq_id" uuid,
+    "available_capacity" integer,
+    "instance_type" text,
+    "total_capacity" integer,
+    CONSTRAINT aws_ec2_host_available_capacity_available_instance_capacity_pk PRIMARY KEY(cq_id),
+    UNIQUE(cq_id),
+    FOREIGN KEY (host_cq_id) REFERENCES aws_ec2_hosts(cq_id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "aws_ec2_host_instances" (
+    "cq_id" uuid NOT NULL,
+    "cq_meta" jsonb,
+    "host_cq_id" uuid,
+    "instance_id" text,
+    "instance_type" text,
+    "owner_id" text,
+    CONSTRAINT aws_ec2_host_instances_pk PRIMARY KEY(cq_id),
+    UNIQUE(cq_id),
+    FOREIGN KEY (host_cq_id) REFERENCES aws_ec2_hosts(cq_id) ON DELETE CASCADE
+);
