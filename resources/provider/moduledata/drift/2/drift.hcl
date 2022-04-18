@@ -1012,6 +1012,15 @@ provider "aws" {
     }
   }
 
+  resource "ec2.hosts" {
+    iac {
+      terraform {
+        type = "aws_ec2_host"
+        identifiers = [ "arn" ]
+      }
+    }
+  }
+
   resource "ec2.images" {
     identifiers = [ "id", "region" ]
     iac {
@@ -2205,6 +2214,15 @@ provider "aws" {
           "running_mode_auto_stop_timeout_in_minutes=workspace_properties.0.running_mode_auto_stop_timeout_in_minutes",
           "user_volume_size_gib=workspace_properties.0.user_volume_size_gib",
         ]
+      }
+    }
+  }
+
+  resource "xray.encryption_config" {
+    identifiers = [ "region" ]
+    iac {
+      terraform {
+        type = "aws_xray_encryption_config"
       }
     }
   }
