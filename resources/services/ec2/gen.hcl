@@ -202,6 +202,10 @@ resource "aws" "ec2" "hosts" {
     description       = "Any tags assigned to the Dedicated Host."
   }
 
+  column "available_capacity_available_instance_capacity" {
+    rename = "available_instance_capacity"
+  }
+
   userDefinedColumn "arn" {
     type        = "string"
     description = "The Amazon Resource Name (ARN) for the dedicated host."

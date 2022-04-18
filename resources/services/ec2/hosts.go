@@ -154,7 +154,7 @@ func Hosts() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_ec2_host_available_capacity_available_instance_capacity",
+				Name:        "aws_ec2_host_available_instance_capacity",
 				Description: "Information about the number of instances that can be launched onto the Dedicated Host.",
 				Resolver:    fetchEc2HostAvailableCapacityAvailableInstanceCapacities,
 				Columns: []schema.Column{

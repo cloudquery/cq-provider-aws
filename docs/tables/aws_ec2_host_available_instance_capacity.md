@@ -1,5 +1,5 @@
 
-# Table: aws_ec2_host_available_capacity_available_instance_capacity
+# Table: aws_ec2_host_available_instance_capacity
 Information about the number of instances that can be launched onto the Dedicated Host.
 ## Columns
 | Name        | Type           | Description  |

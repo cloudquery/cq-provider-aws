@@ -226,14 +226,14 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_hosts" (
     CONSTRAINT aws_ec2_hosts_pk PRIMARY KEY(arn),
     UNIQUE(cq_id)
 );
-CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_capacity_available_instance_capacity" (
+CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_instance_capacity" (
     "cq_id" uuid NOT NULL,
     "cq_meta" jsonb,
     "host_cq_id" uuid,
     "available_capacity" integer,
     "instance_type" text,
     "total_capacity" integer,
-    CONSTRAINT aws_ec2_host_available_capacity_available_instance_capacity_pk PRIMARY KEY(cq_id),
+    CONSTRAINT aws_ec2_host_available_instance_capacity_pk PRIMARY KEY(cq_id),
     UNIQUE(cq_id),
     FOREIGN KEY (host_cq_id) REFERENCES aws_ec2_hosts(cq_id) ON DELETE CASCADE
 );

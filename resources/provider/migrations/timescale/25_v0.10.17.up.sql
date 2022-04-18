@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_hosts" (
     UNIQUE(cq_fetch_date,cq_id)
 );
 SELECT setup_tsdb_parent('aws_ec2_hosts');
-CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_capacity_available_instance_capacity" (
+CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_instance_capacity" (
     "cq_id" uuid NOT NULL,
     "cq_meta" jsonb,
     "cq_fetch_date" timestamp without time zone NOT NULL,
@@ -253,11 +253,11 @@ CREATE TABLE IF NOT EXISTS "aws_ec2_host_available_capacity_available_instance_c
     "available_capacity" integer,
     "instance_type" text,
     "total_capacity" integer,
-    CONSTRAINT aws_ec2_host_available_capacity_available_instance_capacity_pk PRIMARY KEY(cq_fetch_date,cq_id),
+    CONSTRAINT aws_ec2_host_available_instance_capacity_pk PRIMARY KEY(cq_fetch_date,cq_id),
     UNIQUE(cq_fetch_date,cq_id)
 );
-CREATE INDEX ON aws_ec2_host_available_capacity_available_instance_capacity (cq_fetch_date, host_cq_id);
-SELECT setup_tsdb_child('aws_ec2_host_available_capacity_available_instance_capacity', 'host_cq_id', 'aws_ec2_hosts', 'cq_id');
+CREATE INDEX ON aws_ec2_host_available_instance_capacity (cq_fetch_date, host_cq_id);
+SELECT setup_tsdb_child('aws_ec2_host_available_instance_capacity', 'host_cq_id', 'aws_ec2_hosts', 'cq_id');
 CREATE TABLE IF NOT EXISTS "aws_ec2_host_instances" (
     "cq_id" uuid NOT NULL,
     "cq_meta" jsonb,
