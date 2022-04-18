@@ -45,6 +45,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/organizations v1.2.1
+	github.com/aws/aws-sdk-go-v2/service/qldb v1.14.3
 	github.com/aws/aws-sdk-go-v2/service/rds v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/redshift v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.4.0
@@ -64,7 +65,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.3
-	github.com/cloudquery/cq-provider-sdk v0.8.16
+	github.com/cloudquery/cq-provider-sdk v0.8.17
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -93,6 +94,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/wafregional v1.12.3
 	github.com/creasty/defaults v1.5.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/doug-martin/goqu/v9 v9.17.0 // indirect
@@ -151,7 +153,7 @@ require (
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
