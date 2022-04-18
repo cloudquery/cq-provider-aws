@@ -240,9 +240,22 @@ provider "aws" {
   }
 
   resource "apigatewayv2.apis" {
+    identifiers = [ "arn" ]
+    ignore_attributes = [ "created_date", "api_gateway_managed", "disable_schema_validation" ]
+    sets = [ "cors_configuration_allow_headers", "cors_configuration_allow_methods", "cors_configuration_allow_origins", "cors_configuration_expose_headers" ]
     iac {
       terraform {
         type = "aws_apigatewayv2_api"
+        identifiers = [ "arn" ]
+        attribute_map = [
+          "cors_configuration_allow_credentials=cors_configuration.0.allow_credentials",
+          "cors_configuration_allow_headers=cors_configuration.0.allow_headers",
+          "cors_configuration_allow_methods=cors_configuration.0.allow_methods",
+          "cors_configuration_allow_origins=cors_configuration.0.allow_origins",
+          "cors_configuration_allow_credentials=cors_configuration.0.allow_credentials",
+          "cors_configuration_expose_headers=cors_configuration.0.expose_headers",
+          "cors_configuration_max_age=cors_configuration.0.max_age"
+        ]
       }
     }
   }
