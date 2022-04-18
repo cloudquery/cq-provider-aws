@@ -2220,6 +2220,7 @@ provider "aws" {
 
   resource "xray.encryption_config" {
     identifiers = [ "region" ]
+    ignore_attributes = [ "status" ]
     iac {
       terraform {
         type = "aws_xray_encryption_config"
