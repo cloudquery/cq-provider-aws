@@ -101,5 +101,3 @@ terraform init
 terraform apply -var="prefix=AB"
 go test -run="TestIntegration/ROOT_TABLE_NAME" -tags=integration ./...
 ```
-
->For CloudQuery employees, please use the Playground AWS account to deploy and test your resources. Make sure to destroy the resources once you're done.
