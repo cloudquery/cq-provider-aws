@@ -53,16 +53,14 @@ A few important things to note when adding functions that call the AWS API:
 
 ### Integration Tests
 
-To Run Integration tests please run
-
+To prepare your environment for running integration tests:
 ```bash
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -d  postgres:13.3
-gcloud auth application-default login
 # login with AWS. See all options at https://hub.cloudquery.io/providers/cloudquery/aws/latest
-go test -run=TestIntegration -tags=integration ./...
+gcloud auth application-default login
 ```
 
-To Run integration test for specific table:
+To run integration test for specific table:
 
 ```bash
 go test -run="TestIntegration/ROOT_TABLE_NAME" -tags=integration ./...
@@ -70,9 +68,25 @@ go test -run="TestIntegration/ROOT_TABLE_NAME" -tags=integration ./...
 go test -run="TestIntegration/azure_sql_managed_instances" -tags=integration ./...
 ```
 
-#### Adding new Terraform File Guidelines
+To run all integration tests:
 
-There a few good rule of thumb to follow when creating new terraform resources that will be served as testing infrastructure:
+```bash
+go test -run=TestIntegration -tags=integration ./...
+```
+
+>**Important** When adding a single resource, it's more common to only run the test for a specific table. You'll need to ensure your resource has the relevant Terraform service deployed 
+
+#### Adding new Terraform Files Guidelines
+
+Terraform files are organized under the [`terraform`](../../terraform/) folder, and each service has its own folder.
+Under each service folder, we organize files into 3 folders:
+- `local`: When testing locally run the terraform CLI from here
+- `modules/tests`: Terraform resource and module definitions go here
+- `prod`: This folder is used for our CI testing. See relevant scripts [here](../../scripts/). **Not to be used locally**
+
+>Each service has its own Terraform to follow best practices. It allows creating a test environment for each service, and avoids slowdowns and memory issues if we would have had a single Terraform file for all services.
+
+There are a few good rules of thumb to follow when creating new terraform resources that will be served as testing infrastructure:
 * If possible make all resources private.
 * Make sure to replace built-in plain text passwords with `random_password` generator
 * For every compute/db try to use the smallest size to keep the cost low
@@ -80,8 +94,12 @@ There a few good rule of thumb to follow when creating new terraform resources t
 
 If you want to apply the terraform locally first before pushing it to CI and applying there use:
 
-```
+```bash
 cd terraform/YOUR_SERVICE_NAME/local
+terraform init
 # Use AB as your initial so you can have multiple team members working on the same account without conflicting resources
 terraform apply -var="prefix=AB"
 go test -run="TestIntegration/ROOT_TABLE_NAME" -tags=integration ./...
+```
+
+>For CloudQuery employees, please use the Playground AWS account to deploy and test your resources. Make sure to destroy the resources once you're done.
