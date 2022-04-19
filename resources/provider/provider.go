@@ -2,6 +2,7 @@ package provider
 
 import (
 	"embed"
+	"github.com/cloudquery/cq-provider-aws/resources/services/shield"
 
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
@@ -209,6 +210,7 @@ func Provider() *provider.Provider {
 			"sagemaker.notebook_instances":          sagemaker.SagemakerNotebookInstances(),
 			"sagemaker.training_jobs":               sagemaker.SagemakerTrainingJobs(),
 			"secretsmanager.secrets":                secretsmanager.SecretsmanagerSecrets(),
+			"shield.protections":                    shield.Protections(),
 			"sns.subscriptions":                     sns.SnsSubscriptions(),
 			"sns.topics":                            sns.SnsTopics(),
 			"sqs.queues":                            sqs.SQSQueues(),

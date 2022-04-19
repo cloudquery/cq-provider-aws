@@ -1,4 +1,4 @@
-package ec2
+package shield
 
 import (
 	"context"
@@ -16,9 +16,10 @@ func Protections() *schema.Table {
 		Name:         "aws_shield_protections",
 		Description:  "An object that represents a resource that is under DDoS protection.",
 		Resolver:     fetchShieldProtections,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("shield"),
+		Multiplex:    client.AccountMultiplex,
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -35,7 +36,7 @@ func Protections() *schema.Table {
 			{
 				Name:        "tags",
 				Description: "The AWS tags of the resource.",
-				Type:        schema.TypeString,
+				Type:        schema.TypeJSON,
 				Resolver:    ResolveShieldProtectionTags,
 			},
 			{

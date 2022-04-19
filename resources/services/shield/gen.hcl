@@ -8,11 +8,11 @@ resource "aws" "shield" "protections" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
   }
   multiplex "AwsAccount" {
-    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    path   = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex,"
     params = ["shield"]
   }
   deleteFilter "AccountRegionFilter" {
-    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
   }
   userDefinedColumn "account_id" {
     type        = "string"
@@ -29,12 +29,16 @@ resource "aws" "shield" "protections" {
     }
   }
 
+  options {
+    primary_keys = ["arn"]
+  }
+
   column "protection_arn" {
     rename = "arn"
   }
 
   userDefinedColumn "tags" {
-    type              = "string"
+    type              = "json"
     description       = "The AWS tags of the resource."
     generate_resolver = true
   }
