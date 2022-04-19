@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go-v2/service/shield"
 
 	"github.com/aws/aws-sdk-go-v2/service/qldb"
 
@@ -657,4 +658,10 @@ type WafRegionalClient interface {
 	ListRules(ctx context.Context, params *wafregional.ListRulesInput, optFns ...func(*wafregional.Options)) (*wafregional.ListRulesOutput, error)
 	ListTagsForResource(ctx context.Context, params *wafregional.ListTagsForResourceInput, optFns ...func(*wafregional.Options)) (*wafregional.ListTagsForResourceOutput, error)
 	ListWebACLs(ctx context.Context, params *wafregional.ListWebACLsInput, optFns ...func(*wafregional.Options)) (*wafregional.ListWebACLsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/shield.go . ShieldClient
+type ShieldClient interface {
+	ListProtections(ctx context.Context, params *shield.ListProtectionsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionsOutput, error)
+	ListTagsForResource(ctx context.Context, params *shield.ListTagsForResourceInput, optFns ...func(*shield.Options)) (*shield.ListTagsForResourceOutput, error)
 }

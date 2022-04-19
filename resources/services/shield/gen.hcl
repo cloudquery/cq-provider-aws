@@ -2,8 +2,6 @@ service          = "aws"
 output_directory = "."
 add_generate     = true
 
-
-
 resource "aws" "shield" "protections" {
   path = "github.com/aws/aws-sdk-go-v2/service/shield/types.Protection"
   ignoreError "IgnoreAccessDenied" {
@@ -30,10 +28,14 @@ resource "aws" "shield" "protections" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
   }
-  column "application_layer_automatic_response_configuration" {
-    skip = true
+
+  column "protection_arn" {
+    rename = "arn"
   }
-  #  column "application_layer_automatic_response_configuration_action_block_no_smithy_document_serde" {
-  #    rename = "test"
-  #  }
+
+  userDefinedColumn "tags" {
+    type              = "string"
+    description       = "The AWS tags of the resource."
+    generate_resolver = true
+  }
 }
