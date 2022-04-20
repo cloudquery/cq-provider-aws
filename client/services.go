@@ -3,8 +3,6 @@ package client
 import (
 	"context"
 
-	"github.com/aws/aws-sdk-go-v2/service/qldb"
-
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
@@ -44,6 +42,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
+	"github.com/aws/aws-sdk-go-v2/service/qldb"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
@@ -56,8 +55,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
+	"github.com/aws/aws-sdk-go-v2/service/wafregional"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
+	"github.com/aws/aws-sdk-go-v2/service/xray"
 )
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_acm.go . ACMClient
@@ -218,6 +219,7 @@ type Ec2Client interface {
 	DescribeCustomerGateways(ctx context.Context, params *ec2.DescribeCustomerGatewaysInput, optFns ...func(*ec2.Options)) (*ec2.DescribeCustomerGatewaysOutput, error)
 	DescribeEgressOnlyInternetGateways(ctx context.Context, params *ec2.DescribeEgressOnlyInternetGatewaysInput, optFns ...func(*ec2.Options)) (*ec2.DescribeEgressOnlyInternetGatewaysOutput, error)
 	DescribeFlowLogs(ctx context.Context, params *ec2.DescribeFlowLogsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeFlowLogsOutput, error)
+	DescribeHosts(ctx context.Context, params *ec2.DescribeHostsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeHostsOutput, error)
 	DescribeImageAttribute(ctx context.Context, params *ec2.DescribeImageAttributeInput, optFns ...func(*ec2.Options)) (*ec2.DescribeImageAttributeOutput, error)
 	DescribeImages(ctx context.Context, params *ec2.DescribeImagesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeImagesOutput, error)
 	DescribeInstances(ctx context.Context, params *ec2.DescribeInstancesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeInstancesOutput, error)
@@ -644,4 +646,22 @@ type QLDBClient interface {
 	qldb.ListJournalS3ExportsForLedgerAPIClient
 	DescribeLedger(ctx context.Context, params *qldb.DescribeLedgerInput, optFns ...func(*qldb.Options)) (*qldb.DescribeLedgerOutput, error)
 	ListTagsForResource(ctx context.Context, params *qldb.ListTagsForResourceInput, optFns ...func(*qldb.Options)) (*qldb.ListTagsForResourceOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/wafregional.go . WafRegionalClient
+type WafRegionalClient interface {
+	GetRateBasedRule(ctx context.Context, params *wafregional.GetRateBasedRuleInput, optFns ...func(*wafregional.Options)) (*wafregional.GetRateBasedRuleOutput, error)
+	GetRule(ctx context.Context, params *wafregional.GetRuleInput, optFns ...func(*wafregional.Options)) (*wafregional.GetRuleOutput, error)
+	GetRuleGroup(ctx context.Context, params *wafregional.GetRuleGroupInput, optFns ...func(*wafregional.Options)) (*wafregional.GetRuleGroupOutput, error)
+	GetWebACL(ctx context.Context, params *wafregional.GetWebACLInput, optFns ...func(*wafregional.Options)) (*wafregional.GetWebACLOutput, error)
+	ListRateBasedRules(ctx context.Context, params *wafregional.ListRateBasedRulesInput, optFns ...func(*wafregional.Options)) (*wafregional.ListRateBasedRulesOutput, error)
+	ListRuleGroups(ctx context.Context, params *wafregional.ListRuleGroupsInput, optFns ...func(*wafregional.Options)) (*wafregional.ListRuleGroupsOutput, error)
+	ListRules(ctx context.Context, params *wafregional.ListRulesInput, optFns ...func(*wafregional.Options)) (*wafregional.ListRulesOutput, error)
+	ListTagsForResource(ctx context.Context, params *wafregional.ListTagsForResourceInput, optFns ...func(*wafregional.Options)) (*wafregional.ListTagsForResourceOutput, error)
+	ListWebACLs(ctx context.Context, params *wafregional.ListWebACLsInput, optFns ...func(*wafregional.Options)) (*wafregional.ListWebACLsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/xray.go . XrayClient
+type XrayClient interface {
+	GetEncryptionConfig(ctx context.Context, params *xray.GetEncryptionConfigInput, optFns ...func(*xray.Options)) (*xray.GetEncryptionConfigOutput, error)
 }

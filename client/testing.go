@@ -16,6 +16,7 @@ type TestOptions struct {
 }
 
 func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, _ TestOptions) {
+	table.IgnoreInTests = false
 	t.Helper()
 	ctrl := gomock.NewController(t)
 
@@ -53,28 +54,4 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 		Config:           cfg,
 		SkipIgnoreInTest: true,
 	})
-}
-
-func AWSTestHelper(t *testing.T, table *schema.Table) {
-	t.Helper()
-	cfg := `
-	aws_debug = false
-	`
-
-	providertest.TestResource(t, providertest.ResourceTestCase{
-		Provider: &provider.Provider{
-			Name:      "aws_mock_test_provider",
-			Version:   "development",
-			Configure: Configure,
-			Config: func() provider.Config {
-				return &Config{}
-			},
-			ResourceMap: map[string]*schema.Table{
-				"test_resource": table,
-			},
-		},
-		Config:           cfg,
-		SkipIgnoreInTest: true,
-	})
-
 }
