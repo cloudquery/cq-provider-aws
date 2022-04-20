@@ -61,6 +61,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafregional"
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
+	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
 )
 
 var (
@@ -127,6 +128,7 @@ func Provider() *provider.Provider {
 			"ec2.ebs_volumes":                       ec2.Ec2EbsVolumes(),
 			"ec2.egress_only_internet_gateways":     ec2.EgressOnlyInternetGateways(),
 			"ec2.eips":                              ec2.Ec2Eips(),
+			"ec2.hosts":                             ec2.Hosts(),
 			"ec2.flow_logs":                         ec2.Ec2FlowLogs(),
 			"ec2.images":                            ec2.Ec2Images(),
 			"ec2.instance_statuses":                 ec2.Ec2InstanceStatuses(),
@@ -231,7 +233,8 @@ func Provider() *provider.Provider {
 			"wafregional.web_acls":                  wafregional.WebAcls(),
 			"workspaces.workspaces":                 workspaces.Workspaces(),
 			"workspaces.directories":                workspaces.Directories(),
-			// "iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
+			"xray.encryption_config":                xray.EncryptionConfigs(),
+			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
 		Config: func() provider.Config {
 			return &client.Config{}
