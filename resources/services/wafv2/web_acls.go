@@ -10,7 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -111,12 +110,6 @@ func Wafv2WebAcls() *schema.Table {
 				Name:        "managed_by_firewall_manager",
 				Description: "Indicates whether this web ACL is managed by AWS Firewall Manager",
 				Type:        schema.TypeBool,
-			},
-			{
-				Name:        "logging_configuration",
-				Description: "The LoggingConfiguration for the specified web ACL.",
-				Type:        schema.TypeStringArray,
-				Resolver:    resolveWafV2WebACLRuleLoggingConfiguration,
 			},
 		},
 		Relations: []*schema.Table{
@@ -294,6 +287,48 @@ func Wafv2WebAcls() *schema.Table {
 						Description: "A boolean indicating whether AWS WAF should store a sampling of the web requests that match the rules",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("VisibilityConfig.SampledRequestsEnabled"),
+					},
+				},
+			},
+			{
+				Name:          "aws_wafv2_web_acl_logging_configuration",
+				Description:   "The LoggingConfiguration for the specified web ACL.",
+				Resolver:      fetchWafv2WebACLLoggingConfiguration,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
+				IgnoreInTests: true,
+				Columns: []schema.Column{
+					{
+						Name:        "web_acl_cq_id",
+						Description: "Unique CloudQuery ID of aws_wafv2_web_acls table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "log_destination_configs",
+						Description: "The Amazon Resource Names (ARNs) of the logging destinations that you want to associate with the web ACL.",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "resource_arn",
+						Description: "The Amazon Resource Name (ARN) of the web ACL that you want to associate with LogDestinationConfigs.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "logging_filter",
+						Description: "Filtering that specifies which web requests are kept in the logs and which are dropped. You can filter on the rule action and on the web request labels that were applied by matching rules during web ACL evaluation.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveWafv2WebACLLoggingConfigurationLoggingFilter,
+					},
+					{
+						Name:        "managed_by_firewall_manager",
+						Description: "Indicates whether the logging configuration was created by Firewall Manager, as part of an WAF policy configuration. If true, only Firewall Manager can modify or delete the configuration.",
+						Type:        schema.TypeBool,
+					},
+					{
+						Name:        "redacted_fields",
+						Description: "The parts of the request that you want redacted from the logs. For example, if you redact the cookie field, the cookie field in the firehose will be xxx. You can specify only the following fields for redaction: UriPath, QueryString, SingleHeader, Method, and JsonBody.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveWafv2WebACLLoggingConfigurationRedactedFields,
 					},
 				},
 			},
@@ -513,8 +548,9 @@ func resolveWafv2webACLPreProcessFirewallManagerRuleGroupOverrideAction(ctx cont
 	}
 	return resource.Set(c.Name, data)
 }
-func resolveWafV2WebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func fetchWafv2WebACLLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, res chan<- interface{}) error {
 	rule := resource.Item.(*types.WebACL)
+
 	cl := meta.(*client.Client)
 	svc := cl.Services().WafV2
 	cfg := wafv2.GetLoggingConfigurationInput{
@@ -532,5 +568,22 @@ func resolveWafV2WebACLRuleLoggingConfiguration(ctx context.Context, meta schema
 		}
 		return err
 	}
-	return resource.Set(c.Name, output.LoggingConfiguration.LogDestinationConfigs)
+	res <- output.LoggingConfiguration
+	return nil
+}
+func resolveWafv2WebACLLoggingConfigurationRedactedFields(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	conf := resource.Item.(*types.LoggingConfiguration)
+	out, err := json.Marshal(conf.RedactedFields)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return resource.Set(c.Name, out)
+}
+func resolveWafv2WebACLLoggingConfigurationLoggingFilter(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	conf := resource.Item.(*types.LoggingConfiguration)
+	out, err := json.Marshal(conf.LoggingFilter)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return resource.Set(c.Name, out)
 }

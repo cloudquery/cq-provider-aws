@@ -2,13 +2,13 @@ package waf
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
@@ -63,12 +63,6 @@ func WafWebAcls() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("WebACLArn"),
 			},
-			{
-				Name:        "logging_configuration",
-				Description: "The LoggingConfiguration for the specified web ACL.",
-				Type:        schema.TypeStringArray,
-				Resolver:    resolveWafWebACLRuleLoggingConfiguration,
-			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -116,6 +110,37 @@ func WafWebAcls() *schema.Table {
 						Name:        "type",
 						Description: "The rule type, either REGULAR, as defined by Rule, RATE_BASED, as defined by RateBasedRule, or GROUP, as defined by RuleGroup",
 						Type:        schema.TypeString,
+					},
+				},
+			},
+			{
+				Name:          "aws_waf_web_acl_logging_configuration",
+				Description:   "The LoggingConfiguration for the specified web ACL.",
+				Resolver:      fetchWafWebACLLoggingConfiguration,
+				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
+				IgnoreInTests: true,
+				Columns: []schema.Column{
+					{
+						Name:        "web_acl_cq_id",
+						Description: "Unique CloudQuery ID of aws_waf_web_acls table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "log_destination_configs",
+						Description: "An array of Amazon Kinesis Data Firehose ARNs.",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "resource_arn",
+						Description: "The Amazon Resource Name (ARN) of the web ACL that you want to associate with LogDestinationConfigs.",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "redacted_fields",
+						Description: "The parts of the request that you want redacted from the logs. For example, if you redact the cookie field, the cookie field in the firehose will be xxx.",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveWafWebACLLoggingConfigurationRedactedFields,
 					},
 				},
 			},
@@ -193,7 +218,7 @@ func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMe
 	}
 	return resource.Set(c.Name, excludedRules)
 }
-func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func fetchWafWebACLLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, res chan<- interface{}) error {
 	rule := resource.Item.(*types.WebACL)
 
 	cl := meta.(*client.Client)
@@ -213,5 +238,14 @@ func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.C
 		}
 		return err
 	}
-	return resource.Set(c.Name, output.LoggingConfiguration.LogDestinationConfigs)
+	res <- output.LoggingConfiguration
+	return nil
+}
+func resolveWafWebACLLoggingConfigurationRedactedFields(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	conf := resource.Item.(*types.LoggingConfiguration)
+	out, err := json.Marshal(conf.RedactedFields)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return resource.Set(c.Name, out)
 }
