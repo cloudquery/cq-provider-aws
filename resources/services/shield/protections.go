@@ -43,18 +43,18 @@ func Protections() *schema.Table {
 			},
 			{
 				Name:        "application_layer_automatic_response_configuration_status",
-				Description: "Indicates whether automatic application layer DDoS mitigation is enabled for the protection.  This member is required.",
+				Description: "Indicates whether automatic application layer DDoS mitigation is enabled for the protection",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("ApplicationLayerAutomaticResponseConfiguration.Status"),
 			},
 			{
 				Name:        "health_check_ids",
-				Description: "The unique identifier (ID) for the Route 53 health check that's associated with the protection.",
+				Description: "The unique identifier (ID) for the Route 53 health check that's associated with the protection",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "id",
-				Description: "The unique identifier (ID) of the protection.",
+				Description: "The unique identifier (ID) of the protection",
 				Type:        schema.TypeString,
 			},
 			{
@@ -64,13 +64,13 @@ func Protections() *schema.Table {
 			},
 			{
 				Name:        "arn",
-				Description: "The ARN (Amazon Resource Name) of the protection.",
+				Description: "The ARN (Amazon Resource Name) of the protection",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("ProtectionArn"),
 			},
 			{
 				Name:        "resource_arn",
-				Description: "The ARN (Amazon Resource Name) of the Amazon Web Services resource that is protected.",
+				Description: "The ARN (Amazon Resource Name) of the Amazon Web Services resource that is protected",
 				Type:        schema.TypeString,
 			},
 		},

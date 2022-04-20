@@ -670,4 +670,8 @@ type XrayClient interface {
 type ShieldClient interface {
 	ListProtections(ctx context.Context, params *shield.ListProtectionsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionsOutput, error)
 	ListTagsForResource(ctx context.Context, params *shield.ListTagsForResourceInput, optFns ...func(*shield.Options)) (*shield.ListTagsForResourceOutput, error)
+	DescribeSubscription(ctx context.Context, params *shield.DescribeSubscriptionInput, optFns ...func(*shield.Options)) (*shield.DescribeSubscriptionOutput, error)
+	ListAttacks(ctx context.Context, params *shield.ListAttacksInput, optFns ...func(*shield.Options)) (*shield.ListAttacksOutput, error)
+	DescribeAttack(ctx context.Context, params *shield.DescribeAttackInput, optFns ...func(*shield.Options)) (*shield.DescribeAttackOutput, error)
+	ListProtectionGroups(ctx context.Context, params *shield.ListProtectionGroupsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionGroupsOutput, error)
 }
