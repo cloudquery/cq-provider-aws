@@ -168,7 +168,7 @@ func Functions() *schema.Table {
 			},
 			{
 				Name:        "ephemeral_storage_size",
-				Description: "The size of the function’s /tmp directory.  This member is required.",
+				Description: "The size of the function’s /tmp directory.",
 				Type:        schema.TypeInt,
 				Resolver:    schema.PathResolver("Configuration.EphemeralStorage.Size"),
 			},
@@ -396,12 +396,12 @@ func Functions() *schema.Table {
 					},
 					{
 						Name:        "arn",
-						Description: "The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.  This member is required.",
+						Description: "The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "local_mount_path",
-						Description: "The path where the function can access the file system, starting with /mnt/.  This member is required.",
+						Description: "The path where the function can access the file system, starting with /mnt/.",
 						Type:        schema.TypeString,
 					},
 				},
@@ -557,25 +557,25 @@ func Functions() *schema.Table {
 					},
 					{
 						Name:        "url_config_creation_time",
-						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).",
 						Type:        schema.TypeTimestamp,
 						Resolver:    client.ISODateResolver("UrlConfig.CreationTime"),
 					},
 					{
 						Name:        "url_config_function_arn",
-						Description: "The Amazon Resource Name (ARN) of your function.  This member is required.",
+						Description: "The Amazon Resource Name (ARN) of your function.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("UrlConfig.FunctionArn"),
 					},
 					{
 						Name:        "url_config_function_url",
-						Description: "The HTTP URL endpoint for your function.  This member is required.",
+						Description: "The HTTP URL endpoint for your function.",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("UrlConfig.FunctionUrl"),
 					},
 					{
 						Name:        "url_config_last_modified_time",
-						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).  This member is required.",
+						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).",
 						Type:        schema.TypeTimestamp,
 						Resolver:    client.ISODateResolver("UrlConfig.LastModifiedTime"),
 					},
@@ -647,7 +647,7 @@ func Functions() *schema.Table {
 					},
 					{
 						Name:        "ephemeral_storage_size",
-						Description: "The size of the function’s /tmp directory.  This member is required.",
+						Description: "The size of the function’s /tmp directory.",
 						Type:        schema.TypeInt,
 						Resolver:    schema.PathResolver("EphemeralStorage.Size"),
 					},
@@ -841,12 +841,12 @@ func Functions() *schema.Table {
 							},
 							{
 								Name:        "arn",
-								Description: "The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.  This member is required.",
+								Description: "The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.",
 								Type:        schema.TypeString,
 							},
 							{
 								Name:        "local_mount_path",
-								Description: "The path where the function can access the file system, starting with /mnt/.  This member is required.",
+								Description: "The path where the function can access the file system, starting with /mnt/.",
 								Type:        schema.TypeString,
 							},
 						},

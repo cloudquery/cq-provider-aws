@@ -2,6 +2,10 @@ service          = "aws"
 output_directory = "."
 add_generate     = true
 
+description_modifier "remove_read_only" {
+  words = ["  This member is required."]
+}
+
 resource "aws" "lambda" "functions" {
   path        = "github.com/aws/aws-sdk-go-v2/service/lambda.GetFunctionOutput"
   description = "AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers, creating workload-aware cluster scaling logic, maintaining event integrations, or managing runtimes"

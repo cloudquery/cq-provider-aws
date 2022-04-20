@@ -27,7 +27,7 @@ AWS Lambda is a serverless compute service that lets you run code without provis
 |environment_error_code|text|The error code.|
 |environment_error_message|text|The error message.|
 |environment_variables|jsonb|Environment variable key-value pairs.|
-|ephemeral_storage_size|integer|The size of the function’s /tmp directory.  This member is required.|
+|ephemeral_storage_size|integer|The size of the function’s /tmp directory.|
 |arn|text|The function's Amazon Resource Name (ARN).|
 |name|text|The name of the function.|
 |handler|text|The function that Lambda calls to begin executing your function.|
