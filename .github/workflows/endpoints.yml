@@ -1,9 +1,12 @@
 # DO NOT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
-name: endpoints-verification
+name: endpoints-generation
 on:
-  push:
+  pull_request:
     branches:
       - main
+  schedule:
+    - cron:  "15 * * * *"
+
 
 jobs:
   endpoints:
@@ -14,12 +17,20 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.17
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
+
       - name: regenerate partition_service_region file
         run: |
           go run ./tools/endpoints/main.go
-      - name: Fail if file is changed
-        run: |
-          test "$(git status -s ./client/data/partition_service_region.json | wc -l)" -eq 0
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          # required so the PR triggers workflow runs
+          token: ${{ secrets.GH_CQ_BOT }}
+          branch: fix/update_endpoints
+          base: chore/test_endpoints_sync_pr
+          title: "fix: Update endpoints"
+          body: This PR was created by a scheduled workflow to sync endpoint changes
