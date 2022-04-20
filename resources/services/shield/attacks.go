@@ -224,6 +224,7 @@ func resolveAttackSubResourcesAttackVectors(ctx context.Context, meta schema.Cli
 	}
 	return resource.Set(c.Name, json)
 }
+
 func resolveAttackSubResourcesCounters(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.SubResourceSummary)
 	json, err := json.Marshal(r.Counters)
@@ -231,28 +232,4 @@ func resolveAttackSubResourcesCounters(ctx context.Context, meta schema.ClientMe
 		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, json)
-}
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func fetchShieldAttackSubResourceAttackVectors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func resolveAttackSubResourceAttackVectorsVectorCounters(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	panic("not implemented")
-}
-func fetchShieldAttackSubResourceCounters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.SubResourceSummary)
-	res <- r.Counters
-	return nil
-}
-func fetchShieldAttackCounters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(*types.AttackDetail)
-	res <- r.AttackCounters
-	return nil
-}
-func fetchShieldAttackSubResourceAttackVectorVectorCounters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
 }
