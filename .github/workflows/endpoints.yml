@@ -1,6 +1,9 @@
 # DO NOT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
 name: endpoints-generation
 on:
+  pull_request:
+    branches:
+      - main
   schedule:
     - cron:  "30 * * * *"
 
@@ -14,9 +17,19 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.17
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
       - name: regenerate partition_service_region file
         run: |
