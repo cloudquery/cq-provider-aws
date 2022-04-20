@@ -17,6 +17,10 @@ If the service to which the resource belongs has not been used before in cq-prov
 1. Init the service in the `initServices` function in [client/client.go](../../client/client.go)
 1. Run `go generate client/services.go` to create a mock for your new service. This will update [client/mocks/<service>.go](../../client/mocks) automatically
 
+> On MacOS, if you get an error about not being able to find `mockgen`, `export PATH=${PATH}:`go env GOPATH`/bin` in you shell to set up your `PATH` environment properly
+
+> You might need to update an existing AWS client by running `go get github.com/aws/aws-sdk-go-v2/service/<service-name>@latest` and then `go mod tidy`
+
 ## Setting up the resource
 
 ### Skeleton
