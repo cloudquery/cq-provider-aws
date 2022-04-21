@@ -40,7 +40,7 @@ func buildEc2ImagesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 			LastLaunchedTime: &types.AttributeValue{Value: &lastLaunched},
 		},
 		nil,
-	)
+	).Times(2)
 	return services
 }
 
