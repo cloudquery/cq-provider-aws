@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
+	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -122,6 +123,18 @@ func fetchElasticbeanstalkApplicationVersions(ctx context.Context, meta schema.C
 		})
 		if err != nil {
 			return diag.WrapError(err)
+		}
+
+		for i := range output.ApplicationVersions {
+			if output.ApplicationVersions[i].BuildArn == nil {
+				output.ApplicationVersions[i].BuildArn = new(string)
+			}
+
+			if output.ApplicationVersions[i].SourceBuildInformation == nil {
+				output.ApplicationVersions[i].SourceBuildInformation = &types.SourceBuildInformation{
+					SourceLocation: new(string),
+				}
+			}
 		}
 
 		res <- output.ApplicationVersions
