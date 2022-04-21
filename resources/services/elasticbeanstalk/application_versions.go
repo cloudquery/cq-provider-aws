@@ -3,6 +3,7 @@ package elasticbeanstalk
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
@@ -114,12 +115,22 @@ func fetchElasticbeanstalkApplicationVersions(ctx context.Context, meta schema.C
 	var config elasticbeanstalk.DescribeApplicationVersionsInput
 	c := meta.(*client.Client)
 	svc := c.Services().ElasticBeanstalk
-	output, err := svc.DescribeApplicationVersions(ctx, &config, func(options *elasticbeanstalk.Options) {
-		options.Region = c.Region
-	})
-	if err != nil {
-		return diag.WrapError(err)
+
+	for {
+		output, err := svc.DescribeApplicationVersions(ctx, &config, func(options *elasticbeanstalk.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return diag.WrapError(err)
+		}
+
+		res <- output.ApplicationVersions
+
+		if aws.ToString(output.NextToken) == "" {
+			break
+		}
+		config.NextToken = output.NextToken
 	}
-	res <- output.ApplicationVersions
+
 	return nil
 }
