@@ -464,7 +464,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				}
 			})
 		if err != nil {
-			return nil, diags.Add(diag.FromError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.ACCESS))
+			return nil, diags.Add(diag.FromError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.ACCESS, diag.WithDetails("DescribeRegions failed, need permissions")))
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
