@@ -559,7 +559,7 @@ func Functions() *schema.Table {
 						Name:        "url_config_creation_time",
 						Description: "When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).",
 						Type:        schema.TypeTimestamp,
-						Resolver:    client.ISODateResolver("UrlConfig.CreationTime"),
+						Resolver:    schema.DateResolver("UrlConfig.CreationTime"),
 					},
 					{
 						Name:        "url_config_function_arn",
@@ -577,7 +577,7 @@ func Functions() *schema.Table {
 						Name:        "url_config_last_modified_time",
 						Description: "When the function URL configuration was last updated, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).",
 						Type:        schema.TypeTimestamp,
-						Resolver:    client.ISODateResolver("UrlConfig.LastModifiedTime"),
+						Resolver:    schema.DateResolver("UrlConfig.LastModifiedTime"),
 					},
 					{
 						Name:        "url_config_cors",
