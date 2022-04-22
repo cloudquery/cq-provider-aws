@@ -178,6 +178,8 @@ type CognitoUserPoolsClient interface {
 type ConfigServiceClient interface {
 	DescribeConfigurationRecorders(ctx context.Context, params *configservice.DescribeConfigurationRecordersInput, optFns ...func(*configservice.Options)) (*configservice.DescribeConfigurationRecordersOutput, error)
 	DescribeConfigurationRecorderStatus(ctx context.Context, params *configservice.DescribeConfigurationRecorderStatusInput, optFns ...func(*configservice.Options)) (*configservice.DescribeConfigurationRecorderStatusOutput, error)
+	GetConformancePackComplianceDetails(ctx context.Context, params *configservice.GetConformancePackComplianceDetailsInput, optFns ...func(*configservice.Options)) (*configservice.GetConformancePackComplianceDetailsOutput, error)
+	configservice.DescribeConformancePackComplianceAPIClient
 	configservice.DescribeConformancePacksAPIClient
 }
 
@@ -490,6 +492,7 @@ type LambdaClient interface {
 	GetFunctionCodeSigningConfig(ctx context.Context, params *lambda.GetFunctionCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionCodeSigningConfigOutput, error)
 	GetCodeSigningConfig(ctx context.Context, params *lambda.GetCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetCodeSigningConfigOutput, error)
 	GetLayerVersionPolicy(ctx context.Context, params *lambda.GetLayerVersionPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetLayerVersionPolicyOutput, error)
+	GetFunctionUrlConfig(ctx context.Context, params *lambda.GetFunctionUrlConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionUrlConfigOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_analyzer.go . AnalyzerClient
