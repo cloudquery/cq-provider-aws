@@ -9,15 +9,15 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer/types"
 	"github.com/aws/smithy-go/middleware"
 	"github.com/cloudquery/cq-provider-aws/client"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func AccessAnalyzerAnalyzers() *schema.Table {
+//go:generate cq-gen --resource analyzers --config gen.hcl --output .
+func Analyzers() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_access_analyzer_analyzers",
-		Description:  "Contains information about the analyzer",
+		Description:  "Contains information about the analyzer.",
 		Resolver:     fetchAccessAnalyzerAnalyzers,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("access-analyzer"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -38,57 +38,57 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 			},
 			{
 				Name:        "arn",
-				Description: "The ARN of the analyzer.",
+				Description: "The ARN of the analyzer.  This member is required.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "created_at",
-				Description: "A timestamp for the time at which the analyzer was created",
+				Description: "A timestamp for the time at which the analyzer was created.  This member is required.",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "name",
-				Description: "The name of the analyzer",
+				Description: "The name of the analyzer.  This member is required.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "status",
-				Description: "The status of the analyzer. An Active analyzer successfully monitors supported resources and generates new findings. The analyzer is Disabled when a user action, such as removing trusted access for AWS IAM Access Analyzer from AWS Organizations, causes the analyzer to stop generating new findings. The status is Creating when the analyzer creation is in progress and Failed when the analyzer creation has failed.",
+				Description: "The status of the analyzer",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "type",
-				Description: "The type of analyzer, which corresponds to the zone of trust chosen for the analyzer",
+				Description: "The type of analyzer, which corresponds to the zone of trust chosen for the analyzer.  This member is required.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "last_resource_analyzed",
-				Description: "The resource that was most recently analyzed by the analyzer",
+				Description: "The resource that was most recently analyzed by the analyzer.",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "last_resource_analyzed_at",
-				Description: "The time at which the most recently analyzed resource was analyzed",
+				Description: "The time at which the most recently analyzed resource was analyzed.",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "status_reason_code",
-				Description: "The reason code for the current status of the analyzer",
+				Description: "The reason code for the current status of the analyzer.  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("StatusReason.Code"),
 			},
 			{
 				Name:        "tags",
-				Description: "The tags added to the analyzer",
+				Description: "The tags added to the analyzer.",
 				Type:        schema.TypeJSON,
 			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_access_analyzer_analyzer_findings",
-				Description: "Contains information about a finding",
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"analyzer_cq_id", "id"}},
+				Description: "Contains information about a finding.",
 				Resolver:    fetchAccessAnalyzerAnalyzerFindings,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"analyzer_cq_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "analyzer_cq_id",
@@ -98,47 +98,47 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 					},
 					{
 						Name:        "analyzed_at",
-						Description: "The time at which the resource-based policy that generated the finding was analyzed",
+						Description: "The time at which the resource-based policy that generated the finding was analyzed.  This member is required.",
 						Type:        schema.TypeTimestamp,
 					},
 					{
 						Name:        "condition",
-						Description: "The condition in the analyzed policy statement that resulted in a finding",
+						Description: "The condition in the analyzed policy statement that resulted in a finding.  This member is required.",
 						Type:        schema.TypeJSON,
 					},
 					{
 						Name:        "created_at",
-						Description: "The time at which the finding was created",
+						Description: "The time at which the finding was created.  This member is required.",
 						Type:        schema.TypeTimestamp,
 					},
 					{
 						Name:        "id",
-						Description: "The ID of the finding",
+						Description: "The ID of the finding.  This member is required.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "resource_owner_account",
-						Description: "The AWS account ID that owns the resource",
+						Description: "The Amazon Web Services account ID that owns the resource.  This member is required.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "resource_type",
-						Description: "The type of the resource that the external principal has access to",
+						Description: "The type of the resource that the external principal has access to.  This member is required.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "status",
-						Description: "The status of the finding",
+						Description: "The status of the finding.  This member is required.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "updated_at",
-						Description: "The time at which the finding was most recently updated",
+						Description: "The time at which the finding was most recently updated.  This member is required.",
 						Type:        schema.TypeTimestamp,
 					},
 					{
 						Name:        "action",
-						Description: "The action in the analyzed policy statement that an external principal has permission to use",
+						Description: "The action in the analyzed policy statement that an external principal has permission to use.",
 						Type:        schema.TypeStringArray,
 					},
 					{
@@ -149,24 +149,24 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 					},
 					{
 						Name:        "is_public",
-						Description: "Indicates whether the finding reports a resource that has a policy that allows public access",
+						Description: "Indicates whether the finding reports a resource that has a policy that allows public access.",
 						Type:        schema.TypeBool,
 					},
 					{
 						Name:        "principal",
-						Description: "The external principal that has access to a resource within the zone of trust",
+						Description: "The external principal that has access to a resource within the zone of trust.",
 						Type:        schema.TypeJSON,
 					},
 					{
 						Name:        "resource",
-						Description: "The resource that the external principal has access to",
+						Description: "The resource that the external principal has access to.",
 						Type:        schema.TypeString,
 					},
 				},
 				Relations: []*schema.Table{
 					{
 						Name:          "aws_access_analyzer_analyzer_finding_sources",
-						Description:   "The source of the finding.",
+						Description:   "The source of the finding",
 						Resolver:      fetchAccessAnalyzerAnalyzerFindingSources,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
@@ -178,7 +178,7 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "Indicates the type of access that generated the finding",
+								Description: "Indicates the type of access that generated the finding.  This member is required.",
 								Type:        schema.TypeString,
 							},
 							{
@@ -193,7 +193,7 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 			},
 			{
 				Name:          "aws_access_analyzer_analyzer_archive_rules",
-				Description:   "Contains information about an archive rule",
+				Description:   "Contains information about an archive rule.",
 				Resolver:      fetchAccessAnalyzerAnalyzerArchiveRules,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
@@ -205,22 +205,22 @@ func AccessAnalyzerAnalyzers() *schema.Table {
 					},
 					{
 						Name:        "created_at",
-						Description: "The time at which the archive rule was created",
+						Description: "The time at which the archive rule was created.  This member is required.",
 						Type:        schema.TypeTimestamp,
 					},
 					{
 						Name:        "filter",
-						Description: "A filter used to define the archive rule",
+						Description: "A filter used to define the archive rule.  This member is required.",
 						Type:        schema.TypeJSON,
 					},
 					{
 						Name:        "rule_name",
-						Description: "The name of the archive rule",
+						Description: "The name of the archive rule.  This member is required.",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "updated_at",
-						Description: "The time at which the archive rule was last updated",
+						Description: "The time at which the archive rule was last updated.  This member is required.",
 						Type:        schema.TypeTimestamp,
 					},
 				},
