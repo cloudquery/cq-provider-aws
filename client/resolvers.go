@@ -2,9 +2,10 @@ package client
 
 import (
 	"context"
+	"reflect"
+
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"reflect"
 )
 
 func ResolveAWSAccount(_ context.Context, meta schema.ClientMeta, r *schema.Resource, _ schema.Column) error {
