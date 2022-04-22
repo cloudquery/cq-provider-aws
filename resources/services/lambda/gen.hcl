@@ -134,7 +134,7 @@ resource "aws" "lambda" "functions" {
     column "url_config_last_modified_time" {
       type = "timestamp"
       resolver "dateResolver" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ISODateResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.DateResolver"
         params = ["UrlConfig.LastModifiedTime"]
       }
     }
@@ -142,7 +142,7 @@ resource "aws" "lambda" "functions" {
     column "url_config_creation_time" {
       type = "timestamp"
       resolver "dateResolver" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ISODateResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.DateResolver"
         params = ["UrlConfig.CreationTime"]
       }
     }
