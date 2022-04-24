@@ -7,28 +7,28 @@ install-cq:
 	chmod a+x cloudquery
 
 # start a timescale db running in a local container
-.PHONY: start-ts
-start-ts:
+.PHONY: ts-start
+ts-start:
 	docker run -p 5433:5432 -e POSTGRES_PASSWORD=pass -d timescale/timescaledb:latest-pg14
 
 # stop the timescale db running in a local container
-.PHONY: stop-ts
-stop-ts:
+.PHONY: ts-stop
+ts-stop:
 	docker stop $$(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
 
 # start a running docker container
-.PHONY: start-pg
-start-pg:
+.PHONY: pg-start
+pg-start:
 	docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -d postgres
 
 # stop a running docker container
-.PHONY: stop-pg
-stop-pg:
+.PHONY: pg-start
+pg-start:
 	docker stop $$(docker ps -q --filter ancestor=postgres:latest)
 
 # connect to pg via cli
-.PHONY: connect-pg
-connect-pg:
+.PHONY: pg-connect
+pg-connect:
 	psql -h localhost -p 5432 -U postgres -d postgres
 
 # build the cq aws provider
