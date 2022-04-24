@@ -2,11 +2,13 @@ package elasticbeanstalk
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
@@ -433,6 +435,15 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 		ResourceArn: p.EnvironmentArn,
 	}, func(o *elasticbeanstalk.Options) {})
 	if err != nil {
+		var apiErr smithy.APIError
+		if errors.As(err, &apiErr) {
+			switch apiErr.(type) {
+			// It takes a few minutes for an environment to be terminated
+			// This ensures we don't error while trying to fetch related resources for a terminated environment
+			case *types.ResourceNotFoundException:
+				return nil
+			}
+		}
 		return diag.WrapError(err)
 	}
 	if len(tagsOutput.ResourceTags) == 0 {
@@ -450,6 +461,17 @@ func fetchElasticbeanstalkEnvironmentLinks(ctx context.Context, meta schema.Clie
 	return nil
 }
 
+// It takes a few minutes for an environment to be terminated
+// This ensures we don't error while trying to fetch related resources for a terminated environment
+func IsInvalidParameterValueError(err error) bool {
+	var apiErr smithy.APIError
+	if errors.As(err, &apiErr); apiErr.ErrorCode() == "InvalidParameterValue" {
+		return true
+	}
+
+	return false
+}
+
 func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.EnvironmentDescription)
 	c := meta.(*client.Client)
@@ -462,6 +484,9 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 		options.Region = c.Region
 	})
 	if err != nil {
+		if IsInvalidParameterValueError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 
@@ -492,6 +517,9 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 		options.Region = c.Region
 	})
 	if err != nil {
+		if IsInvalidParameterValueError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 
