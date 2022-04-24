@@ -7,14 +7,14 @@ install-cq:
 	chmod a+x cloudquery
 
 # start a timescale db running in a local container
-.PHONY: ts-start
-ts-start:
+.PHONY: start-ts
+start-ts:
 	docker run -p 5433:5432 -e POSTGRES_PASSWORD=pass -d timescale/timescaledb:latest-pg14
 
 # stop the timescale db running in a local container
-.PHONY: ts-stop
-ts-stop:
-	docker stop $(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
+.PHONY: stop-ts
+stop-ts:
+	docker stop $$(docker ps -q --filter ancestor=timescale/timescaledb:latest-pg14)
 
 # start a running docker container
 .PHONY: start-pg
@@ -27,8 +27,8 @@ stop-pg:
 	docker stop $$(docker ps -q --filter ancestor=postgres:latest)
 
 # connect to pg via cli
-.PHONY: pg-connect
-pg-connect:
+.PHONY: connect-pg
+connect-pg:
 	psql -h localhost -p 5432 -U postgres -d postgres
 
 # build the cq aws provider
@@ -60,3 +60,10 @@ test-unit:
 .PHONY: test-integration
 test-integration:
 	@if [[ "$(tableName)" == "" ]]; then go test -run=TestIntegration -timeout 3m -tags=integration ./...; else go test -run="TestIntegration/$(tableName)" -timeout 3m -tags=integration ./...; fi
+
+# Create a DB migration
+.PHONY: db-migration
+db-migration:
+	@if [[ "$(prefix)" == "" ]]; then echo "Invalid prefix, see example 'make db-migration prefix=26_v0.10.18'" && exit 1; fi;
+	go run tools/migrations/main.go -prefix "${prefix}" -dsn 'postgres://postgres:pass@localhost:5432/postgres?sslmode=disable'
+	go run tools/migrations/main.go -prefix "${prefix}" -fake-tsdb -dsn 'postgres://postgres:pass@localhost:5432/postgres?sslmode=disable'
