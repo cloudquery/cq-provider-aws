@@ -435,14 +435,11 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 		ResourceArn: p.EnvironmentArn,
 	}, func(o *elasticbeanstalk.Options) {})
 	if err != nil {
+		// It takes a few minutes for an environment to be terminated
+		// This ensures we don't error while trying to fetch related resources for a terminated environment
 		var apiErr smithy.APIError
-		if errors.As(err, &apiErr) {
-			switch apiErr.(type) {
-			// It takes a few minutes for an environment to be terminated
-			// This ensures we don't error while trying to fetch related resources for a terminated environment
-			case *types.ResourceNotFoundException:
-				return nil
-			}
+		if errors.As(err, &apiErr); apiErr.ErrorCode() == "ResourceNotFoundException" {
+			return nil
 		}
 		return diag.WrapError(err)
 	}
