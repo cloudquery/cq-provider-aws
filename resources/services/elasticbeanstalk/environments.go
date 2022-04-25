@@ -430,15 +430,15 @@ func resolveElasticbeanstalkEnvironmentTags(ctx context.Context, meta schema.Cli
 }
 func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.EnvironmentDescription)
-	svc := meta.(*client.Client).Services().ElasticBeanstalk
+	cl := meta.(*client.Client)
+	svc := cl.Services().ElasticBeanstalk
 	tagsOutput, err := svc.ListTagsForResource(ctx, &elasticbeanstalk.ListTagsForResourceInput{
 		ResourceArn: p.EnvironmentArn,
 	}, func(o *elasticbeanstalk.Options) {})
 	if err != nil {
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
-		var apiErr smithy.APIError
-		if errors.As(err, &apiErr); apiErr.ErrorCode() == "ResourceNotFoundException" {
+		if cl.IsNotFoundError(err) {
 			return nil
 		}
 		return diag.WrapError(err)
