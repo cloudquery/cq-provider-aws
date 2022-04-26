@@ -66,7 +66,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.4
-	github.com/cloudquery/cq-provider-sdk v0.8.19
+	github.com/cloudquery/cq-provider-sdk v0.9.0
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0
@@ -92,7 +92,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.3.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.9.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/shield v1.16.3
 	github.com/aws/aws-sdk-go-v2/service/sso v1.2.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/wafregional v1.12.3
 	github.com/creasty/defaults v1.5.2 // indirect
