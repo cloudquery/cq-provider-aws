@@ -59,7 +59,7 @@ resource "aws_wafv2_web_acl" "wafv2_web_acl" {
 
 module "wafv2-web-acl-logging" {
   source        = "terraform-aws-modules/s3-bucket/aws"
-  version       = "~> 3.1.1"
+  version       = "~> 3.1.0"
   bucket        = "aws-waf-logs-${var.prefix}-s3-wafv2-web-acl-logging"
   force_destroy = true
 }
