@@ -7,7 +7,7 @@ An object that represents a resource that is under DDoS protection.
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |tags|jsonb|The AWS tags of the resource.|
-|application_layer_automatic_response_configuration_status|text|Indicates whether automatic application layer DDoS mitigation is enabled for the protection|
+|application_automatic_response_configuration_status|text|Indicates whether automatic application layer DDoS mitigation is enabled for the protection|
 |health_check_ids|text[]|The unique identifier (ID) for the Route 53 health check that's associated with the protection|
 |id|text|The unique identifier (ID) of the protection|
 |name|text|The name of the protection|

@@ -40,6 +40,10 @@ resource "aws" "shield" "protections" {
     rename = "arn"
   }
 
+  column "application_layer_automatic_response_configuration_status" {
+    rename = "application_automatic_response_configuration_status"
+  }
+
   userDefinedColumn "tags" {
     type              = "json"
     description       = "The AWS tags of the resource."
