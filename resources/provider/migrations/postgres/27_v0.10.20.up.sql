@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "aws_shield_protections" (
     "account_id" text,
     "region" text,
     "tags" jsonb,
-    "application_layer_automatic_response_configuration_status" text,
+    "application_automatic_response_configuration_status" text,
     "health_check_ids" text[],
     "id" text,
     "name" text,
