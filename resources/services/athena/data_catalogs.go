@@ -2,6 +2,7 @@ package athena
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/athena/types"
@@ -215,7 +216,7 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 				// retrieving of default data catalog (AwsDataCatalog) returns "not found error" but it exists and its
 				// relations can be fetched by its name
 				if *d.CatalogName == "AwsDataCatalog" {
-					res <- d
+					res <- types.DataCatalog{Name: d.CatalogName, Type: d.Type}
 					continue
 				}
 				return diag.WrapError(err)
@@ -233,12 +234,13 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Athena
-	//todo build arn
-	params := athena.ListTagsForResourceInput{ResourceARN: resource.Item.(types.DataCatalog).Name}
+	dc := resource.Item.(types.DataCatalog)
+	arn := fmt.Sprintf("arn:aws:athena:%s:%s:datacatalog/%s", cl.Region, cl.AccountID, *dc.Name)
+	params := athena.ListTagsForResourceInput{ResourceARN: &arn}
 	tags := make(map[string]string)
 	for {
 		result, err := svc.ListTagsForResource(ctx, &params)
-		if err != nil {
+		if err != nil && !cl.IsNotFoundError(err) {
 			return diag.WrapError(err)
 		}
 		client.TagsIntoMap(result.Tags, tags)
