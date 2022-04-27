@@ -1,3 +1,4 @@
+{{=<% %>=}}
 # DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
 name: terraform_plan
 on:
@@ -28,6 +29,7 @@ jobs:
             echo "and paste the output in the PR"
 
   terrafrom_plan:
+    <%> env %>
 
     needs: is_organization_member
     if: github.event_name != 'pull_request_target' || needs.is_organization_member.outputs.status == 'true'
@@ -58,11 +60,7 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::707066037989:role/cq-provider-aws-github-action
-          aws-region: us-east-1
+      <%> auth_step %>
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1

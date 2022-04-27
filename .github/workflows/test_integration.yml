@@ -1,3 +1,4 @@
+{{=<% %>=}}
 # DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
 name: test_integration
 
@@ -81,11 +82,7 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::707066037989:role/cq-provider-aws-github-action
-          aws-region: us-east-1
+      <%> auth_step %>
 
       - uses: actions/cache@v3
         with:
@@ -105,6 +102,6 @@ jobs:
         env:
           SLACK_CHANNEL: oss-tests
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'aws - E2E tests failed'
-          SLACK_TITLE: aws - E2E tests failed
+          SLACK_MESSAGE: '<%> name %> - E2E tests failed'
+          SLACK_TITLE: <%> name %> - E2E tests failed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

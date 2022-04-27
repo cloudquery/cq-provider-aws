@@ -1,3 +1,4 @@
+{{=<% %>=}}
 # DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
 name: terraform_apply
 on:
@@ -9,6 +10,7 @@ on:
 
 jobs:
   terrafrom_apply:
+    <%> env %>
     permissions:
         id-token: write
         contents: read    # This is required for actions/checkout@v2
@@ -25,11 +27,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::707066037989:role/cq-provider-aws-github-action
-          aws-region: us-east-1
+      <%> auth_step %>
       
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
