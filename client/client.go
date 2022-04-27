@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"os"
 	"strings"
 	"time"
@@ -106,6 +107,7 @@ type Services struct {
 	Apigateway             ApigatewayClient
 	Apigatewayv2           Apigatewayv2Client
 	ApplicationAutoscaling ApplicationAutoscalingClient
+	Athena                 AthenaClient
 	Autoscaling            AutoscalingClient
 	Backup                 BackupClient
 	Cloudformation         CloudFormationClient
@@ -502,6 +504,7 @@ func initServices(region string, c aws.Config) Services {
 		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
 		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
 		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
+		Athena:                 athena.NewFromConfig(awsCfg),
 		Backup:                 backup.NewFromConfig(awsCfg),
 		Cloudfront:             cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),

@@ -2,6 +2,7 @@ package provider
 
 import (
 	"embed"
+	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
@@ -94,6 +95,7 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":             apigatewayv2.Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":       applicationautoscaling.ApplicationautoscalingPolicies(),
+			"athena.data_catalogs":                  athena.DataCatalogs(),
 			"autoscaling.groups":                    autoscaling.AutoscalingGroups(),
 			"autoscaling.launch_configurations":     autoscaling.AutoscalingLaunchConfigurations(),
 			"autoscaling.scheduled_actions":         autoscaling.AutoscalingScheduledActions(),

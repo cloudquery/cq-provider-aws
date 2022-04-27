@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -124,6 +125,15 @@ type Apigatewayv2Client interface {
 	GetVpcLinks(ctx context.Context, params *apigatewayv2.GetVpcLinksInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetVpcLinksOutput, error)
 	GetDomainNames(ctx context.Context, params *apigatewayv2.GetDomainNamesInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetDomainNamesOutput, error)
 	GetTags(ctx context.Context, params *apigatewayv2.GetTagsInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_athena.go . AthenaClient
+type AthenaClient interface {
+	ListDataCatalogs(ctx context.Context, params *athena.ListDataCatalogsInput, optFns ...func(*athena.Options)) (*athena.ListDataCatalogsOutput, error)
+	GetDataCatalog(ctx context.Context, params *athena.GetDataCatalogInput, optFns ...func(*athena.Options)) (*athena.GetDataCatalogOutput, error)
+	ListDatabases(ctx context.Context, params *athena.ListDatabasesInput, optFns ...func(*athena.Options)) (*athena.ListDatabasesOutput, error)
+	ListTableMetadata(ctx context.Context, params *athena.ListTableMetadataInput, optFns ...func(*athena.Options)) (*athena.ListTableMetadataOutput, error)
+	ListTagsForResource(ctx context.Context, params *athena.ListTagsForResourceInput, optFns ...func(*athena.Options)) (*athena.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudfront.go . CloudfrontClient
