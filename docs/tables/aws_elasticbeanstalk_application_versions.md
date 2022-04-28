@@ -7,7 +7,7 @@ Describes the properties of an application version.
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
 |application_name|text|The name of the application to which the application version belongs.|
-|application_version_arn|text|The Amazon Resource Name (ARN) of the application version.|
+|arn|text|The Amazon Resource Name (ARN) of the application version.|
 |build_arn|text|Reference to the artifact from the AWS CodeBuild build.|
 |date_created|timestamp without time zone|The creation date of the application version.|
 |date_updated|timestamp without time zone|The last modified date of the application version.|

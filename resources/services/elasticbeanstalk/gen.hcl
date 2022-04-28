@@ -31,7 +31,7 @@ resource "aws" "elasticbeanstalk" "application_versions" {
   }
 
   options {
-    primary_keys = ["application_version_arn"]
+    primary_keys = ["arn"]
   }
 
 }

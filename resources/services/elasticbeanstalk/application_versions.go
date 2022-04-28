@@ -19,7 +19,7 @@ func ApplicationVersions() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"application_version_arn"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -39,14 +39,15 @@ func ApplicationVersions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "application_version_arn",
+				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the application version.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("SourceBuildInformation.SourceLocation"),
 			},
 			{
-				Name:        "build_arn",
-				Description: "Reference to the artifact from the AWS CodeBuild build.",
-				Type:        schema.TypeString,
+				Name:          "build_arn",
+				Description:   "Reference to the artifact from the AWS CodeBuild build.",
+				Type:          schema.TypeString,
 				IgnoreInTests: true,
 			},
 			{
@@ -65,10 +66,10 @@ func ApplicationVersions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "source_build_information_source_location",
-				Description: "The location of the source code, as a formatted string, depending on the value of SourceRepository  * For CodeCommit, the format is the repository name and commit ID, separated by a forward slash",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("SourceBuildInformation.SourceLocation"),
+				Name:          "source_build_information_source_location",
+				Description:   "The location of the source code, as a formatted string, depending on the value of SourceRepository  * For CodeCommit, the format is the repository name and commit ID, separated by a forward slash",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("SourceBuildInformation.SourceLocation"),
 				IgnoreInTests: true,
 			},
 			{

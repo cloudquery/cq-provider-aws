@@ -18,20 +18,9 @@ CREATE TABLE IF NOT EXISTS "aws_backup_region_settings" (
 	"cq_fetch_date" timestamp without time zone NOT NULL,
 	"account_id" text,
 	"region" text,
-	"application_name" text,
-	"application_version_arn" text,
-	"build_arn" text,
-	"date_created" timestamp without time zone,
-	"date_updated" timestamp without time zone,
-	"description" text,
-	"source_build_information_source_location" text,
-	"source_build_information_source_repository" text,
-	"source_build_information_source_type" text,
-	"source_bundle_s3_bucket" text,
-	"source_bundle_s3_key" text,
-	"status" text,
-	"version_label" text,
-	CONSTRAINT aws_elasticbeanstalk_application_versions_pk PRIMARY KEY(cq_fetch_date,application_version_arn),
+	"resource_type_management_preference" jsonb,
+	"resource_type_opt_in_preference" jsonb,
+	CONSTRAINT aws_backup_region_settings_pk PRIMARY KEY(cq_fetch_date,account_id,region),
 	UNIQUE(cq_fetch_date,cq_id)
 );
-SELECT setup_tsdb_parent('aws_elasticbeanstalk_application_versions');
+SELECT setup_tsdb_parent('aws_backup_region_settings');

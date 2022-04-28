@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "aws_elasticbeanstalk_application_versions" (
 	"account_id" text,
 	"region" text,
 	"application_name" text,
-	"application_version_arn" text,
+	"arn" text,
 	"build_arn" text,
 	"date_created" timestamp without time zone,
 	"date_updated" timestamp without time zone,
@@ -20,6 +20,6 @@ CREATE TABLE IF NOT EXISTS "aws_elasticbeanstalk_application_versions" (
 	"source_bundle_s3_key" text,
 	"status" text,
 	"version_label" text,
-	CONSTRAINT aws_elasticbeanstalk_application_versions_pk PRIMARY KEY(application_version_arn),
+	CONSTRAINT aws_elasticbeanstalk_application_versions_pk PRIMARY KEY(arn),
 	UNIQUE(cq_id)
 );
