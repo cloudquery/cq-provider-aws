@@ -11,16 +11,24 @@ import (
 )
 
 type retryer struct {
-	*retry.Standard
+	aws.Retryer
 	logger hclog.Logger
 }
 
 func newRetryer(logger hclog.Logger, maxRetries int, maxBackoff int) func() aws.Retryer {
 	return func() aws.Retryer {
 		return &retryer{
-			Standard: retry.NewStandard(func(o *retry.StandardOptions) {
-				o.MaxAttempts = maxRetries
-				o.MaxBackoff = time.Second * time.Duration(maxBackoff)
+			//Retryer: retry.NewStandard(func(o *retry.StandardOptions) {
+			//	o.MaxAttempts = maxRetries
+			//	o.MaxBackoff = time.Second * time.Duration(maxBackoff)
+			//}),
+			Retryer: retry.NewAdaptiveMode(func(o *retry.AdaptiveModeOptions) {
+				o.StandardOptions = []func(o *retry.StandardOptions){
+					func(o *retry.StandardOptions) {
+						o.MaxAttempts = maxRetries
+						o.MaxBackoff = time.Second * time.Duration(maxBackoff)
+					},
+				}
 			}),
 			logger: logger,
 		}
@@ -28,12 +36,13 @@ func newRetryer(logger hclog.Logger, maxRetries int, maxBackoff int) func() aws.
 }
 
 func (r *retryer) RetryDelay(attempt int, err error) (time.Duration, error) {
-	dur, retErr := r.Standard.RetryDelay(attempt, err)
+	dur, retErr := r.Retryer.RetryDelay(attempt, err)
 
 	logParams := []interface{}{
 		"duration", dur.String(),
 		"attempt", attempt,
-		"err", retErr,
+		"retrier_err", retErr,
+		"err", err,
 	}
 	var oe *smithy.OperationError
 	if errors.As(err, &oe) {
