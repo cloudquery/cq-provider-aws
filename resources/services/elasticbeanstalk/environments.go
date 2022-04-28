@@ -456,6 +456,10 @@ func fetchElasticbeanstalkEnvironmentLinks(ctx context.Context, meta schema.Clie
 	return nil
 }
 
+func logParameterValueError(meta schema.ClientMeta, err error, p types.EnvironmentDescription) {
+	meta.Logger().Debug("Failed extracting configuration settings for environment. It might be terminated", "environment", p.EnvironmentName, "application", p.ApplicationName)
+}
+
 func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.EnvironmentDescription)
 	c := meta.(*client.Client)
@@ -471,6 +475,7 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
 		if c.IsInvalidParameterValueError(err) {
+			logParameterValueError(meta, err, p)
 			return nil
 		}
 		return diag.WrapError(err)
@@ -506,6 +511,7 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
 		if c.IsInvalidParameterValueError(err) {
+			logParameterValueError(meta, err, p)
 			return nil
 		}
 		return diag.WrapError(err)
