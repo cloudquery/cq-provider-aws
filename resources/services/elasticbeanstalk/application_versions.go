@@ -42,7 +42,7 @@ func ApplicationVersions() *schema.Table {
 				Name:        "arn",
 				Description: "The Amazon Resource Name (ARN) of the application version.",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("SourceBuildInformation.SourceLocation"),
+				Resolver:    schema.PathResolver("ApplicationVersionArn"),
 			},
 			{
 				Name:          "build_arn",
