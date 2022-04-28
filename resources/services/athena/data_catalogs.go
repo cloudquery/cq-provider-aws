@@ -128,9 +128,10 @@ func DataCatalogs() *schema.Table {
 						},
 						Relations: []*schema.Table{
 							{
-								Name:        "aws_athena_data_catalog_database_table_columns",
-								Description: "Contains metadata for a column in a table",
-								Resolver:    fetchAthenaDataCatalogDatabaseTableColumns,
+								Name:          "aws_athena_data_catalog_database_table_columns",
+								Description:   "Contains metadata for a column in a table",
+								Resolver:      fetchAthenaDataCatalogDatabaseTableColumns,
+								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",
@@ -156,9 +157,10 @@ func DataCatalogs() *schema.Table {
 								},
 							},
 							{
-								Name:        "aws_athena_data_catalog_database_table_partition_keys",
-								Description: "Contains metadata for a column in a table",
-								Resolver:    fetchAthenaDataCatalogDatabaseTablePartitionKeys,
+								Name:          "aws_athena_data_catalog_database_table_partition_keys",
+								Description:   "Contains metadata for a column in a table",
+								Resolver:      fetchAthenaDataCatalogDatabaseTablePartitionKeys,
+								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",
@@ -240,7 +242,10 @@ func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, r
 	tags := make(map[string]string)
 	for {
 		result, err := svc.ListTagsForResource(ctx, &params)
-		if err != nil && !cl.IsNotFoundError(err) {
+		if err != nil {
+			if cl.IsNotFoundError(err) {
+				return nil
+			}
 			return diag.WrapError(err)
 		}
 		client.TagsIntoMap(result.Tags, tags)
