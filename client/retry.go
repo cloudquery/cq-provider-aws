@@ -1,42 +1,50 @@
 package client
 
 import (
+	"errors"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
+	"github.com/aws/smithy-go"
 	"github.com/hashicorp/go-hclog"
 )
 
 type retryer struct {
 	*retry.Standard
-	backoff *retry.ExponentialJitterBackoff
-	logger  hclog.Logger
+	logger hclog.Logger
 }
 
 func newRetryer(logger hclog.Logger, maxRetries int, maxBackoff int) func() aws.Retryer {
 	return func() aws.Retryer {
-		maxbackoff := time.Second * time.Duration(maxBackoff)
-		backoff := retry.NewExponentialJitterBackoff(maxbackoff)
-
 		return &retryer{
 			Standard: retry.NewStandard(func(o *retry.StandardOptions) {
 				o.MaxAttempts = maxRetries
-				o.MaxBackoff = maxbackoff
-				o.Backoff = backoff
+				o.MaxBackoff = time.Second * time.Duration(maxBackoff)
 			}),
-			backoff: backoff,
-			logger:  logger,
+			logger: logger,
 		}
 	}
 }
 
 func (r *retryer) RetryDelay(attempt int, err error) (time.Duration, error) {
-	dur, err := r.backoff.BackoffDelay(attempt, err)
-	if err != nil {
-		r.logger.Debug("retryDelay returned err", "err", err, "duration", dur.String())
-	} else {
-		r.logger.Debug("retryDelay will wait", "duration", dur.String())
+	dur, retErr := r.Standard.RetryDelay(attempt, err)
+
+	logParams := []interface{}{
+		"duration", dur.String(),
+		"err", retErr,
 	}
-	return dur, err
+	var oe *smithy.OperationError
+	if errors.As(err, &oe) {
+		logParams = append(logParams, []interface{}{
+			"op", oe.Operation(),
+			"service_id", oe.Service(),
+		})
+	}
+	if retErr != nil {
+		r.logger.Debug("retryDelay returned err", logParams...)
+	} else {
+		r.logger.Debug("retryDelay will wait", logParams...)
+	}
+	return dur, retErr
 }
