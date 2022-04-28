@@ -32,6 +32,7 @@ func (r *retryer) RetryDelay(attempt int, err error) (time.Duration, error) {
 
 	logParams := []interface{}{
 		"duration", dur.String(),
+		"attempt", attempt,
 		"err", retErr,
 	}
 	var oe *smithy.OperationError
