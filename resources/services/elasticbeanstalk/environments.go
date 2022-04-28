@@ -474,7 +474,7 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 	if err != nil {
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
-		if c.IsInvalidParameterValueError(err) {
+		if client.IsInvalidParameterValueError(err) {
 			logInvalidParameterValueError(meta, err, p)
 			return nil
 		}
@@ -510,7 +510,7 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 	if err != nil {
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
-		if c.IsInvalidParameterValueError(err) {
+		if client.IsInvalidParameterValueError(err) {
 			logInvalidParameterValueError(meta, err, p)
 			return nil
 		}

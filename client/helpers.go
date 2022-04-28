@@ -278,7 +278,7 @@ func (c *Client) IsNotFoundError(err error) bool {
 	return false
 }
 
-func (c *Client) IsInvalidParameterValueError(err error) bool {
+func IsInvalidParameterValueError(err error) bool {
 	var apiErr smithy.APIError
 	if errors.As(err, &apiErr); apiErr.ErrorCode() == "InvalidParameterValue" {
 		return true
