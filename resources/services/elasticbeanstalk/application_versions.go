@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
-	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -48,6 +47,7 @@ func ApplicationVersions() *schema.Table {
 				Name:        "build_arn",
 				Description: "Reference to the artifact from the AWS CodeBuild build.",
 				Type:        schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "date_created",
@@ -69,6 +69,7 @@ func ApplicationVersions() *schema.Table {
 				Description: "The location of the source code, as a formatted string, depending on the value of SourceRepository  * For CodeCommit, the format is the repository name and commit ID, separated by a forward slash",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("SourceBuildInformation.SourceLocation"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "source_build_information_source_repository",
@@ -123,18 +124,6 @@ func fetchElasticbeanstalkApplicationVersions(ctx context.Context, meta schema.C
 		})
 		if err != nil {
 			return diag.WrapError(err)
-		}
-
-		for i := range output.ApplicationVersions {
-			if output.ApplicationVersions[i].BuildArn == nil {
-				output.ApplicationVersions[i].BuildArn = new(string)
-			}
-
-			if output.ApplicationVersions[i].SourceBuildInformation == nil {
-				output.ApplicationVersions[i].SourceBuildInformation = &types.SourceBuildInformation{
-					SourceLocation: new(string),
-				}
-			}
 		}
 
 		res <- output.ApplicationVersions
