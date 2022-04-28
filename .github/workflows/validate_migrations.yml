@@ -1,0 +1,94 @@
+# DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
+name: validate_migrations
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate_migrations:
+    name: Validate migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get changed migration files
+        id: changed-files
+        uses: tj-actions/changed-files@v19
+        with:
+          files: |
+            resources/provider/migrations/**/*.sql
+      - name: Install dependencies
+        run: npm i semver
+      - uses: actions/github-script@v6
+        env:
+          ADDED_MIGRATIONS: ${{ steps.changed-files.outputs.added_files }}
+        with:
+          script: |
+            const { promises: fs } = require('fs')
+            const semver = require('semver')
+            const path = require('path')
+
+            const splitMigrationFile = (migration) => {
+              const order = parseInt(migration.split('_')[0]);
+              const versionParts = migration
+                .slice(order.length + 1)
+                .split('.')
+                .slice(0, 3);
+
+              return { order, versionParts };
+            };
+
+            const { ADDED_MIGRATIONS = '' } = process.env;
+            const migrations = ADDED_MIGRATIONS.trim().split(' ').filter(Boolean).map(migration => path.basename(migration));
+
+            if (migrations.length === 0) {
+              console.log('No migrations added. Exiting.');
+              return;
+            }
+
+            console.log(`Added migrations: ${migrations}`);
+            // 2 (up, down) for postgress, 2 (up, down) for tsdb
+            if (migrations.length !== 4) {
+              throw new Error(
+                `Please add 2 up/down migrations for postgress and 2 up/down for tsdb. Added migrations: ${migrations}`
+              );
+            }
+
+
+            const existingMigrations = (
+              await fs.readdir(`resources/provider/migrations/postgres`)
+            ).map(existingMigration => path.basename(existingMigration)).filter(existingMigration => !migrations.includes(existingMigration));
+
+            const latestMigration = splitMigrationFile(
+              existingMigrations[existingMigrations.length - 1]
+            );
+
+            const releases = await github.paginate(github.rest.repos.listReleases, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100,
+            });
+
+            const versions = releases
+              .map(({ tag_name }) => tag_name)
+              .filter(semver.valid)
+              .sort(semver.rcompare)
+              .map(semver.parse);
+
+            const [latestVersion] = versions;
+
+            const expectedPrefix = `${latestMigration.order + 1}_v${
+              latestVersion.major
+            }.${latestVersion.minor}.${latestVersion.patch + 1}`;
+
+            const invalidMigrations = migrations.filter(
+              (migration) => !migration.startsWith(expectedPrefix)
+            );
+
+            if (invalidMigrations.length > 1) {
+              throw new Error(
+                `Invalid migrations: ${invalidMigrations.join(
+                  ', '
+                )}. Expected prefix: ${expectedPrefix}`
+              );
+            }
