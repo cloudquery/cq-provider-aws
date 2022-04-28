@@ -18,17 +18,9 @@ type retryer struct {
 func newRetryer(logger hclog.Logger, maxRetries int, maxBackoff int) func() aws.Retryer {
 	return func() aws.Retryer {
 		return &retryer{
-			//Retryer: retry.NewStandard(func(o *retry.StandardOptions) {
-			//	o.MaxAttempts = maxRetries
-			//	o.MaxBackoff = time.Second * time.Duration(maxBackoff)
-			//}),
-			Retryer: retry.NewAdaptiveMode(func(o *retry.AdaptiveModeOptions) {
-				o.StandardOptions = []func(o *retry.StandardOptions){
-					func(o *retry.StandardOptions) {
-						o.MaxAttempts = maxRetries
-						o.MaxBackoff = time.Second * time.Duration(maxBackoff)
-					},
-				}
+			Retryer: retry.NewStandard(func(o *retry.StandardOptions) {
+				o.MaxAttempts = maxRetries
+				o.MaxBackoff = time.Second * time.Duration(maxBackoff)
 			}),
 			logger: logger,
 		}
