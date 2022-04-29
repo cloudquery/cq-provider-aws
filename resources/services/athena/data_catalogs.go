@@ -40,9 +40,10 @@ func DataCatalogs() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveAthenaDataCatalogTags,
+				Name:          "tags",
+				Type:          schema.TypeJSON,
+				Resolver:      ResolveAthenaDataCatalogTags,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "name",
@@ -55,14 +56,16 @@ func DataCatalogs() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "description",
-				Description: "An optional description of the data catalog",
-				Type:        schema.TypeString,
+				Name:          "description",
+				Description:   "An optional description of the data catalog",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "parameters",
-				Description: "Specifies the Lambda function or functions to use for the data catalog",
-				Type:        schema.TypeJSON,
+				Name:          "parameters",
+				Description:   "Specifies the Lambda function or functions to use for the data catalog",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
 			},
 		},
 		Relations: []*schema.Table{
