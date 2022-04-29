@@ -2,7 +2,6 @@ package sns
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
@@ -99,10 +98,10 @@ func SnsTopics() *schema.Table {
 				Resolver:    schema.PathResolver("TopicArn"),
 			},
 			{
-				Name:          "tags",
-				Description:   "Topic tags.",
-				Type:          schema.TypeJSON,
-				IgnoreInTests: true,
+				Name:        "tags",
+				Description: "Topic tags.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveTopicTags,
 			},
 		},
 	}
@@ -146,12 +145,6 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 		return diag.WrapError(err)
 	}
 
-	tagParams := sns.ListTagsForResourceInput{
-		ResourceArn: topic.TopicArn,
-	}
-	tags, err := svc.ListTagsForResource(ctx, &tagParams, func(o *sns.Options) {
-		o.Region = c.Region
-	})
 	if err != nil {
 		return diag.WrapError(err)
 	}
@@ -198,9 +191,22 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 			return err
 		}
 	}
-	if err := resource.Set("tags", client.TagsToMap(tags.Tags)); err != nil {
-		return err
-	}
 
 	return nil
+}
+
+func resolveTopicTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, col schema.Column) error {
+	topic := resource.Item.(types.Topic)
+	c := meta.(*client.Client)
+	svc := c.Services().SNS
+	tagParams := sns.ListTagsForResourceInput{
+		ResourceArn: topic.TopicArn,
+	}
+	tags, err := svc.ListTagsForResource(ctx, &tagParams, func(o *sns.Options) {
+		o.Region = c.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(col.Name, client.TagsToMap(tags.Tags)))
 }
