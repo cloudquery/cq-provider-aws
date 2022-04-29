@@ -2,6 +2,7 @@ package sns
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
@@ -97,6 +98,12 @@ func SnsTopics() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("TopicArn"),
 			},
+			{
+				Name:          "tags",
+				Description:   "Queue tags.",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
+			},
 		},
 	}
 }
@@ -138,6 +145,18 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 	if err != nil {
 		return diag.WrapError(err)
 	}
+
+	tagParams := sns.ListTagsForResourceInput{
+		ResourceArn: topic.TopicArn,
+	}
+	tags, err := svc.ListTagsForResource(ctx, &tagParams, func(o *sns.Options) {
+		o.Region = c.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	fmt.Println(tags)
+
 	// Set all attributes
 	if err := resource.Set("subscriptions_confirmed", cast.ToInt(output.Attributes["SubscriptionsConfirmed"])); err != nil {
 		return err
@@ -179,6 +198,9 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 		if err := resource.Set("kms_master_key_id", p); err != nil {
 			return err
 		}
+	}
+	if err := resource.Set("tags", client.TagsToMap(tags.Tags)); err != nil {
+		return err
 	}
 
 	return nil
