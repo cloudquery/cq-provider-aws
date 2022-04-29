@@ -100,7 +100,7 @@ func SnsTopics() *schema.Table {
 			},
 			{
 				Name:          "tags",
-				Description:   "Queue tags.",
+				Description:   "Topic tags.",
 				Type:          schema.TypeJSON,
 				IgnoreInTests: true,
 			},
