@@ -3,13 +3,18 @@ package athena
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
+
+const MAX_GOROUTINES = 10
 
 //go:generate cq-gen --resource data_catalogs --config gen.hcl --output .
 func DataCatalogs() *schema.Table {
@@ -201,6 +206,7 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListDataCatalogsInput{}
+	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	for {
 		response, err := svc.ListDataCatalogs(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
@@ -208,24 +214,22 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 		if err != nil {
 			return diag.WrapError(err)
 		}
+		errs, ctx := errgroup.WithContext(ctx)
 		for _, d := range response.DataCatalogsSummary {
-			dc, err := svc.GetDataCatalog(ctx, &athena.GetDataCatalogInput{
-				Name: d.CatalogName,
-			}, func(options *athena.Options) {
-				options.Region = c.Region
-			})
-			if err != nil {
-				// retrieving of default data catalog (AwsDataCatalog) returns "not found error" but it exists and its
-				// relations can be fetched by its name
-				if *d.CatalogName == "AwsDataCatalog" {
-					res <- types.DataCatalog{Name: d.CatalogName, Type: d.Type}
-					continue
-				}
+			if err := sem.Acquire(ctx, 1); err != nil {
 				return diag.WrapError(err)
 			}
-			res <- *dc.DataCatalog
+			func(summary types.DataCatalogSummary) {
+				errs.Go(func() error {
+					defer sem.Release(1)
+					return fetchDataCatalog(ctx, res, svc, c.Region, summary)
+				})
+			}(d)
 		}
-
+		err = errs.Wait()
+		if err != nil {
+			return diag.WrapError(err)
+		}
 		if aws.ToString(response.NextToken) == "" {
 			break
 		}
@@ -307,5 +311,24 @@ func fetchAthenaDataCatalogDatabaseTableColumns(ctx context.Context, meta schema
 }
 func fetchAthenaDataCatalogDatabaseTablePartitionKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	res <- parent.Item.(types.TableMetadata).PartitionKeys
+	return nil
+}
+
+func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.AthenaClient, region string, catalogSummary types.DataCatalogSummary) error {
+	dc, err := svc.GetDataCatalog(ctx, &athena.GetDataCatalogInput{
+		Name: catalogSummary.CatalogName,
+	}, func(options *athena.Options) {
+		options.Region = region
+	})
+	if err != nil {
+		// retrieving of default data catalog (AwsDataCatalog) returns "not found error" but it exists and its
+		// relations can be fetched by its name
+		if *catalogSummary.CatalogName == "AwsDataCatalog" {
+			res <- types.DataCatalog{Name: catalogSummary.CatalogName, Type: catalogSummary.Type}
+			return nil
+		}
+		return diag.WrapError(err)
+	}
+	res <- *dc.DataCatalog
 	return nil
 }
