@@ -144,11 +144,6 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 	if err != nil {
 		return diag.WrapError(err)
 	}
-
-	if err != nil {
-		return diag.WrapError(err)
-	}
-
 	// Set all attributes
 	if err := resource.Set("subscriptions_confirmed", cast.ToInt(output.Attributes["SubscriptionsConfirmed"])); err != nil {
 		return err
