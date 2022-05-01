@@ -66,20 +66,20 @@ func ApplicationVersions() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:          "source_build_information_source_location",
+				Name:          "source_location",
 				Description:   "The location of the source code, as a formatted string, depending on the value of SourceRepository  * For CodeCommit, the format is the repository name and commit ID, separated by a forward slash",
 				Type:          schema.TypeString,
 				Resolver:      schema.PathResolver("SourceBuildInformation.SourceLocation"),
 				IgnoreInTests: true,
 			},
 			{
-				Name:        "source_build_information_source_repository",
+				Name:        "source_repository",
 				Description: "Location where the repository is stored.  * CodeCommit  * S3  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("SourceBuildInformation.SourceRepository"),
 			},
 			{
-				Name:        "source_build_information_source_type",
+				Name:        "source_type",
 				Description: "The type of repository.  * Git  * Zip  This member is required.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("SourceBuildInformation.SourceType"),
