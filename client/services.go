@@ -134,6 +134,14 @@ type AthenaClient interface {
 	ListDatabases(ctx context.Context, params *athena.ListDatabasesInput, optFns ...func(*athena.Options)) (*athena.ListDatabasesOutput, error)
 	ListTableMetadata(ctx context.Context, params *athena.ListTableMetadataInput, optFns ...func(*athena.Options)) (*athena.ListTableMetadataOutput, error)
 	ListTagsForResource(ctx context.Context, params *athena.ListTagsForResourceInput, optFns ...func(*athena.Options)) (*athena.ListTagsForResourceOutput, error)
+	ListWorkGroups(ctx context.Context, params *athena.ListWorkGroupsInput, optFns ...func(*athena.Options)) (*athena.ListWorkGroupsOutput, error)
+	GetWorkGroup(ctx context.Context, params *athena.GetWorkGroupInput, optFns ...func(*athena.Options)) (*athena.GetWorkGroupOutput, error)
+	ListPreparedStatements(ctx context.Context, params *athena.ListPreparedStatementsInput, optFns ...func(*athena.Options)) (*athena.ListPreparedStatementsOutput, error)
+	GetPreparedStatement(ctx context.Context, params *athena.GetPreparedStatementInput, optFns ...func(*athena.Options)) (*athena.GetPreparedStatementOutput, error)
+	ListQueryExecutions(ctx context.Context, params *athena.ListQueryExecutionsInput, optFns ...func(*athena.Options)) (*athena.ListQueryExecutionsOutput, error)
+	ListNamedQueries(ctx context.Context, params *athena.ListNamedQueriesInput, optFns ...func(*athena.Options)) (*athena.ListNamedQueriesOutput, error)
+	GetNamedQuery(ctx context.Context, params *athena.GetNamedQueryInput, optFns ...func(*athena.Options)) (*athena.GetNamedQueryOutput, error)
+	GetQueryExecution(ctx context.Context, params *athena.GetQueryExecutionInput, optFns ...func(*athena.Options)) (*athena.GetQueryExecutionOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudfront.go . CloudfrontClient

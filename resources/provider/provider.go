@@ -97,6 +97,7 @@ func Provider() *provider.Provider {
 			"apigatewayv2.vpc_links":                apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":       applicationautoscaling.ApplicationautoscalingPolicies(),
 			"athena.data_catalogs":                  athena.DataCatalogs(),
+			"athena.work_groups":                    athena.WorkGroups(),
 			"autoscaling.groups":                    autoscaling.AutoscalingGroups(),
 			"autoscaling.launch_configurations":     autoscaling.AutoscalingLaunchConfigurations(),
 			"autoscaling.scheduled_actions":         autoscaling.AutoscalingScheduledActions(),
