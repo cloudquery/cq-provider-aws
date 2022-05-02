@@ -15,14 +15,13 @@ import (
 
 func WafWebAcls() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_waf_web_acls",
-		Description:   "This is AWS WAF Classic documentation",
-		Resolver:      fetchWafWebAcls,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
-		IgnoreInTests: true,
+		Name:         "aws_waf_web_acls",
+		Description:  "This is AWS WAF Classic documentation",
+		Resolver:     fetchWafWebAcls,
+		Multiplex:    client.AccountMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -66,11 +65,10 @@ func WafWebAcls() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:          "aws_waf_web_acl_rules",
-				Description:   "This is AWS WAF Classic documentation",
-				Resolver:      fetchWafWebAclRules,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "rule_id"}},
-				IgnoreInTests: true,
+				Name:        "aws_waf_web_acl_rules",
+				Description: "This is AWS WAF Classic documentation",
+				Resolver:    fetchWafWebAclRules,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "rule_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
@@ -114,11 +112,10 @@ func WafWebAcls() *schema.Table {
 				},
 			},
 			{
-				Name:          "aws_waf_web_acl_logging_configuration",
-				Description:   "The LoggingConfiguration for the specified web ACL.",
-				Resolver:      fetchWafWebACLLoggingConfiguration,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
-				IgnoreInTests: true,
+				Name:        "aws_waf_web_acl_logging_configuration",
+				Description: "The LoggingConfiguration for the specified web ACL.",
+				Resolver:    fetchWafWebACLLoggingConfiguration,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",

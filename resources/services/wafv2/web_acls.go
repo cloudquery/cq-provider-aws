@@ -16,14 +16,13 @@ import (
 
 func Wafv2WebAcls() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_wafv2_web_acls",
-		Description:   "A Web ACL defines a collection of rules to use to inspect and control web requests",
-		Resolver:      fetchWafv2WebAcls,
-		Multiplex:     client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
-		IgnoreInTests: true,
+		Name:         "aws_wafv2_web_acls",
+		Description:  "A Web ACL defines a collection of rules to use to inspect and control web requests",
+		Resolver:     fetchWafv2WebAcls,
+		Multiplex:    client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
@@ -114,11 +113,10 @@ func Wafv2WebAcls() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:          "aws_wafv2_web_acl_rules",
-				Description:   "A single rule, which you can use in a WebACL or RuleGroup to identify web requests that you want to allow, block, or count",
-				Resolver:      fetchWafv2WebAclRules,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
-				IgnoreInTests: true,
+				Name:        "aws_wafv2_web_acl_rules",
+				Description: "A single rule, which you can use in a WebACL or RuleGroup to identify web requests that you want to allow, block, or count",
+				Resolver:    fetchWafv2WebAclRules,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
@@ -181,11 +179,10 @@ func Wafv2WebAcls() *schema.Table {
 				},
 			},
 			{
-				Name:          "aws_wafv2_web_acl_post_process_firewall_manager_rule_groups",
-				Description:   "A rule group that's defined for an AWS Firewall Manager WAF policy. ",
-				Resolver:      fetchWafv2WebAclPostProcessFirewallManagerRuleGroups,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
-				IgnoreInTests: true,
+				Name:        "aws_wafv2_web_acl_post_process_firewall_manager_rule_groups",
+				Description: "A rule group that's defined for an AWS Firewall Manager WAF policy. ",
+				Resolver:    fetchWafv2WebAclPostProcessFirewallManagerRuleGroups,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
@@ -236,11 +233,10 @@ func Wafv2WebAcls() *schema.Table {
 				},
 			},
 			{
-				Name:          "aws_wafv2_web_acl_pre_process_firewall_manager_rule_groups",
-				Description:   "A rule group that's defined for an AWS Firewall Manager WAF policy. ",
-				Resolver:      fetchWafv2WebAclPreProcessFirewallManagerRuleGroups,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
-				IgnoreInTests: true,
+				Name:        "aws_wafv2_web_acl_pre_process_firewall_manager_rule_groups",
+				Description: "A rule group that's defined for an AWS Firewall Manager WAF policy. ",
+				Resolver:    fetchWafv2WebAclPreProcessFirewallManagerRuleGroups,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
@@ -291,11 +287,10 @@ func Wafv2WebAcls() *schema.Table {
 				},
 			},
 			{
-				Name:          "aws_wafv2_web_acl_logging_configuration",
-				Description:   "The LoggingConfiguration for the specified web ACL.",
-				Resolver:      fetchWafv2WebACLLoggingConfiguration,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
-				IgnoreInTests: true,
+				Name:        "aws_wafv2_web_acl_logging_configuration",
+				Description: "The LoggingConfiguration for the specified web ACL.",
+				Resolver:    fetchWafv2WebACLLoggingConfiguration,
+				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
