@@ -1,12 +1,10 @@
 package client
 
 import (
-	"errors"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/retry"
-	"github.com/aws/smithy-go"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -37,18 +35,9 @@ func (r *retryer) RetryDelay(attempt int, err error) (time.Duration, error) {
 	}
 	if retErr != nil {
 		logParams = append(logParams, "retrier_err", retErr)
-	}
-	var oe *smithy.OperationError
-	if errors.As(err, &oe) {
-		logParams = append(logParams, []interface{}{
-			"op", oe.Operation(),
-			"service_id", oe.Service(),
-		})
-	}
-	if retErr != nil {
-		r.logger.Debug("retryDelay returned err", logParams...)
+		r.logger.Debug("RetryDelay returned err", logParams...)
 	} else {
-		r.logger.Debug("retryDelay will wait", logParams...)
+		r.logger.Debug("waiting before retry...", logParams...)
 	}
 	return dur, retErr
 }
