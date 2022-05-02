@@ -222,8 +222,8 @@ github.com/aws/aws-sdk-go-v2/service/efs v1.2.0 h1:PCLM4aShavpVcyXqUoUsQpMJ+Z/PL
 github.com/aws/aws-sdk-go-v2/service/efs v1.2.0/go.mod h1:6ZQj15y/BJWGzjbc7JIjD9K4QEINDR5Es/2OW9frZ7I=
 github.com/aws/aws-sdk-go-v2/service/eks v1.2.1 h1:eNSGiZZKcrjT1/UlxOSL/v1gjR5bePJk4xMdGBZXd1o=
 github.com/aws/aws-sdk-go-v2/service/eks v1.2.1/go.mod h1:XGNXr+eBGsXebPMHCHHJEaOWaenvyybnUU+dsdKpDXg=
-github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.9.1 h1:DVrBxRaacVoF3zvTmcCZlZAhXvvP0HuYvw160ZtjQ+8=
-github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.9.1/go.mod h1:g9dsBAskorxMGp1ViGoTYn0EG/YGevqsbFhMYCEW3dU=
+github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.3 h1:r6CaVaIvKKBNwivTtLkeSqoVVLVlPCIRO70trJCQ4/w=
+github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.3/go.mod h1:sredqfV5Vq99SniDZhMTIxALdcSGuU8y8iGOmCud6dI=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.3.0 h1:jcx18EAelE2w/3pECszdXvXH32PMAYC/uJN5F12QP4U=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.3.0/go.mod h1:5AcWE9oBNguXvA3Ky2fYuBYrwz+mX4U4GzDaJnljr5I=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.2.0 h1:9lADbVulXuffsnKXULr1p82sHd9t8JiMF41jmgIRbkg=
@@ -360,8 +360,8 @@ github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58/go.mod h1:EOBUe0h
 github.com/cloudquery/cq-gen v0.0.4 h1:VcVwtmv5d/XISCvXxWGxfe2ouaqXs1FBLmpb3ozpeUk=
 github.com/cloudquery/cq-gen v0.0.4/go.mod h1:1UY0w0cm8uC3DwCUO5GNClB6pOztnbBvbOQOkSm6X7Y=
 github.com/cloudquery/cq-provider-sdk v0.8.2/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
-github.com/cloudquery/cq-provider-sdk v0.9.0 h1:2NNADgmD6ERE5UFN/DgsZrqNWyVAy5pXAH1GQd5ifv0=
-github.com/cloudquery/cq-provider-sdk v0.9.0/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
+github.com/cloudquery/cq-provider-sdk v0.9.2 h1:zPCkU2Q6sWizy4qQ6+2gytdLqEmy+16jb9e2HcvPNl8=
+github.com/cloudquery/cq-provider-sdk v0.9.2/go.mod h1:IHxqY7TOttWhNQhMRqYl1vBo2JS2szLAf5Mhg78MwTQ=
 github.com/cloudquery/faker/v3 v3.7.4/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=
 github.com/cloudquery/faker/v3 v3.7.5 h1:G7ANdEEcm8TvAAjIwNWSLrYK36CFCiSlrCqOTGCccL0=
 github.com/cloudquery/faker/v3 v3.7.5/go.mod h1:1b8WVG9Gh0T2hVo1a8dWeXfu0AhqSB6J/mmJaesqOeo=

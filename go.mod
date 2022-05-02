@@ -32,7 +32,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.1
 	github.com/aws/aws-sdk-go-v2/service/efs v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/eks v1.2.1
-	github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.9.1
+	github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.3
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.2.0
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.4.0
@@ -66,7 +66,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.4
-	github.com/cloudquery/cq-provider-sdk v0.9.0
+	github.com/cloudquery/cq-provider-sdk v0.9.2
 	github.com/cloudquery/faker/v3 v3.7.5
 	github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8
 	github.com/golang/mock v1.6.0

@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -198,6 +196,11 @@ type Client struct {
 	WAFScope             wafv2types.Scope
 }
 
+var (
+	_ schema.ClientMeta       = (*Client)(nil)
+	_ schema.ClientIdentifier = (*Client)(nil)
+)
+
 // S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
 // has different structure then all other services (i.e no service but just a function) and we need
 // the ability to mock it.
@@ -227,6 +230,16 @@ func NewAwsClient(logger hclog.Logger, accounts []Account) Client {
 }
 func (c *Client) Logger() hclog.Logger {
 	return &awsLogger{c.logger, c.Accounts}
+}
+
+// Identify the given client
+func (c *Client) Identify() string {
+	return strings.TrimRight(strings.Join([]string{
+		obfuscateAccountId(c.AccountID),
+		c.Region,
+		c.AutoscalingNamespace,
+		string(c.WAFScope),
+	}, ":"), ":")
 }
 
 func (c *Client) Services() *Services {
@@ -350,7 +363,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	var awsCfg aws.Config
 	configFns := []func(*config.LoadOptions) error{
 		config.WithDefaultRegion(defaultRegion),
-		config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
+		config.WithRetryer(newRetryer(logger, awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 	}
 
 	if account.LocalProfile != "" {
@@ -411,7 +424,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
 			logger.Error("error getting child accounts", "err", err)
-			return nil, diags.Add(diag.FromError(err, diag.ACCESS))
+			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 	}
 
@@ -437,7 +450,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		}
 
 		if err := verifyRegions(localRegions); err != nil {
-			return nil, diags.Add(diag.FromError(err, diag.USER))
+			return nil, diags.Add(classifyError(err, diag.USER, nil))
 		}
 
 		if isAllRegions(localRegions) {
@@ -451,7 +464,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				diags = diags.Add(diag.FromError(errors.New("unable to assume role in account"), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
 				continue
 			}
-			return nil, diags.Add(diag.FromError(err, diag.ACCESS))
+			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 
 		// This is a work-around to skip disabled regions
@@ -465,7 +478,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				}
 			})
 		if err != nil {
-			return nil, diags.Add(diag.FromError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.ACCESS, diag.WithDetails("DescribeRegions failed, need permissions")))
+			return nil, diags.Add(classifyError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.INTERNAL, nil))
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
@@ -475,7 +488,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			return nil, diags.Add(diag.FromError(err, diag.INTERNAL))
+			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 		if client.AccountID == "" {
 			// set default
@@ -555,15 +568,6 @@ func initServices(region string, c aws.Config) Services {
 		Workspaces:             workspaces.NewFromConfig(awsCfg),
 		IOT:                    iot.NewFromConfig(awsCfg),
 		Xray:                   xray.NewFromConfig(awsCfg),
-	}
-}
-
-func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
-	return func() aws.Retryer {
-		return retry.NewStandard(func(o *retry.StandardOptions) {
-			o.MaxAttempts = maxRetries
-			o.MaxBackoff = time.Second * time.Duration(maxBackoff)
-		})
 	}
 }
 
