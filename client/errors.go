@@ -15,58 +15,62 @@ import (
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
 
+	return classifyError(err, diag.RESOLVING, client.Accounts, diag.WithResourceName(resourceName), includeResourceIdWithAccount(client, err))
+}
+
+func classifyError(err error, fallbackType diag.Type, accounts []Account, opts ...diag.BaseErrorOption) diag.Diagnostics {
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
 		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err,
+				RedactError(accounts, diag.NewBaseError(err,
 					diag.ACCESS,
-					diag.WithType(diag.ACCESS),
-					diag.WithSeverity(diag.WARNING),
-					ParseSummaryMessage(err),
-					diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]),
-					includeResourceIdWithAccount(client, err),
-				)),
+					append(opts,
+						diag.WithType(diag.ACCESS),
+						diag.WithSeverity(diag.WARNING),
+						ParseSummaryMessage(err),
+						diag.WithDetails("%s", errorCodeDescriptions[ae.ErrorCode()]),
+					)...),
+				),
 			}
 		case "InvalidAction":
 			return diag.Diagnostics{
-				RedactError(client.Accounts, diag.NewBaseError(err,
+				RedactError(accounts, diag.NewBaseError(err,
 					diag.RESOLVING,
-					diag.WithType(diag.RESOLVING),
-					diag.WithSeverity(diag.IGNORE),
-					ParseSummaryMessage(err),
-					diag.WithDetails("The action is invalid for the service."),
-					includeResourceIdWithAccount(client, err),
-				)),
+					append(opts,
+						diag.WithType(diag.RESOLVING),
+						diag.WithSeverity(diag.IGNORE),
+						ParseSummaryMessage(err),
+						diag.WithDetails("The action is invalid for the service."),
+					)...),
+				),
 			}
 		}
 	}
 	if IsErrorThrottle(err) {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, diag.NewBaseError(err,
+			RedactError(accounts, diag.NewBaseError(err,
 				diag.THROTTLE,
-				diag.WithType(diag.THROTTLE),
-				diag.WithSeverity(diag.WARNING),
-				ParseSummaryMessage(err),
-				diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries/retry_timeout in provider configuration."),
-				includeResourceIdWithAccount(client, err),
-			)),
+				append(opts,
+					diag.WithType(diag.THROTTLE),
+					diag.WithSeverity(diag.WARNING),
+					ParseSummaryMessage(err),
+					diag.WithDetails("CloudQuery AWS provider has been throttled, increase max_retries in provider configuration."),
+				)...),
+			),
 		}
 	}
 
 	// Take over from SDK and always return diagnostics, redacting PII
 	if d, ok := err.(diag.Diagnostic); ok {
 		return diag.Diagnostics{
-			RedactError(client.Accounts, diag.NewBaseError(d, d.Type(), includeResourceIdWithAccount(client, err))),
+			RedactError(accounts, diag.NewBaseError(d, d.Type(), opts...)),
 		}
 	}
 
 	return diag.Diagnostics{
-		RedactError(client.Accounts, diag.NewBaseError(err,
-			diag.RESOLVING,
-			diag.WithResourceName(resourceName),
-		)),
+		RedactError(accounts, diag.NewBaseError(err, fallbackType, opts...)),
 	}
 }
 
@@ -153,13 +157,15 @@ func isCodeThrottle(code string) bool {
 }
 
 var (
-	requestIdRegex = regexp.MustCompile(`\s(RequestID:|request id:)\s[A-Za-z0-9-]+`)
+	requestIdRegex = regexp.MustCompile(`\s([Rr]equest[ _]{0,1}(ID|Id|id):)\s[A-Za-z0-9-]+`)
 	hostIdRegex    = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
 	arnIdRegex     = regexp.MustCompile(`(\s)(arn:aws[A-Za-z0-9-]*:)[^ \.\(\)\[\]\{\}\;\,]+(\s?)`)
 	urlRegex       = regexp.MustCompile(`([\s"])http(s?):\/\/[a-z0-9_\-\./]+([":\s]?)`)
 	lookupRegex    = regexp.MustCompile(`(\slookup\s)[-A-Za-z0-9\.]+\son\s([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.+?)([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})->([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.*)`)
+	dialRegex      = regexp.MustCompile(`(\sdial\s)(tcp|udp)(\s)([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.+?)`)
 	encAuthRegex   = regexp.MustCompile(`(\s)(Encoded authorization failure message:)\s[A-Za-z0-9_-]+`)
 	userRegex      = regexp.MustCompile(`(\s)(is not authorized to perform: .+ on resource:\s)(user)\s.+`)
+	s3Regex        = regexp.MustCompile(`(\s)(S3(Key|Bucket))=(.+?)([,;\s])`)
 )
 
 func removePII(aa []Account, msg string) string {
@@ -171,8 +177,10 @@ func removePII(aa []Account, msg string) string {
 	msg = arnIdRegex.ReplaceAllString(msg, "${1}${2}xxxx${3}")
 	msg = urlRegex.ReplaceAllString(msg, "${1}http${2}://xxxx${3}")
 	msg = lookupRegex.ReplaceAllString(msg, "${1}xxxx${3}xxxx->xxxx${6}")
+	msg = dialRegex.ReplaceAllString(msg, "${1}${2}${3}xxxx${5}")
 	msg = encAuthRegex.ReplaceAllString(msg, "${1}${2} xxxx")
 	msg = userRegex.ReplaceAllString(msg, "${1}${2}${3} xxxx")
+	msg = s3Regex.ReplaceAllString(msg, "${1}${2}=xxxx${5}")
 	msg = accountObfusactor(aa, msg)
 
 	return msg
