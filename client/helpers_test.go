@@ -203,7 +203,7 @@ func TestIgnoreCustomError(t *testing.T) {
 			want:         false,
 		},
 		{
-			name:         "RegexNotMatched",
+			name:         "CodeNotMatched",
 			err:          cfErr,
 			code:         "not valid error code",
 			messageRegex: "Stack with id xxxxxxxxx does not exist",
