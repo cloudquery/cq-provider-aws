@@ -11,6 +11,8 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
 //go:generate cq-gen -config=patch_baselines.hcl -domain=ssm -resource=patch_baselines
@@ -194,10 +196,14 @@ func PatchBaselines() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
+const patchBaselinesConcurrency = 5
+
 func fetchSsmPatchBaselines(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().SSM
 	params := ssm.DescribePatchBaselinesInput{}
+	g, ctx := errgroup.WithContext(ctx)
+	s := semaphore.NewWeighted(patchBaselinesConcurrency)
 	for {
 		result, err := svc.DescribePatchBaselines(ctx, &params, func(o *ssm.Options) {
 			o.Region = cl.Region
@@ -206,28 +212,36 @@ func fetchSsmPatchBaselines(ctx context.Context, meta schema.ClientMeta, parent 
 			return diag.WrapError(err)
 		}
 		for _, item := range result.BaselineIdentities {
-			b, err := svc.GetPatchBaseline(
-				ctx,
-				&ssm.GetPatchBaselineInput{
-					BaselineId: item.BaselineId,
-				},
-				func(o *ssm.Options) {
-					o.Region = cl.Region
-				},
-			)
-			if err != nil {
-				return diag.WrapError(err)
-			}
-			if b != nil {
-				res <- *b
-			}
+			id := item.BaselineId
+			g.Go(func() error {
+				if err := s.Acquire(ctx, 1); err != nil {
+					return diag.WrapError(err)
+				}
+				defer s.Release(1)
+				b, err := svc.GetPatchBaseline(
+					ctx,
+					&ssm.GetPatchBaselineInput{
+						BaselineId: id,
+					},
+					func(o *ssm.Options) {
+						o.Region = cl.Region
+					},
+				)
+				if err != nil {
+					return diag.WrapError(err)
+				}
+				if b != nil {
+					res <- *b
+				}
+				return nil
+			})
 		}
 		if aws.ToString(result.NextToken) == "" {
 			break
 		}
 		params.NextToken = result.NextToken
 	}
-	return nil
+	return g.Wait()
 }
 func fetchSsmPatchBaselineApprovalRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	b := parent.Item.(ssm.GetPatchBaselineOutput)

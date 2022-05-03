@@ -10,6 +10,8 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
 //go:generate cq-gen -config=associations.hcl -domain=ssm -resource=associations
@@ -265,37 +267,50 @@ func Associations() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
+const associacionsConcurrency = 5
+
 func fetchSsmAssociations(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().SSM
 	params := ssm.ListAssociationsInput{}
+	g, ctx := errgroup.WithContext(ctx)
+	s := semaphore.NewWeighted(associacionsConcurrency)
 	for {
 		result, err := svc.ListAssociations(ctx, &params, func(o *ssm.Options) { o.Region = cl.Region })
 		if err != nil {
 			return diag.WrapError(err)
 		}
 		for _, a := range result.Associations {
-			desc, err := svc.DescribeAssociation(
-				ctx,
-				&ssm.DescribeAssociationInput{
-					AssociationId:      a.AssociationId,
-					AssociationVersion: a.AssociationVersion,
-				},
-				func(o *ssm.Options) { o.Region = cl.Region },
-			)
-			if err != nil {
-				return diag.WrapError(err)
-			}
-			if desc.AssociationDescription != nil {
-				res <- *desc.AssociationDescription
-			}
+			id := a.AssociationId
+			v := a.AssociationVersion
+			g.Go(func() error {
+				if err := s.Acquire(ctx, 1); err != nil {
+					return diag.WrapError(err)
+				}
+				defer s.Release(1)
+				desc, err := svc.DescribeAssociation(
+					ctx,
+					&ssm.DescribeAssociationInput{
+						AssociationId:      id,
+						AssociationVersion: v,
+					},
+					func(o *ssm.Options) { o.Region = cl.Region },
+				)
+				if err != nil {
+					return diag.WrapError(err)
+				}
+				if desc.AssociationDescription != nil {
+					res <- *desc.AssociationDescription
+				}
+				return nil
+			})
 		}
 		if aws.ToString(result.NextToken) == "" {
 			break
 		}
 		params.NextToken = result.NextToken
 	}
-	return nil
+	return g.Wait()
 }
 func fetchSsmAssociationTargetLocations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	a := parent.Item.(types.AssociationDescription)
