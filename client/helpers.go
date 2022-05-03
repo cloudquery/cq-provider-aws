@@ -302,6 +302,19 @@ func IsAWSError(err error, code ...string) bool {
 	return false
 }
 
+func IgnoreCustomError(err error, code string, messageRegex string) bool {
+	var ae smithy.APIError
+	if !errors.As(err, &ae) {
+		return false
+	}
+
+	r, _ := regexp.Compile(messageRegex)
+	if ae.ErrorCode() == code && r.MatchString(ae.ErrorMessage()) {
+		return true
+	}
+	return false
+}
+
 // TagsIntoMap expects []T (usually "[]Tag") where T has "Key" and "Value" fields (of type string or *string) and writes them into the given map
 func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 	stringify := func(v reflect.Value) string {

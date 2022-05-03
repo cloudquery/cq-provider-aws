@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"github.com/aws/smithy-go"
 	"testing"
 	"time"
 
@@ -167,4 +168,53 @@ func TestTagsIntoMap(t *testing.T) {
 	}, res)
 
 	assert.Equal(t, map[string]string{"k": "v", "k2": "v2"}, res)
+}
+
+func TestIgnoreCustomError(t *testing.T) {
+	cfErr := &smithy.OperationError{
+		ServiceID:     "Cloudformation",
+		OperationName: "ListStackResources",
+		Err: &smithy.GenericAPIError{
+			Code:    "ValidationError",
+			Message: "Stack with id xxxxxxxxx does not exist",
+			Fault:   smithy.FaultUnknown,
+		},
+	}
+
+	tests := []struct {
+		name         string
+		err          *smithy.OperationError
+		code         string
+		messageRegex string
+		want         bool
+	}{
+		{
+			name:         "RegexMatched",
+			err:          cfErr,
+			code:         "ValidationError",
+			messageRegex: "Stack with id (.*) does not exist",
+			want:         true,
+		},
+		{
+			name:         "RegexNotMatched",
+			err:          cfErr,
+			code:         "ValidationError",
+			messageRegex: "Not valid error message",
+			want:         false,
+		},
+		{
+			name:         "RegexNotMatched",
+			err:          cfErr,
+			code:         "not valid error code",
+			messageRegex: "Stack with id xxxxxxxxx does not exist",
+			want:         false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			found := IgnoreCustomError(tt.err, tt.code, tt.messageRegex)
+			require.Equal(t, found, tt.want)
+		})
+	}
 }
