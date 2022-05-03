@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/retry"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -197,6 +195,11 @@ type Client struct {
 	WAFScope             wafv2types.Scope
 }
 
+var (
+	_ schema.ClientMeta       = (*Client)(nil)
+	_ schema.ClientIdentifier = (*Client)(nil)
+)
+
 // S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
 // has different structure then all other services (i.e no service but just a function) and we need
 // the ability to mock it.
@@ -226,6 +229,16 @@ func NewAwsClient(logger hclog.Logger, accounts []Account) Client {
 }
 func (c *Client) Logger() hclog.Logger {
 	return &awsLogger{c.logger, c.Accounts}
+}
+
+// Identify the given client
+func (c *Client) Identify() string {
+	return strings.TrimRight(strings.Join([]string{
+		obfuscateAccountId(c.AccountID),
+		c.Region,
+		c.AutoscalingNamespace,
+		string(c.WAFScope),
+	}, ":"), ":")
 }
 
 func (c *Client) Services() *Services {
@@ -349,7 +362,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	var awsCfg aws.Config
 	configFns := []func(*config.LoadOptions) error{
 		config.WithDefaultRegion(defaultRegion),
-		config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
+		config.WithRetryer(newRetryer(logger, awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 	}
 
 	if account.LocalProfile != "" {
@@ -553,15 +566,6 @@ func initServices(region string, c aws.Config) Services {
 		Workspaces:             workspaces.NewFromConfig(awsCfg),
 		IOT:                    iot.NewFromConfig(awsCfg),
 		Xray:                   xray.NewFromConfig(awsCfg),
-	}
-}
-
-func newRetryer(maxRetries int, maxBackoff int) func() aws.Retryer {
-	return func() aws.Retryer {
-		return retry.NewStandard(func(o *retry.StandardOptions) {
-			o.MaxAttempts = maxRetries
-			o.MaxBackoff = time.Second * time.Duration(maxBackoff)
-		})
 	}
 }
 
