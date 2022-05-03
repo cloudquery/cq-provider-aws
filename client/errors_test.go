@@ -49,7 +49,7 @@ func TestRemovePII(t *testing.T) {
 		},
 		{
 			"operation error EC2: DescribeSnapshotAttribute, https response error StatusCode: 400, RequestID: xxxx, api error InvalidSnapshot.NotFound: The snapshot 'snap-11111111111111111' does not exist.",
-			"operation error EC2: DescribeSnapshotAttribute, https response error StatusCode: 400, RequestID: xxxx, api error InvalidSnapshot.NotFound: The snapshot 'snap-xxxx' does not exist.",
+			"operation error EC2: DescribeSnapshotAttribute, https response error StatusCode: 400, RequestID: xxxx, api error InvalidSnapshot.NotFound: The snapshot 'xxxx' does not exist.",
 		},
 	}
 	for i, tc := range cases {

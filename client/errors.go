@@ -166,7 +166,7 @@ var (
 	encAuthRegex   = regexp.MustCompile(`(\s)(Encoded authorization failure message:)\s[A-Za-z0-9_-]+`)
 	userRegex      = regexp.MustCompile(`(\s)(is not authorized to perform: .+ on resource:\s)(user)\s.+`)
 	s3Regex        = regexp.MustCompile(`(\s)(S3(Key|Bucket))=(.+?)([,;\s])`)
-	snapshotRegex  = regexp.MustCompile(`(\s)(The snapshot 'snap-)(.+?)'( does not exist)`)
+	snapshotRegex  = regexp.MustCompile(`(\sThe )(.+ )'(.+?)'( does not exist)`)
 )
 
 func removePII(aa []Account, msg string) string {
@@ -182,7 +182,7 @@ func removePII(aa []Account, msg string) string {
 	msg = encAuthRegex.ReplaceAllString(msg, "${1}${2} xxxx")
 	msg = userRegex.ReplaceAllString(msg, "${1}${2}${3} xxxx")
 	msg = s3Regex.ReplaceAllString(msg, "${1}${2}=xxxx${5}")
-	msg = snapshotRegex.ReplaceAllString(msg, "${1}${2}xxxx'${4}")
+	msg = snapshotRegex.ReplaceAllString(msg, "${1}${2}'xxxx'${4}")
 	msg = accountObfusactor(aa, msg)
 
 	return msg
