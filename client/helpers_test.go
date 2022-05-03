@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"regexp"
 	"testing"
 	"time"
 
@@ -170,7 +171,7 @@ func TestTagsIntoMap(t *testing.T) {
 	assert.Equal(t, map[string]string{"k": "v", "k2": "v2"}, res)
 }
 
-func TestIgnoreCustomError(t *testing.T) {
+func TestIsErrorRegex(t *testing.T) {
 	cfErr := &smithy.OperationError{
 		ServiceID:     "Cloudformation",
 		OperationName: "ListStackResources",
@@ -180,40 +181,42 @@ func TestIgnoreCustomError(t *testing.T) {
 			Fault:   smithy.FaultUnknown,
 		},
 	}
+	validRegex := regexp.MustCompile("Stack with id (.*) does not exist")
+	notValidRegex := regexp.MustCompile("Not valid error message")
 
 	tests := []struct {
 		name         string
 		err          *smithy.OperationError
 		code         string
-		messageRegex string
+		messageRegex *regexp.Regexp
 		want         bool
 	}{
 		{
 			name:         "RegexMatched",
 			err:          cfErr,
 			code:         "ValidationError",
-			messageRegex: "Stack with id (.*) does not exist",
+			messageRegex: validRegex,
 			want:         true,
 		},
 		{
 			name:         "RegexNotMatched",
 			err:          cfErr,
 			code:         "ValidationError",
-			messageRegex: "Not valid error message",
+			messageRegex: notValidRegex,
 			want:         false,
 		},
 		{
 			name:         "CodeNotMatched",
 			err:          cfErr,
 			code:         "not valid error code",
-			messageRegex: "Stack with id xxxxxxxxx does not exist",
+			messageRegex: validRegex,
 			want:         false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			found := IgnoreCustomError(tt.err, tt.code, tt.messageRegex)
+			found := IsErrorRegex(tt.err, tt.code, tt.messageRegex)
 			require.Equal(t, found, tt.want)
 		})
 	}

@@ -302,14 +302,12 @@ func IsAWSError(err error, code ...string) bool {
 	return false
 }
 
-func IgnoreCustomError(err error, code string, messageRegex string) bool {
+func IsErrorRegex(err error, code string, messageRegex *regexp.Regexp) bool {
 	var ae smithy.APIError
 	if !errors.As(err, &ae) {
 		return false
 	}
-
-	r, _ := regexp.Compile(messageRegex)
-	if ae.ErrorCode() == code && r.MatchString(ae.ErrorMessage()) {
+	if ae.ErrorCode() == code && messageRegex.MatchString(ae.ErrorMessage()) {
 		return true
 	}
 	return false

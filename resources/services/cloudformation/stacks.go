@@ -2,6 +2,7 @@ package cloudformation
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -9,6 +10,10 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+)
+
+var (
+	validStackNotFoundRegex = regexp.MustCompile("Stack with id (.*) does not exist")
 )
 
 //go:generate cq-gen --resource stacks --config gen.hcl --output .
@@ -336,7 +341,7 @@ func fetchCloudformationStackResources(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			if client.IgnoreCustomError(err, "ValidationError", "Stack with id (.*) does not exist") {
+			if client.IsErrorRegex(err, "ValidationError", validStackNotFoundRegex) {
 				meta.Logger().Debug("received ValidationError on ListStackResources, stack does not exist", "region", c.Region, "err", err)
 				return nil
 			}
