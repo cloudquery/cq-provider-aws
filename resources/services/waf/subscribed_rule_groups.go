@@ -12,13 +12,14 @@ import (
 
 func WafSubscribedRuleGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_waf_subscribed_rule_groups",
-		Description:  "This is AWS WAF Classic documentation",
-		Resolver:     fetchWafSubscribedRuleGroups,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "rule_group_id"}},
+		Name:          "aws_waf_subscribed_rule_groups",
+		Description:   "This is AWS WAF Classic documentation",
+		Resolver:      fetchWafSubscribedRuleGroups,
+		Multiplex:     client.AccountMultiplex,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountFilter,
+		IgnoreInTests: true,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "rule_group_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

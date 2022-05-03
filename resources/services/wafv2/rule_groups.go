@@ -42,9 +42,10 @@ func Wafv2RuleGroups() *schema.Table {
 				Resolver: resolveWafv2ruleGroupTags,
 			},
 			{
-				Name:     "policy",
-				Type:     schema.TypeJSON,
-				Resolver: resolveWafv2ruleGroupPolicy,
+				Name:          "policy",
+				Type:          schema.TypeJSON,
+				IgnoreInTests: true,
+				Resolver:      resolveWafv2ruleGroupPolicy,
 			},
 			{
 				Name:        "arn",
