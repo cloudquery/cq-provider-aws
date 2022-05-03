@@ -3,13 +3,13 @@ package client
 import (
 	"context"
 	"errors"
-	"github.com/aws/smithy-go"
 	"testing"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	ttypes "github.com/aws/aws-sdk-go-v2/service/acm/types"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
