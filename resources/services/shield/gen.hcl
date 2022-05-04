@@ -97,6 +97,20 @@ resource "aws" "shield" "subscriptions" {
 
   column "protection_group_limits_pattern_type_limitsprotection_group_limits_arbitrary_pattern_limits_max_members" {
     rename = "protection_group_limits_arbitrary_pattern_limits_max_members"
+    type              = "int"
+    generate_resolver = true
+  }
+
+  column "protection_group_limits_max_protection_groups" {
+    type              = "int"
+    generate_resolver = true
+  }
+
+
+
+  column "time_commitment_in_seconds" {
+    type              = "int"
+    generate_resolver = true
   }
 }
 

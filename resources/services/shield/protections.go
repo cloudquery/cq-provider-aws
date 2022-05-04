@@ -101,22 +101,25 @@ func fetchShieldProtections(ctx context.Context, meta schema.ClientMeta, parent 
 	}
 	return nil
 }
+
 func ResolveShieldProtectionTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Protection)
-	client := meta.(*client.Client)
-	svc := client.Services().Shield
+	cli := meta.(*client.Client)
+	svc := cli.Services().Shield
 	config := shield.ListTagsForResourceInput{ResourceARN: r.ProtectionArn}
 
 	output, err := svc.ListTagsForResource(ctx, &config, func(o *shield.Options) {
-		o.Region = client.Region
+		o.Region = cli.Region
 	})
 	if err != nil {
+		if cli.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 
-	tags := map[string]*string{}
-	for _, t := range output.Tags {
-		tags[*t.Key] = t.Value
-	}
+	tags := map[string]string{}
+	client.TagsIntoMap(output.Tags, tags)
+
 	return resource.Set(c.Name, tags)
 }

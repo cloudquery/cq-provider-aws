@@ -31,14 +31,14 @@ func Subscriptions() *schema.Table {
 			{
 				Name:        "protection_group_limits_max_protection_groups",
 				Description: "The maximum number of protection groups that you can have at one time",
-				Type:        schema.TypeBigInt,
-				Resolver:    schema.PathResolver("SubscriptionLimits.ProtectionGroupLimits.MaxProtectionGroups"),
+				Type:        schema.TypeInt,
+				Resolver:    resolveSubscriptionsProtectionGroupLimitsMaxProtectionGroups,
 			},
 			{
 				Name:        "protection_group_limits_arbitrary_pattern_limits_max_members",
 				Description: "The maximum number of resources you can specify for a single arbitrary pattern in a protection group",
-				Type:        schema.TypeBigInt,
-				Resolver:    schema.PathResolver("SubscriptionLimits.ProtectionGroupLimits.PatternTypeLimits.ArbitraryPatternLimits.MaxMembers"),
+				Type:        schema.TypeInt,
+				Resolver:    resolveSubscriptionsProtectionGroupLimitsArbitraryPatternLimitsMaxMembers,
 			},
 			{
 				Name:        "protected_resource_type_limits",
@@ -81,7 +81,8 @@ func Subscriptions() *schema.Table {
 			{
 				Name:        "time_commitment_in_seconds",
 				Description: "The length, in seconds, of the Shield Advanced subscription for the account",
-				Type:        schema.TypeBigInt,
+				Type:        schema.TypeInt,
+				Resolver:    resolveSubscriptionsTimeCommitmentInSeconds,
 			},
 		},
 	}
@@ -104,6 +105,23 @@ func fetchShieldSubscriptions(ctx context.Context, meta schema.ClientMeta, paren
 	res <- output.Subscription
 	return nil
 }
+func resolveSubscriptionsProtectionGroupLimitsMaxProtectionGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(*types.Subscription)
+	if r.SubscriptionLimits == nil || r.SubscriptionLimits.ProtectionGroupLimits == nil {
+		return nil
+	}
+	return resource.Set(c.Name, int32(r.SubscriptionLimits.ProtectionGroupLimits.MaxProtectionGroups))
+}
+func resolveSubscriptionsProtectionGroupLimitsArbitraryPatternLimitsMaxMembers(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(*types.Subscription)
+	if r.SubscriptionLimits == nil ||
+		r.SubscriptionLimits.ProtectionGroupLimits == nil ||
+		r.SubscriptionLimits.ProtectionGroupLimits.PatternTypeLimits == nil ||
+		r.SubscriptionLimits.ProtectionGroupLimits.PatternTypeLimits.ArbitraryPatternLimits == nil {
+		return nil
+	}
+	return resource.Set(c.Name, int32(r.SubscriptionLimits.ProtectionGroupLimits.PatternTypeLimits.ArbitraryPatternLimits.MaxMembers))
+}
 func resolveSubscriptionsProtectedResourceTypeLimits(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.Subscription)
 	json := make(map[string]interface{})
@@ -122,4 +140,8 @@ func resolveSubscriptionsLimits(ctx context.Context, meta schema.ClientMeta, res
 		json[*l.Type] = l.Max
 	}
 	return resource.Set(c.Name, json)
+}
+func resolveSubscriptionsTimeCommitmentInSeconds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(*types.Subscription)
+	return resource.Set(c.Name, int32(r.TimeCommitmentInSeconds))
 }
