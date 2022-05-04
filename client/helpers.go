@@ -45,6 +45,18 @@ type SupportedServiceRegionsData struct {
 	Partitions map[string]AwsPartition `json:"partitions"`
 }
 
+func (s *SupportedServiceRegionsData) RegionsPartition(region string) (string, bool) {
+	for _, p := range s.Partitions {
+		for _, svc := range p.Services {
+			if _, ok := svc.Regions[region]; ok {
+				return p.Id, true
+			}
+		}
+	}
+
+	return defaultPartition, false
+}
+
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
 	f, err := supportedServiceRegionFile.Open(PartitionServiceRegionFile)
 	if err != nil {
@@ -79,7 +91,8 @@ func isSupportedServiceForRegion(service string, region string) bool {
 		return false
 	}
 
-	currentPartition := supportedServiceRegion.Partitions[defaultPartition]
+	prt, _ := supportedServiceRegion.RegionsPartition(region)
+	currentPartition := supportedServiceRegion.Partitions[prt]
 
 	if currentPartition.Services[service] == nil {
 		return false
@@ -107,11 +120,11 @@ func getAvailableRegions() (map[string]bool, error) {
 		return nil, fmt.Errorf("could not found any AWS partitions")
 	}
 
-	currentPartition := supportedServiceRegion.Partitions[defaultPartition]
-
-	for _, service := range currentPartition.Services {
-		for region := range service.Regions {
-			regionsSet[region] = true
+	for _, prt := range supportedServiceRegion.Partitions {
+		for _, service := range prt.Services {
+			for region := range service.Regions {
+				regionsSet[region] = true
+			}
 		}
 	}
 
@@ -162,9 +175,10 @@ func GenerateResourceARN(service, resourceType, resourceID, region, accountID st
 		resource = fmt.Sprintf("%s/%s", resourceType, resourceID)
 	}
 
+	p, _ := supportedServiceRegion.RegionsPartition(region)
+
 	return arn.ARN{
-		// TODO: Make this configurable in the future
-		Partition: "aws",
+		Partition: p,
 		Service:   service,
 		Region:    region,
 		AccountID: accountID,
@@ -201,8 +215,9 @@ const (
 // MakeARN creates an ARN using supplied service name, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
 func MakeARN(service AWSService, accountID, region string, idParts ...string) string {
+	p, _ := supportedServiceRegion.RegionsPartition(region)
 	return arn.ARN{
-		Partition: "aws",
+		Partition: p,
 		Service:   string(service),
 		Region:    region,
 		AccountID: accountID,
