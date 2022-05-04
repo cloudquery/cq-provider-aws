@@ -144,7 +144,6 @@ func fetchEc2EbsSnapshots(ctx context.Context, meta schema.ClientMeta, parent *s
 	}
 	return nil
 }
-
 func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Snapshot)
 	cl := meta.(*client.Client)
