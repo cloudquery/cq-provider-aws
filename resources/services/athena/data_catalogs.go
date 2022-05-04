@@ -86,9 +86,10 @@ func DataCatalogs() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "description",
-						Description: "An optional description of the database",
-						Type:        schema.TypeString,
+						Name:          "description",
+						Description:   "An optional description of the database",
+						Type:          schema.TypeString,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "parameters",
@@ -119,9 +120,10 @@ func DataCatalogs() *schema.Table {
 								Type:        schema.TypeTimestamp,
 							},
 							{
-								Name:        "last_access_time",
-								Description: "The last time the table was accessed",
-								Type:        schema.TypeTimestamp,
+								Name:          "last_access_time",
+								Description:   "The last time the table was accessed",
+								Type:          schema.TypeTimestamp,
+								IgnoreInTests: true,
 							},
 							{
 								Name:        "parameters",
@@ -129,9 +131,10 @@ func DataCatalogs() *schema.Table {
 								Type:        schema.TypeJSON,
 							},
 							{
-								Name:        "table_type",
-								Description: "The type of table",
-								Type:        schema.TypeString,
+								Name:          "table_type",
+								Description:   "The type of table",
+								Type:          schema.TypeString,
+								IgnoreInTests: true,
 							},
 						},
 						Relations: []*schema.Table{
