@@ -187,7 +187,9 @@ const (
 	CloudfrontService           AWSService = "cloudfront"
 	CognitoIdentityService      AWSService = "cognito-identity"
 	DirectConnectService        AWSService = "directconnect"
+	DynamoDBService             AWSService = "dynamodb"
 	EC2Service                  AWSService = "ec2"
+	EFSService                  AWSService = "elasticfilesystem"
 	ElasticLoadBalancingService AWSService = "elasticloadbalancing"
 	GuardDutyService            AWSService = "guardduty"
 	RedshiftService             AWSService = "redshift"
@@ -276,6 +278,15 @@ func (c *Client) IsNotFoundError(err error) bool {
 			return true
 		}
 	}
+	return false
+}
+
+func IsInvalidParameterValueError(err error) bool {
+	var apiErr smithy.APIError
+	if errors.As(err, &apiErr); apiErr.ErrorCode() == "InvalidParameterValue" {
+		return true
+	}
+
 	return false
 }
 
