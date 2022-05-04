@@ -12,5 +12,5 @@ TRUNCATE TABLE aws_wafv2_rule_groups;
 ALTER TABLE IF EXISTS "aws_wafv2_rule_groups" ADD COLUMN IF NOT EXISTS "scope" text;
 
 -- Resource: wafv2.web_acls
-TRUNCATE TABLE aws_wafv2_web_acls;
+DELETE FROM aws_wafv2_web_acls;
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" ADD COLUMN IF NOT EXISTS "scope" text;
