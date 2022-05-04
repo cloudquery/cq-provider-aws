@@ -21,7 +21,7 @@ func Wafv2ManagedRuleGroups() *schema.Table {
 		Resolver:             fetchWafv2ManagedRuleGroups,
 		Multiplex:            client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		DeleteFilter:         client.DeleteAccountRegionScopeFilter,
 		PostResourceResolver: resolveDescribeManagedRuleGroup,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "scope", "vendor_name", "name"}},
 		Columns: []schema.Column{
