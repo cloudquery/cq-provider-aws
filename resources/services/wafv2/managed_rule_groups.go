@@ -23,7 +23,7 @@ func Wafv2ManagedRuleGroups() *schema.Table {
 		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: resolveDescribeManagedRuleGroup,
-		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "vendor_name", "name"}},
+		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "scope", "vendor_name", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -36,6 +36,12 @@ func Wafv2ManagedRuleGroups() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "scope",
+				Description: "The scope (Regional or Global) of the resource.",
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveWAFScope,
 			},
 			{
 				Name: "available_labels",
