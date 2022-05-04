@@ -92,9 +92,10 @@ func DataCatalogs() *schema.Table {
 						IgnoreInTests: true,
 					},
 					{
-						Name:        "parameters",
-						Description: "A set of custom key/value pairs",
-						Type:        schema.TypeJSON,
+						Name:          "parameters",
+						Description:   "A set of custom key/value pairs",
+						Type:          schema.TypeJSON,
+						IgnoreInTests: true,
 					},
 				},
 				Relations: []*schema.Table{
