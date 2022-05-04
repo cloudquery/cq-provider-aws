@@ -3,12 +3,10 @@ package ec2
 import (
 	"context"
 	"encoding/json"
-	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
@@ -147,15 +145,6 @@ func fetchEc2EbsSnapshots(ctx context.Context, meta schema.ClientMeta, parent *s
 	return nil
 }
 
-func isSnapshotNotFoundError(err error) bool {
-	var apiErr smithy.APIError
-	if errors.As(err, &apiErr); apiErr.ErrorCode() == "InvalidSnapshot.NotFound" {
-		return true
-	}
-
-	return false
-}
-
 func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Snapshot)
 	cl := meta.(*client.Client)
@@ -168,7 +157,7 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 	})
 
 	if err != nil {
-		if isSnapshotNotFoundError(err) {
+		if client.IsAWSError(err, "InvalidSnapshot.NotFound") {
 			meta.Logger().Debug("Failed extracting snapshot volume permissions", "SnapshotId", r.SnapshotId, "error", err)
 			return nil
 		}
