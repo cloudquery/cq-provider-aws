@@ -42,19 +42,8 @@ type AwsPartition struct {
 }
 
 type SupportedServiceRegionsData struct {
-	Partitions map[string]AwsPartition `json:"partitions"`
-}
-
-func (s *SupportedServiceRegionsData) RegionsPartition(region string) (string, bool) {
-	for _, p := range s.Partitions {
-		for _, svc := range p.Services {
-			if _, ok := svc.Regions[region]; ok {
-				return p.Id, true
-			}
-		}
-	}
-
-	return defaultPartition, false
+	Partitions        map[string]AwsPartition `json:"partitions"`
+	regionVsPartition map[string]string
 }
 
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
@@ -70,12 +59,22 @@ func readSupportedServiceRegions() *SupportedServiceRegionsData {
 	if _, err := f.Read(data); err != nil {
 		return nil
 	}
-	var result *SupportedServiceRegionsData
-	err = json.Unmarshal(data, &result)
-	if err != nil {
+
+	var result SupportedServiceRegionsData
+	if err := json.Unmarshal(data, &result); err != nil {
 		return nil
 	}
-	return result
+
+	result.regionVsPartition = make(map[string]string)
+	for _, p := range result.Partitions {
+		for _, svc := range p.Services {
+			for reg := range svc.Regions {
+				result.regionVsPartition[reg] = p.Id
+			}
+		}
+	}
+
+	return &result
 }
 
 func isSupportedServiceForRegion(service string, region string) bool {
@@ -91,7 +90,7 @@ func isSupportedServiceForRegion(service string, region string) bool {
 		return false
 	}
 
-	prt, _ := supportedServiceRegion.RegionsPartition(region)
+	prt, _ := regionsPartition(region)
 	currentPartition := supportedServiceRegion.Partitions[prt]
 
 	if currentPartition.Services[service] == nil {
@@ -129,6 +128,18 @@ func getAvailableRegions() (map[string]bool, error) {
 	}
 
 	return regionsSet, nil
+}
+
+func regionsPartition(region string) (string, bool) {
+	readOnce.Do(func() {
+		supportedServiceRegion = readSupportedServiceRegions()
+	})
+
+	prt, ok := supportedServiceRegion.regionVsPartition[region]
+	if !ok {
+		return defaultPartition, false
+	}
+	return prt, true
 }
 
 func IgnoreAccessDeniedServiceDisabled(err error) bool {
@@ -175,7 +186,7 @@ func GenerateResourceARN(service, resourceType, resourceID, region, accountID st
 		resource = fmt.Sprintf("%s/%s", resourceType, resourceID)
 	}
 
-	p, _ := supportedServiceRegion.RegionsPartition(region)
+	p, _ := regionsPartition(region)
 
 	return arn.ARN{
 		Partition: p,
@@ -215,7 +226,7 @@ const (
 // MakeARN creates an ARN using supplied service name, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
 func MakeARN(service AWSService, accountID, region string, idParts ...string) string {
-	p, _ := supportedServiceRegion.RegionsPartition(region)
+	p, _ := regionsPartition(region)
 	return arn.ARN{
 		Partition: p,
 		Service:   string(service),
