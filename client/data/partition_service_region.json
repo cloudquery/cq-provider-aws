@@ -1772,6 +1772,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -2677,6 +2678,13 @@
             "us-west-2": {}
           }
         },
+        "ivschat": {
+          "regions": {
+            "eu-west-1": {},
+            "us-east-1": {},
+            "us-west-2": {}
+          }
+        },
         "kafka": {
           "regions": {
             "af-south-1": {},
@@ -2927,6 +2935,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -3081,6 +3090,16 @@
         "marketplacecommerceanalytics": {
           "regions": {
             "us-east-1": {}
+          }
+        },
+        "media-pipelines-chime": {
+          "regions": {
+            "ap-southeast-1": {},
+            "eu-central-1": {},
+            "us-east-1": {},
+            "us-east-1-fips": {},
+            "us-west-2": {},
+            "us-west-2-fips": {}
           }
         },
         "mediaconnect": {
@@ -3448,6 +3467,7 @@
         },
         "nimble": {
           "regions": {
+            "ap-northeast-1": {},
             "ap-southeast-2": {},
             "ca-central-1": {},
             "eu-west-2": {},
@@ -3934,6 +3954,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -4737,6 +4758,10 @@
             "eu-west-1": {},
             "eu-west-2": {},
             "eu-west-3": {},
+            "fips-us-east-1": {},
+            "fips-us-east-2": {},
+            "fips-us-west-1": {},
+            "fips-us-west-2": {},
             "me-south-1": {},
             "sa-east-1": {},
             "us-east-1": {},
@@ -6251,6 +6276,11 @@
             "us-isob-east-1": {}
           }
         },
+        "ram": {
+          "regions": {
+            "us-isob-east-1": {}
+          }
+        },
         "rds": {
           "regions": {
             "us-isob-east-1": {}
@@ -7241,6 +7271,8 @@
         },
         "synthetics": {
           "regions": {
+            "fips-us-gov-east-1": {},
+            "fips-us-gov-west-1": {},
             "us-gov-east-1": {},
             "us-gov-west-1": {}
           }
