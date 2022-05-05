@@ -183,7 +183,7 @@ func resolveIamRoleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 	response, err := svc.ListRoleTags(ctx, &iam.ListRoleTagsInput{RoleName: r.RoleName})
 	if err != nil {
 		if cl.IsNotFoundError(err) {
-			meta.Logger().Debug("received NoSuchEntity on ListRoleTags, role does not exists", "region", cl.Region, "err", err)
+			meta.Logger().Debug("ListRoleTags: role does not exist", "err", err)
 			return nil
 		}
 		return diag.WrapError(err)
