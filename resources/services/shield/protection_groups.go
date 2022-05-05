@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/shield"
+	"github.com/aws/aws-sdk-go-v2/service/shield/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -27,6 +28,11 @@ func ProtectionGroups() *schema.Table {
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: ResolveShieldProtectionGroupTags,
 			},
 			{
 				Name:        "aggregation",
@@ -87,4 +93,25 @@ func fetchShieldProtectionGroups(ctx context.Context, meta schema.ClientMeta, pa
 		config.NextToken = output.NextToken
 	}
 	return nil
+}
+func ResolveShieldProtectionGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.ProtectionGroup)
+	cli := meta.(*client.Client)
+	svc := cli.Services().Shield
+	config := shield.ListTagsForResourceInput{ResourceARN: r.ProtectionGroupArn}
+
+	output, err := svc.ListTagsForResource(ctx, &config, func(o *shield.Options) {
+		o.Region = cli.Region
+	})
+	if err != nil {
+		if cli.IsNotFoundError(err) {
+			return nil
+		}
+		return diag.WrapError(err)
+	}
+
+	tags := map[string]string{}
+	client.TagsIntoMap(output.Tags, tags)
+
+	return resource.Set(c.Name, tags)
 }

@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS "aws_shield_protection_groups" (
     "id" text,
     "arn" text,
     "resource_type" text,
+    "tags" jsonb,
     CONSTRAINT aws_shield_protection_groups_pk PRIMARY KEY (cq_fetch_date, arn),
     UNIQUE (cq_fetch_date, cq_id)
 );

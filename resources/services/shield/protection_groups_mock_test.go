@@ -20,6 +20,13 @@ func buildProtectionGroups(t *testing.T, ctrl *gomock.Controller) client.Service
 	pp.NextToken = nil
 	m.EXPECT().ListProtectionGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(&pp, nil)
 
+	tags := shield.ListTagsForResourceOutput{}
+	err = faker.FakeData(&tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tags, nil)
+
 	return client.Services{
 		Shield: m,
 	}

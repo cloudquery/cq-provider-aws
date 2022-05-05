@@ -96,7 +96,7 @@ resource "aws" "shield" "subscriptions" {
   }
 
   column "protection_group_limits_pattern_type_limitsprotection_group_limits_arbitrary_pattern_limits_max_members" {
-    rename = "protection_group_limits_arbitrary_pattern_limits_max_members"
+    rename            = "protection_group_limits_arbitrary_pattern_limits_max_members"
     type              = "int"
     generate_resolver = true
   }
@@ -105,7 +105,6 @@ resource "aws" "shield" "subscriptions" {
     type              = "int"
     generate_resolver = true
   }
-
 
 
   column "time_commitment_in_seconds" {
@@ -202,5 +201,10 @@ resource "aws" "shield" "protection_groups" {
 
   column "protection_group_arn" {
     rename = "arn"
+  }
+
+  userDefinedColumn "tags" {
+    type              = "json"
+    generate_resolver = true
   }
 }

@@ -3,8 +3,6 @@ package provider
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/resources/services/shield"
-
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -55,6 +53,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/s3"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sagemaker"
 	"github.com/cloudquery/cq-provider-aws/resources/services/secretsmanager"
+	"github.com/cloudquery/cq-provider-aws/resources/services/shield"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sns"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sqs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/ssm"
