@@ -35,5 +35,5 @@ TRUNCATE TABLE aws_wafv2_rule_groups;
 ALTER TABLE IF EXISTS "aws_wafv2_rule_groups" DROP COLUMN IF EXISTS "scope";
 
 -- Resource: wafv2.web_acls
-DELETE FROM aws_wafv2_web_acls;
+TRUNCATE TABLE aws_wafv2_web_acls CASCADE;
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" DROP COLUMN IF EXISTS "scope";
