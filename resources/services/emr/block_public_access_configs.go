@@ -111,7 +111,7 @@ func fetchEmrBlockPublicAccessConfigs(ctx context.Context, meta schema.ClientMet
 	})
 	if err != nil {
 		if client.IgnoreNotAvailableRegion(err) {
-			meta.Logger().Debug("received InvalidRequestException on GetBlockPublicAccessConfiguration, api is not available in the current Region.", "region", c.Region, "err", err)
+			meta.Logger().Debug("received InvalidRequestException on GetBlockPublicAccessConfiguration, api is not available in the current Region.", "err", err)
 			return nil
 		}
 		return diag.WrapError(err)
