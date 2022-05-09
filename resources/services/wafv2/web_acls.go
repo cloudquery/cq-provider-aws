@@ -21,7 +21,7 @@ func Wafv2WebAcls() *schema.Table {
 		Resolver:     fetchWafv2WebAcls,
 		Multiplex:    client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
+		DeleteFilter: client.DeleteAccountRegionScopeFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
@@ -33,6 +33,12 @@ func Wafv2WebAcls() *schema.Table {
 				Name:     "region",
 				Type:     schema.TypeString,
 				Resolver: client.ResolveAWSRegion,
+			},
+			{
+				Name:        "scope",
+				Description: "Specifies whether this is for an Amazon CloudFront distribution or for a regional application.",
+				Type:        schema.TypeString,
+				Resolver:    client.ResolveWAFScope,
 			},
 			{
 				Name:     "resources_for_web_acl",
