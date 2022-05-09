@@ -44,17 +44,3 @@ ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
   DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
   ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (cq_fetch_date, conformance_pack_cq_id);
 CREATE INDEX ON aws_config_conformance_pack_rule_compliances (cq_fetch_date, conformance_pack_cq_id);
-
--- Resource: shield.attacks
-DROP TABLE IF EXISTS aws_shield_attack_properties;
-DROP TABLE IF EXISTS aws_shield_attack_sub_resources;
-DROP TABLE IF EXISTS aws_shield_attacks;
-
--- Resource: shield.protections
-DROP TABLE IF EXISTS aws_shield_protections;
-
--- Resource: shield.protections_groups
-DROP TABLE IF EXISTS aws_shield_protection_groups;
-
--- Resource: shield.subscriptions
-DROP TABLE IF EXISTS aws_shield_subscriptions;

@@ -42,17 +42,3 @@ ALTER TABLE IF EXISTS "aws_wafv2_web_acls" DROP COLUMN IF EXISTS "scope";
 ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
   DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
   ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (conformance_pack_cq_id);
-
--- Resource: shield.attacks
-DROP TABLE IF EXISTS aws_shield_attack_properties;
-DROP TABLE IF EXISTS aws_shield_attack_sub_resources;
-DROP TABLE IF EXISTS aws_shield_attacks;
-
--- Resource: shield.protections
-DROP TABLE IF EXISTS aws_shield_protections;
-
--- Resource: shield.protections_groups
-DROP TABLE IF EXISTS aws_shield_protection_groups;
-
--- Resource: shield.subscriptions
-DROP TABLE IF EXISTS aws_shield_subscriptions;
