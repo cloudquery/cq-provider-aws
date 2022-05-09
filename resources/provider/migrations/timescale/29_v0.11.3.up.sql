@@ -45,6 +45,13 @@ ALTER TABLE IF EXISTS "aws_wafv2_rule_groups" ADD COLUMN IF NOT EXISTS "scope" t
 TRUNCATE TABLE aws_wafv2_web_acls CASCADE;
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" ADD COLUMN IF NOT EXISTS "scope" text;
 
+-- aws_config_conformance_pack_rule_compliances: PK change
+DROP INDEX IF EXISTS "aws_config_conformance_pack_r_cq_fetch_date_conformance_pac_idx";
+ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
+  DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
+  ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (cq_fetch_date, cq_id);
+CREATE INDEX ON aws_config_conformance_pack_rule_compliances (cq_fetch_date, cq_id);
+
 -- Resource: shield.attacks
 CREATE TABLE IF NOT EXISTS "aws_shield_attacks" (
     "cq_id" uuid NOT NULL,

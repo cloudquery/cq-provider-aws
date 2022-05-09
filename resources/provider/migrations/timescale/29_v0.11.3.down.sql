@@ -38,6 +38,13 @@ ALTER TABLE IF EXISTS "aws_wafv2_rule_groups" DROP COLUMN IF EXISTS "scope";
 DELETE FROM aws_wafv2_web_acls;
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" DROP COLUMN IF EXISTS "scope";
 
+-- aws_config_conformance_pack_rule_compliances: PK change
+DROP INDEX IF EXISTS "aws_config_conformance_pack_rule_compli_cq_fetch_date_cq_id_idx";
+ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
+  DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
+  ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (cq_fetch_date, conformance_pack_cq_id);
+CREATE INDEX ON aws_config_conformance_pack_rule_compliances (cq_fetch_date, conformance_pack_cq_id);
+
 -- Resource: shield.attacks
 DROP TABLE IF EXISTS aws_shield_attack_properties;
 DROP TABLE IF EXISTS aws_shield_attack_sub_resources;
