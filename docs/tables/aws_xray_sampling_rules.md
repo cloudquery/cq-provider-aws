@@ -6,6 +6,7 @@ A SamplingRule.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb|A list of Tags that specify information about the sampling rule.|
 |created_at|timestamp without time zone|When the rule was created.|
 |modified_at|timestamp without time zone|When the rule was last modified.|
 |fixed_rate|float|The percentage of matching requests to instrument, after the reservoir is exhausted.|

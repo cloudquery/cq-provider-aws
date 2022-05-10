@@ -6,6 +6,7 @@ Details for a group.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb|A list of Tags that specify information about the group.|
 |filter_expression|text|The filter expression defining the parameters to include traces.|
 |arn|text|The ARN of the group generated based on the GroupName.|
 |group_name|text|The unique case-sensitive name of the group.|

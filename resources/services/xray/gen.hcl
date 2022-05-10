@@ -76,6 +76,10 @@ resource "aws" "xray" "sampling_rules" {
     primary_keys = ["arn"]
   }
 
+  userDefinedColumn "tags" {
+    type = "json"
+    generate_resolver = true
+  }
 }
 
 resource "aws" "xray" "groups" {
@@ -118,4 +122,8 @@ resource "aws" "xray" "groups" {
     primary_keys = ["arn"]
   }
 
+  userDefinedColumn "tags" {
+    type = "json"
+    generate_resolver = true
+  }
 }

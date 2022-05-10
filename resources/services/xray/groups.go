@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/xray"
+	"github.com/aws/aws-sdk-go-v2/service/xray/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -32,6 +33,12 @@ func Groups() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:        "tags",
+				Description: "A list of Tags that specify information about the group.",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveXrayGroupTags,
 			},
 			{
 				Name:        "filter_expression",
@@ -88,4 +95,25 @@ func fetchXrayGroups(ctx context.Context, meta schema.ClientMeta, parent *schema
 		input.NextToken = output.NextToken
 	}
 	return nil
+}
+func ResolveXrayGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	group := resource.Item.(types.GroupSummary)
+	cl := meta.(*client.Client)
+	svc := cl.Services().Xray
+	params := xray.ListTagsForResourceInput{ResourceARN: group.GroupARN}
+
+	output, err := svc.ListTagsForResource(ctx, &params, func(o *xray.Options) {
+		o.Region = cl.Region
+	})
+	if err != nil {
+		if cl.IsNotFoundError(err) {
+			return nil
+		}
+		return diag.WrapError(err)
+	}
+
+	tags := map[string]string{}
+	client.TagsIntoMap(output.Tags, tags)
+
+	return resource.Set(c.Name, tags)
 }

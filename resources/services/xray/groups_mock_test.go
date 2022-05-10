@@ -14,6 +14,8 @@ import (
 func buildGroups(t *testing.T, ctrl *gomock.Controller) client.Services {
 	mock := mocks.NewMockXrayClient(ctrl)
 
+	test := "test"
+
 	var group types.GroupSummary
 	if err := faker.FakeData(&group); err != nil {
 		t.Fatal(err)
@@ -27,6 +29,22 @@ func buildGroups(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&xray.GetGroupsOutput{
 			Groups: []types.GroupSummary{
 				group,
+			},
+		},
+		nil,
+	)
+
+	mock.EXPECT().ListTagsForResource(
+		gomock.Any(),
+		&xray.ListTagsForResourceInput{ResourceARN: group.GroupARN},
+		gomock.Any(),
+	).Return(
+		&xray.ListTagsForResourceOutput{
+			Tags: []types.Tag{
+				{
+					Key:   &test,
+					Value: &test,
+				},
 			},
 		},
 		nil,

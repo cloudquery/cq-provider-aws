@@ -673,6 +673,7 @@ type XrayClient interface {
 	GetEncryptionConfig(ctx context.Context, params *xray.GetEncryptionConfigInput, optFns ...func(*xray.Options)) (*xray.GetEncryptionConfigOutput, error)
 	GetSamplingRules(ctx context.Context, params *xray.GetSamplingRulesInput, optFns ...func(*xray.Options)) (*xray.GetSamplingRulesOutput, error)
 	GetGroups(ctx context.Context, params *xray.GetGroupsInput, optFns ...func(*xray.Options)) (*xray.GetGroupsOutput, error)
+	ListTagsForResource(ctx context.Context, params *xray.ListTagsForResourceInput, optFns ...func(*xray.Options)) (*xray.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/shield.go . ShieldClient
