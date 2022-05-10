@@ -44,9 +44,10 @@ func DataCatalogs() *schema.Table {
 				Resolver:    ResolveAthenaDataCatalogArn,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveAthenaDataCatalogTags,
+				Name:          "tags",
+				Type:          schema.TypeJSON,
+				Resolver:      ResolveAthenaDataCatalogTags,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "name",
