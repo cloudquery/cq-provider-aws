@@ -14,8 +14,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const MAX_GOROUTINES = 10
-
 //go:generate cq-gen --resource data_catalogs --config gen.hcl --output .
 func DataCatalogs() *schema.Table {
 	return &schema.Table{
@@ -25,7 +23,7 @@ func DataCatalogs() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -40,10 +38,15 @@ func DataCatalogs() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:          "tags",
-				Type:          schema.TypeJSON,
-				Resolver:      ResolveAthenaDataCatalogTags,
-				IgnoreInTests: true,
+				Name:        "arn",
+				Description: "ARN of the resource.",
+				Type:        schema.TypeString,
+				Resolver:    ResolveAthenaDataCatalogArn,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: ResolveAthenaDataCatalogTags,
 			},
 			{
 				Name:        "name",
@@ -244,11 +247,16 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
+func ResolveAthenaDataCatalogArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	dc := resource.Item.(types.DataCatalog)
+	return resource.Set(c.Name, createDataCatalogArn(cl.Region, cl.AccountID, *dc.Name))
+}
 func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Athena
 	dc := resource.Item.(types.DataCatalog)
-	arn := fmt.Sprintf("arn:aws:athena:%s:%s:datacatalog/%s", cl.Region, cl.AccountID, *dc.Name)
+	arn := createDataCatalogArn(cl.Region, cl.AccountID, *dc.Name)
 	params := athena.ListTagsForResourceInput{ResourceARN: &arn}
 	tags := make(map[string]string)
 	for {
@@ -321,6 +329,12 @@ func fetchAthenaDataCatalogDatabaseTablePartitionKeys(ctx context.Context, meta 
 	return nil
 }
 
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
+const MAX_GOROUTINES = 10
+
 func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.AthenaClient, region string, catalogSummary types.DataCatalogSummary) error {
 	dc, err := svc.GetDataCatalog(ctx, &athena.GetDataCatalogInput{
 		Name: catalogSummary.CatalogName,
@@ -338,4 +352,8 @@ func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.At
 	}
 	res <- *dc.DataCatalog
 	return nil
+}
+
+func createDataCatalogArn(region, accountId, catalogName string) string {
+	return fmt.Sprintf("arn:aws:athena:%s:%s:datacatalog/%s", region, accountId, catalogName)
 }

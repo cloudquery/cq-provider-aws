@@ -112,9 +112,10 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalogs"(
     "tags" jsonb,
     "name" text,
     "type" text,
+	"arn" text,
     "description" text,
     "parameters" jsonb,
-    CONSTRAINT aws_athena_data_catalogs_pk PRIMARY KEY(cq_fetch_date,account_id,region,name),
+    CONSTRAINT aws_athena_data_catalogs_pk PRIMARY KEY(cq_fetch_date,arn),
     UNIQUE(cq_fetch_date,cq_id)
 );
 SELECT setup_tsdb_parent('aws_athena_data_catalogs');
@@ -185,6 +186,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_groups"(
     "region" text,
     "tags" jsonb,
     "name" text,
+	"arn" text,
     "bytes_scanned_cutoff_per_query" bigint,
     "enforce_work_group_configuration" boolean,
     "effective_engine_version" text,
@@ -199,7 +201,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_groups"(
     "creation_time" timestamp WITHOUT TIME ZONE,
     "description" text,
     "state" text,
-    CONSTRAINT aws_athena_work_groups_pk PRIMARY KEY(cq_fetch_date,account_id,region,name),
+    CONSTRAINT aws_athena_work_groups_pk PRIMARY KEY(cq_fetch_date,arn),
     UNIQUE(cq_fetch_date,cq_id)
 );
 SELECT setup_tsdb_parent('aws_athena_work_groups');

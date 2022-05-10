@@ -23,13 +23,19 @@ func WorkGroups() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
+			},
+			{
+				Name:        "arn",
+				Description: "ARN of the resource.",
+				Type:        schema.TypeString,
+				Resolver:    ResolveAthenaWorkGroupArn,
 			},
 			{
 				Name:        "region",
@@ -438,11 +444,16 @@ func fetchAthenaWorkGroups(ctx context.Context, meta schema.ClientMeta, parent *
 	}
 	return nil
 }
+func ResolveAthenaWorkGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	dc := resource.Item.(types.WorkGroup)
+	return resource.Set(c.Name, createWorkGroupArn(cl.Region, cl.AccountID, *dc.Name))
+}
 func ResolveAthenaWorkGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Athena
-	dc := resource.Item.(types.WorkGroup)
-	arn := fmt.Sprintf("arn:aws:athena:%s:%s:workgroup/%s", cl.Region, cl.AccountID, *dc.Name)
+	wg := resource.Item.(types.WorkGroup)
+	arn := createWorkGroupArn(cl.Region, cl.AccountID, *wg.Name)
 	params := athena.ListTagsForResourceInput{ResourceARN: &arn}
 	tags := make(map[string]string)
 	for {
@@ -572,4 +583,8 @@ func fetchWorkGroup(ctx context.Context, res chan<- interface{}, svc client.Athe
 	}
 	res <- *dc.WorkGroup
 	return nil
+}
+
+func createWorkGroupArn(region, accountId, groupName string) string {
+	return fmt.Sprintf("arn:aws:athena:%s:%s:workgroup/%s", region, accountId, groupName)
 }

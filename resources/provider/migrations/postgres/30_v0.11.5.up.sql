@@ -90,11 +90,6 @@ CREATE TABLE IF NOT EXISTS "aws_shield_subscriptions" (
 	UNIQUE (cq_id)
 );
 
--- aws_config_conformance_pack_rule_compliances: PK change
-ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
-DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
-  ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (cq_id);
-
 -- Resource: athena.data_catalogs
 CREATE TABLE IF NOT EXISTS "aws_athena_data_catalogs" (
     "cq_id" uuid NOT NULL,
@@ -104,9 +99,10 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalogs" (
     "tags" jsonb,
     "name" text,
     "type" text,
+	"arn" text,
     "description" text,
     "parameters" jsonb,
-    CONSTRAINT aws_athena_data_catalogs_pk PRIMARY KEY (account_id, region, name),
+    CONSTRAINT aws_athena_data_catalogs_pk PRIMARY KEY (arn),
     UNIQUE (cq_id)
 );
 CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_databases" (
@@ -164,6 +160,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_groups" (
     "region" text,
     "tags" jsonb,
     "name" text,
+	"arn" text,
     "bytes_scanned_cutoff_per_query" bigint,
     "enforce_work_group_configuration" boolean,
     "effective_engine_version" text,
@@ -178,7 +175,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_groups" (
     "creation_time" timestamp WITHOUT TIME ZONE,
     "description" text,
     "state" text,
-    CONSTRAINT aws_athena_work_groups_pk PRIMARY KEY (account_id, region, name),
+    CONSTRAINT aws_athena_work_groups_pk PRIMARY KEY (arn),
     UNIQUE (cq_id)
 );
 CREATE TABLE IF NOT EXISTS "aws_athena_work_group_prepared_statements" (

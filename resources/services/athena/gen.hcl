@@ -22,9 +22,7 @@ resource "aws" "athena" "data_catalogs" {
 
   options {
     primary_keys = [
-      "account_id",
-      "region",
-      "name"
+      "arn",
     ]
   }
   userDefinedColumn "account_id" {
@@ -40,6 +38,12 @@ resource "aws" "athena" "data_catalogs" {
     resolver "resolveAWSRegion" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
+  }
+
+  userDefinedColumn "arn" {
+    type              = "string"
+    description       = "ARN of the resource."
+    generate_resolver = true
   }
 
   user_relation "aws" "athena" "databases" {
@@ -72,9 +76,7 @@ resource "aws" "athena" "work_groups" {
 
   options {
     primary_keys = [
-      "account_id",
-      "region",
-      "name"
+      "arn"
     ]
   }
   userDefinedColumn "account_id" {
@@ -84,6 +86,12 @@ resource "aws" "athena" "work_groups" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
     }
   }
+  userDefinedColumn "arn" {
+    type              = "string"
+    description       = "ARN of the resource."
+    generate_resolver = true
+  }
+
   userDefinedColumn "region" {
     type        = "string"
     description = "The AWS Region of the resource."
