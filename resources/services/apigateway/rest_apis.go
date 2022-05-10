@@ -913,7 +913,6 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 			return nil
 		}
 		if cl.IsNotFoundError(err) {
-			meta.Logger().Debug("GetModelTemplate: model does not exist", "err", err)
 			return nil
 		}
 		return diag.WrapError(err)
