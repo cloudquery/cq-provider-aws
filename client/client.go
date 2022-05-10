@@ -62,6 +62,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
@@ -74,9 +75,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/smithy-go/logging"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
-	"github.com/hashicorp/go-hclog"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/hashicorp/go-hclog"
 )
 
 var envVarsToCheck = []string{
@@ -93,6 +93,7 @@ const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
 	defaultVar                 = "default"
+	cloudfrontScopeRegion      = defaultRegion
 )
 
 var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
@@ -149,6 +150,7 @@ type Services struct {
 	S3                     S3Client
 	S3Control              S3ControlClient
 	S3Manager              S3ManagerClient
+	Shield                 ShieldClient
 	SNS                    SnsClient
 	SQS                    SQSClient
 	SSM                    SSMClient
@@ -165,7 +167,8 @@ type ServicesAccountRegionMap map[string]map[string]*Services
 
 // ServicesManager will hold the entire map of (account X region) services
 type ServicesManager struct {
-	services ServicesAccountRegionMap
+	services         ServicesAccountRegionMap
+	wafScopeServices map[string]*Services
 }
 
 func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region string) *Services {
@@ -175,11 +178,22 @@ func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region st
 	return s.services[accountId][region]
 }
 
+func (s *ServicesManager) ServicesByAccountForWAFScope(accountId string) *Services {
+	return s.wafScopeServices[accountId]
+}
+
 func (s *ServicesManager) InitServicesForAccountAndRegion(accountId string, region string, services Services) {
 	if s.services[accountId] == nil {
 		s.services[accountId] = make(map[string]*Services)
 	}
 	s.services[accountId][region] = &services
+}
+
+func (s *ServicesManager) InitServicesForAccountAndScope(accountId string, services Services) {
+	if s.wafScopeServices == nil {
+		s.wafScopeServices = make(map[string]*Services)
+	}
+	s.wafScopeServices[accountId] = &services
 }
 
 type Client struct {
@@ -245,7 +259,11 @@ func (c *Client) Identify() string {
 }
 
 func (c *Client) Services() *Services {
-	return c.ServicesManager.ServicesByAccountAndRegion(c.AccountID, c.Region)
+	s := c.ServicesManager.ServicesByAccountAndRegion(c.AccountID, c.Region)
+	if s == nil && c.WAFScope == wafv2types.ScopeCloudfront {
+		return c.ServicesManager.ServicesByAccountForWAFScope(c.AccountID)
+	}
+	return s
 }
 
 func (c *Client) withAccountID(accountID string) *Client {
@@ -501,6 +519,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		for _, region := range account.Regions {
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
 		}
+		client.ServicesManager.InitServicesForAccountAndScope(*output.Account, initServices(cloudfrontScopeRegion, awsCfg))
 	}
 	if len(client.Accounts) == 0 {
 		return nil, diags.Add(diag.FromError(errors.New("no accounts instantiated"), diag.INTERNAL))
@@ -561,6 +580,7 @@ func initServices(region string, c aws.Config) Services {
 		S3Manager:              newS3ManagerFromConfig(awsCfg),
 		SageMaker:              sagemaker.NewFromConfig(awsCfg),
 		SecretsManager:         secretsmanager.NewFromConfig(awsCfg),
+		Shield:                 shield.NewFromConfig(awsCfg),
 		SNS:                    sns.NewFromConfig(awsCfg),
 		SSM:                    ssm.NewFromConfig(awsCfg),
 		SQS:                    sqs.NewFromConfig(awsCfg),

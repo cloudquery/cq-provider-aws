@@ -86,6 +86,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -583,6 +584,7 @@
             "eu-central-1": {},
             "eu-north-1": {},
             "eu-west-1": {},
+            "eu-west-2": {},
             "us-east-1": {},
             "us-east-2": {},
             "us-west-2": {}
@@ -874,7 +876,6 @@
         },
         "cloudhsm": {
           "regions": {
-            "eu-west-1": {},
             "us-east-1": {}
           }
         },
@@ -2115,6 +2116,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -2458,6 +2460,7 @@
         },
         "identity-chime": {
           "regions": {
+            "eu-central-1": {},
             "us-east-1": {},
             "us-east-1-fips": {}
           }
@@ -3231,6 +3234,7 @@
         },
         "messaging-chime": {
           "regions": {
+            "eu-central-1": {},
             "us-east-1": {},
             "us-east-1-fips": {}
           }
@@ -4951,6 +4955,7 @@
             "ap-south-1": {},
             "ap-southeast-1": {},
             "ap-southeast-2": {},
+            "ap-southeast-3": {},
             "ca-central-1": {},
             "eu-central-1": {},
             "eu-north-1": {},
@@ -4966,6 +4971,7 @@
             "fips-ap-south-1": {},
             "fips-ap-southeast-1": {},
             "fips-ap-southeast-2": {},
+            "fips-ap-southeast-3": {},
             "fips-ca-central-1": {},
             "fips-eu-central-1": {},
             "fips-eu-north-1": {},
@@ -6209,6 +6215,12 @@
             "us-isob-east-1": {}
           }
         },
+        "elasticfilesystem": {
+          "regions": {
+            "fips-us-isob-east-1": {},
+            "us-isob-east-1": {}
+          }
+        },
         "elasticloadbalancing": {
           "regions": {
             "us-isob-east-1": {}
@@ -7073,6 +7085,11 @@
             "fips-us-gov-east-1": {},
             "fips-us-gov-west-1": {},
             "us-gov-east-1": {},
+            "us-gov-west-1": {}
+          }
+        },
+        "robomaker": {
+          "regions": {
             "us-gov-west-1": {}
           }
         },

@@ -33,7 +33,7 @@ ALTER TABLE IF EXISTS aws_redshift_subnet_groups ADD CONSTRAINT aws_redshift_sub
 TRUNCATE TABLE aws_wafv2_managed_rule_groups;
 ALTER TABLE IF EXISTS aws_wafv2_managed_rule_groups DROP CONSTRAINT aws_wafv2_managed_rule_groups_pk;
 ALTER TABLE IF EXISTS "aws_wafv2_managed_rule_groups" ADD COLUMN IF NOT EXISTS "scope" text;
-ALTER TABLE IF EXISTS aws_wafv2_managed_rule_groups ADD CONSTRAINT aws_wafv2_managed_rule_groups_pk PRIMARY KEY (account_id, region, scope, vendor_name, name);
+ALTER TABLE IF EXISTS aws_wafv2_managed_rule_groups ADD CONSTRAINT aws_wafv2_managed_rule_groups_pk PRIMARY KEY (account_id,region,scope,vendor_name,name);
 
 -- Resource: wafv2.rule_groups
 TRUNCATE TABLE aws_wafv2_rule_groups;
@@ -42,3 +42,8 @@ ALTER TABLE IF EXISTS "aws_wafv2_rule_groups" ADD COLUMN IF NOT EXISTS "scope" t
 -- Resource: wafv2.web_acls
 TRUNCATE TABLE aws_wafv2_web_acls CASCADE;
 ALTER TABLE IF EXISTS "aws_wafv2_web_acls" ADD COLUMN IF NOT EXISTS "scope" text;
+
+-- aws_config_conformance_pack_rule_compliances: PK change
+ALTER TABLE IF EXISTS "aws_config_conformance_pack_rule_compliances"
+  DROP CONSTRAINT aws_config_conformance_pack_rule_compliances_pk,
+  ADD CONSTRAINT aws_config_conformance_pack_rule_compliances_pk PRIMARY KEY (cq_id);
