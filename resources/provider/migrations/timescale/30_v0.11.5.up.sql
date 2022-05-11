@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalogs"(
 	"parameters" jsonb,
 	CONSTRAINT aws_athena_data_catalogs_pk PRIMARY KEY(cq_fetch_date,arn),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 SELECT setup_tsdb_parent('aws_athena_data_catalogs');
 CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_databases"(
 	"cq_id" uuid NOT NULL,
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_databases"(
 	"parameters" jsonb,
 	CONSTRAINT aws_athena_data_catalog_databases_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_data_catalog_databases(cq_fetch_date,data_catalog_cq_id);
 SELECT setup_tsdb_child('aws_athena_data_catalog_databases','data_catalog_cq_id','aws_athena_data_catalogs','cq_id');
 CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_database_tables"(
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_database_tables"(
 	"table_type" text,
 	CONSTRAINT aws_athena_data_catalog_database_tables_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_data_catalog_database_tables(cq_fetch_date,data_catalog_database_cq_id);
 SELECT setup_tsdb_child('aws_athena_data_catalog_database_tables','data_catalog_database_cq_id',
 						'aws_athena_data_catalog_databases','cq_id');
@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_database_table_columns"(
 	"type" text,
 	CONSTRAINT aws_athena_data_catalog_database_table_columns_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_data_catalog_database_table_columns(cq_fetch_date,data_catalog_database_table_cq_id);
 SELECT setup_tsdb_child('aws_athena_data_catalog_database_table_columns','data_catalog_database_table_cq_id',
 						'aws_athena_data_catalog_database_tables','cq_id');
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_data_catalog_database_table_partition_key
 	"type" text,
 	CONSTRAINT aws_athena_data_catalog_database_table_partition_keys_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_data_catalog_database_table_partition_keys(cq_fetch_date,data_catalog_database_table_cq_id);
 SELECT setup_tsdb_child('aws_athena_data_catalog_database_table_partition_keys','data_catalog_database_table_cq_id',
 						'aws_athena_data_catalog_database_tables','cq_id');
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_groups"(
 	"state" text,
 	CONSTRAINT aws_athena_work_groups_pk PRIMARY KEY(cq_fetch_date,arn),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 SELECT setup_tsdb_parent('aws_athena_work_groups');
 CREATE TABLE IF NOT EXISTS "aws_athena_work_group_prepared_statements"(
 	"cq_id" uuid NOT NULL,
@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_group_prepared_statements"(
 	"work_group_name" text,
 	CONSTRAINT aws_athena_work_group_prepared_statements_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_work_group_prepared_statements(cq_fetch_date,work_group_cq_id);
 SELECT setup_tsdb_child('aws_athena_work_group_prepared_statements','work_group_cq_id','aws_athena_work_groups',
 						'cq_id');
@@ -305,7 +305,7 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_group_query_executions"(
 	"work_group" text,
 	CONSTRAINT aws_athena_work_group_query_executions_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_work_group_query_executions(cq_fetch_date,work_group_cq_id);
 SELECT setup_tsdb_child('aws_athena_work_group_query_executions','work_group_cq_id','aws_athena_work_groups',
 						'cq_id');
@@ -322,6 +322,6 @@ CREATE TABLE IF NOT EXISTS "aws_athena_work_group_named_queries"(
 	"work_group" text,
 	CONSTRAINT aws_athena_work_group_named_queries_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
-	);
+);
 CREATE INDEX ON aws_athena_work_group_named_queries(cq_fetch_date,work_group_cq_id);
 SELECT setup_tsdb_child('aws_athena_work_group_named_queries','work_group_cq_id','aws_athena_work_groups','cq_id');
