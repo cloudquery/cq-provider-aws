@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"reflect"
+	"time"
 
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -53,4 +54,25 @@ func ResolveTagField(fieldName string) func(context.Context, schema.ClientMeta, 
 		data := TagsToMap(f.Interface())
 		return diag.WrapError(r.Set(c.Name, data))
 	}
+}
+
+func ResolveTimestamp(_ context.Context, _ schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+	var val reflect.Value
+	var ts time.Time
+
+	if reflect.TypeOf(r.Item).Kind() == reflect.Ptr {
+		val = reflect.ValueOf(r.Item).Elem()
+	} else {
+		val = reflect.ValueOf(r.Item)
+	}
+
+	switch val.Kind() {
+	case reflect.Int | reflect.Int8 | reflect.Int16 | reflect.Int32 | reflect.Int64:
+		ts = time.Unix(val.Int(), 0)
+	default:
+		return nil
+	}
+
+	return diag.WrapError(r.Set(c.Name, ts))
+
 }
