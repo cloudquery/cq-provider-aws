@@ -37,16 +37,3 @@ ALTER TABLE IF EXISTS aws_rds_instances ADD CONSTRAINT aws_rds_instances_pk PRIM
 TRUNCATE TABLE aws_ssm_instance_compliance_items CASCADE;
 ALTER TABLE IF EXISTS aws_ssm_instance_compliance_items DROP CONSTRAINT aws_ssm_instance_compliance_items_pk;
 ALTER TABLE IF EXISTS aws_ssm_instance_compliance_items ADD CONSTRAINT aws_ssm_instance_compliance_items_pk PRIMARY KEY (cq_fetch_date,instance_cq_id,resource_id,id);
-
--- Resource: athena.data_catalogs
-DROP TABLE IF EXISTS aws_athena_data_catalog_database_table_columns;
-DROP TABLE IF EXISTS aws_athena_data_catalog_database_table_partition_keys;
-DROP TABLE IF EXISTS aws_athena_data_catalog_database_tables;
-DROP TABLE IF EXISTS aws_athena_data_catalog_databases;
-DROP TABLE IF EXISTS aws_athena_data_catalogs;
-
--- Resource: athena.work_groups
-DROP TABLE IF EXISTS aws_athena_work_group_prepared_statements;
-DROP TABLE IF EXISTS aws_athena_work_group_query_executions;
-DROP TABLE IF EXISTS aws_athena_work_group_named_queries;
-DROP TABLE IF EXISTS aws_athena_work_groups;
