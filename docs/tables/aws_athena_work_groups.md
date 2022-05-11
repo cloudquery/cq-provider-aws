@@ -5,6 +5,7 @@ A workgroup, which contains a name, description, creation time, state, and other
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
+|arn|text|ARN of the resource.|
 |region|text|The AWS Region of the resource.|
 |tags|jsonb||
 |name|text|The workgroup name|
