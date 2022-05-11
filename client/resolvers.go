@@ -2,11 +2,11 @@ package client
 
 import (
 	"context"
-	"reflect"
-	"time"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/thoas/go-funk"
+	"reflect"
+	"time"
 )
 
 func ResolveAWSAccount(_ context.Context, meta schema.ClientMeta, r *schema.Resource, _ schema.Column) error {
@@ -56,23 +56,28 @@ func ResolveTagField(fieldName string) func(context.Context, schema.ClientMeta, 
 	}
 }
 
-func ResolveTimestamp(_ context.Context, _ schema.ClientMeta, r *schema.Resource, c schema.Column) error {
-	var val reflect.Value
-	var ts time.Time
+func ResolveTimestampField(path string, rfcs ...string) func(_ context.Context, _ schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+	return func(ctx context.Context, cl schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+		var val reflect.Value
 
-	if reflect.TypeOf(r.Item).Kind() == reflect.Ptr {
-		val = reflect.ValueOf(r.Item).Elem()
-	} else {
-		val = reflect.ValueOf(r.Item)
+		value := funk.Get(r.Item, path, funk.WithAllowZero())
+		if value == nil {
+			return diag.WrapError(r.Set(c.Name, nil))
+		}
+
+		if reflect.TypeOf(value).Kind() == reflect.Ptr {
+			val = reflect.ValueOf(value).Elem()
+		} else {
+			val = reflect.ValueOf(value)
+		}
+
+		switch val.Kind() {
+		case reflect.Int32, reflect.Int64:
+			return diag.WrapError(r.Set(c.Name, time.Unix(val.Int(), 0)))
+		case reflect.String:
+			return schema.DateResolver(path, rfcs...)(ctx, cl, r, c)
+		default:
+			return diag.WrapError(r.Set(c.Name, nil))
+		}
 	}
-
-	switch val.Kind() {
-	case reflect.Int | reflect.Int8 | reflect.Int16 | reflect.Int32 | reflect.Int64:
-		ts = time.Unix(val.Int(), 0)
-	default:
-		return nil
-	}
-
-	return diag.WrapError(r.Set(c.Name, ts))
-
 }

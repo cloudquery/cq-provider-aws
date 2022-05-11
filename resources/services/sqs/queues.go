@@ -2,7 +2,6 @@ package sqs
 
 import (
 	"context"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
@@ -76,13 +75,13 @@ func SQSQueues() *schema.Table {
 				Name:        "created_timestamp",
 				Description: "UNIX time when the queue was created.",
 				Type:        schema.TypeTimestamp,
-				Resolver:    client.ResolveTimestamp,
+				Resolver:    client.ResolveTimestampField("CreatedTimestamp"),
 			},
 			{
 				Name:        "last_modified_timestamp",
 				Description: "UNIX time when the queue was last changed.",
 				Type:        schema.TypeTimestamp,
-				Resolver:    client.ResolveTimestamp,
+				Resolver:    client.ResolveTimestampField("LastModifiedTimestamp"),
 			},
 			{
 				Name:        "arn",

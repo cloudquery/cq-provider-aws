@@ -138,7 +138,7 @@ func IotTopicRules() *schema.Table {
 			{
 				Name:          "error_action_cloudwatch_metric_timestamp",
 				Description:   "An optional Unix timestamp (https://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/cloudwatch_concepts.html#about_timestamp).",
-				Type:          schema.TypeString, // FIXME
+				Type:          schema.TypeString,
 				Resolver:      schema.PathResolver("Rule.ErrorAction.CloudwatchMetric.MetricTimestamp"),
 				IgnoreInTests: true,
 			},
@@ -646,14 +646,14 @@ func IotTopicRules() *schema.Table {
 			{
 				Name:          "error_action_timestream_timestamp_unit",
 				Description:   "The precision of the timestamp value that results from the expression described in value",
-				Type:          schema.TypeString, // FIXME
+				Type:          schema.TypeString,
 				Resolver:      schema.PathResolver("Rule.ErrorAction.Timestream.Timestamp.Unit"),
 				IgnoreInTests: true,
 			},
 			{
 				Name:          "error_action_timestream_timestamp_value",
 				Description:   "An expression that returns a long epoch time value.",
-				Type:          schema.TypeString, // FIXME
+				Type:          schema.TypeString,
 				Resolver:      schema.PathResolver("Rule.ErrorAction.Timestream.Timestamp.Value"),
 				IgnoreInTests: true,
 			},
@@ -774,7 +774,7 @@ func IotTopicRules() *schema.Table {
 					{
 						Name:          "cloudwatch_metric_metric_timestamp",
 						Description:   "An optional Unix timestamp (https://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/cloudwatch_concepts.html#about_timestamp).",
-						Type:          schema.TypeString, // FIXME
+						Type:          schema.TypeString,
 						Resolver:      schema.PathResolver("CloudwatchMetric.MetricTimestamp"),
 						IgnoreInTests: true,
 					},
@@ -1282,14 +1282,14 @@ func IotTopicRules() *schema.Table {
 					{
 						Name:          "timestream_timestamp_unit",
 						Description:   "The precision of the timestamp value that results from the expression described in value",
-						Type:          schema.TypeString, // FIXME
+						Type:          schema.TypeString,
 						Resolver:      schema.PathResolver("Timestream.Timestamp.Unit"),
 						IgnoreInTests: true,
 					},
 					{
 						Name:          "timestream_timestamp_value",
 						Description:   "An expression that returns a long epoch time value.",
-						Type:          schema.TypeString, // FIXME
+						Type:          schema.TypeString,
 						Resolver:      schema.PathResolver("Timestream.Timestamp.Value"),
 						IgnoreInTests: true,
 					},
