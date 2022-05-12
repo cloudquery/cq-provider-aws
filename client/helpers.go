@@ -28,9 +28,6 @@ var (
 	supportedServiceRegion     *SupportedServiceRegionsData
 )
 
-// GroupNameRegex log-group:([a-zA-Z0-9/]+):
-var GroupNameRegex = regexp.MustCompile("arn:aws:logs:[a-z0-9-]+:[0-9]+:log-group:([a-zA-Z0-9-/]+):")
-
 type AwsService struct {
 	Regions map[string]*map[string]interface{} `json:"regions"`
 }
@@ -90,7 +87,7 @@ func isSupportedServiceForRegion(service string, region string) bool {
 		return false
 	}
 
-	prt, _ := regionsPartition(region)
+	prt, _ := RegionsPartition(region)
 	currentPartition := supportedServiceRegion.Partitions[prt]
 
 	if currentPartition.Services[service] == nil {
@@ -130,7 +127,7 @@ func getAvailableRegions() (map[string]bool, error) {
 	return regionsSet, nil
 }
 
-func regionsPartition(region string) (string, bool) {
+func RegionsPartition(region string) (string, bool) {
 	readOnce.Do(func() {
 		supportedServiceRegion = readSupportedServiceRegions()
 	})
@@ -198,7 +195,7 @@ func GenerateResourceARN(service, resourceType, resourceID, region, accountID st
 		resource = fmt.Sprintf("%s/%s", resourceType, resourceID)
 	}
 
-	p, _ := regionsPartition(region)
+	p, _ := RegionsPartition(region)
 
 	return arn.ARN{
 		Partition: p,
@@ -239,7 +236,7 @@ const (
 // MakeARN creates an ARN using supplied service name, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
 func MakeARN(service AWSService, accountID, region string, idParts ...string) string {
-	p, _ := regionsPartition(region)
+	p, _ := RegionsPartition(region)
 	return arn.ARN{
 		Partition: p,
 		Service:   string(service),

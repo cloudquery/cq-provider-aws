@@ -2,7 +2,6 @@ package athena
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
@@ -586,5 +585,5 @@ func fetchWorkGroup(ctx context.Context, res chan<- interface{}, svc client.Athe
 }
 
 func createWorkGroupArn(region, accountId, groupName string) string {
-	return fmt.Sprintf("arn:aws:athena:%s:%s:workgroup/%s", region, accountId, groupName)
+	return client.MakeARN("athena", accountId, region, "workgroup", groupName)
 }

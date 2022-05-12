@@ -2,7 +2,6 @@ package athena
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
@@ -356,5 +355,5 @@ func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.At
 }
 
 func createDataCatalogArn(region, accountId, catalogName string) string {
-	return fmt.Sprintf("arn:aws:athena:%s:%s:datacatalog/%s", region, accountId, catalogName)
+	return client.MakeARN("athena", accountId, region, "datacatalog", catalogName)
 }
