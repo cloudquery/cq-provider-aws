@@ -124,7 +124,7 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 func resolveWafRuleArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	rule := resource.Item.(*types.Rule)
-	return resource.Set(c.Name, client.MakeARN("waf", cl.AccountID, cl.Region, "rule", aws.ToString(rule.RuleId)))
+	return resource.Set(c.Name, cl.ARN("waf", "rule", aws.ToString(rule.RuleId)))
 }
 func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule := resource.Item.(*types.Rule)
@@ -134,7 +134,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 	service := cl.Services().Waf
 
 	// Generate arn
-	arnStr := client.MakeARN("waf", cl.AccountID, "", "rule", aws.ToString(rule.RuleId)) // FIXME no partition
+	arnStr := cl.GlobalARN("waf", "rule", aws.ToString(rule.RuleId))
 
 	outputTags := make(map[string]*string)
 	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: aws.String(arnStr)}

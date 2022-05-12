@@ -203,18 +203,17 @@ const (
 	WorkspacesService           AWSService = "workspaces"
 )
 
-// MakeARN creates an ARN using supplied service name, account id, region name and resource id parts.
+// makeARN creates an ARN using supplied service name, partition, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
 // See https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html for more information.
-func MakeARN(service AWSService, accountID, region string, idParts ...string) string {
-	p, _ := RegionsPartition(region)
+func makeARN(service AWSService, partition, accountID, region string, idParts ...string) arn.ARN {
 	return arn.ARN{
-		Partition: p,
+		Partition: partition,
 		Service:   string(service),
 		Region:    region,
 		AccountID: accountID,
 		Resource:  strings.Join(idParts, "/"),
-	}.String()
+	}
 }
 
 func resolveARN(service AWSService, resourceID func(resource *schema.Resource) ([]string, error), useRegion, useAccountID bool) schema.ColumnResolver {
@@ -231,7 +230,8 @@ func resolveARN(service AWSService, resourceID func(resource *schema.Resource) (
 		if useRegion {
 			region = cl.Region
 		}
-		return resource.Set(c.Name, MakeARN(service, accountID, region, idParts...))
+		p, _ := RegionsPartition(cl.Region)
+		return resource.Set(c.Name, makeARN(service, p, accountID, region, idParts...).String())
 	}
 }
 

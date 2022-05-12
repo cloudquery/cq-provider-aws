@@ -250,13 +250,13 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 func ResolveAthenaDataCatalogArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	dc := resource.Item.(types.DataCatalog)
-	return resource.Set(c.Name, createDataCatalogArn(cl.Region, cl.AccountID, *dc.Name))
+	return resource.Set(c.Name, createDataCatalogArn(cl, *dc.Name))
 }
 func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Athena
 	dc := resource.Item.(types.DataCatalog)
-	arn := createDataCatalogArn(cl.Region, cl.AccountID, *dc.Name)
+	arn := createDataCatalogArn(cl, *dc.Name)
 	params := athena.ListTagsForResourceInput{ResourceARN: &arn}
 	tags := make(map[string]string)
 	for {
@@ -354,6 +354,6 @@ func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.At
 	return nil
 }
 
-func createDataCatalogArn(region, accountId, catalogName string) string {
-	return client.MakeARN(client.Athena, accountId, region, "datacatalog", catalogName)
+func createDataCatalogArn(cl *client.Client, catalogName string) string {
+	return cl.ARN(client.Athena, "datacatalog", catalogName)
 }

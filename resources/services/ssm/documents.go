@@ -296,5 +296,5 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 func resolveSSMDocumentARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	d := resource.Item.(*types.DocumentDescription)
 	cl := meta.(*client.Client)
-	return resource.Set(c.Name, client.MakeARN("ssm", cl.AccountID, cl.Region, "document", *d.Name))
+	return resource.Set(c.Name, cl.ARN("ssm", "document", *d.Name))
 }
