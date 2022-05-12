@@ -3,8 +3,6 @@ package provider
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
-
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -15,6 +13,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigateway"
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/backup"
 	"github.com/cloudquery/cq-provider-aws/resources/services/cloudformation"
