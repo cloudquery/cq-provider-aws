@@ -1,0 +1,1630 @@
+{
+  "accessanalyzer.analyzers": [
+    { "type": "", "name": "aws_access_analyzer_analyzers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_access_analyzer_analyzer_finding_sources",
+      "parent": "aws_access_analyzer_analyzer_findings"
+    },
+    {
+      "type": "table",
+      "name": "aws_access_analyzer_analyzer_findings",
+      "parent": "aws_access_analyzer_analyzers"
+    },
+    {
+      "type": "table",
+      "name": "aws_access_analyzer_analyzer_archive_rules",
+      "parent": "aws_access_analyzer_analyzers"
+    }
+  ],
+  "acm.certificates": [
+    { "type": "", "name": "aws_acm_certificates", "parent": "" }
+  ],
+  "apigateway.api_keys": [
+    { "type": "", "name": "aws_apigateway_api_keys", "parent": "" }
+  ],
+  "apigateway.client_certificates": [
+    { "type": "", "name": "aws_apigateway_client_certificates", "parent": "" }
+  ],
+  "apigateway.domain_names": [
+    { "type": "", "name": "aws_apigateway_domain_names", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_apigateway_domain_name_base_path_mappings",
+      "parent": "aws_apigateway_domain_names"
+    }
+  ],
+  "apigateway.rest_apis": [
+    { "type": "", "name": "aws_apigateway_rest_apis", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_authorizers",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_deployments",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_documentation_parts",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_documentation_versions",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_gateway_responses",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_models",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_request_validators",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_resources",
+      "parent": "aws_apigateway_rest_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_rest_api_stages",
+      "parent": "aws_apigateway_rest_apis"
+    }
+  ],
+  "apigateway.usage_plans": [
+    { "type": "", "name": "aws_apigateway_usage_plans", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_apigateway_usage_plan_api_stages",
+      "parent": "aws_apigateway_usage_plans"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigateway_usage_plan_keys",
+      "parent": "aws_apigateway_usage_plans"
+    }
+  ],
+  "apigateway.vpc_links": [
+    { "type": "", "name": "aws_apigateway_vpc_links", "parent": "" }
+  ],
+  "apigatewayv2.apis": [
+    { "type": "", "name": "aws_apigatewayv2_apis", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_authorizers",
+      "parent": "aws_apigatewayv2_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_deployments",
+      "parent": "aws_apigatewayv2_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_integration_responses",
+      "parent": "aws_apigatewayv2_api_integrations"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_integrations",
+      "parent": "aws_apigatewayv2_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_models",
+      "parent": "aws_apigatewayv2_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_route_responses",
+      "parent": "aws_apigatewayv2_api_routes"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_routes",
+      "parent": "aws_apigatewayv2_apis"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_api_stages",
+      "parent": "aws_apigatewayv2_apis"
+    }
+  ],
+  "apigatewayv2.domain_names": [
+    { "type": "", "name": "aws_apigatewayv2_domain_names", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_domain_name_configurations",
+      "parent": "aws_apigatewayv2_domain_names"
+    },
+    {
+      "type": "table",
+      "name": "aws_apigatewayv2_domain_name_rest_api_mappings",
+      "parent": "aws_apigatewayv2_domain_names"
+    }
+  ],
+  "apigatewayv2.vpc_links": [
+    { "type": "", "name": "aws_apigatewayv2_vpc_links", "parent": "" }
+  ],
+  "applicationautoscaling.policies": [
+    { "type": "", "name": "aws_applicationautoscaling_policies", "parent": "" }
+  ],
+  "autoscaling.groups": [
+    { "type": "", "name": "aws_autoscaling_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_autoscaling_group_instances",
+      "parent": "aws_autoscaling_groups"
+    },
+    {
+      "type": "table",
+      "name": "aws_autoscaling_group_tags",
+      "parent": "aws_autoscaling_groups"
+    },
+    {
+      "type": "table",
+      "name": "aws_autoscaling_group_scaling_policies",
+      "parent": "aws_autoscaling_groups"
+    },
+    {
+      "type": "table",
+      "name": "aws_autoscaling_group_lifecycle_hooks",
+      "parent": "aws_autoscaling_groups"
+    }
+  ],
+  "autoscaling.launch_configurations": [
+    {
+      "type": "",
+      "name": "aws_autoscaling_launch_configurations",
+      "parent": ""
+    },
+    {
+      "type": "table",
+      "name": "aws_autoscaling_launch_configuration_block_device_mappings",
+      "parent": "aws_autoscaling_launch_configurations"
+    }
+  ],
+  "autoscaling.scheduled_actions": [
+    { "type": "", "name": "aws_autoscaling_scheduled_actions", "parent": "" }
+  ],
+  "aws.regions": [{ "type": "", "name": "aws_regions", "parent": "" }],
+  "backup.global_settings": [
+    { "type": "", "name": "aws_backup_global_settings", "parent": "" }
+  ],
+  "backup.plans": [
+    { "type": "", "name": "aws_backup_plans", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_backup_plan_rules",
+      "parent": "aws_backup_plans"
+    },
+    {
+      "type": "table",
+      "name": "aws_backup_plan_selections",
+      "parent": "aws_backup_plans"
+    }
+  ],
+  "backup.region_settings": [
+    { "type": "", "name": "aws_backup_region_settings", "parent": "" }
+  ],
+  "backup.vaults": [
+    { "type": "", "name": "aws_backup_vaults", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_backup_vault_recovery_points",
+      "parent": "aws_backup_vaults"
+    }
+  ],
+  "cloudformation.stacks": [
+    { "type": "", "name": "aws_cloudformation_stacks", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cloudformation_stack_outputs",
+      "parent": "aws_cloudformation_stacks"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudformation_stack_resources",
+      "parent": "aws_cloudformation_stacks"
+    }
+  ],
+  "cloudfront.cache_policies": [
+    { "type": "", "name": "aws_cloudfront_cache_policies", "parent": "" }
+  ],
+  "cloudfront.distributions": [
+    { "type": "", "name": "aws_cloudfront_distributions", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_default_cache_behavior_functions",
+      "parent": "aws_cloudfront_distributions"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_origins",
+      "parent": "aws_cloudfront_distributions"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_cache_behavior_lambda_functions",
+      "parent": "aws_cloudfront_distribution_cache_behaviors"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_cache_behaviors",
+      "parent": "aws_cloudfront_distributions"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_custom_error_responses",
+      "parent": "aws_cloudfront_distributions"
+    },
+    {
+      "type": "table",
+      "name": "aws_cloudfront_distribution_origin_groups",
+      "parent": "aws_cloudfront_distributions"
+    }
+  ],
+  "cloudtrail.trails": [
+    { "type": "", "name": "aws_cloudtrail_trails", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cloudtrail_trail_event_selectors",
+      "parent": "aws_cloudtrail_trails"
+    }
+  ],
+  "cloudwatch.alarms": [
+    { "type": "", "name": "aws_cloudwatch_alarms", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cloudwatch_alarm_metrics",
+      "parent": "aws_cloudwatch_alarms"
+    }
+  ],
+  "cloudwatchlogs.filters": [
+    { "type": "", "name": "aws_cloudwatchlogs_filters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cloudwatchlogs_filter_metric_transformations",
+      "parent": "aws_cloudwatchlogs_filters"
+    }
+  ],
+  "codebuild.projects": [
+    { "type": "", "name": "aws_codebuild_projects", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_codebuild_project_environment_variables",
+      "parent": "aws_codebuild_projects"
+    },
+    {
+      "type": "table",
+      "name": "aws_codebuild_project_file_system_locations",
+      "parent": "aws_codebuild_projects"
+    },
+    {
+      "type": "table",
+      "name": "aws_codebuild_project_secondary_artifacts",
+      "parent": "aws_codebuild_projects"
+    },
+    {
+      "type": "table",
+      "name": "aws_codebuild_project_secondary_sources",
+      "parent": "aws_codebuild_projects"
+    }
+  ],
+  "codepipeline.pipelines": [
+    { "type": "", "name": "aws_codepipeline_pipelines", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_codepipeline_pipeline_stage_actions",
+      "parent": "aws_codepipeline_pipeline_stages"
+    },
+    {
+      "type": "table",
+      "name": "aws_codepipeline_pipeline_stages",
+      "parent": "aws_codepipeline_pipelines"
+    }
+  ],
+  "codepipeline.webhooks": [
+    { "type": "", "name": "aws_codepipeline_webhooks", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_codepipeline_webhook_filters",
+      "parent": "aws_codepipeline_webhooks"
+    }
+  ],
+  "cognito.identity_pools": [
+    { "type": "", "name": "aws_cognito_identity_pools", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cognito_identity_pool_cognito_identity_providers",
+      "parent": "aws_cognito_identity_pools"
+    }
+  ],
+  "cognito.user_pools": [
+    { "type": "", "name": "aws_cognito_user_pools", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_cognito_user_pool_schema_attributes",
+      "parent": "aws_cognito_user_pools"
+    },
+    {
+      "type": "table",
+      "name": "aws_cognito_user_pool_identity_providers",
+      "parent": "aws_cognito_user_pools"
+    }
+  ],
+  "config.configuration_recorders": [
+    { "type": "", "name": "aws_config_configuration_recorders", "parent": "" }
+  ],
+  "config.conformance_packs": [
+    { "type": "", "name": "aws_config_conformance_packs", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_config_conformance_pack_rule_compliances",
+      "parent": "aws_config_conformance_packs"
+    }
+  ],
+  "dax.clusters": [
+    { "type": "", "name": "aws_dax_clusters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_dax_cluster_nodes",
+      "parent": "aws_dax_clusters"
+    }
+  ],
+  "directconnect.connections": [
+    { "type": "", "name": "aws_directconnect_connections", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_directconnect_connection_mac_sec_keys",
+      "parent": "aws_directconnect_connections"
+    }
+  ],
+  "directconnect.gateways": [
+    { "type": "", "name": "aws_directconnect_gateways", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_directconnect_gateway_associations",
+      "parent": "aws_directconnect_gateways"
+    },
+    {
+      "type": "table",
+      "name": "aws_directconnect_gateway_attachments",
+      "parent": "aws_directconnect_gateways"
+    }
+  ],
+  "directconnect.lags": [
+    { "type": "", "name": "aws_directconnect_lags", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_directconnect_lag_mac_sec_keys",
+      "parent": "aws_directconnect_lags"
+    }
+  ],
+  "directconnect.virtual_gateways": [
+    { "type": "", "name": "aws_directconnect_virtual_gateways", "parent": "" }
+  ],
+  "directconnect.virtual_interfaces": [
+    {
+      "type": "",
+      "name": "aws_directconnect_virtual_interfaces",
+      "parent": ""
+    },
+    {
+      "type": "table",
+      "name": "aws_directconnect_virtual_interface_bgp_peers",
+      "parent": "aws_directconnect_virtual_interfaces"
+    }
+  ],
+  "dms.replication_instances": [
+    { "type": "", "name": "aws_dms_replication_instances", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_dms_replication_instance_replication_subnet_group_subnets",
+      "parent": "aws_dms_replication_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_dms_replication_instance_vpc_security_groups",
+      "parent": "aws_dms_replication_instances"
+    }
+  ],
+  "dynamodb.tables": [
+    { "type": "", "name": "aws_dynamodb_tables", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_dynamodb_table_global_secondary_indexes",
+      "parent": "aws_dynamodb_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_dynamodb_table_local_secondary_indexes",
+      "parent": "aws_dynamodb_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_dynamodb_table_replicas",
+      "parent": "aws_dynamodb_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_dynamodb_table_replica_auto_scalings",
+      "parent": "aws_dynamodb_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_dynamodb_table_continuous_backups",
+      "parent": "aws_dynamodb_tables"
+    }
+  ],
+  "ec2.byoip_cidrs": [
+    { "type": "", "name": "aws_ec2_byoip_cidrs", "parent": "" }
+  ],
+  "ec2.customer_gateways": [
+    { "type": "", "name": "aws_ec2_customer_gateways", "parent": "" }
+  ],
+  "ec2.ebs_snapshots": [
+    { "type": "", "name": "aws_ec2_ebs_snapshots", "parent": "" }
+  ],
+  "ec2.ebs_volumes": [
+    { "type": "", "name": "aws_ec2_ebs_volumes", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_ebs_volume_attachments",
+      "parent": "aws_ec2_ebs_volumes"
+    }
+  ],
+  "ec2.egress_only_internet_gateways": [
+    {
+      "type": "",
+      "name": "aws_ec2_egress_only_internet_gateways",
+      "parent": ""
+    }
+  ],
+  "ec2.eips": [{ "type": "", "name": "aws_ec2_eips", "parent": "" }],
+  "ec2.flow_logs": [{ "type": "", "name": "aws_ec2_flow_logs", "parent": "" }],
+  "ec2.hosts": [
+    { "type": "", "name": "aws_ec2_hosts", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_host_available_instance_capacity",
+      "parent": "aws_ec2_hosts"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_host_instances",
+      "parent": "aws_ec2_hosts"
+    }
+  ],
+  "ec2.images": [
+    { "type": "", "name": "aws_ec2_images", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_image_block_device_mappings",
+      "parent": "aws_ec2_images"
+    }
+  ],
+  "ec2.instance_statuses": [
+    { "type": "", "name": "aws_ec2_instance_statuses", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_status_events",
+      "parent": "aws_ec2_instance_statuses"
+    }
+  ],
+  "ec2.instances": [
+    { "type": "", "name": "aws_ec2_instances", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_block_device_mappings",
+      "parent": "aws_ec2_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_elastic_gpu_associations",
+      "parent": "aws_ec2_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_elastic_inference_accelerator_associations",
+      "parent": "aws_ec2_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_network_interface_groups",
+      "parent": "aws_ec2_instance_network_interfaces"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_network_interface_ipv6_addresses",
+      "parent": "aws_ec2_instance_network_interfaces"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_network_interface_private_ip_addresses",
+      "parent": "aws_ec2_instance_network_interfaces"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_network_interfaces",
+      "parent": "aws_ec2_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_product_codes",
+      "parent": "aws_ec2_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_instance_security_groups",
+      "parent": "aws_ec2_instances"
+    }
+  ],
+  "ec2.internet_gateways": [
+    { "type": "", "name": "aws_ec2_internet_gateways", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_internet_gateway_attachments",
+      "parent": "aws_ec2_internet_gateways"
+    }
+  ],
+  "ec2.nat_gateways": [
+    { "type": "", "name": "aws_ec2_nat_gateways", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_nat_gateway_addresses",
+      "parent": "aws_ec2_nat_gateways"
+    }
+  ],
+  "ec2.network_acls": [
+    { "type": "", "name": "aws_ec2_network_acls", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_network_acl_associations",
+      "parent": "aws_ec2_network_acls"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_network_acl_entries",
+      "parent": "aws_ec2_network_acls"
+    }
+  ],
+  "ec2.network_interfaces": [
+    { "type": "", "name": "aws_ec2_network_interfaces", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_network_interface_private_ip_addresses",
+      "parent": "aws_ec2_network_interfaces"
+    }
+  ],
+  "ec2.regional_config": [
+    { "type": "", "name": "aws_ec2_regional_config", "parent": "" }
+  ],
+  "ec2.route_tables": [
+    { "type": "", "name": "aws_ec2_route_tables", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_route_table_associations",
+      "parent": "aws_ec2_route_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_route_table_propagating_vgws",
+      "parent": "aws_ec2_route_tables"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_route_table_routes",
+      "parent": "aws_ec2_route_tables"
+    }
+  ],
+  "ec2.security_groups": [
+    { "type": "", "name": "aws_ec2_security_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_security_group_ip_permission_ip_ranges",
+      "parent": "aws_ec2_security_group_ip_permissions"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_security_group_ip_permission_prefix_list_ids",
+      "parent": "aws_ec2_security_group_ip_permissions"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_security_group_ip_permission_user_id_group_pairs",
+      "parent": "aws_ec2_security_group_ip_permissions"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_security_group_ip_permissions",
+      "parent": "aws_ec2_security_groups"
+    }
+  ],
+  "ec2.subnets": [
+    { "type": "", "name": "aws_ec2_subnets", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_subnet_ipv6_cidr_block_association_sets",
+      "parent": "aws_ec2_subnets"
+    }
+  ],
+  "ec2.transit_gateways": [
+    { "type": "", "name": "aws_ec2_transit_gateways", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_transit_gateway_attachments",
+      "parent": "aws_ec2_transit_gateways"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_transit_gateway_route_tables",
+      "parent": "aws_ec2_transit_gateways"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_transit_gateway_vpc_attachments",
+      "parent": "aws_ec2_transit_gateways"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_transit_gateway_peering_attachments",
+      "parent": "aws_ec2_transit_gateways"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_transit_gateway_multicast_domains",
+      "parent": "aws_ec2_transit_gateways"
+    }
+  ],
+  "ec2.vpc_endpoints": [
+    { "type": "", "name": "aws_ec2_vpc_endpoints", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_vpc_endpoint_dns_entries",
+      "parent": "aws_ec2_vpc_endpoints"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_vpc_endpoint_groups",
+      "parent": "aws_ec2_vpc_endpoints"
+    }
+  ],
+  "ec2.vpc_peering_connections": [
+    { "type": "", "name": "aws_ec2_vpc_peering_connections", "parent": "" }
+  ],
+  "ec2.vpcs": [
+    { "type": "", "name": "aws_ec2_vpcs", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_vpc_cidr_block_association_sets",
+      "parent": "aws_ec2_vpcs"
+    },
+    {
+      "type": "table",
+      "name": "aws_ec2_vpc_ipv6_cidr_block_association_sets",
+      "parent": "aws_ec2_vpcs"
+    }
+  ],
+  "ec2.vpn_gateways": [
+    { "type": "", "name": "aws_ec2_vpn_gateways", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ec2_vpc_attachment",
+      "parent": "aws_ec2_vpn_gateways"
+    }
+  ],
+  "ecr.repositories": [
+    { "type": "", "name": "aws_ecr_repositories", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ecr_repository_images",
+      "parent": "aws_ecr_repositories"
+    }
+  ],
+  "ecs.clusters": [
+    { "type": "", "name": "aws_ecs_clusters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_attachments",
+      "parent": "aws_ecs_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_task_attachments",
+      "parent": "aws_ecs_cluster_tasks"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_task_containers",
+      "parent": "aws_ecs_cluster_tasks"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_tasks",
+      "parent": "aws_ecs_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_deployments",
+      "parent": "aws_ecs_cluster_services"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_events",
+      "parent": "aws_ecs_cluster_services"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_load_balancers",
+      "parent": "aws_ecs_cluster_services"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_service_registries",
+      "parent": "aws_ecs_cluster_services"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_task_set_load_balancers",
+      "parent": "aws_ecs_cluster_service_task_sets"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_task_set_service_registries",
+      "parent": "aws_ecs_cluster_service_task_sets"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_service_task_sets",
+      "parent": "aws_ecs_cluster_services"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_services",
+      "parent": "aws_ecs_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instance_attachments",
+      "parent": "aws_ecs_cluster_container_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instance_attributes",
+      "parent": "aws_ecs_cluster_container_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instance_health_status_details",
+      "parent": "aws_ecs_cluster_container_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instance_registered_resources",
+      "parent": "aws_ecs_cluster_container_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instance_remaining_resources",
+      "parent": "aws_ecs_cluster_container_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_cluster_container_instances",
+      "parent": "aws_ecs_clusters"
+    }
+  ],
+  "ecs.task_definitions": [
+    { "type": "", "name": "aws_ecs_task_definitions", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ecs_task_definition_container_definitions",
+      "parent": "aws_ecs_task_definitions"
+    },
+    {
+      "type": "table",
+      "name": "aws_ecs_task_definition_volumes",
+      "parent": "aws_ecs_task_definitions"
+    }
+  ],
+  "efs.filesystems": [
+    { "type": "", "name": "aws_efs_filesystems", "parent": "" }
+  ],
+  "eks.clusters": [
+    { "type": "", "name": "aws_eks_clusters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_eks_cluster_encryption_configs",
+      "parent": "aws_eks_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_eks_cluster_loggings",
+      "parent": "aws_eks_clusters"
+    }
+  ],
+  "elasticbeanstalk.application_versions": [
+    {
+      "type": "",
+      "name": "aws_elasticbeanstalk_application_versions",
+      "parent": ""
+    }
+  ],
+  "elasticbeanstalk.applications": [
+    { "type": "", "name": "aws_elasticbeanstalk_applications", "parent": "" }
+  ],
+  "elasticbeanstalk.environments": [
+    { "type": "", "name": "aws_elasticbeanstalk_environments", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_elasticbeanstalk_configuration_setting_options",
+      "parent": "aws_elasticbeanstalk_configuration_settings"
+    },
+    {
+      "type": "table",
+      "name": "aws_elasticbeanstalk_configuration_settings",
+      "parent": "aws_elasticbeanstalk_environments"
+    },
+    {
+      "type": "table",
+      "name": "aws_elasticbeanstalk_configuration_options",
+      "parent": "aws_elasticbeanstalk_environments"
+    },
+    {
+      "type": "table",
+      "name": "aws_elasticbeanstalk_environment_links",
+      "parent": "aws_elasticbeanstalk_environments"
+    }
+  ],
+  "elasticsearch.domains": [
+    { "type": "", "name": "aws_elasticsearch_domains", "parent": "" }
+  ],
+  "elbv1.load_balancers": [
+    { "type": "", "name": "aws_elbv1_load_balancers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_elbv1_load_balancer_backend_server_descriptions",
+      "parent": "aws_elbv1_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv1_load_balancer_listeners",
+      "parent": "aws_elbv1_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv1_load_balancer_policies_app_cookie_stickiness",
+      "parent": "aws_elbv1_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv1_load_balancer_policies_lb_cookie_stickiness",
+      "parent": "aws_elbv1_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv1_load_balancer_policies",
+      "parent": "aws_elbv1_load_balancers"
+    }
+  ],
+  "elbv2.load_balancers": [
+    { "type": "", "name": "aws_elbv2_load_balancers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_elbv2_listener_certificates",
+      "parent": "aws_elbv2_listeners"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_listener_default_action_forward_config_target_groups",
+      "parent": "aws_elbv2_listener_default_actions"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_listener_default_actions",
+      "parent": "aws_elbv2_listeners"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_listeners",
+      "parent": "aws_elbv2_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_load_balancer_availability_zone_addresses",
+      "parent": "aws_elbv2_load_balancer_availability_zones"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_load_balancer_availability_zones",
+      "parent": "aws_elbv2_load_balancers"
+    },
+    {
+      "type": "table",
+      "name": "aws_elbv2_load_balancer_attributes",
+      "parent": "aws_elbv2_load_balancers"
+    }
+  ],
+  "elbv2.target_groups": [
+    { "type": "", "name": "aws_elbv2_target_groups", "parent": "" }
+  ],
+  "emr.block_public_access_configs": [
+    { "type": "", "name": "aws_emr_block_public_access_configs", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_emr_block_public_access_config_port_ranges",
+      "parent": "aws_emr_block_public_access_configs"
+    }
+  ],
+  "emr.clusters": [{ "type": "", "name": "aws_emr_clusters", "parent": "" }],
+  "fsx.backups": [{ "type": "", "name": "aws_fsx_backups", "parent": "" }],
+  "guardduty.detectors": [
+    { "type": "", "name": "aws_guardduty_detectors", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_guardduty_detector_members",
+      "parent": "aws_guardduty_detectors"
+    }
+  ],
+  "iam.accounts": [{ "type": "", "name": "aws_accounts", "parent": "" }],
+  "iam.groups": [
+    { "type": "", "name": "aws_iam_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iam_group_policies",
+      "parent": "aws_iam_groups"
+    }
+  ],
+  "iam.openid_connect_identity_providers": [
+    {
+      "type": "",
+      "name": "aws_iam_openid_connect_identity_providers",
+      "parent": ""
+    }
+  ],
+  "iam.password_policies": [
+    { "type": "", "name": "aws_iam_password_policies", "parent": "" }
+  ],
+  "iam.policies": [
+    { "type": "", "name": "aws_iam_policies", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iam_policy_versions",
+      "parent": "aws_iam_policies"
+    }
+  ],
+  "iam.roles": [
+    { "type": "", "name": "aws_iam_roles", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iam_role_policies",
+      "parent": "aws_iam_roles"
+    }
+  ],
+  "iam.saml_identity_providers": [
+    { "type": "", "name": "aws_iam_saml_identity_providers", "parent": "" }
+  ],
+  "iam.server_certificates": [
+    { "type": "", "name": "aws_iam_server_certificates", "parent": "" }
+  ],
+  "iam.users": [
+    { "type": "", "name": "aws_iam_users", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iam_user_access_keys",
+      "parent": "aws_iam_users"
+    },
+    {
+      "type": "table",
+      "name": "aws_iam_user_groups",
+      "parent": "aws_iam_users"
+    },
+    {
+      "type": "table",
+      "name": "aws_iam_user_attached_policies",
+      "parent": "aws_iam_users"
+    },
+    {
+      "type": "table",
+      "name": "aws_iam_user_policies",
+      "parent": "aws_iam_users"
+    }
+  ],
+  "iam.virtual_mfa_devices": [
+    { "type": "", "name": "aws_iam_virtual_mfa_devices", "parent": "" }
+  ],
+  "iot.billing_groups": [
+    { "type": "", "name": "aws_iot_billing_groups", "parent": "" }
+  ],
+  "iot.ca_certificates": [
+    { "type": "", "name": "aws_iot_ca_certificates", "parent": "" }
+  ],
+  "iot.certificates": [
+    { "type": "", "name": "aws_iot_certificates", "parent": "" }
+  ],
+  "iot.policies": [{ "type": "", "name": "aws_iot_policies", "parent": "" }],
+  "iot.streams": [
+    { "type": "", "name": "aws_iot_streams", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iot_stream_files",
+      "parent": "aws_iot_streams"
+    }
+  ],
+  "iot.thing_groups": [
+    { "type": "", "name": "aws_iot_thing_groups", "parent": "" }
+  ],
+  "iot.thing_types": [
+    { "type": "", "name": "aws_iot_thing_types", "parent": "" }
+  ],
+  "iot.things": [{ "type": "", "name": "aws_iot_things", "parent": "" }],
+  "iot.topic_rules": [
+    { "type": "", "name": "aws_iot_topic_rules", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_iot_topic_rule_actions",
+      "parent": "aws_iot_topic_rules"
+    }
+  ],
+  "kms.keys": [{ "type": "", "name": "aws_kms_keys", "parent": "" }],
+  "lambda.functions": [
+    { "type": "", "name": "aws_lambda_functions", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_file_system_configs",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_layers",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_event_invoke_configs",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_aliases",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_version_file_system_configs",
+      "parent": "aws_lambda_function_versions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_version_layers",
+      "parent": "aws_lambda_function_versions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_versions",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_concurrency_configs",
+      "parent": "aws_lambda_functions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_function_event_source_mappings",
+      "parent": "aws_lambda_functions"
+    }
+  ],
+  "lambda.layers": [
+    { "type": "", "name": "aws_lambda_layers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_lambda_layer_version_policies",
+      "parent": "aws_lambda_layer_versions"
+    },
+    {
+      "type": "table",
+      "name": "aws_lambda_layer_versions",
+      "parent": "aws_lambda_layers"
+    }
+  ],
+  "lambda.runtimes": [
+    { "type": "", "name": "aws_lambda_runtimes", "parent": "" }
+  ],
+  "mq.brokers": [
+    { "type": "", "name": "aws_mq_brokers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_mq_broker_configuration_revisions",
+      "parent": "aws_mq_broker_configurations"
+    },
+    {
+      "type": "table",
+      "name": "aws_mq_broker_configurations",
+      "parent": "aws_mq_brokers"
+    },
+    {
+      "type": "table",
+      "name": "aws_mq_broker_users",
+      "parent": "aws_mq_brokers"
+    }
+  ],
+  "organizations.accounts": [
+    { "type": "", "name": "aws_organizations_accounts", "parent": "" }
+  ],
+  "qldb.ledgers": [
+    { "type": "", "name": "aws_qldb_ledgers", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_qldb_ledger_journal_kinesis_streams",
+      "parent": "aws_qldb_ledgers"
+    },
+    {
+      "type": "table",
+      "name": "aws_qldb_ledger_journal_s3_exports",
+      "parent": "aws_qldb_ledgers"
+    }
+  ],
+  "rds.certificates": [
+    { "type": "", "name": "aws_rds_certificates", "parent": "" }
+  ],
+  "rds.cluster_parameter_groups": [
+    { "type": "", "name": "aws_rds_cluster_parameter_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_rds_cluster_parameters",
+      "parent": "aws_rds_cluster_parameter_groups"
+    }
+  ],
+  "rds.cluster_snapshots": [
+    { "type": "", "name": "aws_rds_cluster_snapshots", "parent": "" }
+  ],
+  "rds.clusters": [
+    { "type": "", "name": "aws_rds_clusters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_rds_cluster_associated_roles",
+      "parent": "aws_rds_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_cluster_db_cluster_members",
+      "parent": "aws_rds_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_cluster_domain_memberships",
+      "parent": "aws_rds_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_cluster_vpc_security_groups",
+      "parent": "aws_rds_clusters"
+    }
+  ],
+  "rds.db_parameter_groups": [
+    { "type": "", "name": "aws_rds_db_parameter_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_rds_db_parameters",
+      "parent": "aws_rds_db_parameter_groups"
+    }
+  ],
+  "rds.db_security_groups": [
+    { "type": "", "name": "aws_rds_db_security_groups", "parent": "" }
+  ],
+  "rds.db_snapshots": [
+    { "type": "", "name": "aws_rds_db_snapshots", "parent": "" }
+  ],
+  "rds.db_subnet_groups": [
+    { "type": "", "name": "aws_rds_subnet_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_rds_subnet_group_subnets",
+      "parent": "aws_rds_subnet_groups"
+    }
+  ],
+  "rds.event_subscriptions": [
+    { "type": "", "name": "aws_rds_event_subscriptions", "parent": "" }
+  ],
+  "rds.instances": [
+    { "type": "", "name": "aws_rds_instances", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_associated_roles",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_db_instance_automated_backups_replications",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_db_parameter_groups",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_db_security_groups",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_db_subnet_group_subnets",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_domain_memberships",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_option_group_memberships",
+      "parent": "aws_rds_instances"
+    },
+    {
+      "type": "table",
+      "name": "aws_rds_instance_vpc_security_groups",
+      "parent": "aws_rds_instances"
+    }
+  ],
+  "redshift.clusters": [
+    { "type": "", "name": "aws_redshift_clusters", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_nodes",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_parameters",
+      "parent": "aws_redshift_cluster_parameter_groups"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_parameter_group_status_lists",
+      "parent": "aws_redshift_cluster_parameter_groups"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_parameter_groups",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_security_groups",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_deferred_maintenance_windows",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_endpoint_vpc_endpoint_network_interfaces",
+      "parent": "aws_redshift_cluster_endpoint_vpc_endpoints"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_endpoint_vpc_endpoints",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_iam_roles",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_cluster_vpc_security_groups",
+      "parent": "aws_redshift_clusters"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_snapshot_accounts_with_restore_access",
+      "parent": "aws_redshift_snapshots"
+    },
+    {
+      "type": "table",
+      "name": "aws_redshift_snapshots",
+      "parent": "aws_redshift_clusters"
+    }
+  ],
+  "redshift.event_subscriptions": [
+    { "type": "", "name": "aws_redshift_event_subscriptions", "parent": "" }
+  ],
+  "redshift.subnet_groups": [
+    { "type": "", "name": "aws_redshift_subnet_groups", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_redshift_subnet_group_subnets",
+      "parent": "aws_redshift_subnet_groups"
+    }
+  ],
+  "route53.domains": [
+    { "type": "", "name": "aws_route53_domains", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_route53_domain_nameservers",
+      "parent": "aws_route53_domains"
+    }
+  ],
+  "route53.health_checks": [
+    { "type": "", "name": "aws_route53_health_checks", "parent": "" }
+  ],
+  "route53.hosted_zones": [
+    { "type": "", "name": "aws_route53_hosted_zones", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_route53_hosted_zone_query_logging_configs",
+      "parent": "aws_route53_hosted_zones"
+    },
+    {
+      "type": "table",
+      "name": "aws_route53_hosted_zone_resource_record_sets",
+      "parent": "aws_route53_hosted_zones"
+    },
+    {
+      "type": "table",
+      "name": "aws_route53_hosted_zone_traffic_policy_instances",
+      "parent": "aws_route53_hosted_zones"
+    },
+    {
+      "type": "table",
+      "name": "aws_route53_hosted_zone_vpc_association_authorizations",
+      "parent": "aws_route53_hosted_zones"
+    }
+  ],
+  "route53.reusable_delegation_sets": [
+    { "type": "", "name": "aws_route53_reusable_delegation_sets", "parent": "" }
+  ],
+  "route53.traffic_policies": [
+    { "type": "", "name": "aws_route53_traffic_policies", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_route53_traffic_policy_versions",
+      "parent": "aws_route53_traffic_policies"
+    }
+  ],
+  "s3.accounts": [
+    { "type": "", "name": "aws_s3_account_config", "parent": "" }
+  ],
+  "s3.buckets": [
+    { "type": "", "name": "aws_s3_buckets", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_s3_bucket_grants",
+      "parent": "aws_s3_buckets"
+    },
+    {
+      "type": "table",
+      "name": "aws_s3_bucket_cors_rules",
+      "parent": "aws_s3_buckets"
+    },
+    {
+      "type": "table",
+      "name": "aws_s3_bucket_encryption_rules",
+      "parent": "aws_s3_buckets"
+    },
+    {
+      "type": "table",
+      "name": "aws_s3_bucket_replication_rules",
+      "parent": "aws_s3_buckets"
+    },
+    {
+      "type": "table",
+      "name": "aws_s3_bucket_lifecycles",
+      "parent": "aws_s3_buckets"
+    }
+  ],
+  "sagemaker.endpoint_configurations": [
+    {
+      "type": "",
+      "name": "aws_sagemaker_endpoint_configurations",
+      "parent": ""
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_endpoint_configuration_production_variants",
+      "parent": "aws_sagemaker_endpoint_configurations"
+    }
+  ],
+  "sagemaker.models": [
+    { "type": "", "name": "aws_sagemaker_models", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_model_containers",
+      "parent": "aws_sagemaker_models"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_model_vpc_config",
+      "parent": "aws_sagemaker_models"
+    }
+  ],
+  "sagemaker.notebook_instances": [
+    { "type": "", "name": "aws_sagemaker_notebook_instances", "parent": "" }
+  ],
+  "sagemaker.training_jobs": [
+    { "type": "", "name": "aws_sagemaker_training_jobs", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_algorithm_specification",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_debug_hook_config",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_debug_rule_configurations",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_debug_rule_evaluation_statuses",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_input_data_config",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_profiler_rule_configurations",
+      "parent": "aws_sagemaker_training_jobs"
+    },
+    {
+      "type": "table",
+      "name": "aws_sagemaker_training_job_profiler_rule_evaluation_statuses",
+      "parent": "aws_sagemaker_training_jobs"
+    }
+  ],
+  "secretsmanager.secrets": [
+    { "type": "", "name": "aws_secretsmanager_secrets", "parent": "" }
+  ],
+  "shield.attacks": [
+    { "type": "", "name": "aws_shield_attacks", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_shield_attack_properties",
+      "parent": "aws_shield_attacks"
+    },
+    {
+      "type": "table",
+      "name": "aws_shield_attack_sub_resources",
+      "parent": "aws_shield_attacks"
+    }
+  ],
+  "shield.protections": [
+    { "type": "", "name": "aws_shield_protections", "parent": "" }
+  ],
+  "shield.protections_groups": [
+    { "type": "", "name": "aws_shield_protection_groups", "parent": "" }
+  ],
+  "shield.subscriptions": [
+    { "type": "", "name": "aws_shield_subscriptions", "parent": "" }
+  ],
+  "sns.subscriptions": [
+    { "type": "", "name": "aws_sns_subscriptions", "parent": "" }
+  ],
+  "sns.topics": [{ "type": "", "name": "aws_sns_topics", "parent": "" }],
+  "sqs.queues": [{ "type": "", "name": "aws_sqs_queues", "parent": "" }],
+  "ssm.documents": [{ "type": "", "name": "aws_ssm_documents", "parent": "" }],
+  "ssm.instances": [
+    { "type": "", "name": "aws_ssm_instances", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_ssm_instance_compliance_items",
+      "parent": "aws_ssm_instances"
+    }
+  ],
+  "waf.rule_groups": [
+    { "type": "", "name": "aws_waf_rule_groups", "parent": "" }
+  ],
+  "waf.rules": [
+    { "type": "", "name": "aws_waf_rules", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_waf_rule_predicates",
+      "parent": "aws_waf_rules"
+    }
+  ],
+  "waf.subscribed_rule_groups": [
+    { "type": "", "name": "aws_waf_subscribed_rule_groups", "parent": "" }
+  ],
+  "waf.web_acls": [
+    { "type": "", "name": "aws_waf_web_acls", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_waf_web_acl_rules",
+      "parent": "aws_waf_web_acls"
+    }
+  ],
+  "wafregional.rate_based_rules": [
+    { "type": "", "name": "aws_wafregional_rate_based_rules", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_wafregional_rate_based_rule_match_predicates",
+      "parent": "aws_wafregional_rate_based_rules"
+    }
+  ],
+  "wafregional.rule_groups": [
+    { "type": "", "name": "aws_wafregional_rule_groups", "parent": "" }
+  ],
+  "wafregional.rules": [
+    { "type": "", "name": "aws_wafregional_rules", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_wafregional_rule_predicates",
+      "parent": "aws_wafregional_rules"
+    }
+  ],
+  "wafregional.web_acls": [
+    { "type": "", "name": "aws_wafregional_web_acls", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_wafregional_web_acl_rules",
+      "parent": "aws_wafregional_web_acls"
+    }
+  ],
+  "wafv2.ipsets": [{ "type": "", "name": "aws_wafv2_ipsets", "parent": "" }],
+  "wafv2.managed_rule_groups": [
+    { "type": "", "name": "aws_wafv2_managed_rule_groups", "parent": "" }
+  ],
+  "wafv2.regex_pattern_sets": [
+    { "type": "", "name": "aws_wafv2_regex_pattern_sets", "parent": "" }
+  ],
+  "wafv2.rule_groups": [
+    { "type": "", "name": "aws_wafv2_rule_groups", "parent": "" }
+  ],
+  "wafv2.web_acls": [
+    { "type": "", "name": "aws_wafv2_web_acls", "parent": "" },
+    {
+      "type": "table",
+      "name": "aws_wafv2_web_acl_rules",
+      "parent": "aws_wafv2_web_acls"
+    },
+    {
+      "type": "table",
+      "name": "aws_wafv2_web_acl_post_process_firewall_manager_rule_groups",
+      "parent": "aws_wafv2_web_acls"
+    },
+    {
+      "type": "table",
+      "name": "aws_wafv2_web_acl_pre_process_firewall_manager_rule_groups",
+      "parent": "aws_wafv2_web_acls"
+    }
+  ],
+  "workspaces.directories": [
+    { "type": "", "name": "aws_workspaces_directories", "parent": "" }
+  ],
+  "workspaces.workspaces": [
+    { "type": "", "name": "aws_workspaces_workspaces", "parent": "" }
+  ],
+  "xray.encryption_config": [
+    { "type": "", "name": "aws_xray_encryption_config", "parent": "" }
+  ],
+  "xray.groups": [{ "type": "", "name": "aws_xray_groups", "parent": "" }],
+  "xray.sampling_rules": [
+    { "type": "", "name": "aws_xray_sampling_rules", "parent": "" }
+  ]
+}
