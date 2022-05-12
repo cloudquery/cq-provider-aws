@@ -176,36 +176,6 @@ func IgnoreNotAvailableRegion(err error) bool {
 	return false
 }
 
-// GenerateResourceARN generates the arn for a resource.
-// Service: The service name e.g. waf or elb or s3
-// ResourceType: The sub resource type e.g. rule or instance (for an ec2 instance)
-// ResourceID: The resource id e.g. i-1234567890abcdefg
-// Region: The resource region e.g. us-east-1
-// AccountID: The account id e.g. 123456789012
-// See https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html for
-// more information.
-func GenerateResourceARN(service, resourceType, resourceID, region, accountID string) string {
-
-	// if resource type is empty
-	// for example s3 bucket
-	resource := ""
-	if resourceType == "" {
-		resource = resourceID
-	} else {
-		resource = fmt.Sprintf("%s/%s", resourceType, resourceID)
-	}
-
-	p, _ := RegionsPartition(region)
-
-	return arn.ARN{
-		Partition: p,
-		Service:   service,
-		Region:    region,
-		AccountID: accountID,
-		Resource:  resource,
-	}.String()
-}
-
 func accountObfusactor(aa []Account, msg string) string {
 	for _, a := range aa {
 		msg = strings.ReplaceAll(msg, a.ID, obfuscateAccountId(a.ID))
@@ -235,6 +205,7 @@ const (
 
 // MakeARN creates an ARN using supplied service name, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
+// See https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html for more information.
 func MakeARN(service AWSService, accountID, region string, idParts ...string) string {
 	p, _ := RegionsPartition(region)
 	return arn.ARN{

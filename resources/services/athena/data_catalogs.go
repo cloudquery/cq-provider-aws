@@ -355,5 +355,5 @@ func fetchDataCatalog(ctx context.Context, res chan<- interface{}, svc client.At
 }
 
 func createDataCatalogArn(region, accountId, catalogName string) string {
-	return client.MakeARN("athena", accountId, region, "datacatalog", catalogName)
+	return client.MakeARN(client.Athena, accountId, region, "datacatalog", catalogName)
 }

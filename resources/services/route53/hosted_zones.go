@@ -487,19 +487,22 @@ func getRoute53tagsByResourceID(id string, set []types.ResourceTagSet) []types.T
 	return nil
 }
 func resolveRoute53HostedZoneArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	// cl := meta.(*client.Client)
 	hz := resource.Item.(Route53HostedZoneWrapper)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "hostedzone", *hz.Id, "", ""))
+	return resource.Set(c.Name, client.MakeARN(client.Route53Service, "", "", "hostedzone", *hz.Id)) // FIXME no partition
 }
-func resolveRoute53HostedZoneQueryLoggingConfigsArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveRoute53HostedZoneQueryLoggingConfigsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	// cl := meta.(*client.Client)
 	ql := resource.Item.(types.QueryLoggingConfig)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "queryloggingconfig", *ql.Id, "", ""))
+	return resource.Set(c.Name, client.MakeARN(client.Route53Service, "", "", "queryloggingconfig", *ql.Id)) // FIXME no partition
 }
-func resolveRoute53HostedZoneTrafficPolicyInstancesArn(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveRoute53HostedZoneTrafficPolicyInstancesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	// cl := meta.(*client.Client)
 	tp := resource.Item.(types.TrafficPolicyInstance)
-	return resource.Set(c.Name, client.GenerateResourceARN("route53", "trafficpolicyinstance", *tp.Id, "", ""))
+	return resource.Set(c.Name, client.MakeARN(client.Route53Service, "", "", "trafficpolicyinstance", *tp.Id)) // FIXME no partition
 }
 func resolveRoute53HostedZoneVpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	vpc := resource.Item.(types.VPC)
-	return resource.Set(c.Name, client.GenerateResourceARN("ec2", "vpc", *vpc.VPCId, cl.Region, cl.AccountID))
+	return resource.Set(c.Name, client.MakeARN(client.EC2Service, cl.AccountID, cl.Region, "vpc", *vpc.VPCId))
 }

@@ -585,5 +585,5 @@ func fetchWorkGroup(ctx context.Context, res chan<- interface{}, svc client.Athe
 }
 
 func createWorkGroupArn(region, accountId, groupName string) string {
-	return client.MakeARN("athena", accountId, region, "workgroup", groupName)
+	return client.MakeARN(client.Athena, accountId, region, "workgroup", groupName)
 }
