@@ -134,7 +134,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 	service := cl.Services().Waf
 
 	// Generate arn
-	arnStr := cl.GlobalARN("waf", "rule", aws.ToString(rule.RuleId))
+	arnStr := cl.AccountGlobalARN("waf", "rule", aws.ToString(rule.RuleId))
 
 	outputTags := make(map[string]*string)
 	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: aws.String(arnStr)}

@@ -489,18 +489,18 @@ func getRoute53tagsByResourceID(id string, set []types.ResourceTagSet) []types.T
 func resolveRoute53HostedZoneArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	hz := resource.Item.(Route53HostedZoneWrapper)
-	return resource.Set(c.Name, cl.UniversalARN(client.Route53Service, "hostedzone", *hz.Id))
+	return resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "hostedzone", *hz.Id))
 
 }
 func resolveRoute53HostedZoneQueryLoggingConfigsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	ql := resource.Item.(types.QueryLoggingConfig)
-	return resource.Set(c.Name, cl.UniversalARN(client.Route53Service, "queryloggingconfig", *ql.Id))
+	return resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "queryloggingconfig", *ql.Id))
 }
 func resolveRoute53HostedZoneTrafficPolicyInstancesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	tp := resource.Item.(types.TrafficPolicyInstance)
-	return resource.Set(c.Name, cl.UniversalARN(client.Route53Service, "trafficpolicyinstance", *tp.Id))
+	return resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "trafficpolicyinstance", *tp.Id))
 }
 func resolveRoute53HostedZoneVpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
