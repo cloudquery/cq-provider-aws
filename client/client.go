@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -60,6 +61,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
@@ -72,9 +74,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/smithy-go/logging"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
-	"github.com/hashicorp/go-hclog"
-
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/hashicorp/go-hclog"
 )
 
 var envVarsToCheck = []string{
@@ -105,6 +106,7 @@ type Services struct {
 	Apigateway             ApigatewayClient
 	Apigatewayv2           Apigatewayv2Client
 	ApplicationAutoscaling ApplicationAutoscalingClient
+	Athena                 AthenaClient
 	Autoscaling            AutoscalingClient
 	Backup                 BackupClient
 	Cloudformation         CloudFormationClient
@@ -147,6 +149,7 @@ type Services struct {
 	S3                     S3Client
 	S3Control              S3ControlClient
 	S3Manager              S3ManagerClient
+	Shield                 ShieldClient
 	SNS                    SnsClient
 	SQS                    SQSClient
 	SSM                    SSMClient
@@ -260,6 +263,24 @@ func (c *Client) Services() *Services {
 		return c.ServicesManager.ServicesByAccountForWAFScope(c.AccountID)
 	}
 	return s
+}
+
+// ARN builds an ARN tied to current client's partition, accountID and region
+func (c *Client) ARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, c.AccountID, c.Region, idParts...).String()
+}
+
+// AccountGlobalARN builds an ARN tied to current client's partition and accountID
+func (c *Client) AccountGlobalARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, c.AccountID, "", idParts...).String()
+}
+
+// PartitionGlobalARN builds an ARN tied to current client's partition
+func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, "", "", idParts...).String()
 }
 
 func (c *Client) withAccountID(accountID string) *Client {
@@ -533,6 +554,7 @@ func initServices(region string, c aws.Config) Services {
 		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
 		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
 		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
+		Athena:                 athena.NewFromConfig(awsCfg),
 		Backup:                 backup.NewFromConfig(awsCfg),
 		Cloudfront:             cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),
@@ -575,6 +597,7 @@ func initServices(region string, c aws.Config) Services {
 		S3Manager:              newS3ManagerFromConfig(awsCfg),
 		SageMaker:              sagemaker.NewFromConfig(awsCfg),
 		SecretsManager:         secretsmanager.NewFromConfig(awsCfg),
+		Shield:                 shield.NewFromConfig(awsCfg),
 		SNS:                    sns.NewFromConfig(awsCfg),
 		SSM:                    ssm.NewFromConfig(awsCfg),
 		SQS:                    sqs.NewFromConfig(awsCfg),

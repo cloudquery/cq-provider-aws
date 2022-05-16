@@ -150,7 +150,6 @@ func SsmInstances() *schema.Table {
 				Description: "Information about the compliance as defined by the resource type",
 				Resolver:    fetchSsmInstanceComplianceItems,
 				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "resource_id", "id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -273,5 +272,5 @@ func fetchSsmInstanceComplianceItems(ctx context.Context, meta schema.ClientMeta
 func resolveSSMInstanceARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	instance := resource.Item.(types.InstanceInformation)
 	cl := meta.(*client.Client)
-	return resource.Set(c.Name, client.GenerateResourceARN("ssm", "managed-instance", *instance.InstanceId, cl.Region, cl.AccountID))
+	return resource.Set(c.Name, cl.ARN("ssm", "managed-instance", *instance.InstanceId))
 }

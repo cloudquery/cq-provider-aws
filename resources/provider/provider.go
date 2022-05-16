@@ -13,6 +13,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigateway"
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/backup"
 	"github.com/cloudquery/cq-provider-aws/resources/services/cloudformation"
@@ -53,6 +54,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/s3"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sagemaker"
 	"github.com/cloudquery/cq-provider-aws/resources/services/secretsmanager"
+	"github.com/cloudquery/cq-provider-aws/resources/services/shield"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sns"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sqs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/ssm"
@@ -94,6 +96,8 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":             apigatewayv2.Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":       applicationautoscaling.ApplicationautoscalingPolicies(),
+			"athena.data_catalogs":                  athena.DataCatalogs(),
+			"athena.work_groups":                    athena.WorkGroups(),
 			"autoscaling.groups":                    autoscaling.AutoscalingGroups(),
 			"autoscaling.launch_configurations":     autoscaling.AutoscalingLaunchConfigurations(),
 			"autoscaling.scheduled_actions":         autoscaling.AutoscalingScheduledActions(),
@@ -214,6 +218,10 @@ func Provider() *provider.Provider {
 			"sagemaker.notebook_instances":          sagemaker.SagemakerNotebookInstances(),
 			"sagemaker.training_jobs":               sagemaker.SagemakerTrainingJobs(),
 			"secretsmanager.secrets":                secretsmanager.SecretsmanagerSecrets(),
+			"shield.attacks":                        shield.Attacks(),
+			"shield.subscriptions":                  shield.Subscriptions(),
+			"shield.protections_groups":             shield.ProtectionGroups(),
+			"shield.protections":                    shield.Protections(),
 			"sns.subscriptions":                     sns.SnsSubscriptions(),
 			"sns.topics":                            sns.SnsTopics(),
 			"sqs.queues":                            sqs.SQSQueues(),
@@ -235,6 +243,8 @@ func Provider() *provider.Provider {
 			"workspaces.workspaces":                 workspaces.Workspaces(),
 			"workspaces.directories":                workspaces.Directories(),
 			"xray.encryption_config":                xray.EncryptionConfigs(),
+			"xray.groups":                           xray.Groups(),
+			"xray.sampling_rules":                   xray.SamplingRules(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
 		Config: func() provider.Config {

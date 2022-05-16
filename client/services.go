@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -51,6 +52,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
@@ -124,6 +126,23 @@ type Apigatewayv2Client interface {
 	GetVpcLinks(ctx context.Context, params *apigatewayv2.GetVpcLinksInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetVpcLinksOutput, error)
 	GetDomainNames(ctx context.Context, params *apigatewayv2.GetDomainNamesInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetDomainNamesOutput, error)
 	GetTags(ctx context.Context, params *apigatewayv2.GetTagsInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_athena.go . AthenaClient
+type AthenaClient interface {
+	ListDataCatalogs(ctx context.Context, params *athena.ListDataCatalogsInput, optFns ...func(*athena.Options)) (*athena.ListDataCatalogsOutput, error)
+	GetDataCatalog(ctx context.Context, params *athena.GetDataCatalogInput, optFns ...func(*athena.Options)) (*athena.GetDataCatalogOutput, error)
+	ListDatabases(ctx context.Context, params *athena.ListDatabasesInput, optFns ...func(*athena.Options)) (*athena.ListDatabasesOutput, error)
+	ListTableMetadata(ctx context.Context, params *athena.ListTableMetadataInput, optFns ...func(*athena.Options)) (*athena.ListTableMetadataOutput, error)
+	ListTagsForResource(ctx context.Context, params *athena.ListTagsForResourceInput, optFns ...func(*athena.Options)) (*athena.ListTagsForResourceOutput, error)
+	ListWorkGroups(ctx context.Context, params *athena.ListWorkGroupsInput, optFns ...func(*athena.Options)) (*athena.ListWorkGroupsOutput, error)
+	GetWorkGroup(ctx context.Context, params *athena.GetWorkGroupInput, optFns ...func(*athena.Options)) (*athena.GetWorkGroupOutput, error)
+	ListPreparedStatements(ctx context.Context, params *athena.ListPreparedStatementsInput, optFns ...func(*athena.Options)) (*athena.ListPreparedStatementsOutput, error)
+	GetPreparedStatement(ctx context.Context, params *athena.GetPreparedStatementInput, optFns ...func(*athena.Options)) (*athena.GetPreparedStatementOutput, error)
+	ListQueryExecutions(ctx context.Context, params *athena.ListQueryExecutionsInput, optFns ...func(*athena.Options)) (*athena.ListQueryExecutionsOutput, error)
+	ListNamedQueries(ctx context.Context, params *athena.ListNamedQueriesInput, optFns ...func(*athena.Options)) (*athena.ListNamedQueriesOutput, error)
+	GetNamedQuery(ctx context.Context, params *athena.GetNamedQueryInput, optFns ...func(*athena.Options)) (*athena.GetNamedQueryOutput, error)
+	GetQueryExecution(ctx context.Context, params *athena.GetQueryExecutionInput, optFns ...func(*athena.Options)) (*athena.GetQueryExecutionOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudfront.go . CloudfrontClient
@@ -670,4 +689,17 @@ type WafRegionalClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/xray.go . XrayClient
 type XrayClient interface {
 	GetEncryptionConfig(ctx context.Context, params *xray.GetEncryptionConfigInput, optFns ...func(*xray.Options)) (*xray.GetEncryptionConfigOutput, error)
+	GetSamplingRules(ctx context.Context, params *xray.GetSamplingRulesInput, optFns ...func(*xray.Options)) (*xray.GetSamplingRulesOutput, error)
+	GetGroups(ctx context.Context, params *xray.GetGroupsInput, optFns ...func(*xray.Options)) (*xray.GetGroupsOutput, error)
+	ListTagsForResource(ctx context.Context, params *xray.ListTagsForResourceInput, optFns ...func(*xray.Options)) (*xray.ListTagsForResourceOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/shield.go . ShieldClient
+type ShieldClient interface {
+	ListProtections(ctx context.Context, params *shield.ListProtectionsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionsOutput, error)
+	ListTagsForResource(ctx context.Context, params *shield.ListTagsForResourceInput, optFns ...func(*shield.Options)) (*shield.ListTagsForResourceOutput, error)
+	DescribeSubscription(ctx context.Context, params *shield.DescribeSubscriptionInput, optFns ...func(*shield.Options)) (*shield.DescribeSubscriptionOutput, error)
+	ListAttacks(ctx context.Context, params *shield.ListAttacksInput, optFns ...func(*shield.Options)) (*shield.ListAttacksOutput, error)
+	DescribeAttack(ctx context.Context, params *shield.DescribeAttackInput, optFns ...func(*shield.Options)) (*shield.DescribeAttackOutput, error)
+	ListProtectionGroups(ctx context.Context, params *shield.ListProtectionGroupsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionGroupsOutput, error)
 }
