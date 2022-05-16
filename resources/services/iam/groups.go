@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"net/url"
-	"time"
 )
 
 //go:generate cq-gen --resource groups --config gen.hcl --output .
@@ -350,7 +351,7 @@ func fetchIamGroupAccessedDetails(ctx context.Context, meta schema.ClientMeta, p
 			time.Sleep(time.Millisecond * 200)
 			continue
 		case types.JobStatusTypeFailed:
-			return diag.WrapError(fmt.Errorf("failed to get last acessed details with error: %s - %s", details.Error.Code, details.Error.Message))
+			return diag.WrapError(fmt.Errorf("failed to get last acessed details with error: %s - %s", *details.Error.Code, *details.Error.Message))
 		case types.JobStatusTypeCompleted:
 			for _, s := range details.ServicesLastAccessed {
 				if *s.TotalAuthenticatedEntities > 0 {
