@@ -167,6 +167,7 @@ var errorCodeDescriptions = map[string]string{
 	"AccessDeniedException":         "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
 	"AccessDenied":                  "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
 	"AuthorizationError":            "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
+	"AuthFailure":                   "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
 }
 
 var throttleCodes = map[string]struct{}{
