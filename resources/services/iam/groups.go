@@ -79,6 +79,11 @@ func Groups() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
+						Name:     "group_id",
+						Type:     schema.TypeString,
+						Resolver: schema.ParentResourceFieldResolver("id"),
+					},
+					{
 						Name:        "account_id",
 						Description: "The AWS Account ID of the resource.",
 						Type:        schema.TypeString,

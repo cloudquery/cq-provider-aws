@@ -46,6 +46,15 @@ resource "aws" "iam" "groups" {
   user_relation "aws" "iam" "policies" {
     path = "github.com/aws/aws-sdk-go-v2/service/iam.GetGroupPolicyOutput"
 
+
+    userDefinedColumn "group_id" {
+      type = "string"
+      resolver "resolveAWSAccount" {
+        path = "github.com/cloudquery/cq-provider-sdk/provider/schema.ParentResourceFieldResolver"
+        params = ["id"]
+      }
+    }
+
     userDefinedColumn "account_id" {
       type        = "string"
       description = "The AWS Account ID of the resource."

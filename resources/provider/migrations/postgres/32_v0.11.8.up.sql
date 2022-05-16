@@ -2,8 +2,6 @@
 -- CHANGEME: Verify or edit this file before proceeding
 
 -- Resource: iam.groups
-ALTER TABLE IF EXISTS "aws_iam_group_policies" DROP COLUMN IF EXISTS "group_id";
-
 CREATE TABLE IF NOT EXISTS "aws_iam_group_accessed_details" (
 	"cq_id" uuid NOT NULL,
 	"cq_meta" jsonb,
