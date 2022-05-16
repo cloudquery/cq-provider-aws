@@ -168,7 +168,7 @@ func Provider() *provider.Provider {
 			"fsx.backups":                           fsx.FsxBackups(),
 			"guardduty.detectors":                   guardduty.GuarddutyDetectors(),
 			"iam.accounts":                          iam.IamAccounts(),
-			"iam.groups":                            iam.IamGroups(),
+			"iam.groups":                            iam.Groups(),
 			"iam.openid_connect_identity_providers": iam.IamOpenidConnectIdentityProviders(),
 			"iam.password_policies":                 iam.IamPasswordPolicies(),
 			"iam.policies":                          iam.IamPolicies(),
