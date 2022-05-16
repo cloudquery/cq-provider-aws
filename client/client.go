@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -105,6 +106,7 @@ type Services struct {
 	Apigateway             ApigatewayClient
 	Apigatewayv2           Apigatewayv2Client
 	ApplicationAutoscaling ApplicationAutoscalingClient
+	Athena                 AthenaClient
 	Autoscaling            AutoscalingClient
 	Backup                 BackupClient
 	Cloudformation         CloudFormationClient
@@ -261,6 +263,24 @@ func (c *Client) Services() *Services {
 		return c.ServicesManager.ServicesByAccountForWAFScope(c.AccountID)
 	}
 	return s
+}
+
+// ARN builds an ARN tied to current client's partition, accountID and region
+func (c *Client) ARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, c.AccountID, c.Region, idParts...).String()
+}
+
+// AccountGlobalARN builds an ARN tied to current client's partition and accountID
+func (c *Client) AccountGlobalARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, c.AccountID, "", idParts...).String()
+}
+
+// PartitionGlobalARN builds an ARN tied to current client's partition
+func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) string {
+	p, _ := RegionsPartition(c.Region)
+	return makeARN(service, p, "", "", idParts...).String()
 }
 
 func (c *Client) withAccountID(accountID string) *Client {
@@ -534,6 +554,7 @@ func initServices(region string, c aws.Config) Services {
 		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
 		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
 		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
+		Athena:                 athena.NewFromConfig(awsCfg),
 		Backup:                 backup.NewFromConfig(awsCfg),
 		Cloudfront:             cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),
