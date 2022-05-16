@@ -62,6 +62,12 @@ func WafWebAcls() *schema.Table {
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("WebACLArn"),
 			},
+			{
+				Name:        "logging_configuration",
+				Description: "The LoggingConfiguration for the specified web ACL.",
+				Type:        schema.TypeStringArray,
+				Resolver:    resolveWafWebACLRuleLoggingConfiguration,
+			},
 		},
 		Relations: []*schema.Table{
 			{
@@ -145,6 +151,11 @@ func WafWebAcls() *schema.Table {
 	}
 }
 
+type WebACLWrapper struct {
+	*types.WebACL
+	LoggingConfiguration *types.LoggingConfiguration
+}
+
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
@@ -167,7 +178,26 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 			if err != nil {
 				return diag.WrapError(err)
 			}
-			res <- webAclOutput.WebACL
+
+			cfg := waf.GetLoggingConfigurationInput{
+				ResourceArn: webAclOutput.WebACL.WebACLArn,
+			}
+			loggingConfigurationOutput, err := service.GetLoggingConfiguration(ctx, &cfg, func(options *waf.Options) {
+				options.Region = c.Region
+			})
+			if err != nil {
+				var exc *types.WAFNonexistentItemException
+				if errors.As(err, &exc) {
+					if exc.ErrorCode() != "WAFNonexistentItemException" {
+						return err
+					}
+				}
+			}
+
+			res <- &WebACLWrapper{
+				webAclOutput.WebACL,
+				loggingConfigurationOutput.LoggingConfiguration,
+			}
 		}
 
 		if aws.ToString(output.NextMarker) == "" {
@@ -178,7 +208,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 	return nil
 }
 func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	webACL := resource.Item.(*types.WebACL)
+	webACL := resource.Item.(*WebACLWrapper)
 
 	// Resolve tags for resource
 	awsClient := meta.(*client.Client)
@@ -203,7 +233,7 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 	return resource.Set("tags", outputTags)
 }
 func fetchWafWebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	webACL := parent.Item.(*types.WebACL)
+	webACL := parent.Item.(*WebACLWrapper)
 	res <- webACL.Rules
 	return nil
 }
@@ -216,26 +246,8 @@ func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMe
 	return resource.Set(c.Name, excludedRules)
 }
 func fetchWafWebACLLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, res chan<- interface{}) error {
-	rule := resource.Item.(*types.WebACL)
-
-	cl := meta.(*client.Client)
-	svc := cl.Services().Waf
-	cfg := waf.GetLoggingConfigurationInput{
-		ResourceArn: rule.WebACLArn,
-	}
-	output, err := svc.GetLoggingConfiguration(ctx, &cfg, func(options *waf.Options) {
-		options.Region = cl.Region
-	})
-	if err != nil {
-		var exc *types.WAFNonexistentItemException
-		if errors.As(err, &exc) {
-			if exc.ErrorCode() == "WAFNonexistentItemException" {
-				return nil
-			}
-		}
-		return err
-	}
-	res <- output.LoggingConfiguration
+	rule := resource.Item.(*WebACLWrapper)
+	res <- rule.LoggingConfiguration
 	return nil
 }
 func resolveWafWebACLLoggingConfigurationRedactedFields(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -245,4 +257,9 @@ func resolveWafWebACLLoggingConfigurationRedactedFields(ctx context.Context, met
 		return diag.WrapError(err)
 	}
 	return resource.Set(c.Name, out)
+}
+
+func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	rule := resource.Item.(*WebACLWrapper)
+	return resource.Set(c.Name, rule.LoggingConfiguration.LogDestinationConfigs)
 }
