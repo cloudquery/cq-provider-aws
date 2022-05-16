@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -209,6 +210,7 @@ type Client struct {
 	Region               string
 	AutoscalingNamespace string
 	WAFScope             wafv2types.Scope
+	Partition            string
 }
 
 var (
@@ -527,11 +529,17 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		if err != nil {
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
+		iamArn, err := arn.Parse(*output.Arn)
+		if err != nil {
+			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
+		}
 		if client.AccountID == "" {
 			// set default
 			client.AccountID = *output.Account
 			client.Region = account.Regions[0]
+			client.Partition = iamArn.Partition
 			client.Accounts = append(client.Accounts, Account{ID: *output.Account, RoleARN: *output.Arn})
+
 		}
 		for _, region := range account.Regions {
 			client.ServicesManager.InitServicesForAccountAndRegion(*output.Account, region, initServices(region, awsCfg))
