@@ -328,9 +328,9 @@ func fetchIamGroupAccessedDetails(ctx context.Context, meta schema.ClientMeta, p
 	c := meta.(*client.Client)
 	svc := c.Services().IAM
 	group := parent.Item.(types.Group)
-	//todo add granuality
 	config := iam.GenerateServiceLastAccessedDetailsInput{
-		Arn: group.Arn,
+		Arn:         group.Arn,
+		Granularity: types.AccessAdvisorUsageGranularityTypeActionLevel,
 	}
 	output, err := svc.GenerateServiceLastAccessedDetails(ctx, &config)
 	if err != nil {
@@ -369,7 +369,6 @@ func fetchIamGroupAccessedDetails(ctx context.Context, meta schema.ClientMeta, p
 			}
 		}
 	}
-	return nil
 }
 func fetchIamGroupAccessedDetailTrackedActionsLastAccesseds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	serviceLastAccessed := parent.Item.(AccessedDetails)
