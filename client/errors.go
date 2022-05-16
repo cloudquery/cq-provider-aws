@@ -12,6 +12,8 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+const ssoInvalidOrExpired = "failed to refresh cached credentials, the SSO session has expired or is invalid"
+
 func ErrorClassifier(meta schema.ClientMeta, resourceName string, err error) diag.Diagnostics {
 	client := meta.(*Client)
 
@@ -57,6 +59,19 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 						diag.WithSeverity(diag.IGNORE),
 						ParseSummaryMessage(err),
 						diag.WithDetails("The action is invalid for the service."),
+					)...),
+				),
+			}
+		}
+		if ae.ErrorMessage() == ssoInvalidOrExpired {
+			return diag.Diagnostics{
+				RedactError(accounts, diag.NewBaseError(err,
+					diag.ACCESS,
+					append(opts,
+						diag.WithType(diag.ACCESS),
+						diag.WithSeverity(diag.WARNING),
+						ParseSummaryMessage(err),
+						diag.WithDetails(errorCodeDescriptions[ae.ErrorCode()]),
 					)...),
 				),
 			}
