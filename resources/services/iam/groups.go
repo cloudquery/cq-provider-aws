@@ -148,10 +148,6 @@ func Groups() *schema.Table {
 						Type:        schema.TypeInt,
 						Resolver:    schema.PathResolver("ServiceLastAccessed.TotalAuthenticatedEntities"),
 					},
-					{
-						Name: "job_id",
-						Type: schema.TypeString,
-					},
 				},
 				Relations: []*schema.Table{
 					{
@@ -199,31 +195,31 @@ func Groups() *schema.Table {
 								Resolver:    schema.ParentIdResolver,
 							},
 							{
-								Name:        "entity_info_arn",
+								Name:        "arn",
 								Description: "The Amazon Resource Name (ARN)",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("EntityInfo.Arn"),
 							},
 							{
-								Name:        "entity_info_id",
+								Name:        "id",
 								Description: "The identifier of the entity (user or role)",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("EntityInfo.Id"),
 							},
 							{
-								Name:        "entity_info_name",
+								Name:        "name",
 								Description: "The name of the entity (user or role)",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("EntityInfo.Name"),
 							},
 							{
-								Name:        "entity_info_type",
+								Name:        "type",
 								Description: "The type of entity (user or role)",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("EntityInfo.Type"),
 							},
 							{
-								Name:        "entity_info_path",
+								Name:        "path",
 								Description: "The path to the entity (user or role)",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("EntityInfo.Path"),

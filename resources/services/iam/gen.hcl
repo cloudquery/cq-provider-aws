@@ -57,8 +57,8 @@ resource "aws" "iam" "groups" {
       primary_keys = ["group_cq_id", "policy_name"]
     }
 
-    column "policy_document"{
-      type = "json"
+    column "policy_document" {
+      type              = "json"
       generate_resolver = true
     }
   }
@@ -68,8 +68,17 @@ resource "aws" "iam" "groups" {
     column "service_last_accessed" {
       skip_prefix = true
     }
+
+    column "job_id" {
+      skip = true
+    }
+
     user_relation "aws" "iam" "entities" {
       path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
+
+      column "entity_info" {
+        skip_prefix = true
+      }
     }
   }
 }
