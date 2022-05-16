@@ -284,6 +284,7 @@ func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) strin
 
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -298,6 +299,7 @@ func (c *Client) withAccountID(accountID string) *Client {
 
 func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -313,6 +315,7 @@ func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 
 func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -328,6 +331,7 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 
 func (c *Client) withAccountIDRegionAndScope(accountID, region string, scope wafv2types.Scope) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
