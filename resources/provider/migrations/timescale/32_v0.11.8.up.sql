@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS "aws_iam_group_accessed_details" (
 	"last_authenticated_entity" text,
 	"last_authenticated_region" text,
 	"total_authenticated_entities" integer,
-	"job_id" text,
 	CONSTRAINT aws_iam_group_accessed_details_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
 );
@@ -37,11 +36,11 @@ CREATE TABLE IF NOT EXISTS "aws_iam_group_accessed_detail_entities" (
 	"cq_meta" jsonb,
 	"cq_fetch_date" timestamp without time zone NOT NULL,
 	"group_accessed_detail_cq_id" uuid,
-	"entity_info_arn" text,
-	"entity_info_id" text,
-	"entity_info_name" text,
-	"entity_info_type" text,
-	"entity_info_path" text,
+	"arn" text,
+	"id" text,
+	"name" text,
+	"type" text,
+	"path" text,
 	"last_authenticated" timestamp without time zone,
 	CONSTRAINT aws_iam_group_accessed_detail_entities_pk PRIMARY KEY(cq_fetch_date,cq_id),
 	UNIQUE(cq_fetch_date,cq_id)
