@@ -3,9 +3,7 @@ package iam
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
@@ -18,14 +16,13 @@ import (
 //go:generate cq-gen --resource groups --config gen.hcl --output .
 func Groups() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_groups",
-		Description:   "Contains information about an IAM group entity",
-		Resolver:      fetchIamGroups,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
-		IgnoreInTests: true,
+		Name:         "aws_iam_groups",
+		Description:  "Contains information about an IAM group entity",
+		Resolver:     fetchIamGroups,
+		Multiplex:    client.AccountMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -81,9 +78,10 @@ func Groups() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:     "group_id",
-						Type:     schema.TypeString,
-						Resolver: schema.ParentResourceFieldResolver("id"),
+						Name:        "group_id",
+						Description: "Group ID the policy belongs too.",
+						Type:        schema.TypeString,
+						Resolver:    schema.ParentResourceFieldResolver("id"),
 					},
 					{
 						Name:        "account_id",
@@ -312,7 +310,6 @@ func fetchIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, parent *
 }
 func resolveGroupPoliciesPolicyDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*iam.GetGroupPolicyOutput)
-
 	decodedDocument, err := url.QueryUnescape(*r.PolicyDocument)
 	if err != nil {
 		return diag.WrapError(err)
@@ -329,74 +326,20 @@ func fetchIamGroupAccessedDetails(ctx context.Context, meta schema.ClientMeta, p
 	c := meta.(*client.Client)
 	svc := c.Services().IAM
 	group := parent.Item.(types.Group)
-	config := iam.GenerateServiceLastAccessedDetailsInput{
-		Arn:         group.Arn,
-		Granularity: types.AccessAdvisorUsageGranularityTypeActionLevel,
-	}
-	output, err := svc.GenerateServiceLastAccessedDetails(ctx, &config)
+	err := fetchIamAccessDetails(ctx, res, svc, *group.Arn)
 	if err != nil {
 		return diag.WrapError(err)
 	}
-
-	getDetails := iam.GetServiceLastAccessedDetailsInput{
-		JobId: output.JobId,
-	}
-	for {
-		details, err := svc.GetServiceLastAccessedDetails(ctx, &getDetails)
-		if err != nil {
-			return diag.WrapError(err)
-		}
-
-		switch details.JobStatus {
-		case types.JobStatusTypeInProgress:
-			time.Sleep(time.Millisecond * 200)
-			continue
-		case types.JobStatusTypeFailed:
-			return diag.WrapError(fmt.Errorf("failed to get last acessed details with error: %s - %s", *details.Error.Code, *details.Error.Message))
-		case types.JobStatusTypeCompleted:
-			for _, s := range details.ServicesLastAccessed {
-				if *s.TotalAuthenticatedEntities > 0 {
-					res <- AccessedDetails{
-						JobId:               output.JobId,
-						ServiceLastAccessed: s,
-					}
-				}
-			}
-			if details.Marker == nil {
-				return nil
-			}
-			if details.Marker != nil {
-				getDetails.Marker = details.Marker
-			}
-		}
-	}
+	return nil
 }
 func fetchIamGroupAccessedDetailTrackedActionsLastAccesseds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	serviceLastAccessed := parent.Item.(AccessedDetails)
-	res <- serviceLastAccessed.TrackedActionsLastAccessed
+	details := parent.Item.(AccessedDetails)
+	res <- details.TrackedActionsLastAccessed
 	return nil
 }
 func fetchIamGroupAccessedDetailEntities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	c := meta.(*client.Client)
-	svc := c.Services().IAM
-	serviceLastAccessed := parent.Item.(AccessedDetails)
-	config := iam.GetServiceLastAccessedDetailsWithEntitiesInput{
-		JobId:            serviceLastAccessed.JobId,
-		ServiceNamespace: serviceLastAccessed.ServiceNamespace,
-	}
-	for {
-		output, err := svc.GetServiceLastAccessedDetailsWithEntities(ctx, &config)
-		if err != nil {
-			return diag.WrapError(err)
-		}
-		res <- output.EntityDetailsList
-		if output.Marker == nil {
-			break
-		}
-		if output.Marker != nil {
-			config.Marker = output.Marker
-		}
-	}
+	details := parent.Item.(AccessedDetails)
+	res <- details.Entities
 	return nil
 }
 
@@ -406,5 +349,5 @@ func fetchIamGroupAccessedDetailEntities(ctx context.Context, meta schema.Client
 
 type AccessedDetails struct {
 	types.ServiceLastAccessed
-	JobId *string
+	Entities []types.EntityDetails
 }

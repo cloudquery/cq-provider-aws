@@ -77,11 +77,8 @@ resource "aws" "iam" "groups" {
       skip_prefix = true
     }
 
-    column "job_id" {
-      skip = true
-    }
 
-    user_relation "aws" "iam" "entities" {
+    relation "aws" "iam" "entities" {
       path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
 
       column "entity_info" {
