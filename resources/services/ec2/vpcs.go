@@ -90,7 +90,6 @@ func Ec2Vpcs() *schema.Table {
 				Name:        "aws_ec2_vpc_cidr_block_association_sets",
 				Description: "Describes an IPv4 CIDR block associated with a VPC.",
 				Resolver:    fetchEc2VpcCidrBlockAssociationSets,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"vpc_cq_id", "association_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_cq_id",
@@ -127,7 +126,6 @@ func Ec2Vpcs() *schema.Table {
 				Name:        "aws_ec2_vpc_ipv6_cidr_block_association_sets",
 				Description: "Describes an IPv6 CIDR block associated with a VPC.",
 				Resolver:    fetchEc2VpcIpv6CidrBlockAssociationSets,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"vpc_cq_id", "association_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "vpc_cq_id",

@@ -171,7 +171,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:          "aws_apigatewayv2_api_authorizers",
 				Description:   "Represents an authorizer.",
 				Resolver:      fetchApigatewayv2ApiAuthorizers,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "authorizer_id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -268,7 +267,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_deployments",
 				Description: "An immutable representation of an API that can be called by users.",
 				Resolver:    fetchApigatewayv2ApiDeployments,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "deployment_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -329,7 +327,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_integrations",
 				Description: "Represents an integration.",
 				Resolver:    fetchApigatewayv2ApiIntegrations,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "integration_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -470,7 +467,6 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:          "aws_apigatewayv2_api_integration_responses",
 						Description:   "Represents an integration response.",
 						Resolver:      fetchApigatewayv2ApiIntegrationResponses,
-						Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_integration_cq_id", "integration_response_id"}},
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -534,7 +530,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:          "aws_apigatewayv2_api_models",
 				Description:   "Represents a data model for an API.",
 				Resolver:      fetchApigatewayv2ApiModels,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "model_id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -595,7 +590,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_routes",
 				Description: "Represents a route.",
 				Resolver:    fetchApigatewayv2ApiRoutes,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "route_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -697,7 +691,6 @@ func Apigatewayv2Apis() *schema.Table {
 						Name:          "aws_apigatewayv2_api_route_responses",
 						Description:   "Represents a route response.",
 						Resolver:      fetchApigatewayv2ApiRouteResponses,
-						Options:       schema.TableCreationOptions{PrimaryKeys: []string{"api_route_cq_id", "route_response_id"}},
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -756,7 +749,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_stages",
 				Description: "Represents an API stage.",
 				Resolver:    fetchApigatewayv2ApiStages,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"api_cq_id", "stage_name"}},
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",

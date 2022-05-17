@@ -124,7 +124,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_authorizers",
 				Description:   "Represents an authorization layer for methods.",
 				Resolver:      fetchApigatewayRestApiAuthorizers,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -207,7 +206,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_deployments",
 				Description:   "An immutable representation of a RestApi resource that can be called by users using Stages.",
 				Resolver:      fetchApigatewayRestApiDeployments,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -259,7 +257,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_documentation_parts",
 				Description:   "A documentation part for a targeted API entity.",
 				Resolver:      fetchApigatewayRestApiDocumentationParts,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -331,7 +328,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_documentation_versions",
 				Description:   "A snapshot of the documentation of an API.",
 				Resolver:      fetchApigatewayRestApiDocumentationVersions,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "version"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -432,7 +428,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_models",
 				Description:   "Represents the data structure of a method's request or response payload.",
 				Resolver:      fetchApigatewayRestApiModels,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -494,7 +489,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_request_validators",
 				Description:   "A set of validation rules for incoming Method requests.",
 				Resolver:      fetchApigatewayRestApiRequestValidators,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -546,7 +540,6 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_resources",
 				Description:   "Represents an API resource.",
 				Resolver:      fetchApigatewayRestApiResources,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"rest_api_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

@@ -405,7 +405,6 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_block_device_mappings",
 				Description: "Describes a block device mapping.",
 				Resolver:    fetchEc2InstanceBlockDeviceMappings,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "ebs_volume_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -448,7 +447,6 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_elastic_gpu_associations",
 				Description:   "Describes the association between an instance and an Elastic Graphics accelerator.",
 				Resolver:      fetchEc2InstanceElasticGpuAssociations,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "elastic_gpu_association_id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -483,7 +481,6 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_elastic_inference_accelerator_associations",
 				Description:   "Describes the association between an instance and an elastic inference accelerator.",
 				Resolver:      fetchEc2InstanceElasticInferenceAcceleratorAssociations,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "elastic_inference_accelerator_association_id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -518,7 +515,6 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_network_interfaces",
 				Description: "Describes a network interface.",
 				Resolver:    fetchEc2InstanceNetworkInterfaces,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "network_interface_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -672,7 +668,6 @@ func Ec2Instances() *schema.Table {
 						Name:        "aws_ec2_instance_network_interface_groups",
 						Description: "Describes a security group.",
 						Resolver:    fetchEc2InstanceNetworkInterfaceGroups,
-						Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_network_interface_cq_id", "group_id"}},
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
@@ -780,7 +775,6 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_product_codes",
 				Description:   "Describes a product code.",
 				Resolver:      fetchEc2InstanceProductCodes,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "product_code_id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -805,7 +799,6 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_security_groups",
 				Description: "Describes a security group.",
 				Resolver:    fetchEc2InstanceSecurityGroups,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"instance_cq_id", "group_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",

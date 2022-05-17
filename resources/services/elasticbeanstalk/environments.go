@@ -179,7 +179,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_configuration_settings",
 				Description:   "Describes the settings for a configuration set.",
 				Resolver:      fetchElasticbeanstalkConfigurationSettings,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_arn"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -281,7 +280,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_configuration_options",
 				Description:   "Describes the possible values for a configuration option.",
 				Resolver:      fetchElasticbeanstalkConfigurationOptions,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "application_arn", "name", "namespace"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -368,7 +366,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_environment_links",
 				Description:   "A link to another environment, defined in the environment's manifest",
 				Resolver:      fetchElasticbeanstalkEnvironmentLinks,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"environment_cq_id", "link_name"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

@@ -251,7 +251,6 @@ func S3Buckets() *schema.Table {
 				Description:   "Specifies which Amazon S3 objects to replicate and where to store the replicas.",
 				Resolver:      fetchS3BucketReplicationRules,
 				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -371,7 +370,6 @@ func S3Buckets() *schema.Table {
 				Description:   "A lifecycle rule for individual objects in an Amazon S3 bucket.",
 				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Resolver:      fetchS3BucketLifecycles,
-				Options:       schema.TableCreationOptions{PrimaryKeys: []string{"bucket_cq_id", "id"}},
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
