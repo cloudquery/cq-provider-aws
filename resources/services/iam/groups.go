@@ -16,13 +16,14 @@ import (
 //go:generate cq-gen --resource groups --config gen.hcl --output .
 func Groups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_groups",
-		Description:  "Contains information about an IAM group entity",
-		Resolver:     fetchIamGroups,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:          "aws_iam_groups",
+		Description:   "Contains information about an IAM group entity",
+		Resolver:      fetchIamGroups,
+		Multiplex:     client.AccountMultiplex,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
