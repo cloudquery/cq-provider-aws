@@ -5,7 +5,7 @@ Contains the response to a successful GetGroupPolicy request
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |group_cq_id|uuid|Unique CloudQuery ID of aws_iam_groups table (FK)|
-|group_id|text||
+|group_id|text|Group ID the policy belongs too.|
 |account_id|text|The AWS Account ID of the resource.|
 |group_name|text|The group the policy is associated with|
 |policy_document|jsonb|The policy document|
