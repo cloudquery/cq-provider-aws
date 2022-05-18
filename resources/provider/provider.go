@@ -169,6 +169,7 @@ func Provider() *provider.Provider {
 			"guardduty.detectors":                   guardduty.GuarddutyDetectors(),
 			"iam.accounts":                          iam.IamAccounts(),
 			"iam.groups":                            iam.IamGroups(),
+			"iam.groups_access_advisor":             iam.GroupsAccessAdvisors(),
 			"iam.openid_connect_identity_providers": iam.IamOpenidConnectIdentityProviders(),
 			"iam.password_policies":                 iam.IamPasswordPolicies(),
 			"iam.policies":                          iam.IamPolicies(),

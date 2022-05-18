@@ -351,6 +351,9 @@ type IamClient interface {
 	ListSAMLProviders(ctx context.Context, params *iam.ListSAMLProvidersInput, optFns ...func(*iam.Options)) (*iam.ListSAMLProvidersOutput, error)
 	GetSAMLProvider(ctx context.Context, params *iam.GetSAMLProviderInput, optFns ...func(*iam.Options)) (*iam.GetSAMLProviderOutput, error)
 	ListRoleTags(ctx context.Context, params *iam.ListRoleTagsInput, optFns ...func(*iam.Options)) (*iam.ListRoleTagsOutput, error)
+	GenerateServiceLastAccessedDetails(ctx context.Context, params *iam.GenerateServiceLastAccessedDetailsInput, optFns ...func(*iam.Options)) (*iam.GenerateServiceLastAccessedDetailsOutput, error)
+	GetServiceLastAccessedDetails(ctx context.Context, params *iam.GetServiceLastAccessedDetailsInput, optFns ...func(*iam.Options)) (*iam.GetServiceLastAccessedDetailsOutput, error)
+	GetServiceLastAccessedDetailsWithEntities(ctx context.Context, params *iam.GetServiceLastAccessedDetailsWithEntitiesInput, optFns ...func(*iam.Options)) (*iam.GetServiceLastAccessedDetailsWithEntitiesOutput, error)
 
 	iam.ListServerCertificatesAPIClient
 	iam.ListAccountAliasesAPIClient
