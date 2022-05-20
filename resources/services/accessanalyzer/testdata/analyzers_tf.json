@@ -1,0 +1,11 @@
+{
+  "analyzer_name": "testString",
+  "arn": "testString",
+  "tags": {
+          "testAttribute": "testString"
+  },
+  "tags_all": {
+          "testAttribute": "testString"
+  },
+  "type": "testString"
+}

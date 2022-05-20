@@ -16,13 +16,14 @@ import (
 //go:generate cq-gen --resource analyzers --config gen.hcl --output .
 func Analyzers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_access_analyzer_analyzers",
-		Description:  "Contains information about the analyzer",
-		Resolver:     fetchAccessAnalyzerAnalyzers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("access-analyzer"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:                  "aws_access_analyzer_analyzers",
+		TerraformResourceName: "aws_access_analyzer_analyzers",
+		Description:           "Contains information about the analyzer",
+		Resolver:              fetchAccessAnalyzerAnalyzers,
+		Multiplex:             client.ServiceAccountRegionMultiplexer("access-analyzer"),
+		IgnoreError:           client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:          client.DeleteAccountRegionFilter,
+		Options:               schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -47,9 +48,10 @@ func Analyzers() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "name",
-				Description: "The name of the analyzer",
-				Type:        schema.TypeString,
+				Name:              "name",
+				Description:       "The name of the analyzer",
+				Type:              schema.TypeString,
+				TerraformResolver: schema.PathResolver("analyzer_name"),
 			},
 			{
 				Name:        "status",

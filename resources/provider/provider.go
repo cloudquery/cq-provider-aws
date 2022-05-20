@@ -4,7 +4,6 @@ import (
 	"embed"
 
 	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -67,20 +66,16 @@ var (
 	//go:embed migrations/*/*.sql
 	awsMigrations embed.FS
 
-	//go:embed moduledata/*
-	moduleData embed.FS
-
 	Version = "Development"
 )
 
 func Provider() *provider.Provider {
 	return &provider.Provider{
-		Name:             "aws",
-		Version:          Version,
-		Configure:        client.Configure,
-		ErrorClassifier:  client.ErrorClassifier,
-		Migrations:       awsMigrations,
-		ModuleInfoReader: module.EmbeddedReader(moduleData, "moduledata"),
+		Name:            "aws",
+		Version:         Version,
+		Configure:       client.Configure,
+		ErrorClassifier: client.ErrorClassifier,
+		Migrations:      awsMigrations,
 		ResourceMap: map[string]*schema.Table{
 			"accessanalyzer.analyzers":              accessanalyzer.Analyzers(),
 			"acm.certificates":                      acm.AcmCertificates(),

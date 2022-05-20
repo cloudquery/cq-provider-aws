@@ -1,0 +1,145 @@
+{
+	"ami": "testString",
+	"arn": "testString",
+	"associate_public_ip_address": true,
+	"availability_zone": "testString",
+	"capacity_reservation_specification": [
+		{
+			"capacity_reservation_preference": "testString",
+			"capacity_reservation_target": [
+				{
+					"capacity_reservation_id": "testString",
+					"capacity_reservation_resource_group_arn": "testString"
+				}
+			]
+		}
+	],
+	"cpu_core_count": 1337,
+	"cpu_threads_per_core": 1337,
+	"credit_specification": [
+		{
+			"cpu_credits": "testString"
+		}
+	],
+	"disable_api_termination": true,
+	"ebs_block_device": [
+		{
+			"delete_on_termination": true,
+			"device_name": "testString",
+			"encrypted": true,
+			"iops": 1337,
+			"kms_key_id": "testString",
+			"snapshot_id": "testString",
+			"tags": {
+				"testAttribute": "testString"
+			},
+			"throughput": 1337,
+			"volume_id": "testString",
+			"volume_size": 1337,
+			"volume_type": "testString"
+		}
+	],
+	"ebs_optimized": true,
+	"enclave_options": [
+		{
+			"enabled": true
+		}
+	],
+	"ephemeral_block_device": [
+		{
+			"device_name": "testString",
+			"no_device": true,
+			"virtual_name": "testString"
+		}
+	],
+	"get_password_data": true,
+	"hibernation": true,
+	"host_id": "testString",
+	"iam_instance_profile": "testString",
+	"instance_initiated_shutdown_behavior": "testString",
+	"instance_state": "testString",
+	"instance_type": "testString",
+	"ipv6_address_count": 1337,
+	"ipv6_addresses": [
+		"testString"
+	],
+	"key_name": "testString",
+	"launch_template": [
+		{
+			"id": "testString",
+			"name": "testString",
+			"version": "testString"
+		}
+	],
+	"maintenance_options": [
+		{
+			"auto_recovery": "testString"
+		}
+	],
+	"metadata_options": [
+		{
+			"http_endpoint": "testString",
+			"http_put_response_hop_limit": 1337,
+			"http_tokens": "testString",
+			"instance_metadata_tags": "testString"
+		}
+	],
+	"monitoring": true,
+	"network_interface": [
+		{
+			"delete_on_termination": true,
+			"device_index": 1337,
+			"network_card_index": 1337,
+			"network_interface_id": "testString"
+		}
+	],
+	"outpost_arn": "testString",
+	"password_data": "testString",
+	"placement_group": "testString",
+	"placement_partition_number": 1337,
+	"primary_network_interface_id": "testString",
+	"private_dns": "testString",
+	"private_ip": "testString",
+	"public_dns": "testString",
+	"public_ip": "testString",
+	"root_block_device": [
+		{
+			"delete_on_termination": true,
+			"device_name": "testString",
+			"encrypted": true,
+			"iops": 1337,
+			"kms_key_id": "testString",
+			"tags": {
+				"testAttribute": "testString"
+			},
+			"throughput": 1337,
+			"volume_id": "testString",
+			"volume_size": 1337,
+			"volume_type": "testString"
+		}
+	],
+	"secondary_private_ips": [
+		"testString"
+	],
+	"security_groups": [
+		"testString"
+	],
+	"source_dest_check": true,
+	"subnet_id": "testString",
+	"tags": {
+		"testAttribute": "testString"
+	},
+	"tags_all": {
+		"testAttribute": "testString"
+	},
+	"tenancy": "testString",
+	"user_data": "testString",
+	"user_data_base64": "testString",
+	"user_data_replace_on_change": true,
+	"volume_tags": {
+		"testAttribute": "testString"
+	},
+	"vpc_security_group_ids": [
+		"testString"
+	]
+}
