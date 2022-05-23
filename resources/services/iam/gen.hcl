@@ -34,8 +34,17 @@ resource "aws" "iam" "groups_access_advisor" {
     skip_prefix = true
   }
 
+  relation "aws" "iam"  "tracked_actions_last_accessed"{
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorTrackedActionsLastAccesseds"
+    }
+  }
+
   relation "aws" "iam" "entities" {
     path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorEntities"
+    }
 
     column "entity_info" {
       skip_prefix = true

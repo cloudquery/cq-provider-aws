@@ -13,13 +13,12 @@ import (
 //go:generate cq-gen --resource groups_access_advisor --config gen.hcl --output .
 func GroupsAccessAdvisors() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_groups_access_advisor",
-		Resolver:      fetchIamGroupsAccessAdvisors,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
-		IgnoreInTests: true,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
+		Name:         "aws_iam_groups_access_advisor",
+		Resolver:     fetchIamGroupsAccessAdvisors,
+		Multiplex:    client.AccountMultiplex,
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -68,7 +67,7 @@ func GroupsAccessAdvisors() *schema.Table {
 			{
 				Name:        "aws_iam_groups_access_advisor_tracked_actions_last_accessed",
 				Description: "Contains details about the most recent attempt to access an action within the service",
-				Resolver:    fetchIamGroupsAccessAdvisorTrackedActionsLastAccesseds,
+				Resolver:    fetchIamAccessAdvisorTrackedActionsLastAccesseds,
 				Columns: []schema.Column{
 					{
 						Name:        "groups_access_advisor_cq_id",
@@ -101,7 +100,7 @@ func GroupsAccessAdvisors() *schema.Table {
 			{
 				Name:        "aws_iam_groups_access_advisor_entities",
 				Description: "An object that contains details about when the IAM entities (users or roles) were last used in an attempt to access the specified AWS service",
-				Resolver:    fetchIamGroupsAccessAdvisorEntities,
+				Resolver:    fetchIamAccessAdvisorEntities,
 				Columns: []schema.Column{
 					{
 						Name:        "groups_access_advisor_cq_id",
@@ -174,15 +173,5 @@ func fetchIamGroupsAccessAdvisors(ctx context.Context, meta schema.ClientMeta, p
 		}
 		config.Marker = response.Marker
 	}
-	return nil
-}
-func fetchIamGroupsAccessAdvisorTrackedActionsLastAccesseds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	details := parent.Item.(AccessAdvisorDetails)
-	res <- details.TrackedActionsLastAccessed
-	return nil
-}
-func fetchIamGroupsAccessAdvisorEntities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	details := parent.Item.(AccessAdvisorDetails)
-	res <- details.Entities
 	return nil
 }

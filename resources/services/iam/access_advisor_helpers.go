@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -99,4 +101,16 @@ func fetchIamAccessDetails(ctx context.Context, res chan<- interface{}, svc clie
 			}
 		}
 	}
+}
+
+func fetchIamAccessAdvisorTrackedActionsLastAccesseds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	details := parent.Item.(AccessAdvisorDetails)
+	res <- details.TrackedActionsLastAccessed
+	return nil
+}
+
+func fetchIamAccessAdvisorEntities(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	details := parent.Item.(AccessAdvisorDetails)
+	res <- details.Entities
+	return nil
 }
