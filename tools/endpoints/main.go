@@ -15,6 +15,8 @@ const (
 )
 
 type supportedServicesData struct {
+	// nested structs are ok here to simplify JSON unmarshaling
+	// nolint:revive
 	Partitions []struct {
 		PartitionId   string `json:"partition"`
 		PartitionName string `json:"partitionName"`
@@ -88,10 +90,8 @@ func partitionRegionServiceGenerator() error {
 		return err
 	}
 
-	if err := saveToJsonFile(data, filepath.Join("client", client.PartitionServiceRegionFile)); err != nil {
-		return err
-	}
-	return nil
+	err = saveToJsonFile(data, filepath.Join("client", client.PartitionServiceRegionFile))
+	return err
 }
 
 func main() {
