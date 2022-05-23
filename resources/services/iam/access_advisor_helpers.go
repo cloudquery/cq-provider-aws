@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
 )
