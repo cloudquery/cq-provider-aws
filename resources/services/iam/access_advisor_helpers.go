@@ -85,7 +85,6 @@ func fetchIamAccessDetails(ctx context.Context, res chan<- interface{}, svc clie
 							return fetchDetailEntities(ctx, res, svc, sla, jobId)
 						})
 					}(s, *output.JobId)
-
 				}
 			}
 			err = errs.Wait()
