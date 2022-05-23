@@ -13,12 +13,13 @@ import (
 //go:generate cq-gen --resource groups_access_advisor --config gen.hcl --output .
 func GroupsAccessAdvisors() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_groups_access_advisor",
-		Resolver:     fetchIamGroupsAccessAdvisors,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
+		Name:          "aws_iam_groups_access_advisor",
+		Resolver:      fetchIamGroupsAccessAdvisors,
+		Multiplex:     client.AccountMultiplex,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountFilter,
+		IgnoreInTests: true,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
