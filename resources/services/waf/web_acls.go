@@ -13,6 +13,11 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+type WebACLWrapper struct {
+	*types.WebACL
+	LoggingConfiguration *types.LoggingConfiguration
+}
+
 func WafWebAcls() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_waf_web_acls",
@@ -149,11 +154,6 @@ func WafWebAcls() *schema.Table {
 			},
 		},
 	}
-}
-
-type WebACLWrapper struct {
-	*types.WebACL
-	LoggingConfiguration *types.LoggingConfiguration
 }
 
 // ====================================================================================================================
