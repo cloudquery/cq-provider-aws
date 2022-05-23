@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -78,26 +79,37 @@ import (
 	"github.com/hashicorp/go-hclog"
 )
 
-var envVarsToCheck = []string{
-	"AWS_PROFILE",
-	"AWS_ACCESS_KEY_ID",
-	"AWS_SECRET_ACCESS_KEY",
-	"AWS_CONFIG_FILE",
-	"AWS_ROLE_ARN",
-	"AWS_SESSION_TOKEN",
-	"AWS_SHARED_CREDENTIALS_FILE",
+type Client struct {
+	// Those are already normalized values after configure and this is why we don't want to hold
+	// config directly.
+	Accounts        []Account
+	logLevel        *string
+	maxRetries      int
+	maxBackoff      int
+	ServicesManager ServicesManager
+	logger          hclog.Logger
+	// this is set by table clientList
+	AccountID            string
+	Region               string
+	AutoscalingNamespace string
+	WAFScope             wafv2types.Scope
+	Partition            string
 }
 
-const (
-	defaultRegion              = "us-east-1"
-	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
-	defaultVar                 = "default"
-	cloudfrontScopeRegion      = defaultRegion
-)
+// S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
+// has different structure then all other services (i.e no service but just a function) and we need
+// the ability to mock it.
+// Also we need to use s3 manager to be able to query the bucket-region https://github.com/aws/aws-sdk-go-v2/pull/1027#issuecomment-759818990
+type S3Manager struct {
+	s3Client *s3.Client
+}
 
-var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
-var errUnknownRegion = func(region string) error {
-	return fmt.Errorf("unknown region: %q", region)
+type AwsLogger struct {
+	l hclog.Logger
+}
+
+type AssumeRoleAPIClient interface {
+	AssumeRole(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error)
 }
 
 type Services struct {
@@ -170,6 +182,33 @@ type ServicesManager struct {
 	wafScopeServices map[string]*Services
 }
 
+const (
+	defaultRegion              = "us-east-1"
+	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
+	defaultVar                 = "default"
+	cloudfrontScopeRegion      = defaultRegion
+)
+
+var envVarsToCheck = []string{
+	"AWS_PROFILE",
+	"AWS_ACCESS_KEY_ID",
+	"AWS_SECRET_ACCESS_KEY",
+	"AWS_CONFIG_FILE",
+	"AWS_ROLE_ARN",
+	"AWS_SESSION_TOKEN",
+	"AWS_SHARED_CREDENTIALS_FILE",
+}
+
+var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
+var errUnknownRegion = func(region string) error {
+	return fmt.Errorf("unknown region: %q", region)
+}
+
+var (
+	_ schema.ClientMeta       = (*Client)(nil)
+	_ schema.ClientIdentifier = (*Client)(nil)
+)
+
 func (s *ServicesManager) ServicesByAccountAndRegion(accountId string, region string) *Services {
 	if region == "" {
 		region = defaultRegion
@@ -193,35 +232,6 @@ func (s *ServicesManager) InitServicesForAccountAndScope(accountId string, servi
 		s.wafScopeServices = make(map[string]*Services)
 	}
 	s.wafScopeServices[accountId] = &services
-}
-
-type Client struct {
-	// Those are already normalized values after configure and this is why we don't want to hold
-	// config directly.
-	Accounts        []Account
-	logLevel        *string
-	maxRetries      int
-	maxBackoff      int
-	ServicesManager ServicesManager
-	logger          hclog.Logger
-	// this is set by table clientList
-	AccountID            string
-	Region               string
-	AutoscalingNamespace string
-	WAFScope             wafv2types.Scope
-}
-
-var (
-	_ schema.ClientMeta       = (*Client)(nil)
-	_ schema.ClientIdentifier = (*Client)(nil)
-)
-
-// S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
-// has different structure then all other services (i.e no service but just a function) and we need
-// the ability to mock it.
-// Also we need to use s3 manager to be able to query the bucket-region https://github.com/aws/aws-sdk-go-v2/pull/1027#issuecomment-759818990
-type S3Manager struct {
-	s3Client *s3.Client
 }
 
 func newS3ManagerFromConfig(cfg aws.Config) S3Manager {
@@ -267,24 +277,22 @@ func (c *Client) Services() *Services {
 
 // ARN builds an ARN tied to current client's partition, accountID and region
 func (c *Client) ARN(service AWSService, idParts ...string) string {
-	p, _ := RegionsPartition(c.Region)
-	return makeARN(service, p, c.AccountID, c.Region, idParts...).String()
+	return makeARN(service, c.Partition, c.AccountID, c.Region, idParts...).String()
 }
 
 // AccountGlobalARN builds an ARN tied to current client's partition and accountID
 func (c *Client) AccountGlobalARN(service AWSService, idParts ...string) string {
-	p, _ := RegionsPartition(c.Region)
-	return makeARN(service, p, c.AccountID, "", idParts...).String()
+	return makeARN(service, c.Partition, c.AccountID, "", idParts...).String()
 }
 
 // PartitionGlobalARN builds an ARN tied to current client's partition
 func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) string {
-	p, _ := RegionsPartition(c.Region)
-	return makeARN(service, p, "", "", idParts...).String()
+	return makeARN(service, c.Partition, "", "", idParts...).String()
 }
 
 func (c *Client) withAccountID(accountID string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -299,6 +307,7 @@ func (c *Client) withAccountID(accountID string) *Client {
 
 func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -314,6 +323,7 @@ func (c *Client) withAccountIDAndRegion(accountID, region string) *Client {
 
 func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace string) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -329,6 +339,7 @@ func (c *Client) withAccountIDRegionAndNamespace(accountID, region, namespace st
 
 func (c *Client) withAccountIDRegionAndScope(accountID, region string, scope wafv2types.Scope) *Client {
 	return &Client{
+		Partition:            c.Partition,
 		Accounts:             c.Accounts,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
@@ -368,7 +379,6 @@ func verifyRegions(regions []string) error {
 	return nil
 }
 func isAllRegions(regions []string) bool {
-
 	// if regions array is not valid return false
 	err := verifyRegions(regions)
 	if err != nil {
@@ -380,19 +390,11 @@ func isAllRegions(regions []string) bool {
 		wildcardAllRegions = true
 	}
 	return wildcardAllRegions
-
 }
 
 func getAccountId(ctx context.Context, awsCfg aws.Config) (*sts.GetCallerIdentityOutput, error) {
 	svc := sts.NewFromConfig(awsCfg)
-	return svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{}, func(o *sts.Options) {
-		o.Region = "aws-global"
-	})
-
-}
-
-type AssumeRoleAPIClient interface {
-	AssumeRole(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error)
+	return svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{})
 }
 
 func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Config, account Account, stsClient AssumeRoleAPIClient) (aws.Config, error) {
@@ -442,7 +444,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	// Test out retrieving credentials
 	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
 		logger.Error("error retrieving credentials", "err", err)
-		return awsCfg, fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables())
+		return awsCfg, classifyError(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()), diag.INTERNAL, nil, diag.WithSeverity(diag.ERROR))
 	}
 
 	return awsCfg, err
@@ -515,15 +517,19 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				}
 			})
 		if err != nil {
-			return nil, diags.Add(classifyError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.INTERNAL, nil))
+			return nil, diags.Add(classifyError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.INTERNAL, nil, diag.WithSeverity(diag.ERROR)))
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
 			return nil, diags.Add(diag.FromError(fmt.Errorf("no enabled regions provided in config for account %s", account.AccountName), diag.USER))
 		}
-
+		awsCfg.Region = account.Regions[0]
 		output, err := getAccountId(ctx, awsCfg)
+		if err != nil {
+			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
+		}
+		iamArn, err := arn.Parse(*output.Arn)
 		if err != nil {
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
@@ -531,6 +537,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			// set default
 			client.AccountID = *output.Account
 			client.Region = account.Regions[0]
+			client.Partition = iamArn.Partition
 			client.Accounts = append(client.Accounts, Account{ID: *output.Account, RoleARN: *output.Arn})
 		}
 		for _, region := range account.Regions {
@@ -633,10 +640,6 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 		}
 	}
 	return filteredRegions
-}
-
-type AwsLogger struct {
-	l hclog.Logger
 }
 
 func (a AwsLogger) Logf(classification logging.Classification, format string, v ...interface{}) {

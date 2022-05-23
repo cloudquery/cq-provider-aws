@@ -3,14 +3,13 @@ package client
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
-	"github.com/golang/mock/gomock"
-	"github.com/hashicorp/go-hclog"
-
 	"github.com/cloudquery/cq-provider-sdk/logging"
 	"github.com/cloudquery/cq-provider-sdk/provider"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
+	"github.com/golang/mock/gomock"
+	"github.com/hashicorp/go-hclog"
 )
 
 type TestOptions struct{}
@@ -42,6 +41,7 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 					Level: hclog.Warn,
 				}), accounts)
 				c.ServicesManager.InitServicesForAccountAndRegion("testAccount", "us-east-1", builder(t, ctrl))
+				c.Partition = "aws"
 				return &c, nil
 			},
 			ResourceMap: map[string]*schema.Table{

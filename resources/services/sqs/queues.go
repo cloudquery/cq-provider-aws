@@ -12,6 +12,34 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+type sqsQueue struct {
+	URL                                   string
+	Policy                                *string
+	VisibilityTimeout                     *int32
+	MaximumMessageSize                    *int32
+	MessageRetentionPeriod                *int32
+	ApproximateNumberOfMessages           *int32
+	ApproximateNumberOfMessagesNotVisible *int32
+	CreatedTimestamp                      *int32
+	LastModifiedTimestamp                 *int32
+	QueueArn                              *string
+	ApproximateNumberOfMessagesDelayed    *int32
+	DelaySeconds                          *int32
+	ReceiveMessageWaitTimeSeconds         *int32
+	RedrivePolicy                         *string
+	FifoQueue                             *bool
+	ContentBasedDeduplication             *bool
+	KmsMasterKeyId                        *string
+	KmsDataKeyReusePeriodSeconds          *int32
+	DeduplicationScope                    *string
+	FifoThroughputLimit                   *string
+	RedriveAllowPolicy                    *string
+
+	UnknownFields map[string]interface{} `mapstructure:",remain"`
+
+	Tags map[string]string
+}
+
 func SQSQueues() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_sqs_queues",
@@ -167,39 +195,11 @@ func SQSQueues() *schema.Table {
 	}
 }
 
-type sqsQueue struct {
-	URL                                   string
-	Policy                                *string
-	VisibilityTimeout                     *int32
-	MaximumMessageSize                    *int32
-	MessageRetentionPeriod                *int32
-	ApproximateNumberOfMessages           *int32
-	ApproximateNumberOfMessagesNotVisible *int32
-	CreatedTimestamp                      *int32
-	LastModifiedTimestamp                 *int32
-	QueueArn                              *string
-	ApproximateNumberOfMessagesDelayed    *int32
-	DelaySeconds                          *int32
-	ReceiveMessageWaitTimeSeconds         *int32
-	RedrivePolicy                         *string
-	FifoQueue                             *bool
-	ContentBasedDeduplication             *bool
-	KmsMasterKeyId                        *string
-	KmsDataKeyReusePeriodSeconds          *int32
-	DeduplicationScope                    *string
-	FifoThroughputLimit                   *string
-	RedriveAllowPolicy                    *string
-
-	UnknownFields map[string]interface{} `mapstructure:",remain"`
-
-	Tags map[string]string
-}
-
 func fetchSQSQueues(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	client := meta.(*client.Client)
-	sqsClient := client.Services().SQS
+	cl := meta.(*client.Client)
+	sqsClient := cl.Services().SQS
 	optsFn := func(o *sqs.Options) {
-		o.Region = client.Region
+		o.Region = cl.Region
 	}
 	var params sqs.ListQueuesInput
 	for {
@@ -210,11 +210,17 @@ func fetchSQSQueues(ctx context.Context, meta schema.ClientMeta, parent *schema.
 
 		for _, url := range result.QueueUrls {
 			input := sqs.GetQueueAttributesInput{
+				// Using the pointer of url is OK in this case (we don't store the value)
+				// See https://stackoverflow.com/questions/48826460/using-pointers-in-a-for-loop for pitfalls
+				// nolint:revive
 				QueueUrl:       &url,
 				AttributeNames: []types.QueueAttributeName{types.QueueAttributeNameAll},
 			}
 			out, err := sqsClient.GetQueueAttributes(ctx, &input, optsFn)
 			if err != nil {
+				if cl.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 
