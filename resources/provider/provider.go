@@ -3,10 +3,6 @@ package provider
 import (
 	"embed"
 
-	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/module"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/resources/services/accessanalyzer"
 	"github.com/cloudquery/cq-provider-aws/resources/services/acm"
@@ -63,12 +59,12 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
+	"github.com/cloudquery/cq-provider-sdk/provider"
+	"github.com/cloudquery/cq-provider-sdk/provider/module"
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 var (
-	//go:embed migrations/*/*.sql
-	awsMigrations embed.FS
-
 	//go:embed moduledata/*
 	moduleData embed.FS
 
@@ -81,7 +77,6 @@ func Provider() *provider.Provider {
 		Version:          Version,
 		Configure:        client.Configure,
 		ErrorClassifier:  client.ErrorClassifier,
-		Migrations:       awsMigrations,
 		ModuleInfoReader: module.EmbeddedReader(moduleData, "moduledata"),
 		ResourceMap: map[string]*schema.Table{
 			"accessanalyzer.analyzers":              accessanalyzer.Analyzers(),
