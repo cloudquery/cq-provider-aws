@@ -9,9 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.12.0](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.0-rc2...v0.12.0) (2022-05-24)
 
 
-### Miscellaneous Chores
+### ⚠ BREAKING CHANGES
 
-* Release 0.12.0 ([#946](https://github.com/cloudquery/cq-provider-aws/issues/946)) ([68f20b1](https://github.com/cloudquery/cq-provider-aws/commit/68f20b1a47a3d559dfaca7d2462e6a7e312b8e67))
+* Remove migrations (#933)
+
+### Features
+
+* Remove migrations ([#933](https://github.com/cloudquery/cq-provider-aws/issues/933)) ([37620e3](https://github.com/cloudquery/cq-provider-aws/commit/37620e330ba187c4da2ff02382423b92be91e318))
+
 
 ## [0.12.0-rc2](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.0-rc1...v0.12.0-rc2) (2022-05-24)
 
