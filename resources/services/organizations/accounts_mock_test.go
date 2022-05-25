@@ -29,7 +29,7 @@ func buildOrganizationsAccounts(t *testing.T, ctrl *gomock.Controller) client.Se
 		t.Fatal(err)
 	}
 
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any()).Return(
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&organizations.ListTagsForResourceOutput{
 			Tags: tt,
 		}, nil)
