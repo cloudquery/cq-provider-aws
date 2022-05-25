@@ -1,10 +1,10 @@
 
-# Table: aws_iam_groups_access_advisor_entities
+# Table: aws_iam_access_advisor_detail_entities
 An object that contains details about when the IAM entities (users or roles) were last used in an attempt to access the specified AWS service
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|groups_access_advisor_cq_id|uuid|Unique CloudQuery ID of aws_iam_groups_access_advisor table (FK)|
+|access_advisor_detail_cq_id|uuid|Unique CloudQuery ID of aws_iam_access_advisor_details table (FK)|
 |arn|text|The Amazon Resource Name (ARN)|
 |id|text|The identifier of the entity (user or role)|
 |name|text|The name of the entity (user or role)|

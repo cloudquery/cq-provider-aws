@@ -14,10 +14,11 @@ import (
 func GroupsAccessAdvisorDetails() *schema.Table {
 	return &schema.Table{
 		Name:          "aws_iam_access_advisor_details",
+		Description:   "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)",
 		Resolver:      fetchIamGroupsAccessAdvisorDetails,
 		Multiplex:     client.AccountMultiplex,
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		DeleteFilter:  AccessAdvisorFilter("group"),
 		IgnoreInTests: true,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
 		Columns: []schema.Column{
@@ -28,8 +29,9 @@ func GroupsAccessAdvisorDetails() *schema.Table {
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
-				Name: "parent_type",
-				Type: schema.TypeString,
+				Name:        "parent_type",
+				Description: "Type of parent IAM resource",
+				Type:        schema.TypeString,
 			},
 			{
 				Name:        "service_name",
@@ -70,13 +72,13 @@ func GroupsAccessAdvisorDetails() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_iam_groups_access_advisor_detail_tracked_actions_last_accessed",
+				Name:        "aws_iam_access_advisor_detail_tracked_actions_last_accessed",
 				Description: "Contains details about the most recent attempt to access an action within the service",
 				Resolver:    fetchIamAccessAdvisorTrackedActionsLastAccesseds,
 				Columns: []schema.Column{
 					{
-						Name:        "groups_access_advisor_detail_cq_id",
-						Description: "Unique CloudQuery ID of aws_iam_groups_access_advisor_details table (FK)",
+						Name:        "access_advisor_detail_cq_id",
+						Description: "Unique CloudQuery ID of aws_iam_access_advisor_details table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -103,13 +105,13 @@ func GroupsAccessAdvisorDetails() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_iam_groups_access_advisor_detail_entities",
+				Name:        "aws_iam_access_advisor_detail_entities",
 				Description: "An object that contains details about when the IAM entities (users or roles) were last used in an attempt to access the specified AWS service",
 				Resolver:    fetchIamAccessAdvisorEntities,
 				Columns: []schema.Column{
 					{
-						Name:        "groups_access_advisor_detail_cq_id",
-						Description: "Unique CloudQuery ID of aws_iam_groups_access_advisor_details table (FK)",
+						Name:        "access_advisor_detail_cq_id",
+						Description: "Unique CloudQuery ID of aws_iam_access_advisor_details table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},

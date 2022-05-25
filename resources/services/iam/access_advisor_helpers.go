@@ -26,6 +26,7 @@ const (
 )
 
 type AccessAdvisorDetails struct {
+	// Type of parent IAM resource
 	ParentType AccessAdvisorParentType
 	types.ServiceLastAccessed
 	Entities []types.EntityDetails
@@ -122,4 +123,11 @@ func fetchIamAccessAdvisorEntities(ctx context.Context, meta schema.ClientMeta, 
 	details := parent.Item.(AccessAdvisorDetails)
 	res <- details.Entities
 	return nil
+}
+
+func AccessAdvisorFilter(parentType AccessAdvisorParentType) func(meta schema.ClientMeta, parent *schema.Resource) []interface{} {
+	return func(meta schema.ClientMeta, parent *schema.Resource) []interface{} {
+		client := meta.(*client.Client)
+		return []interface{}{"account_id", client.AccountID, "parent_type", parentType}
+	}
 }

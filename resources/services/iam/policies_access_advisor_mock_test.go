@@ -60,5 +60,5 @@ func buildPoliciesAccessAdvisorDetails(t *testing.T, ctrl *gomock.Controller) cl
 }
 
 func TestPoliciesAccessAdvisorDetails(t *testing.T) {
-	client.AwsMockTestHelper(t, PoliciesAccessAdvisorDetails(), buildPoliciesAccessAdvisorDetails, client.TestOptions{})
+	client.AwsMockTestHelper(t, PoliciesAccessAdvisorDetails(), buildPoliciesAccessAdvisorDetails, client.TestOptions{NotParallel: true})
 }

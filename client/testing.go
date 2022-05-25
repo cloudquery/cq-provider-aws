@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/go-hclog"
 )
 
-type TestOptions struct{}
+type TestOptions struct {
+	NotParallel bool
+}
 
-func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, _ TestOptions) {
+func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, options TestOptions) {
 	table.IgnoreInTests = false
 	t.Helper()
 	ctrl := gomock.NewController(t)
@@ -53,5 +55,6 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 		},
 		Config:           cfg,
 		SkipIgnoreInTest: true,
+		NotParallel:      options.NotParallel,
 	})
 }

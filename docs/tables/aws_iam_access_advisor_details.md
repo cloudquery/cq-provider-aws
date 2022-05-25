@@ -1,10 +1,11 @@
 
-# Table: aws_iam_groups_access_advisor
-
+# Table: aws_iam_access_advisor_details
+IAM Access Advisor details of the IAM resources (users, groups, roles, policies)
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
+|parent_type|text|Type of parent IAM resource|
 |service_name|text|The name of the service in which access was attempted|
 |service_namespace|text|The namespace of the service in which access was attempted|
 |last_authenticated|timestamp without time zone|The date and time, in ISO 8601 date-time format (http://wwwisoorg/iso/iso8601), when an authenticated entity most recently attempted to access the service|

@@ -10,15 +10,15 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource policies_access_advisor_details --config gen.hcl --output .
-func PoliciesAccessAdvisorDetails() *schema.Table {
+//go:generate cq-gen --resource roles_access_advisor_details --config gen.hcl --output .
+func RolesAccessAdvisorDetails() *schema.Table {
 	return &schema.Table{
 		Name:          "aws_iam_access_advisor_details",
 		Description:   "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)",
-		Resolver:      fetchIamPoliciesAccessAdvisorDetails,
+		Resolver:      fetchIamRolesAccessAdvisorDetails,
 		Multiplex:     client.AccountMultiplex,
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  AccessAdvisorFilter(POLICY),
+		DeleteFilter:  AccessAdvisorFilter(ROLE),
 		IgnoreInTests: true,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "service_namespace"}},
 		Columns: []schema.Column{
@@ -160,16 +160,16 @@ func PoliciesAccessAdvisorDetails() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIamPoliciesAccessAdvisorDetails(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	var config iam.GetAccountAuthorizationDetailsInput
+func fetchIamRolesAccessAdvisorDetails(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var config iam.ListRolesInput
 	svc := meta.(*client.Client).Services().IAM
 	for {
-		response, err := svc.GetAccountAuthorizationDetails(ctx, &config)
+		response, err := svc.ListRoles(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		for _, g := range response.Policies {
-			err := fetchIamAccessDetails(ctx, res, svc, *g.Arn, POLICY)
+		for _, g := range response.Roles {
+			err := fetchIamAccessDetails(ctx, res, svc, *g.Arn, ROLE)
 			if err != nil {
 				return diag.WrapError(err)
 			}

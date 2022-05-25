@@ -9,6 +9,7 @@ description_modifier "remove_read_only" {
 
 resource "aws" "iam" "groups_access_advisor_details" {
   path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+  description = "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)"
 
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -17,7 +18,8 @@ resource "aws" "iam" "groups_access_advisor_details" {
     path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
   }
   deleteFilter "AccountFilter" {
-    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+    path   = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorFilter"
+    params = ["group"]
   }
   userDefinedColumn "account_id" {
     type        = "string"
@@ -55,6 +57,7 @@ resource "aws" "iam" "groups_access_advisor_details" {
 
 resource "aws" "iam" "users_access_advisor_details" {
   path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+  description = "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)"
 
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -63,7 +66,8 @@ resource "aws" "iam" "users_access_advisor_details" {
     path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
   }
   deleteFilter "AccountFilter" {
-    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+    path   = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorFilter"
+    params = ["user"]
   }
   userDefinedColumn "account_id" {
     type        = "string"
@@ -101,6 +105,7 @@ resource "aws" "iam" "users_access_advisor_details" {
 
 resource "aws" "iam" "roles_access_advisor_details" {
   path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+  description = "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)"
 
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -109,7 +114,8 @@ resource "aws" "iam" "roles_access_advisor_details" {
     path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
   }
   deleteFilter "AccountFilter" {
-    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+    path   = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorFilter"
+    params = ["role"]
   }
   userDefinedColumn "account_id" {
     type        = "string"
@@ -147,6 +153,7 @@ resource "aws" "iam" "roles_access_advisor_details" {
 
 resource "aws" "iam" "policies_access_advisor_details" {
   path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+  description = "IAM Access Advisor details of the IAM resources (users, groups, roles, policies)"
 
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -155,7 +162,8 @@ resource "aws" "iam" "policies_access_advisor_details" {
     path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
   }
   deleteFilter "AccountFilter" {
-    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+    path   = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorFilter"
+    params = ["policy"]
   }
   userDefinedColumn "account_id" {
     type        = "string"

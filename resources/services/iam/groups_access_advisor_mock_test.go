@@ -55,5 +55,5 @@ func buildIamGroupsAccessAdvisors(t *testing.T, ctrl *gomock.Controller) client.
 }
 
 func TestIamGroupsAccessAdvisors(t *testing.T) {
-	client.AwsMockTestHelper(t, GroupsAccessAdvisorDetails(), buildIamGroupsAccessAdvisors, client.TestOptions{})
+	client.AwsMockTestHelper(t, GroupsAccessAdvisorDetails(), buildIamGroupsAccessAdvisors, client.TestOptions{NotParallel: true})
 }
