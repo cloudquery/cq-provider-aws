@@ -12,17 +12,17 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func buildIamGroupsAccessAdvisors(t *testing.T, ctrl *gomock.Controller) client.Services {
+func buildRolesAccessAdvisorDetails(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockIamClient(ctrl)
-	g := iamTypes.Group{}
-	err := faker.FakeData(&g)
+	r := iamTypes.Role{}
+	err := faker.FakeData(&r)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	m.EXPECT().ListGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&iam.ListGroupsOutput{
-			Groups: []iamTypes.Group{g},
+	m.EXPECT().ListRoles(gomock.Any(), gomock.Any()).Return(
+		&iam.ListRolesOutput{
+			Roles: []iamTypes.Role{r},
 		}, nil)
 	gad := iam.GenerateServiceLastAccessedDetailsOutput{}
 	err = faker.FakeData(&gad)
@@ -54,6 +54,6 @@ func buildIamGroupsAccessAdvisors(t *testing.T, ctrl *gomock.Controller) client.
 	}
 }
 
-func TestIamGroupsAccessAdvisors(t *testing.T) {
-	client.AwsMockTestHelper(t, GroupsAccessAdvisorDetails(), buildIamGroupsAccessAdvisors, client.TestOptions{})
+func TestRolesAccessAdvisorDetails(t *testing.T) {
+	client.AwsMockTestHelper(t, RolesAccessAdvisorDetails(), buildRolesAccessAdvisorDetails, client.TestOptions{})
 }

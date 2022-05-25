@@ -12,17 +12,22 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func buildIamGroupsAccessAdvisors(t *testing.T, ctrl *gomock.Controller) client.Services {
+func buildPoliciesAccessAdvisorDetails(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockIamClient(ctrl)
-	g := iamTypes.Group{}
+	g := iamTypes.ManagedPolicyDetail{}
 	err := faker.FakeData(&g)
 	if err != nil {
 		t.Fatal(err)
 	}
+	document := `{"stuff": 3}`
+	// generate valid json
+	for i := range g.PolicyVersionList {
+		g.PolicyVersionList[i].Document = &document
+	}
 
-	m.EXPECT().ListGroups(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&iam.ListGroupsOutput{
-			Groups: []iamTypes.Group{g},
+	m.EXPECT().GetAccountAuthorizationDetails(gomock.Any(), gomock.Any()).Return(
+		&iam.GetAccountAuthorizationDetailsOutput{
+			Policies: []iamTypes.ManagedPolicyDetail{g},
 		}, nil)
 	gad := iam.GenerateServiceLastAccessedDetailsOutput{}
 	err = faker.FakeData(&gad)
@@ -54,6 +59,6 @@ func buildIamGroupsAccessAdvisors(t *testing.T, ctrl *gomock.Controller) client.
 	}
 }
 
-func TestIamGroupsAccessAdvisors(t *testing.T) {
-	client.AwsMockTestHelper(t, GroupsAccessAdvisorDetails(), buildIamGroupsAccessAdvisors, client.TestOptions{})
+func TestPoliciesAccessAdvisorDetails(t *testing.T) {
+	client.AwsMockTestHelper(t, PoliciesAccessAdvisorDetails(), buildPoliciesAccessAdvisorDetails, client.TestOptions{})
 }

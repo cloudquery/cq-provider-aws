@@ -7,7 +7,7 @@ description_modifier "remove_read_only" {
 }
 
 
-resource "aws" "iam" "groups_access_advisor" {
+resource "aws" "iam" "groups_access_advisor_details" {
   path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
 
   ignoreError "IgnoreAccessDenied" {
@@ -34,7 +34,145 @@ resource "aws" "iam" "groups_access_advisor" {
     skip_prefix = true
   }
 
-  relation "aws" "iam"  "tracked_actions_last_accessed"{
+  relation "aws" "iam" "tracked_actions_last_accessed" {
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorTrackedActionsLastAccesseds"
+    }
+  }
+
+  relation "aws" "iam" "entities" {
+    path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorEntities"
+    }
+
+    column "entity_info" {
+      skip_prefix = true
+    }
+  }
+}
+
+
+resource "aws" "iam" "users_access_advisor_details" {
+  path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccount" {
+    path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
+  }
+  deleteFilter "AccountFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  options {
+    primary_keys = ["account_id", "service_namespace"]
+  }
+
+  column "service_last_accessed" {
+    skip_prefix = true
+  }
+
+  relation "aws" "iam" "tracked_actions_last_accessed" {
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorTrackedActionsLastAccesseds"
+    }
+  }
+
+  relation "aws" "iam" "entities" {
+    path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorEntities"
+    }
+
+    column "entity_info" {
+      skip_prefix = true
+    }
+  }
+}
+
+
+resource "aws" "iam" "roles_access_advisor_details" {
+  path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccount" {
+    path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
+  }
+  deleteFilter "AccountFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  options {
+    primary_keys = ["account_id", "service_namespace"]
+  }
+
+  column "service_last_accessed" {
+    skip_prefix = true
+  }
+
+  relation "aws" "iam" "tracked_actions_last_accessed" {
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorTrackedActionsLastAccesseds"
+    }
+  }
+
+  relation "aws" "iam" "entities" {
+    path = "github.com/aws/aws-sdk-go-v2/service/iam/types.EntityDetails"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorEntities"
+    }
+
+    column "entity_info" {
+      skip_prefix = true
+    }
+  }
+}
+
+
+resource "aws" "iam" "policies_access_advisor_details" {
+  path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.AccessAdvisorDetails"
+
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccount" {
+    path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
+  }
+  deleteFilter "AccountFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  options {
+    primary_keys = ["account_id", "service_namespace"]
+  }
+
+  column "service_last_accessed" {
+    skip_prefix = true
+  }
+
+  relation "aws" "iam" "tracked_actions_last_accessed" {
     resolver "resolveAWSAccount" {
       path = "github.com/cloudquery/cq-provider-aws/resources/services/iam.fetchIamAccessAdvisorTrackedActionsLastAccesseds"
     }

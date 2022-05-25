@@ -16,17 +16,28 @@ import (
 
 const MAX_GOROUTINES = 10
 
+type AccessAdvisorParentType string
+
+const (
+	GROUP  AccessAdvisorParentType = "group"
+	USER   AccessAdvisorParentType = "user"
+	ROLE   AccessAdvisorParentType = "role"
+	POLICY AccessAdvisorParentType = "policy"
+)
+
 type AccessAdvisorDetails struct {
+	ParentType AccessAdvisorParentType
 	types.ServiceLastAccessed
 	Entities []types.EntityDetails
 }
 
-func fetchDetailEntities(ctx context.Context, res chan<- interface{}, svc client.IamClient, sla types.ServiceLastAccessed, jobId string) error {
+func fetchDetailEntities(ctx context.Context, res chan<- interface{}, svc client.IamClient, sla types.ServiceLastAccessed, jobId string, parentType AccessAdvisorParentType) error {
 	config := iam.GetServiceLastAccessedDetailsWithEntitiesInput{
 		JobId:            &jobId,
 		ServiceNamespace: sla.ServiceNamespace,
 	}
 	details := AccessAdvisorDetails{
+		ParentType:          parentType,
 		ServiceLastAccessed: sla,
 	}
 	for {
@@ -46,7 +57,7 @@ func fetchDetailEntities(ctx context.Context, res chan<- interface{}, svc client
 	return nil
 }
 
-func fetchIamAccessDetails(ctx context.Context, res chan<- interface{}, svc client.IamClient, arn string) error {
+func fetchIamAccessDetails(ctx context.Context, res chan<- interface{}, svc client.IamClient, arn string, parentType AccessAdvisorParentType) error {
 	config := iam.GenerateServiceLastAccessedDetailsInput{
 		Arn:         &arn,
 		Granularity: types.AccessAdvisorUsageGranularityTypeActionLevel,
@@ -82,7 +93,7 @@ func fetchIamAccessDetails(ctx context.Context, res chan<- interface{}, svc clie
 					func(sla types.ServiceLastAccessed, jobId string) {
 						errs.Go(func() error {
 							defer sem.Release(1)
-							return fetchDetailEntities(ctx, res, svc, sla, jobId)
+							return fetchDetailEntities(ctx, res, svc, sla, jobId, parentType)
 						})
 					}(s, *output.JobId)
 				}

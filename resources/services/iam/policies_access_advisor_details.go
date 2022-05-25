@@ -10,11 +10,11 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource groups_access_advisor --config gen.hcl --output .
-func GroupsAccessAdvisors() *schema.Table {
+//go:generate cq-gen --resource policies_access_advisor_details --config gen.hcl --output .
+func PoliciesAccessAdvisorDetails() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_groups_access_advisor",
-		Resolver:      fetchIamGroupsAccessAdvisors,
+		Name:          "aws_iam_access_advisor_details",
+		Resolver:      fetchIamPoliciesAccessAdvisorDetails,
 		Multiplex:     client.AccountMultiplex,
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:  client.DeleteAccountFilter,
@@ -26,6 +26,10 @@ func GroupsAccessAdvisors() *schema.Table {
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
+			},
+			{
+				Name: "parent_type",
+				Type: schema.TypeString,
 			},
 			{
 				Name:        "service_name",
@@ -66,13 +70,13 @@ func GroupsAccessAdvisors() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_iam_groups_access_advisor_tracked_actions_last_accessed",
+				Name:        "aws_iam_policies_access_advisor_detail_tracked_actions_last_accessed",
 				Description: "Contains details about the most recent attempt to access an action within the service",
 				Resolver:    fetchIamAccessAdvisorTrackedActionsLastAccesseds,
 				Columns: []schema.Column{
 					{
-						Name:        "groups_access_advisor_cq_id",
-						Description: "Unique CloudQuery ID of aws_iam_groups_access_advisor table (FK)",
+						Name:        "policies_access_advisor_detail_cq_id",
+						Description: "Unique CloudQuery ID of aws_iam_policies_access_advisor_details table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -99,13 +103,13 @@ func GroupsAccessAdvisors() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_iam_groups_access_advisor_entities",
+				Name:        "aws_iam_policies_access_advisor_detail_entities",
 				Description: "An object that contains details about when the IAM entities (users or roles) were last used in an attempt to access the specified AWS service",
 				Resolver:    fetchIamAccessAdvisorEntities,
 				Columns: []schema.Column{
 					{
-						Name:        "groups_access_advisor_cq_id",
-						Description: "Unique CloudQuery ID of aws_iam_groups_access_advisor table (FK)",
+						Name:        "policies_access_advisor_detail_cq_id",
+						Description: "Unique CloudQuery ID of aws_iam_policies_access_advisor_details table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -154,16 +158,16 @@ func GroupsAccessAdvisors() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchIamGroupsAccessAdvisors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	var config iam.ListGroupsInput
+func fetchIamPoliciesAccessAdvisorDetails(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var config iam.GetAccountAuthorizationDetailsInput
 	svc := meta.(*client.Client).Services().IAM
 	for {
-		response, err := svc.ListGroups(ctx, &config)
+		response, err := svc.GetAccountAuthorizationDetails(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		for _, g := range response.Groups {
-			err := fetchIamAccessDetails(ctx, res, svc, *g.Arn)
+		for _, g := range response.Policies {
+			err := fetchIamAccessDetails(ctx, res, svc, *g.Arn, POLICY)
 			if err != nil {
 				return diag.WrapError(err)
 			}
