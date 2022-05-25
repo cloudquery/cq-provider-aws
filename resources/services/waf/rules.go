@@ -58,7 +58,6 @@ func WafRules() *schema.Table {
 				Name:        "aws_waf_rule_predicates",
 				Description: "This is AWS WAF Classic documentation",
 				Resolver:    fetchWafRulePredicates,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"rule_cq_id", "data_id"}},
 				Columns: []schema.Column{
 					{
 						Name:        "rule_cq_id",

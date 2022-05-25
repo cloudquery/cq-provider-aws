@@ -306,7 +306,6 @@ func Wafv2WebAcls() *schema.Table {
 				Name:        "aws_wafv2_web_acl_logging_configuration",
 				Description: "The LoggingConfiguration for the specified web ACL.",
 				Resolver:    fetchWafv2WebACLLoggingConfiguration,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"web_acl_cq_id", "resource_arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
