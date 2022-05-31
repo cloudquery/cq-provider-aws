@@ -384,14 +384,19 @@ func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *sche
 				var exc *types.WAFNonexistentItemException
 				if errors.As(err, &exc) {
 					if exc.ErrorCode() != "WAFNonexistentItemException" {
-						return err
+						return diag.WrapError(err)
 					}
 				}
 			}
 
+			var webAclLoggingConfiguration *types.LoggingConfiguration
+			if loggingConfigurationOutput != nil {
+				webAclLoggingConfiguration = loggingConfigurationOutput.LoggingConfiguration
+			}
+
 			res <- &WebACLWrapper{
 				webAclOutput.WebACL,
-				loggingConfigurationOutput.LoggingConfiguration,
+				webAclLoggingConfiguration,
 			}
 		}
 
@@ -585,6 +590,9 @@ func fetchWafv2WebACLLoggingConfiguration(ctx context.Context, meta schema.Clien
 }
 func resolveWafv2WebACLLoggingConfigurationRedactedFields(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	conf := resource.Item.(*types.LoggingConfiguration)
+	if conf == nil {
+		return nil
+	}
 	out, err := json.Marshal(conf.RedactedFields)
 	if err != nil {
 		return diag.WrapError(err)
@@ -593,6 +601,9 @@ func resolveWafv2WebACLLoggingConfigurationRedactedFields(ctx context.Context, m
 }
 func resolveWafv2WebACLLoggingConfigurationLoggingFilter(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	conf := resource.Item.(*types.LoggingConfiguration)
+	if conf == nil {
+		return nil
+	}
 	out, err := json.Marshal(conf.LoggingFilter)
 	if err != nil {
 		return diag.WrapError(err)
@@ -601,5 +612,8 @@ func resolveWafv2WebACLLoggingConfigurationLoggingFilter(ctx context.Context, me
 }
 func resolveWafV2WebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule := resource.Item.(*WebACLWrapper)
+	if rule.LoggingConfiguration == nil {
+		return nil
+	}
 	return resource.Set(c.Name, rule.LoggingConfiguration.LogDestinationConfigs)
 }
