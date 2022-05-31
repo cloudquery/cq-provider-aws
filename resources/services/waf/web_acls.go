@@ -3,6 +3,7 @@ package waf
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
@@ -259,7 +260,6 @@ func resolveWafWebACLLoggingConfigurationRedactedFields(ctx context.Context, met
 		return resource.Set(c.Name, out)
 	}
 	return nil
-
 }
 
 func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
