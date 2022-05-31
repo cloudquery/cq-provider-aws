@@ -60,13 +60,13 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
-		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure", "ExpiredToken":
+		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure":
 			return diag.Diagnostics{
 				RedactError(accounts, diag.NewBaseError(err,
 					diag.ACCESS,
 					append(opts,
 						diag.WithType(diag.ACCESS),
-						diag.WithOptionalSeverity(diag.WARNING),
+						diag.WithSeverity(diag.WARNING),
 						ParseSummaryMessage(err),
 						diag.WithDetails(errorCodeDescriptions[ae.ErrorCode()]),
 					)...),
@@ -79,7 +79,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 						diag.ACCESS,
 						append(opts,
 							diag.WithType(diag.ACCESS),
-							diag.WithOptionalSeverity(diag.WARNING),
+							diag.WithSeverity(diag.WARNING),
 							ParseSummaryMessage(err),
 							diag.WithDetails("Something is wrong with your credentials. Either the accessKeyId or secretAccessKey (or both) are wrong."),
 						)...),
@@ -106,7 +106,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 					diag.RESOLVING,
 					append(opts,
 						diag.WithType(diag.RESOLVING),
-						diag.WithOptionalSeverity(diag.IGNORE),
+						diag.WithSeverity(diag.IGNORE),
 						ParseSummaryMessage(err),
 						diag.WithDetails("The action is invalid for the service."),
 					)...),
@@ -133,7 +133,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 				diag.THROTTLE,
 				append(opts,
 					diag.WithType(diag.THROTTLE),
-					diag.WithOptionalSeverity(diag.WARNING),
+					diag.WithSeverity(diag.WARNING),
 					ParseSummaryMessage(err),
 					diag.WithDetails("CloudQuery AWS provider has been throttled. This is unexpected - you can open an issue on github (https://github.com/cloudquery/cq-provider-aws/issues) or contact us on discord (https://cloudquery.io/discord)"),
 				)...),
