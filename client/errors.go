@@ -60,7 +60,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
-		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure":
+		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure", "ExpiredToken":
 			return diag.Diagnostics{
 				RedactError(accounts, diag.NewBaseError(err,
 					diag.ACCESS,
