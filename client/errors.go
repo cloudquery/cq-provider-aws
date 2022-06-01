@@ -93,7 +93,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 						diag.ACCESS,
 						append(opts,
 							diag.WithType(diag.ACCESS),
-							diag.WithOptionalSeverity(diag.WARNING),
+							diag.WithSeverity(diag.WARNING),
 							ParseSummaryMessage(err),
 							diag.WithDetails("Something is wrong with your credentials. Ensure you have access to the specified resource."),
 						)...),
