@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS aws_resources;
+
 do $$
 declare
   tbl text;
