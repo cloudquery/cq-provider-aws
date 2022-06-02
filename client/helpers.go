@@ -64,7 +64,7 @@ var (
 )
 
 var notFoundErrorPrefixes = []string{
-	"ResourceNotFoundException",
+	"NotFoundException",
 	"WAFNonexistentItemException",
 	"NoSuch",
 	"NotFound",
