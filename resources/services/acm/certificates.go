@@ -3,7 +3,6 @@ package acm
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/acm"
@@ -236,10 +235,7 @@ func fetchAcmCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 }
 
 func resolveACMCertificateKeyUsages(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	cert, ok := resource.Item.(*types.CertificateDetail)
-	if !ok {
-		return fmt.Errorf("not a %T instance: %T", c, resource.Item)
-	}
+	cert := resource.Item.(*types.CertificateDetail)
 	result := make([]string, 0, len(cert.KeyUsages))
 	for _, v := range cert.KeyUsages {
 		result = append(result, string(v.Name))
@@ -249,10 +245,7 @@ func resolveACMCertificateKeyUsages(ctx context.Context, meta schema.ClientMeta,
 
 func resolveACMCertificateJSONField(getter func(*types.CertificateDetail) interface{}) func(context.Context, schema.ClientMeta, *schema.Resource, schema.Column) error {
 	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-		cert, ok := resource.Item.(*types.CertificateDetail)
-		if !ok {
-			return fmt.Errorf("not a %T instance: %T", c, resource.Item)
-		}
+		cert := resource.Item.(*types.CertificateDetail)
 		b, err := json.Marshal(getter(cert))
 		if err != nil {
 			return diag.WrapError(err)
@@ -262,10 +255,7 @@ func resolveACMCertificateJSONField(getter func(*types.CertificateDetail) interf
 }
 
 func resolveACMCertificateTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	cert, ok := resource.Item.(*types.CertificateDetail)
-	if !ok {
-		return fmt.Errorf("not a %T instance: %T", c, resource.Item)
-	}
+	cert := resource.Item.(*types.CertificateDetail)
 	cl := meta.(*client.Client)
 	svc := cl.Services().ACM
 	out, err := svc.ListTagsForCertificate(ctx, &acm.ListTagsForCertificateInput{CertificateArn: cert.CertificateArn})
