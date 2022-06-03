@@ -412,7 +412,7 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta) ([]interface{},
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListWorkGroupsInput{}
-	workGroups := []interface{}{}
+	workGroups := make([]interface{}, 0)
 	for {
 		response, err := svc.ListWorkGroups(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
@@ -420,7 +420,10 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta) ([]interface{},
 		if err != nil {
 			return nil, diag.WrapError(err)
 		}
-		workGroups = append(workGroups, response.WorkGroups)
+		for _, item := range response.WorkGroups {
+			workGroups = append(workGroups, item)
+		}
+
 		if aws.ToString(response.NextToken) == "" {
 			break
 		}
@@ -559,7 +562,7 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
-	wg := summary.(types.WorkGroup)
+	wg := summary.(types.WorkGroupSummary)
 	dc, err := svc.GetWorkGroup(ctx, &athena.GetWorkGroupInput{
 		WorkGroup: wg.Name,
 	}, func(options *athena.Options) {
