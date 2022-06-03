@@ -36,6 +36,10 @@ type SupportedServiceRegionsData struct {
 	regionVsPartition map[string]string
 }
 
+type ListResolver func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
+
+type DetailResolver func(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error
+
 const (
 	ApigatewayService           AWSService = "apigateway"
 	Athena                      AWSService = "athena"
@@ -387,10 +391,6 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 	TagsIntoMap(tagSlice, ret)
 	return ret
 }
-
-type ListResolver func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
-
-type DetailResolver func(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolver, details DetailResolver) error {
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
