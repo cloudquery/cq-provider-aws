@@ -293,7 +293,7 @@ func isNotFoundError(err error) bool {
 	}
 	errorCode := ae.ErrorCode()
 	for _, s := range notFoundErrorSubstrings {
-		if strings.Contains(errorCode, s) {
+		if strings.Contains(strings.ToLower(errorCode), strings.ToLower(s)) {
 			return true
 		}
 	}
