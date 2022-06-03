@@ -64,11 +64,11 @@ var (
 )
 
 var notFoundErrorPrefixes = []string{
-	"ResourceNotFoundException",
-	"WAFNonexistentItemException",
+	"InvalidRequestException",
 	"NoSuch",
 	"NotFound",
-	"NotFoundError",
+	"ResourceNotFoundException",
+	"WAFNonexistentItemException",
 }
 
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
