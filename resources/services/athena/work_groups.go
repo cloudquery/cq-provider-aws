@@ -9,16 +9,16 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
 //go:generate cq-gen --resource work_groups --config gen.hcl --output .
 func WorkGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_athena_work_groups",
-		Description:  "A workgroup, which contains a name, description, creation time, state, and other configuration, listed under WorkGroup$Configuration",
-		Resolver:     fetchAthenaWorkGroups,
+		Name:        "aws_athena_work_groups",
+		Description: "A workgroup, which contains a name, description, creation time, state, and other configuration, listed under WorkGroup$Configuration",
+		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+			return client.ListAndDetailResolver(ctx, meta, res, listWorkGroups, getWorkGroupDetail)
+		},
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -408,41 +408,27 @@ func WorkGroups() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchAthenaWorkGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func listWorkGroups(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error) {
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListWorkGroupsInput{}
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
+	workGroups := []interface{}{}
 	for {
 		response, err := svc.ListWorkGroups(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return nil, diag.WrapError(err)
 		}
-		errs, ctx := errgroup.WithContext(ctx)
-		for _, d := range response.WorkGroups {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
-			func(summary types.WorkGroupSummary) {
-				errs.Go(func() error {
-					defer sem.Release(1)
-					return fetchWorkGroup(ctx, res, svc, c.Region, summary)
-				})
-			}(d)
-		}
-		err = errs.Wait()
-		if err != nil {
-			return diag.WrapError(err)
-		}
+		workGroups = append(workGroups, response.WorkGroups)
 		if aws.ToString(response.NextToken) == "" {
 			break
 		}
 		input.NextToken = response.NextToken
 	}
-	return nil
+	return workGroups, nil
 }
+
 func ResolveAthenaWorkGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	dc := resource.Item.(types.WorkGroup)
@@ -517,7 +503,6 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 		}
 		for _, d := range response.QueryExecutionIds {
 			dc, err := svc.GetQueryExecution(ctx, &athena.GetQueryExecutionInput{
-
 				QueryExecutionId: aws.String(d),
 			}, func(options *athena.Options) {
 				options.Region = c.Region
@@ -571,11 +556,14 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-func fetchWorkGroup(ctx context.Context, res chan<- interface{}, svc client.AthenaClient, region string, groupSummary types.WorkGroupSummary) error {
+func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Athena
+	wg := summary.(types.WorkGroup)
 	dc, err := svc.GetWorkGroup(ctx, &athena.GetWorkGroupInput{
-		WorkGroup: groupSummary.Name,
+		WorkGroup: wg.Name,
 	}, func(options *athena.Options) {
-		options.Region = region
+		options.Region = c.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)
