@@ -13,7 +13,10 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
 type AWSService string
@@ -50,6 +53,8 @@ const (
 	WAFRegional                 AWSService = "waf-regional"
 	WorkspacesService           AWSService = "workspaces"
 )
+
+const MAX_GOROUTINES = 10
 
 const (
 	PartitionServiceRegionFile = "data/partition_service_region.json"
@@ -381,4 +386,33 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 	ret := make(map[string]string, slc.Len())
 	TagsIntoMap(tagSlice, ret)
 	return ret
+}
+
+type ListResolver func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
+
+type DetailResolver func(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error
+
+func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolver, details DetailResolver) error {
+	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
+	errs, ctx := errgroup.WithContext(ctx)
+	response, err := list(ctx, meta)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	for _, item := range response {
+		if err := sem.Acquire(ctx, 1); err != nil {
+			return diag.WrapError(err)
+		}
+		func(summary interface{}) {
+			errs.Go(func() error {
+				defer sem.Release(1)
+				return details(ctx, meta, res, summary)
+			})
+		}(item)
+	}
+	err = errs.Wait()
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return nil
 }
