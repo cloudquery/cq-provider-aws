@@ -63,7 +63,7 @@ var (
 	supportedServiceRegion     *SupportedServiceRegionsData
 )
 
-var notFoundErrorPrefixes = []string{
+var notFoundErrorSubstrings = []string{
 	"InvalidRequestException",
 	"NoSuch",
 	"NotFound",
@@ -292,7 +292,7 @@ func isNotFoundError(err error) bool {
 		return false
 	}
 	errorCode := ae.ErrorCode()
-	for _, s := range notFoundErrorPrefixes {
+	for _, s := range notFoundErrorSubstrings {
 		if strings.Contains(errorCode, s) {
 			return true
 		}
