@@ -28,7 +28,7 @@ func CloudtrailTrails() *schema.Table {
 		Description:          "The settings for a trail.",
 		Resolver:             fetchCloudtrailTrails,
 		Multiplex:            client.AccountMultiplex,
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:          client.IgnoreCommonErrors,
 		DeleteFilter:         client.DeleteAccountFilter,
 		PostResourceResolver: postCloudtrailTrailResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
@@ -194,7 +194,7 @@ func CloudtrailTrails() *schema.Table {
 				Name:          "aws_cloudtrail_trail_event_selectors",
 				Description:   "Use event selectors to further specify the management and data event settings for your trail",
 				Resolver:      fetchCloudtrailTrailEventSelectors,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

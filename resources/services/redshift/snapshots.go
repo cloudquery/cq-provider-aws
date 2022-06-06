@@ -17,7 +17,7 @@ func Snapshots() *schema.Table {
 		Name:          "aws_redshift_snapshots",
 		Description:   "Describes a snapshot.",
 		Resolver:      fetchRedshiftSnapshots,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{

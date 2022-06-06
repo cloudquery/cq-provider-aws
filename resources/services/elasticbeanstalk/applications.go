@@ -15,7 +15,7 @@ func ElasticbeanstalkApplications() *schema.Table {
 		Description:   "Describes the properties of an application.",
 		Resolver:      fetchElasticbeanstalkApplications,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn", "date_created"}},
 		IgnoreInTests: true,

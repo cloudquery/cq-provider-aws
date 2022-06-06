@@ -19,7 +19,7 @@ func ApigatewayDomainNames() *schema.Table {
 		Description:   "Represents a custom domain name as a user-friendly host name of an API (RestApi).",
 		Resolver:      fetchApigatewayDomainNames,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "domain_name"}},
 		IgnoreInTests: true,

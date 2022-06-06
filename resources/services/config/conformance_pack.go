@@ -23,7 +23,7 @@ func ConfigConformancePack() *schema.Table {
 		Description:   "Returns details of a conformance pack.",
 		Resolver:      fetchConfigConformancePacks,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("config"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
@@ -89,7 +89,7 @@ func ConfigConformancePack() *schema.Table {
 				Description:  "Compliance information of one or more AWS Config rules within a conformance pack",
 				Resolver:     fetchConfigConformancePackRuleCompliances,
 				Multiplex:    client.ServiceAccountRegionMultiplexer("config"),
-				IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:  client.IgnoreCommonErrors,
 				DeleteFilter: client.DeleteAccountRegionFilter,
 				Columns: []schema.Column{
 					{

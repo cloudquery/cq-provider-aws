@@ -27,7 +27,7 @@ func DynamodbTables() *schema.Table {
 		Multiplex:     client.ServiceAccountRegionMultiplexer("dynamodb"),
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{

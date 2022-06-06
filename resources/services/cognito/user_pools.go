@@ -18,7 +18,7 @@ func CognitoUserPools() *schema.Table {
 		Description:   "A container for information about the user pool.",
 		Resolver:      fetchCognitoUserPools,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("cognito-idp"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -516,7 +516,7 @@ func CognitoUserPools() *schema.Table {
 				Name:          "aws_cognito_user_pool_identity_providers",
 				Description:   "A container for information about an identity provider.",
 				Resolver:      fetchCognitoUserPoolIdentityProviders,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

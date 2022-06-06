@@ -24,7 +24,7 @@ func SecretsmanagerSecrets() *schema.Table {
 		Description:   "A structure that contains the details about a secret",
 		Resolver:      fetchSecretsmanagerSecrets,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("secretsmanager"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,

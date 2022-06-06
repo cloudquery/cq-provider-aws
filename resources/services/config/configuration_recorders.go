@@ -28,7 +28,7 @@ func ConfigConfigurationRecorders() *schema.Table {
 		Description:   "An object that represents the recording of configuration changes of an AWS resource.",
 		Resolver:      fetchConfigConfigurationRecorders,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("config"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,

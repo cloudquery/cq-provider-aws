@@ -18,7 +18,7 @@ func RedshiftClusters() *schema.Table {
 		Description:  "Describes a cluster.",
 		Resolver:     fetchRedshiftClusters,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("redshift"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -594,7 +594,7 @@ func RedshiftClusters() *schema.Table {
 						Name:          "aws_redshift_cluster_parameter_group_status_lists",
 						Description:   "Describes the status of a parameter group.",
 						Resolver:      fetchRedshiftClusterParameterGroupStatusLists,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -626,7 +626,7 @@ func RedshiftClusters() *schema.Table {
 				Name:          "aws_redshift_cluster_security_groups",
 				Description:   "Describes a cluster security group.",
 				Resolver:      fetchRedshiftClusterSecurityGroups,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -651,7 +651,7 @@ func RedshiftClusters() *schema.Table {
 				Name:          "aws_redshift_cluster_deferred_maintenance_windows",
 				Description:   "Describes a deferred maintenance window .",
 				Resolver:      fetchRedshiftClusterDeferredMaintenanceWindows,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -681,7 +681,7 @@ func RedshiftClusters() *schema.Table {
 				Name:          "aws_redshift_cluster_endpoint_vpc_endpoints",
 				Description:   "The connection endpoint for connecting to an Amazon Redshift cluster through the proxy.",
 				Resolver:      fetchRedshiftClusterEndpointVpcEndpoints,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -706,7 +706,7 @@ func RedshiftClusters() *schema.Table {
 						Name:          "aws_redshift_cluster_endpoint_vpc_endpoint_network_interfaces",
 						Description:   "Describes a network interface.",
 						Resolver:      fetchRedshiftClusterEndpointVpcEndpointNetworkInterfaces,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -743,7 +743,7 @@ func RedshiftClusters() *schema.Table {
 				Name:          "aws_redshift_cluster_iam_roles",
 				Description:   "An AWS Identity and Access Management (IAM) role that can be used by the associated Amazon Redshift cluster to access other AWS services.",
 				Resolver:      fetchRedshiftClusterIamRoles,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

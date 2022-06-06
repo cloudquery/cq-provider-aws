@@ -16,7 +16,7 @@ func SagemakerEndpointConfigurations() *schema.Table {
 		Description:   "Provides summary information for an endpoint configuration.",
 		Resolver:      fetchSagemakerEndpointConfigurations,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
@@ -72,7 +72,7 @@ func SagemakerEndpointConfigurations() *schema.Table {
 				Description:   "Identifies a model that you want to host and the resources chosen to deploy for hosting it",
 				Resolver:      fetchSagemakerEndpointConfigurationProductionVariants,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "endpoint_configuration_cq_id",

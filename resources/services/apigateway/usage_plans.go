@@ -19,7 +19,7 @@ func ApigatewayUsagePlans() *schema.Table {
 		Description:   "Represents a usage plan than can specify who can assess associated API stages with specified request limits and quotas.",
 		Resolver:      fetchApigatewayUsagePlans,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -106,7 +106,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:          "aws_apigateway_usage_plan_api_stages",
 				Description:   "API stage name of the associated API stage in a usage plan.",
 				Resolver:      fetchApigatewayUsagePlanApiStages,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -142,7 +142,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:          "aws_apigateway_usage_plan_keys",
 				Description:   "Represents a usage plan key to identify a plan customer.",
 				Resolver:      fetchApigatewayUsagePlanKeys,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

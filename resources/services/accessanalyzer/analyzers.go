@@ -20,7 +20,7 @@ func Analyzers() *schema.Table {
 		Description:  "Contains information about the analyzer",
 		Resolver:     fetchAccessAnalyzerAnalyzers,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("access-analyzer"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -169,7 +169,7 @@ func Analyzers() *schema.Table {
 						Description:   "The source of the finding",
 						Resolver:      fetchAccessAnalyzerAnalyzerFindingSources,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "analyzer_finding_cq_id",
@@ -196,7 +196,7 @@ func Analyzers() *schema.Table {
 				Name:          "aws_access_analyzer_analyzer_archive_rules",
 				Description:   "Contains information about an archive rule",
 				Resolver:      fetchAccessAnalyzerAnalyzerArchiveRules,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

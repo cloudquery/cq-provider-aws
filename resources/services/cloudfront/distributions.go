@@ -17,7 +17,7 @@ func CloudfrontDistributions() *schema.Table {
 		Description:  "A summary of the information about a CloudFront distribution.",
 		Resolver:     fetchCloudfrontDistributions,
 		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -376,7 +376,7 @@ func CloudfrontDistributions() *schema.Table {
 				Description:   "A complex type that contains a Lambda function association.",
 				Resolver:      fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -662,7 +662,7 @@ func CloudfrontDistributions() *schema.Table {
 						Description:   "A complex type that contains a Lambda function association.",
 						Resolver:      fetchCloudfrontDistributionCacheBehaviorLambdaFunctions,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "distribution_cache_behavior_cq_id",
@@ -729,7 +729,7 @@ func CloudfrontDistributions() *schema.Table {
 				Name:          "aws_cloudfront_distribution_origin_groups",
 				Description:   "An origin group includes two origins (a primary origin and a second origin to failover to) and a failover criteria that you specify",
 				Resolver:      fetchCloudfrontDistributionOriginGroups,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

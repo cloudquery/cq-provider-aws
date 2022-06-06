@@ -22,7 +22,7 @@ func Route53HealthChecks() *schema.Table {
 		Description:   "A complex type that contains information about one health check that is associated with the current AWS account.",
 		Resolver:      fetchRoute53HealthChecks,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

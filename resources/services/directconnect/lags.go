@@ -16,7 +16,7 @@ func DirectconnectLags() *schema.Table {
 		Description:   "Information about Direct Connect Link Aggregation Group (LAG)",
 		Resolver:      fetchDirectconnectLags,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -137,7 +137,7 @@ func DirectconnectLags() *schema.Table {
 				Name:          "aws_directconnect_lag_mac_sec_keys",
 				Description:   "The MAC Security (MACsec) security keys associated with the LAG.",
 				Resolver:      fetchDirectconnectLagMacSecKeys,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

@@ -23,7 +23,7 @@ func Elbv1LoadBalancers() *schema.Table {
 		Description:   "Information about a load balancer.",
 		Resolver:      fetchElbv1LoadBalancers,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		IgnoreInTests: true,
@@ -211,7 +211,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:          "aws_elbv1_load_balancer_backend_server_descriptions",
 				Description:   "Information about the configuration of an EC2 instance.",
 				Resolver:      fetchElbv1LoadBalancerBackendServerDescriptions,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -242,7 +242,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:          "aws_elbv1_load_balancer_listeners",
 				Description:   "The policies enabled for a listener.",
 				Resolver:      fetchElbv1LoadBalancerListeners,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -298,7 +298,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:          "aws_elbv1_load_balancer_policies_app_cookie_stickiness",
 				Description:   "Information about a policy for application-controlled session stickiness.",
 				Resolver:      fetchElbv1LoadBalancerPoliciesAppCookieStickinessPolicies,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -329,7 +329,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:          "aws_elbv1_load_balancer_policies_lb_cookie_stickiness",
 				Description:   "Information about a policy for duration-based session stickiness.",
 				Resolver:      fetchElbv1LoadBalancerPoliciesLbCookieStickinessPolicies,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -360,7 +360,7 @@ func Elbv1LoadBalancers() *schema.Table {
 				Name:          "aws_elbv1_load_balancer_policies",
 				Description:   "Information about a policy.",
 				Resolver:      fetchElbv1LoadBalancerPolicies,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

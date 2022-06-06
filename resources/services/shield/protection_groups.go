@@ -18,7 +18,7 @@ func ProtectionGroups() *schema.Table {
 		Description:   "A grouping of protected resources that you and Shield Advanced can monitor as a collective",
 		Resolver:      fetchShieldProtectionGroups,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,

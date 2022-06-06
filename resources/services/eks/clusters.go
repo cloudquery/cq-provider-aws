@@ -149,7 +149,7 @@ func EksClusters() *schema.Table {
 				Name:          "aws_eks_cluster_encryption_configs",
 				Description:   "The encryption configuration for the cluster.",
 				Resolver:      fetchEksClusterEncryptionConfigs,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

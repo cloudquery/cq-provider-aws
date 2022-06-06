@@ -27,7 +27,7 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 		Description:   "Describes the properties of an environment.",
 		Resolver:      fetchElasticbeanstalkEnvironments,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

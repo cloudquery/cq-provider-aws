@@ -17,7 +17,7 @@ func CloudwatchlogsFilters() *schema.Table {
 		Description:   "Metric filters express how CloudWatch Logs would extract metric observations from ingested log events and transform them into metric data in a CloudWatch metric.",
 		Resolver:      fetchCloudwatchlogsFilters,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("logs"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name", "log_group_name"}},
 		IgnoreInTests: true,
@@ -63,7 +63,7 @@ func CloudwatchlogsFilters() *schema.Table {
 				Description:   "Indicates how to transform ingested log events to metric data in a CloudWatch metric.",
 				Resolver:      fetchCloudwatchlogsFilterMetricTransformations,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "filter_cq_id",

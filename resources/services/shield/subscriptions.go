@@ -17,7 +17,7 @@ func Subscriptions() *schema.Table {
 		Description:   "Information about the Shield Advanced subscription for an account",
 		Resolver:      fetchShieldSubscriptions,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,

@@ -22,7 +22,7 @@ func SagemakerModels() *schema.Table {
 		Description:   "Provides summary information about a model.",
 		Resolver:      fetchSagemakerModels,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
@@ -89,7 +89,7 @@ func SagemakerModels() *schema.Table {
 				Description:   "Describes the container, as part of model definition.",
 				Resolver:      fetchSagemakerModelContainers,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",
@@ -152,7 +152,7 @@ func SagemakerModels() *schema.Table {
 				Description:   "Specifies a VPC that your training jobs and hosted models have access to. Control access to and from your training and model containers by configuring the VPC",
 				Resolver:      fetchSagemakerModelVpcConfigs,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",

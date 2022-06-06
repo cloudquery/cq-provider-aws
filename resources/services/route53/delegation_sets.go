@@ -16,7 +16,7 @@ func Route53ReusableDelegationSets() *schema.Table {
 		Name:          "aws_route53_reusable_delegation_sets",
 		Resolver:      fetchRoute53DelegationSets,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

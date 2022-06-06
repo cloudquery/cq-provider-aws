@@ -15,7 +15,7 @@ func GlobalSettings() *schema.Table {
 		Name:         "aws_backup_global_settings",
 		Resolver:     fetchBackupGlobalSettings,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		Global:       true,
@@ -53,7 +53,7 @@ func fetchBackupGlobalSettings(ctx context.Context, meta schema.ClientMeta, pare
 		o.Region = c.Region
 	})
 	if err != nil {
-		if client.IgnoreAccessDeniedServiceDisabled(err) || client.IsAWSError(err, "ERROR_9601") /* "Your account is not a member of an organization" */ {
+		if client.IgnoreCommonErrors(err) || client.IsAWSError(err, "ERROR_9601") /* "Your account is not a member of an organization" */ {
 			meta.Logger().Debug("received access denied on DescribeGlobalSettings", "err", err)
 			return nil
 		}

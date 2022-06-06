@@ -19,7 +19,7 @@ func ApigatewayRestApis() *schema.Table {
 		Description:   "Represents a REST API.",
 		Resolver:      fetchApigatewayRestApis,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -123,7 +123,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_authorizers",
 				Description:   "Represents an authorization layer for methods.",
 				Resolver:      fetchApigatewayRestApiAuthorizers,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -206,7 +206,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_deployments",
 				Description:   "An immutable representation of a RestApi resource that can be called by users using Stages.",
 				Resolver:      fetchApigatewayRestApiDeployments,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -258,7 +258,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_documentation_parts",
 				Description:   "A documentation part for a targeted API entity.",
 				Resolver:      fetchApigatewayRestApiDocumentationParts,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -330,7 +330,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_documentation_versions",
 				Description:   "A snapshot of the documentation of an API.",
 				Resolver:      fetchApigatewayRestApiDocumentationVersions,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -376,7 +376,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_gateway_responses",
 				Description:   "A gateway response of a given response type and status code, with optional response parameters and mapping templates.",
 				Resolver:      fetchApigatewayRestApiGatewayResponses,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -432,7 +432,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_models",
 				Description:   "Represents the data structure of a method's request or response payload.",
 				Resolver:      fetchApigatewayRestApiModels,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -494,7 +494,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_request_validators",
 				Description:   "A set of validation rules for incoming Method requests.",
 				Resolver:      fetchApigatewayRestApiRequestValidators,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -546,7 +546,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_resources",
 				Description:   "Represents an API resource.",
 				Resolver:      fetchApigatewayRestApiResources,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -603,7 +603,7 @@ func ApigatewayRestApis() *schema.Table {
 				Name:          "aws_apigateway_rest_api_stages",
 				Description:   "Represents a unique identifier for a version of a deployed RestApi that is callable by users.",
 				Resolver:      fetchApigatewayRestApiStages,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

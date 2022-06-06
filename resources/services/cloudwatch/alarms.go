@@ -17,7 +17,7 @@ func CloudwatchAlarms() *schema.Table {
 		Description:   "The details about a metric alarm.",
 		Resolver:      fetchCloudwatchAlarms,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("logs"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
@@ -177,7 +177,7 @@ func CloudwatchAlarms() *schema.Table {
 				Name:          "aws_cloudwatch_alarm_metrics",
 				Description:   "This structure is used in both GetMetricData and PutMetricAlarm.",
 				Resolver:      fetchCloudwatchAlarmMetrics,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

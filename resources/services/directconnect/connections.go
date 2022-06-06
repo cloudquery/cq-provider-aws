@@ -16,7 +16,7 @@ func DirectconnectConnections() *schema.Table {
 		Description:   "Information about a Direct Connect Connection",
 		Resolver:      fetchDirectconnectConnections,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -140,7 +140,7 @@ func DirectconnectConnections() *schema.Table {
 				Name:          "aws_directconnect_connection_mac_sec_keys",
 				Description:   "The MAC Security (MACsec) security keys associated with the connection.",
 				Resolver:      fetchDirectconnectConnectionMacSecKeys,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

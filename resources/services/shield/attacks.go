@@ -20,7 +20,7 @@ func Attacks() *schema.Table {
 		Description:   "The details of a DDoS attack",
 		Resolver:      fetchShieldAttacks,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		IgnoreInTests: true,
@@ -70,7 +70,7 @@ func Attacks() *schema.Table {
 				Name:        "aws_shield_attack_properties",
 				Description: "Details of a Shield event",
 				Resolver:    fetchShieldAttackProperties,
-				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "attack_cq_id",

@@ -23,7 +23,7 @@ func Apigatewayv2Apis() *schema.Table {
 		Description:  "Represents an API.",
 		Resolver:     fetchApigatewayv2Apis,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
@@ -171,7 +171,7 @@ func Apigatewayv2Apis() *schema.Table {
 				Description:   "Represents an authorizer.",
 				Resolver:      fetchApigatewayv2ApiAuthorizers,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -470,7 +470,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Description:   "Represents an integration response.",
 						Resolver:      fetchApigatewayv2ApiIntegrationResponses,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "api_integration_cq_id",
@@ -534,7 +534,7 @@ func Apigatewayv2Apis() *schema.Table {
 				Description:   "Represents a data model for an API.",
 				Resolver:      fetchApigatewayv2ApiModels,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -697,7 +697,7 @@ func Apigatewayv2Apis() *schema.Table {
 						Description:   "Represents a route response.",
 						Resolver:      fetchApigatewayv2ApiRouteResponses,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "api_route_cq_id",

@@ -17,7 +17,7 @@ func ApigatewayAPIKeys() *schema.Table {
 		Description:   "A resource that can be distributed to callers for executing Method resources that require an API key.",
 		Resolver:      fetchApigatewayApiKeys,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

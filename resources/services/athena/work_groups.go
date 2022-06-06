@@ -20,7 +20,7 @@ func WorkGroups() *schema.Table {
 		Description:  "A workgroup, which contains a name, description, creation time, state, and other configuration, listed under WorkGroup$Configuration",
 		Resolver:     fetchAthenaWorkGroups,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -144,7 +144,7 @@ func WorkGroups() *schema.Table {
 				Description:   "A prepared SQL statement for use with Athena",
 				Resolver:      fetchAthenaWorkGroupPreparedStatements,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "work_group_cq_id",
@@ -184,7 +184,7 @@ func WorkGroups() *schema.Table {
 				Description:   "Information about a single instance of a query execution",
 				Resolver:      fetchAthenaWorkGroupQueryExecutions,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "work_group_cq_id",

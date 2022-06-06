@@ -16,7 +16,7 @@ func CognitoIdentityPools() *schema.Table {
 		Description:   "An object representing an Amazon Cognito identity pool.",
 		Resolver:      fetchCognitoIdentityPools,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("cognito-identity"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

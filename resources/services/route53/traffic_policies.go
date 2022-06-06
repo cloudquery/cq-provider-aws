@@ -18,7 +18,7 @@ func Route53TrafficPolicies() *schema.Table {
 		Description:   "A complex type that contains information about the latest version of one traffic policy that is associated with the current AWS account.",
 		Resolver:      fetchRoute53TrafficPolicies,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

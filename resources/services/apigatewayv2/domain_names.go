@@ -20,7 +20,7 @@ func Apigatewayv2DomainNames() *schema.Table {
 		Description:   "Represents a domain name.",
 		Resolver:      fetchApigatewayv2DomainNames,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "domain_name"}},
 		IgnoreInTests: true,

@@ -16,7 +16,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 		Description:   "Information about a virtual interface. A virtual interface (VLAN) transmits the traffic between the AWS Direct Connect location and the customer network",
 		Resolver:      fetchDirectconnectVirtualInterfaces,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
@@ -159,7 +159,7 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Name:          "aws_directconnect_virtual_interface_bgp_peers",
 				Description:   "Information about a BGP peer. ",
 				Resolver:      fetchDirectconnectVirtualInterfaceBgpPeers,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

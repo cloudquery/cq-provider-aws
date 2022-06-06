@@ -22,7 +22,7 @@ func SagemakerTrainingJobs() *schema.Table {
 		Description:   "Provides summary information about a training job.",
 		Resolver:      fetchSagemakerTrainingJobs,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,

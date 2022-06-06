@@ -26,7 +26,7 @@ func Route53HostedZones() *schema.Table {
 		Description:  "A complex type that contains general information about the hosted zone.",
 		Resolver:     fetchRoute53HostedZones,
 		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
@@ -106,7 +106,7 @@ func Route53HostedZones() *schema.Table {
 				Name:          "aws_route53_hosted_zone_query_logging_configs",
 				Description:   "A complex type that contains information about a configuration for DNS query logging.",
 				Resolver:      fetchRoute53HostedZoneQueryLoggingConfigs,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -247,7 +247,7 @@ func Route53HostedZones() *schema.Table {
 				Name:          "aws_route53_hosted_zone_traffic_policy_instances",
 				Description:   "A complex type that contains settings for the new traffic policy instance.",
 				Resolver:      fetchRoute53HostedZoneTrafficPolicyInstances,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -310,7 +310,7 @@ func Route53HostedZones() *schema.Table {
 				Name:          "aws_route53_hosted_zone_vpc_association_authorizations",
 				Description:   "(Private hosted zones only) A complex type that contains information about an Amazon VPC.",
 				Resolver:      fetchRoute53HostedZoneVpcAssociationAuthorizations,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

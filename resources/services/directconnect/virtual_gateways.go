@@ -15,7 +15,7 @@ func DirectconnectVirtualGateways() *schema.Table {
 		Description:   "Information about a virtual private gateway for a private virtual interface.",
 		Resolver:      fetchDirectconnectVirtualGateways,
 		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,

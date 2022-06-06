@@ -21,7 +21,7 @@ func Accounts() *schema.Table {
 		Resolver:      fetchOrganizationsAccounts,
 		Multiplex:     client.AccountMultiplex,
 		DeleteFilter:  client.DeleteAccountFilter,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{

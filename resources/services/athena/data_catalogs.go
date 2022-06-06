@@ -22,7 +22,7 @@ func DataCatalogs() *schema.Table {
 		Description:  "Contains information about a data catalog in an Amazon Web Services account",
 		Resolver:     fetchAthenaDataCatalogs,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -151,7 +151,7 @@ func DataCatalogs() *schema.Table {
 								Description:   "Contains metadata for a column in a table",
 								Resolver:      fetchAthenaDataCatalogDatabaseTableColumns,
 								IgnoreInTests: true,
-								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+								IgnoreError:   client.IgnoreCommonErrors,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",
@@ -181,7 +181,7 @@ func DataCatalogs() *schema.Table {
 								Description:   "Contains metadata for a column in a table",
 								Resolver:      fetchAthenaDataCatalogDatabaseTablePartitionKeys,
 								IgnoreInTests: true,
-								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+								IgnoreError:   client.IgnoreCommonErrors,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",

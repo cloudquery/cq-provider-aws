@@ -18,7 +18,7 @@ func Route53Domains() *schema.Table {
 		Description:   "The domain names registered with Amazon Route 53.",
 		Resolver:      fetchRoute53Domains,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "domain_name"}},
 		IgnoreInTests: true,

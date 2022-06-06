@@ -22,7 +22,7 @@ func Vaults() *schema.Table {
 		Description:          "Contains metadata about a backup vault.",
 		Resolver:             fetchBackupVaults,
 		Multiplex:            client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:          client.IgnoreCommonErrors,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		PostResourceResolver: resolveVaultNotifications,
@@ -124,7 +124,7 @@ func Vaults() *schema.Table {
 				Name:          "aws_backup_vault_recovery_points",
 				Description:   "The recovery points stored in a backup vault.",
 				Resolver:      fetchVaultRecoveryPoints,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

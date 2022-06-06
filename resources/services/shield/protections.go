@@ -18,7 +18,7 @@ func Protections() *schema.Table {
 		Description:   "An object that represents a resource that is under DDoS protection.",
 		Resolver:      fetchShieldProtections,
 		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		DeleteFilter:  client.DeleteAccountFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
