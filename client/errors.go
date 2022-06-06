@@ -139,7 +139,6 @@ func classifyError(err error, fallbackType diag.Type, accounts []Account, opts .
 				),
 			}
 		}
-
 	}
 	if IsErrorThrottle(err) {
 		return diag.Diagnostics{
