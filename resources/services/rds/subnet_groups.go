@@ -68,7 +68,6 @@ func RdsSubnetGroups() *schema.Table {
 				Name:        "aws_rds_subnet_group_subnets",
 				Description: "This data type is used as a response element for the DescribeDBSubnetGroups operation. ",
 				Resolver:    fetchRdsSubnetGroupSubnets,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "subnet_group_cq_id",

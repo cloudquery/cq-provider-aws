@@ -446,7 +446,6 @@ func CognitoUserPools() *schema.Table {
 				Name:        "aws_cognito_user_pool_schema_attributes",
 				Description: "Contains information about the schema attribute.",
 				Resolver:    fetchCognitoUserPoolSchemaAttributes,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "user_pool_cq_id",

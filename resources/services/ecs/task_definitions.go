@@ -191,7 +191,6 @@ func EcsTaskDefinitions() *schema.Table {
 				Name:          "aws_ecs_task_definition_container_definitions",
 				Description:   "Container definitions are used in task definitions to describe the different containers that are launched as part of a task.",
 				Resolver:      fetchEcsTaskDefinitionContainerDefinitions,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -501,7 +500,6 @@ func EcsTaskDefinitions() *schema.Table {
 				Name:          "aws_ecs_task_definition_volumes",
 				Description:   "A data volume used in a task definition",
 				Resolver:      fetchEcsTaskDefinitionVolumes,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

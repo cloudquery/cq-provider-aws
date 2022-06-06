@@ -112,7 +112,6 @@ func GuarddutyDetectors() *schema.Table {
 				Name:          "aws_guardduty_detector_members",
 				Description:   "Contains information about the member account.",
 				Resolver:      fetchGuarddutyDetectorMembers,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

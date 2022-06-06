@@ -93,7 +93,6 @@ func LambdaLayers() *schema.Table {
 				Name:        "aws_lambda_layer_versions",
 				Description: "Details about a version of an AWS Lambda layer (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html). ",
 				Resolver:    fetchLambdaLayerVersions,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "layer_cq_id",
@@ -138,7 +137,6 @@ func LambdaLayers() *schema.Table {
 					{
 						Name:          "aws_lambda_layer_version_policies",
 						Resolver:      fetchLambdaLayerVersionPolicies,
-						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{

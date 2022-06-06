@@ -74,7 +74,6 @@ func Ec2NetworkAcls() *schema.Table {
 				Name:        "aws_ec2_network_acl_associations",
 				Description: "Describes an association between a network ACL and a subnet.",
 				Resolver:    fetchEc2NetworkAclAssociations,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "network_acl_cq_id",
@@ -98,7 +97,6 @@ func Ec2NetworkAcls() *schema.Table {
 				Name:        "aws_ec2_network_acl_entries",
 				Description: "Describes an entry in a network ACL.",
 				Resolver:    fetchEc2NetworkAclEntries,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "network_acl_cq_id",

@@ -91,7 +91,6 @@ func EcrRepositories() *schema.Table {
 				Name:          "aws_ecr_repository_images",
 				Description:   "An object that describes an image returned by a DescribeImages operation.",
 				Resolver:      fetchEcrRepositoryImages,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
