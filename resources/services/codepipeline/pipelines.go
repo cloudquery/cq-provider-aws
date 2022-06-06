@@ -119,6 +119,7 @@ func Pipelines() *schema.Table {
 				Name:        "aws_codepipeline_pipeline_stages",
 				Description: "Represents information about a stage and its definition.",
 				Resolver:    fetchCodepipelinePipelineStages,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "pipeline_cq_id",
@@ -149,6 +150,7 @@ func Pipelines() *schema.Table {
 						Name:        "aws_codepipeline_pipeline_stage_actions",
 						Description: "Represents information about an action declaration.",
 						Resolver:    fetchCodepipelinePipelineStageActions,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "pipeline_stage_cq_id",

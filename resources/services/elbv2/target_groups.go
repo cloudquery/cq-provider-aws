@@ -139,6 +139,7 @@ func Elbv2TargetGroups() *schema.Table {
 				Name:          "aws_elbv2_target_group_target_health_descriptions",
 				Description:   "Information about the health of a target.",
 				Resolver:      resolveElbv2TargetGroupTargetHealthDescriptions,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

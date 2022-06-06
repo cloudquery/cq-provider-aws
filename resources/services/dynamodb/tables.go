@@ -27,6 +27,7 @@ func DynamodbTables() *schema.Table {
 		Multiplex:     client.ServiceAccountRegionMultiplexer("dynamodb"),
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
@@ -210,6 +211,7 @@ func DynamodbTables() *schema.Table {
 				Name:        "aws_dynamodb_table_global_secondary_indexes",
 				Description: "Represents the properties of a global secondary index.",
 				Resolver:    fetchDynamodbTableGlobalSecondaryIndexes,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",
@@ -304,6 +306,7 @@ func DynamodbTables() *schema.Table {
 				Name:        "aws_dynamodb_table_local_secondary_indexes",
 				Description: "Represents the properties of a local secondary index.",
 				Resolver:    fetchDynamodbTableLocalSecondaryIndexes,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",
@@ -357,6 +360,7 @@ func DynamodbTables() *schema.Table {
 				Name:        "aws_dynamodb_table_replicas",
 				Description: "Contains the details of the replica.",
 				Resolver:    fetchDynamodbTableReplicas,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",
@@ -425,6 +429,7 @@ func DynamodbTables() *schema.Table {
 				Name:        "aws_dynamodb_table_replica_auto_scalings",
 				Description: "Represents the auto scaling settings of the replica.",
 				Resolver:    fetchDynamodbTableReplicaAutoScalings,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",
@@ -466,6 +471,7 @@ func DynamodbTables() *schema.Table {
 				Name:        "aws_dynamodb_table_continuous_backups",
 				Description: "Represents the continuous backups and point in time recovery settings on the table.",
 				Resolver:    fetchDynamodbTableContinuousBackups,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",

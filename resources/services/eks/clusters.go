@@ -149,6 +149,7 @@ func EksClusters() *schema.Table {
 				Name:          "aws_eks_cluster_encryption_configs",
 				Description:   "The encryption configuration for the cluster.",
 				Resolver:      fetchEksClusterEncryptionConfigs,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -174,6 +175,7 @@ func EksClusters() *schema.Table {
 				Name:        "aws_eks_cluster_loggings",
 				Description: "An object representing the enabled or disabled Kubernetes control plane logs for your cluster.",
 				Resolver:    fetchEksClusterLoggings,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",

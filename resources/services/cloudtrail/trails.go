@@ -194,6 +194,7 @@ func CloudtrailTrails() *schema.Table {
 				Name:          "aws_cloudtrail_trail_event_selectors",
 				Description:   "Use event selectors to further specify the management and data event settings for your trail",
 				Resolver:      fetchCloudtrailTrailEventSelectors,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

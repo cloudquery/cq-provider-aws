@@ -63,6 +63,7 @@ func CloudwatchlogsFilters() *schema.Table {
 				Description:   "Indicates how to transform ingested log events to metric data in a CloudWatch metric.",
 				Resolver:      fetchCloudwatchlogsFilterMetricTransformations,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "filter_cq_id",

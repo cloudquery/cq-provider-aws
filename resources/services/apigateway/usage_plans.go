@@ -106,6 +106,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:          "aws_apigateway_usage_plan_api_stages",
 				Description:   "API stage name of the associated API stage in a usage plan.",
 				Resolver:      fetchApigatewayUsagePlanApiStages,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -141,6 +142,7 @@ func ApigatewayUsagePlans() *schema.Table {
 				Name:          "aws_apigateway_usage_plan_keys",
 				Description:   "Represents a usage plan key to identify a plan customer.",
 				Resolver:      fetchApigatewayUsagePlanKeys,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

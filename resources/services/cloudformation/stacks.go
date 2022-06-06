@@ -189,6 +189,7 @@ func Stacks() *schema.Table {
 				Description:   "The Output data type.",
 				Resolver:      fetchCloudformationStackOutputs,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "stack_cq_id",
@@ -222,6 +223,7 @@ func Stacks() *schema.Table {
 				Name:        "aws_cloudformation_stack_resources",
 				Description: "Contains high-level information about the specified stack resource.",
 				Resolver:    fetchCloudformationStackResources,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "stack_cq_id",

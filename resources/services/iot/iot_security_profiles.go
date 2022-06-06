@@ -100,6 +100,7 @@ func IotSecurityProfiles() *schema.Table {
 				Name:        "aws_iot_security_profile_behaviors",
 				Description: "A Device Defender security profile behavior.",
 				Resolver:    fetchIotSecurityProfileBehaviors,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "security_profile_cq_id",

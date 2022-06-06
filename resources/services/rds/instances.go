@@ -552,6 +552,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_db_parameter_groups",
 				Description: "The status of the DB parameter group",
 				Resolver:    fetchRdsInstanceDbParameterGroups,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -582,6 +583,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_db_security_groups",
 				Description: "This data type is used as a response element in the following actions:  * ModifyDBInstance  * RebootDBInstance  * RestoreDBInstanceFromDBSnapshot  * RestoreDBInstanceToPointInTime ",
 				Resolver:    fetchRdsInstanceDbSecurityGroups,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -612,6 +614,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_db_subnet_group_subnets",
 				Description: "This data type is used as a response element for the DescribeDBSubnetGroups operation. ",
 				Resolver:    fetchRdsInstanceDbSubnetGroupSubnets,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -653,6 +656,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_domain_memberships",
 				Description: "An Active Directory Domain membership record associated with the DB instance or cluster. ",
 				Resolver:    fetchRdsInstanceDomainMemberships,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -694,6 +698,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_option_group_memberships",
 				Description: "Provides information on the option groups the DB instance is a member of. ",
 				Resolver:    fetchRdsInstanceOptionGroupMemberships,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -717,6 +722,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_vpc_security_groups",
 				Description: "This data type is used as a response element for queries on VPC security group membership. ",
 				Resolver:    fetchRdsInstanceVpcSecurityGroups,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",

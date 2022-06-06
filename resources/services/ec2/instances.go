@@ -404,6 +404,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_block_device_mappings",
 				Description: "Describes a block device mapping.",
 				Resolver:    fetchEc2InstanceBlockDeviceMappings,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -446,6 +447,7 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_elastic_gpu_associations",
 				Description:   "Describes the association between an instance and an Elastic Graphics accelerator.",
 				Resolver:      fetchEc2InstanceElasticGpuAssociations,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -481,6 +483,7 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_elastic_inference_accelerator_associations",
 				Description:   "Describes the association between an instance and an elastic inference accelerator.",
 				Resolver:      fetchEc2InstanceElasticInferenceAcceleratorAssociations,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -515,6 +518,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_network_interfaces",
 				Description: "Describes a network interface.",
 				Resolver:    fetchEc2InstanceNetworkInterfaces,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -668,6 +672,7 @@ func Ec2Instances() *schema.Table {
 						Name:        "aws_ec2_instance_network_interface_groups",
 						Description: "Describes a security group.",
 						Resolver:    fetchEc2InstanceNetworkInterfaceGroups,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
@@ -697,6 +702,7 @@ func Ec2Instances() *schema.Table {
 						Name:          "aws_ec2_instance_network_interface_ipv6_addresses",
 						Description:   "Describes an IPv6 address.",
 						Resolver:      fetchEc2InstanceNetworkInterfaceIpv6Addresses,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -716,6 +722,7 @@ func Ec2Instances() *schema.Table {
 						Name:        "aws_ec2_instance_network_interface_private_ip_addresses",
 						Description: "Describes a private IPv4 address.",
 						Resolver:    fetchEc2InstanceNetworkInterfacePrivateIpAddresses,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
@@ -775,6 +782,7 @@ func Ec2Instances() *schema.Table {
 				Name:          "aws_ec2_instance_product_codes",
 				Description:   "Describes a product code.",
 				Resolver:      fetchEc2InstanceProductCodes,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -799,6 +807,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "aws_ec2_instance_security_groups",
 				Description: "Describes a security group.",
 				Resolver:    fetchEc2InstanceSecurityGroups,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",

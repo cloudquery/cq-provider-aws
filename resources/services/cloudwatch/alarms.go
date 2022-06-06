@@ -177,6 +177,7 @@ func CloudwatchAlarms() *schema.Table {
 				Name:          "aws_cloudwatch_alarm_metrics",
 				Description:   "This structure is used in both GetMetricData and PutMetricAlarm.",
 				Resolver:      fetchCloudwatchAlarmMetrics,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

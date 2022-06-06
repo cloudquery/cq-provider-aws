@@ -89,6 +89,7 @@ func SagemakerModels() *schema.Table {
 				Description:   "Describes the container, as part of model definition.",
 				Resolver:      fetchSagemakerModelContainers,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",
@@ -151,6 +152,7 @@ func SagemakerModels() *schema.Table {
 				Description:   "Specifies a VPC that your training jobs and hosted models have access to. Control access to and from your training and model containers by configuring the VPC",
 				Resolver:      fetchSagemakerModelVpcConfigs,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "model_cq_id",

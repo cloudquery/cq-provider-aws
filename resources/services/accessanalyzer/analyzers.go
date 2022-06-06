@@ -88,6 +88,7 @@ func Analyzers() *schema.Table {
 				Name:        "aws_access_analyzer_analyzer_findings",
 				Description: "Contains information about a finding",
 				Resolver:    fetchAccessAnalyzerAnalyzerFindings,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "analyzer_cq_id",
@@ -168,6 +169,7 @@ func Analyzers() *schema.Table {
 						Description:   "The source of the finding",
 						Resolver:      fetchAccessAnalyzerAnalyzerFindingSources,
 						IgnoreInTests: true,
+						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						Columns: []schema.Column{
 							{
 								Name:        "analyzer_finding_cq_id",
@@ -194,6 +196,7 @@ func Analyzers() *schema.Table {
 				Name:          "aws_access_analyzer_analyzer_archive_rules",
 				Description:   "Contains information about an archive rule",
 				Resolver:      fetchAccessAnalyzerAnalyzerArchiveRules,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

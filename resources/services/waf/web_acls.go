@@ -78,6 +78,7 @@ func WafWebAcls() *schema.Table {
 				Name:        "aws_waf_web_acl_rules",
 				Description: "This is AWS WAF Classic documentation",
 				Resolver:    fetchWafWebAclRules,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",
@@ -124,6 +125,7 @@ func WafWebAcls() *schema.Table {
 				Name:        "aws_waf_web_acl_logging_configuration",
 				Description: "The LoggingConfiguration for the specified web ACL.",
 				Resolver:    fetchWafWebACLLoggingConfiguration,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",

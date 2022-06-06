@@ -144,6 +144,7 @@ func WorkGroups() *schema.Table {
 				Description:   "A prepared SQL statement for use with Athena",
 				Resolver:      fetchAthenaWorkGroupPreparedStatements,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "work_group_cq_id",
@@ -183,6 +184,7 @@ func WorkGroups() *schema.Table {
 				Description:   "Information about a single instance of a query execution",
 				Resolver:      fetchAthenaWorkGroupQueryExecutions,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "work_group_cq_id",
@@ -361,6 +363,7 @@ func WorkGroups() *schema.Table {
 				Name:        "aws_athena_work_group_named_queries",
 				Description: "A query, where QueryString contains the SQL statements that make up the query",
 				Resolver:    fetchAthenaWorkGroupNamedQueries,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "work_group_cq_id",

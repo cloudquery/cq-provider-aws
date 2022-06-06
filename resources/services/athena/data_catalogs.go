@@ -78,6 +78,7 @@ func DataCatalogs() *schema.Table {
 				Name:        "aws_athena_data_catalog_databases",
 				Description: "Contains metadata information for a database in a data catalog",
 				Resolver:    fetchAthenaDataCatalogDatabases,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "data_catalog_cq_id",
@@ -108,6 +109,7 @@ func DataCatalogs() *schema.Table {
 						Name:        "aws_athena_data_catalog_database_tables",
 						Description: "Contains metadata for a table",
 						Resolver:    fetchAthenaDataCatalogDatabaseTables,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "data_catalog_database_cq_id",
@@ -149,6 +151,7 @@ func DataCatalogs() *schema.Table {
 								Description:   "Contains metadata for a column in a table",
 								Resolver:      fetchAthenaDataCatalogDatabaseTableColumns,
 								IgnoreInTests: true,
+								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",
@@ -178,6 +181,7 @@ func DataCatalogs() *schema.Table {
 								Description:   "Contains metadata for a column in a table",
 								Resolver:      fetchAthenaDataCatalogDatabaseTablePartitionKeys,
 								IgnoreInTests: true,
+								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 								Columns: []schema.Column{
 									{
 										Name:        "data_catalog_database_table_cq_id",

@@ -137,6 +137,7 @@ func DirectconnectLags() *schema.Table {
 				Name:          "aws_directconnect_lag_mac_sec_keys",
 				Description:   "The MAC Security (MACsec) security keys associated with the LAG.",
 				Resolver:      fetchDirectconnectLagMacSecKeys,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
