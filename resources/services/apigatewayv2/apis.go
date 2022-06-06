@@ -171,7 +171,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Description:   "Represents an authorizer.",
 				Resolver:      fetchApigatewayv2ApiAuthorizers,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -267,7 +266,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_deployments",
 				Description: "An immutable representation of an API that can be called by users.",
 				Resolver:    fetchApigatewayv2ApiDeployments,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -328,7 +326,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_integrations",
 				Description: "Represents an integration.",
 				Resolver:    fetchApigatewayv2ApiIntegrations,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -470,7 +467,6 @@ func Apigatewayv2Apis() *schema.Table {
 						Description:   "Represents an integration response.",
 						Resolver:      fetchApigatewayv2ApiIntegrationResponses,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						Columns: []schema.Column{
 							{
 								Name:        "api_integration_cq_id",
@@ -534,7 +530,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Description:   "Represents a data model for an API.",
 				Resolver:      fetchApigatewayv2ApiModels,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -594,7 +589,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_routes",
 				Description: "Represents a route.",
 				Resolver:    fetchApigatewayv2ApiRoutes,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",
@@ -697,7 +691,6 @@ func Apigatewayv2Apis() *schema.Table {
 						Description:   "Represents a route response.",
 						Resolver:      fetchApigatewayv2ApiRouteResponses,
 						IgnoreInTests: true,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						Columns: []schema.Column{
 							{
 								Name:        "api_route_cq_id",
@@ -755,7 +748,6 @@ func Apigatewayv2Apis() *schema.Table {
 				Name:        "aws_apigatewayv2_api_stages",
 				Description: "Represents an API stage.",
 				Resolver:    fetchApigatewayv2ApiStages,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "api_cq_id",

@@ -94,7 +94,6 @@ func Ledgers() *schema.Table {
 				Name:          "aws_qldb_ledger_journal_kinesis_streams",
 				Description:   "Information about an Amazon QLDB journal stream, including the Amazon Resource Name (ARN), stream name, creation time, current status, and the parameters of the original stream creation request.",
 				Resolver:      fetchQldbLedgerJournalKinesisStreams,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -171,7 +170,6 @@ func Ledgers() *schema.Table {
 				Name:          "aws_qldb_ledger_journal_s3_exports",
 				Description:   "Information about a journal export job, including the ledger name, export ID, creation time, current status, and the parameters of the original export creation request.",
 				Resolver:      fetchQldbLedgerJournalS3Exports,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

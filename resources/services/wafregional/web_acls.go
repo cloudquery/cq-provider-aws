@@ -74,7 +74,6 @@ func WebAcls() *schema.Table {
 				Name:        "aws_wafregional_web_acl_rules",
 				Description: "The action for each Rule in a WebACL",
 				Resolver:    fetchWafregionalWebAclRules,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "web_acl_cq_id",

@@ -68,7 +68,6 @@ func Rules() *schema.Table {
 				Name:        "aws_wafregional_rule_predicates",
 				Description: "This is AWS WAF Classic documentation",
 				Resolver:    fetchWafregionalRulePredicates,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "rule_cq_id",

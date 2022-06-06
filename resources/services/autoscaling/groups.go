@@ -216,7 +216,6 @@ func AutoscalingGroups() *schema.Table {
 				Name:        "aws_autoscaling_group_instances",
 				Description: "Describes an EC2 instance.",
 				Resolver:    fetchAutoscalingGroupInstances,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "group_cq_id",
@@ -294,7 +293,6 @@ func AutoscalingGroups() *schema.Table {
 				Name:        "aws_autoscaling_group_tags",
 				Description: "Describes a tag for an Auto Scaling group.",
 				Resolver:    fetchAutoscalingGroupTags,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "group_cq_id",
@@ -333,7 +331,6 @@ func AutoscalingGroups() *schema.Table {
 				Name:          "aws_autoscaling_group_scaling_policies",
 				Description:   "Describes a scaling policy.",
 				Resolver:      fetchAutoscalingGroupScalingPolicies,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -478,7 +475,6 @@ func AutoscalingGroups() *schema.Table {
 				Description:   "Describes a lifecycle hook, which tells Amazon EC2 Auto Scaling that you want to perform an action whenever it launches instances or terminates instances.",
 				Resolver:      fetchAutoscalingGroupLifecycleHooks,
 				IgnoreInTests: true,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "group_cq_id",

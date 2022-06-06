@@ -187,7 +187,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_configuration_settings",
 				Description:   "Describes the settings for a configuration set.",
 				Resolver:      fetchElasticbeanstalkConfigurationSettings,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -253,7 +252,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 						Name:          "aws_elasticbeanstalk_configuration_setting_options",
 						Description:   "A specification identifying an individual configuration option along with its current value",
 						Resolver:      fetchElasticbeanstalkConfigurationSettingOptionSettings,
-						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -290,7 +288,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_configuration_options",
 				Description:   "Describes the possible values for a configuration option.",
 				Resolver:      fetchElasticbeanstalkConfigurationOptions,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -377,7 +374,6 @@ func ElasticbeanstalkEnvironments() *schema.Table {
 				Name:          "aws_elasticbeanstalk_environment_links",
 				Description:   "A link to another environment, defined in the environment's manifest",
 				Resolver:      fetchElasticbeanstalkEnvironmentLinks,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

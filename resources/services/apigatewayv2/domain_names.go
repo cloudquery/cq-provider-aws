@@ -84,7 +84,6 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Name:        "aws_apigatewayv2_domain_name_configurations",
 				Description: "The domain name configuration.",
 				Resolver:    fetchApigatewayv2DomainNameConfigurations,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",
@@ -143,7 +142,6 @@ func Apigatewayv2DomainNames() *schema.Table {
 				Name:        "aws_apigatewayv2_domain_name_rest_api_mappings",
 				Description: "Represents an API mapping.",
 				Resolver:    fetchApigatewayv2DomainNameRestApiMappings,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "domain_name_cq_id",

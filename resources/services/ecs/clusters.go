@@ -159,7 +159,6 @@ func Clusters() *schema.Table {
 				Name:          "aws_ecs_cluster_attachments",
 				Description:   "An object representing a container instance or task attachment.",
 				Resolver:      fetchEcsClusterAttachments,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -195,7 +194,6 @@ func Clusters() *schema.Table {
 				Name:          "aws_ecs_cluster_tasks",
 				Description:   "Details on a task in a cluster.",
 				Resolver:      fetchEcsClusterTasks,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -386,7 +384,6 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_task_attachments",
 						Description: "An object representing a container instance or task attachment.",
 						Resolver:    fetchEcsClusterTaskAttachments,
-						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_task_cq_id",
@@ -421,7 +418,6 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_task_containers",
 						Description: "A Docker container that's part of a task.",
 						Resolver:    fetchEcsClusterTaskContainers,
-						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_task_cq_id",
@@ -525,7 +521,6 @@ func Clusters() *schema.Table {
 				Name:        "aws_ecs_cluster_services",
 				Description: "Details on a service within a cluster",
 				Resolver:    fetchEcsClusterServices,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",
@@ -713,7 +708,6 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_deployments",
 						Description: "The details of an Amazon ECS service deployment",
 						Resolver:    fetchEcsClusterServiceDeployments,
-						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_service_cq_id",
@@ -824,7 +818,6 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_events",
 						Description: "The details for an event that's associated with a service.",
 						Resolver:    fetchEcsClusterServiceEvents,
-						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_service_cq_id",
@@ -853,7 +846,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_service_load_balancers",
 						Description:   "The load balancer configuration to use with a service or task set",
 						Resolver:      fetchEcsClusterServiceLoadBalancers,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -889,7 +881,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_service_service_registries",
 						Description:   "The details for the service registry",
 						Resolver:      fetchEcsClusterServiceServiceRegistries,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -924,7 +915,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_service_task_sets",
 						Description:   "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
 						Resolver:      fetchEcsClusterServiceTaskSets,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1075,7 +1065,6 @@ func Clusters() *schema.Table {
 								Name:          "aws_ecs_cluster_service_task_set_load_balancers",
 								Description:   "The load balancer configuration to use with a service or task set",
 								Resolver:      fetchEcsClusterServiceTaskSetLoadBalancers,
-								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
@@ -1110,7 +1099,6 @@ func Clusters() *schema.Table {
 								Name:          "aws_ecs_cluster_service_task_set_service_registries",
 								Description:   "The details for the service registry",
 								Resolver:      fetchEcsClusterServiceTaskSetServiceRegistries,
-								IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
@@ -1150,7 +1138,6 @@ func Clusters() *schema.Table {
 				Name:          "aws_ecs_cluster_container_instances",
 				Description:   "An EC2 instance that's running the Amazon ECS agent and has been registered with a cluster.",
 				Resolver:      fetchEcsClusterContainerInstances,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -1250,7 +1237,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_container_instance_attachments",
 						Description:   "An object representing a container instance or task attachment.",
 						Resolver:      fetchEcsClusterContainerInstanceAttachments,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1286,7 +1272,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_container_instance_attributes",
 						Description:   "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
 						Resolver:      fetchEcsClusterContainerInstanceAttributes,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1321,7 +1306,6 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_health_status_details",
 						Description: "An object representing the result of a container instance health status check.",
 						Resolver:    fetchEcsClusterContainerInstanceHealthStatusDetails,
-						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
@@ -1355,7 +1339,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_container_instance_registered_resources",
 						Description:   "Describes the resources available for a container instance.",
 						Resolver:      fetchEcsClusterContainerInstanceRegisteredResources,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1400,7 +1383,6 @@ func Clusters() *schema.Table {
 						Name:          "aws_ecs_cluster_container_instance_remaining_resources",
 						Description:   "Describes the resources available for a container instance.",
 						Resolver:      fetchEcsClusterContainerInstanceRemainingResources,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{

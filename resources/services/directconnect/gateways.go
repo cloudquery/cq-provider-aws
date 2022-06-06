@@ -75,7 +75,6 @@ func DirectconnectGateways() *schema.Table {
 				Name:          "aws_directconnect_gateway_associations",
 				Description:   "Information about the association between an Direct Connect Gateway and either a Virtual Private Gateway, or Transit Gateway",
 				Resolver:      fetchDirectconnectGatewayAssociations,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -162,7 +161,6 @@ func DirectconnectGateways() *schema.Table {
 				Name:          "aws_directconnect_gateway_attachments",
 				Description:   "Information about the attachment between a Direct Connect gateway and virtual interfaces.",
 				Resolver:      fetchDirectconnectGatewayAttachments,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

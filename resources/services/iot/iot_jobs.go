@@ -224,7 +224,6 @@ func IotJobs() *schema.Table {
 				Name:        "aws_iot_job_abort_config_criteria_list",
 				Description: "The criteria that determine when and how a job abort takes place.",
 				Resolver:    fetchIotJobAbortConfigCriteriaLists,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "job_cq_id",

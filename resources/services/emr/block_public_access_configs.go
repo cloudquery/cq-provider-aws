@@ -76,7 +76,6 @@ func EmrBlockPublicAccessConfigs() *schema.Table {
 				Name:        "aws_emr_block_public_access_config_port_ranges",
 				Description: "A list of port ranges that are permitted to allow inbound traffic from all public IP addresses",
 				Resolver:    fetchEmrBlockPublicAccessConfigPermittedPublicSecurityGroupRuleRanges,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "block_public_access_config_cq_id",

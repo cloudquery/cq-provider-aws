@@ -93,7 +93,6 @@ func IamPolicies() *schema.Table {
 				Name:        "aws_iam_policy_versions",
 				Description: "Contains information about a version of a managed policy.",
 				Resolver:    fetchIamPolicyVersions,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "policy_cq_id",

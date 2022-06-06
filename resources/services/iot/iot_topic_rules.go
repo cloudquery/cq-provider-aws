@@ -687,7 +687,6 @@ func IotTopicRules() *schema.Table {
 				Name:        "aws_iot_topic_rule_actions",
 				Description: "Describes the actions associated with a rule.",
 				Resolver:    fetchIotTopicRuleActions,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "topic_rule_cq_id",

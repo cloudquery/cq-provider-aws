@@ -192,7 +192,6 @@ func Brokers() *schema.Table {
 			{
 				Name:          "aws_mq_broker_configurations",
 				Resolver:      fetchMqBrokerConfigurations,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -279,9 +278,8 @@ func Brokers() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_mq_broker_configuration_revisions",
-						Resolver:    fetchMqBrokerConfigurationRevisions,
-						IgnoreError: client.IgnoreCommonErrors,
+						Name:     "aws_mq_broker_configuration_revisions",
+						Resolver: fetchMqBrokerConfigurationRevisions,
 						Columns: []schema.Column{
 							{
 								Name:        "broker_configuration_cq_id",
@@ -315,9 +313,8 @@ func Brokers() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_mq_broker_users",
-				Resolver:    fetchMqBrokerUsers,
-				IgnoreError: client.IgnoreCommonErrors,
+				Name:     "aws_mq_broker_users",
+				Resolver: fetchMqBrokerUsers,
 				Columns: []schema.Column{
 					{
 						Name:        "broker_cq_id",

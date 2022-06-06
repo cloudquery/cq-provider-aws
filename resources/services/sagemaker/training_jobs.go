@@ -223,7 +223,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_algorithm_specification",
 				Description: "Specifies the training algorithm to use in a CreateTrainingJob request",
 				Resolver:    fetchSagemakerTrainingJobAlgorithmSpecifications,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -263,7 +262,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_debug_hook_config",
 				Description: "Configuration information for the Debugger hook parameters, metric and tensor collections, and storage paths",
 				Resolver:    fetchSagemakerTrainingJobDebugHookConfigs,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -298,7 +296,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_debug_rule_configurations",
 				Description: "Configuration information for SageMaker Debugger rules for debugging",
 				Resolver:    fetchSagemakerTrainingJobDebugRuleConfigurations,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -348,7 +345,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_debug_rule_evaluation_statuses",
 				Description: "Information about the status of the rule evaluation.",
 				Resolver:    fetchSagemakerTrainingJobDebugRuleEvaluationStatuses,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -387,7 +383,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_input_data_config",
 				Description: "A channel is a named input source that training algorithms can consume.",
 				Resolver:    fetchSagemakerTrainingJobInputDataConfigs,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -480,7 +475,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_profiler_rule_configurations",
 				Description: "Configuration information for profiling rules.",
 				Resolver:    fetchSagemakerTrainingJobProfilerRuleConfigurations,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",
@@ -530,7 +524,6 @@ func SagemakerTrainingJobs() *schema.Table {
 				Name:        "aws_sagemaker_training_job_profiler_rule_evaluation_statuses",
 				Description: "Information about the status of the rule evaluation.",
 				Resolver:    fetchSagemakerTrainingJobProfilerRuleEvaluationStatuses,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "training_job_cq_id",

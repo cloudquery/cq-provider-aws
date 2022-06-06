@@ -112,7 +112,6 @@ func Webhooks() *schema.Table {
 				Name:        "aws_codepipeline_webhook_filters",
 				Description: "The event criteria that specify when a webhook notification is sent to your URL.",
 				Resolver:    fetchCodepipelineWebhookFilters,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "webhook_cq_id",

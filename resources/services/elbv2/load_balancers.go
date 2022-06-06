@@ -144,7 +144,6 @@ func Elbv2LoadBalancers() *schema.Table {
 				Name:        "aws_elbv2_load_balancer_availability_zones",
 				Description: "Information about an Availability Zone.",
 				Resolver:    fetchElbv2LoadBalancerAvailabilityZones,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -180,7 +179,6 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:          "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description:   "Information about a static IP address for a load balancer.",
 						Resolver:      fetchElbv2LoadBalancerAvailabilityZoneAddresses,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -225,7 +223,6 @@ func Elbv2LoadBalancers() *schema.Table {
 				Name:        "aws_elbv2_load_balancer_attributes",
 				Description: "Load balancer attributes",
 				Resolver:    fetchElbv2LoadBalancerAttributes,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",

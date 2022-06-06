@@ -140,7 +140,6 @@ func DirectconnectConnections() *schema.Table {
 				Name:          "aws_directconnect_connection_mac_sec_keys",
 				Description:   "The MAC Security (MACsec) security keys associated with the connection.",
 				Resolver:      fetchDirectconnectConnectionMacSecKeys,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

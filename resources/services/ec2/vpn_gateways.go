@@ -69,7 +69,6 @@ func Ec2VpnGateways() *schema.Table {
 			{
 				Name:          "aws_ec2_vpc_attachment",
 				Resolver:      fetchEc2VpcAttachments,
-				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

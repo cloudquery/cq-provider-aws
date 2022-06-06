@@ -78,7 +78,6 @@ func RateBasedRules() *schema.Table {
 				Name:        "aws_wafregional_rate_based_rule_match_predicates",
 				Description: "This is AWS WAF Classic documentation",
 				Resolver:    fetchWafregionalRateBasedRuleMatchPredicates,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "rate_based_rule_cq_id",

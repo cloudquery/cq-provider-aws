@@ -159,7 +159,6 @@ func DirectconnectVirtualInterfaces() *schema.Table {
 				Name:          "aws_directconnect_virtual_interface_bgp_peers",
 				Description:   "Information about a BGP peer. ",
 				Resolver:      fetchDirectconnectVirtualInterfaceBgpPeers,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

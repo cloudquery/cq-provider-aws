@@ -210,7 +210,6 @@ func Snapshots() *schema.Table {
 				Name:        "aws_redshift_snapshot_accounts_with_restore_access",
 				Description: "Describes an AWS customer account authorized to restore a snapshot.",
 				Resolver:    fetchRedshiftSnapshotAccountsWithRestoreAccesses,
-				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "snapshot_cq_id",
