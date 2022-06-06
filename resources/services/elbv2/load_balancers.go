@@ -36,7 +36,7 @@ func Elbv2LoadBalancers() *schema.Table {
 		Description:  "Information about a load balancer.",
 		Resolver:     fetchElbv2LoadBalancers,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -180,7 +180,7 @@ func Elbv2LoadBalancers() *schema.Table {
 						Name:          "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description:   "Information about a static IP address for a load balancer.",
 						Resolver:      fetchElbv2LoadBalancerAvailabilityZoneAddresses,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{

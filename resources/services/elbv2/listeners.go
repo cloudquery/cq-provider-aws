@@ -16,7 +16,7 @@ func Elbv2Listeners() *schema.Table {
 		Name:          "aws_elbv2_listeners",
 		Description:   "Information about a listener.",
 		Resolver:      fetchElbv2Listeners,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
@@ -79,7 +79,7 @@ func Elbv2Listeners() *schema.Table {
 				Name:          "aws_elbv2_listener_certificates",
 				Description:   "Information about an SSL server certificate.",
 				Resolver:      fetchElbv2ListenerCertificates,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -104,7 +104,7 @@ func Elbv2Listeners() *schema.Table {
 				Name:          "aws_elbv2_listener_default_actions",
 				Description:   "Information about an action",
 				Resolver:      fetchElbv2ListenerDefaultActions,
-				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -320,7 +320,7 @@ func Elbv2Listeners() *schema.Table {
 						Name:          "aws_elbv2_listener_default_action_forward_config_target_groups",
 						Description:   "Information about how traffic will be distributed between multiple target groups in a forward rule.",
 						Resolver:      fetchElbv2ListenerDefaultActionForwardConfigTargetGroups,
-						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
