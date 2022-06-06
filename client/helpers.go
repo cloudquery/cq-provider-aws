@@ -64,7 +64,6 @@ var (
 )
 
 var notFoundErrorSubstrings = []string{
-	"InvalidRequestException",
 	"NoSuch",
 	"NotFound",
 	"ResourceNotFoundException",
