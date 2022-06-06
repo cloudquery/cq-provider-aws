@@ -149,7 +149,7 @@ func SsmInstances() *schema.Table {
 				Name:        "aws_ssm_instance_compliance_items",
 				Description: "Information about the compliance as defined by the resource type",
 				Resolver:    fetchSsmInstanceComplianceItems,
-				IgnoreError: client.IgnoreCommonErrors,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
