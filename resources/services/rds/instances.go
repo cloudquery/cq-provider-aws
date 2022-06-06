@@ -492,6 +492,7 @@ func RdsInstances() *schema.Table {
 				Name:          "aws_rds_instance_associated_roles",
 				Description:   "Describes an AWS Identity and Access Management (IAM) role that is associated with a DB instance. ",
 				Resolver:      fetchRdsInstanceAssociatedRoles,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -527,6 +528,7 @@ func RdsInstances() *schema.Table {
 				Name:        "aws_rds_instance_db_instance_automated_backups_replications",
 				Description: "Automated backups of a DB instance replicated to another AWS Region",
 				Resolver:    fetchRdsInstanceDbInstanceAutomatedBackupsReplications,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",

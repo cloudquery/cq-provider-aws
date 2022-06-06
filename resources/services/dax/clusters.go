@@ -19,6 +19,7 @@ func DaxClusters() *schema.Table {
 		Multiplex:     client.ServiceAccountRegionMultiplexer("dax"),
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
@@ -167,6 +168,7 @@ func DaxClusters() *schema.Table {
 				Name:        "aws_dax_cluster_nodes",
 				Description: "Represents an individual node within a DAX cluster.",
 				Resolver:    fetchDaxClusterNodes,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "cluster_cq_id",

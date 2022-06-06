@@ -191,6 +191,7 @@ func Ec2Images() *schema.Table {
 				Name:          "aws_ec2_image_block_device_mappings",
 				Description:   "Describes a block device mapping.",
 				Resolver:      fetchEc2ImageBlockDeviceMappings,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

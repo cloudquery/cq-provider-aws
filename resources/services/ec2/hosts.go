@@ -158,6 +158,7 @@ func Hosts() *schema.Table {
 				Name:        "aws_ec2_host_available_instance_capacity",
 				Description: "Information about the number of instances that can be launched onto the Dedicated Host.",
 				Resolver:    fetchEc2HostAvailableInstanceCapacities,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "host_cq_id",
@@ -186,6 +187,7 @@ func Hosts() *schema.Table {
 				Name:        "aws_ec2_host_instances",
 				Description: "Describes an instance running on a Dedicated Host.",
 				Resolver:    fetchEc2HostInstances,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "host_cq_id",

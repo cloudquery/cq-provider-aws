@@ -206,6 +206,7 @@ func DmsReplicationInstances() *schema.Table {
 				Name:          "aws_dms_replication_instance_replication_subnet_group_subnets",
 				Description:   "In response to a request by the DescribeReplicationSubnetGroups operation, this object identifies a subnet by its given Availability Zone, subnet identifier, and status.",
 				Resolver:      fetchDmsReplicationInstanceReplicationSubnetGroupSubnets,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -236,6 +237,7 @@ func DmsReplicationInstances() *schema.Table {
 				Name:          "aws_dms_replication_instance_vpc_security_groups",
 				Description:   "Describes the status of a security group associated with the virtual private cloud (VPC) hosting your replication and DB instances.",
 				Resolver:      fetchDmsReplicationInstanceVpcSecurityGroups,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
