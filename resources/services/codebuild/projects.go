@@ -471,6 +471,7 @@ func CodebuildProjects() *schema.Table {
 				Name:          "aws_codebuild_project_environment_variables",
 				Description:   "Information about an environment variable for a build project or a build.",
 				Resolver:      fetchCodebuildProjectEnvironmentVariables,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -500,6 +501,7 @@ func CodebuildProjects() *schema.Table {
 				Name:          "aws_codebuild_project_file_system_locations",
 				Description:   "Information about a file system created by Amazon Elastic File System (EFS)",
 				Resolver:      fetchCodebuildProjectFileSystemLocations,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -539,6 +541,7 @@ func CodebuildProjects() *schema.Table {
 				Name:          "aws_codebuild_project_secondary_artifacts",
 				Description:   "Information about the build output artifacts for the build project.",
 				Resolver:      fetchCodebuildProjectSecondaryArtifacts,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -603,6 +606,7 @@ func CodebuildProjects() *schema.Table {
 				Name:          "aws_codebuild_project_secondary_sources",
 				Description:   "Information about the build input source code for the build project.",
 				Resolver:      fetchCodebuildProjectSecondarySources,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

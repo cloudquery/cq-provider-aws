@@ -376,6 +376,7 @@ func CloudfrontDistributions() *schema.Table {
 				Description:   "A complex type that contains a Lambda function association.",
 				Resolver:      fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -405,6 +406,7 @@ func CloudfrontDistributions() *schema.Table {
 				Name:        "aws_cloudfront_distribution_origins",
 				Description: "An origin",
 				Resolver:    fetchCloudfrontDistributionOrigins,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -509,6 +511,7 @@ func CloudfrontDistributions() *schema.Table {
 				Name:        "aws_cloudfront_distribution_cache_behaviors",
 				Description: "A complex type that describes how CloudFront processes requests",
 				Resolver:    fetchCloudfrontDistributionCacheBehaviors,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -659,6 +662,7 @@ func CloudfrontDistributions() *schema.Table {
 						Description:   "A complex type that contains a Lambda function association.",
 						Resolver:      fetchCloudfrontDistributionCacheBehaviorLambdaFunctions,
 						IgnoreInTests: true,
+						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						Columns: []schema.Column{
 							{
 								Name:        "distribution_cache_behavior_cq_id",
@@ -690,6 +694,7 @@ func CloudfrontDistributions() *schema.Table {
 				Name:        "aws_cloudfront_distribution_custom_error_responses",
 				Description: "A complex type that controls:  * Whether CloudFront replaces HTTP status codes in the 4xx and 5xx range with custom error messages before returning the response to the viewer.  * How long CloudFront caches HTTP status codes in the 4xx and 5xx range.  For more information about custom error pages, see Customizing Error Responses (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/custom-error-pages.html) in the Amazon CloudFront Developer Guide.",
 				Resolver:    fetchCloudfrontDistributionCustomErrorResponses,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "distribution_cq_id",
@@ -724,6 +729,7 @@ func CloudfrontDistributions() *schema.Table {
 				Name:          "aws_cloudfront_distribution_origin_groups",
 				Description:   "An origin group includes two origins (a primary origin and a second origin to failover to) and a failover criteria that you specify",
 				Resolver:      fetchCloudfrontDistributionOriginGroups,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

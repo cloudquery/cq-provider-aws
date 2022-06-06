@@ -95,6 +95,7 @@ func CognitoIdentityPools() *schema.Table {
 				Name:          "aws_cognito_identity_pool_cognito_identity_providers",
 				Description:   "A provider representing an Amazon Cognito user pool and its client ID.",
 				Resolver:      fetchCognitoIdentityPoolCognitoIdentityProviders,
+				IgnoreError:   client.IgnoreCommonErrors,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

@@ -384,6 +384,7 @@ func Functions() *schema.Table {
 				Name:          "aws_lambda_function_file_system_configs",
 				Description:   "Details about the connection between a Lambda function and an Amazon EFS file system. ",
 				Resolver:      fetchLambdaFunctionFileSystemConfigs,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -414,6 +415,7 @@ func Functions() *schema.Table {
 				Name:        "aws_lambda_function_layers",
 				Description: "An Lambda layer (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html).",
 				Resolver:    fetchLambdaFunctionLayers,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "function_cq_id",
@@ -455,6 +457,7 @@ func Functions() *schema.Table {
 				Name:          "aws_lambda_function_event_invoke_configs",
 				Description:   "A configuration object that specifies the destination of an event after Lambda processes it. ",
 				Resolver:      fetchLambdaFunctionEventInvokeConfigs,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -501,6 +504,7 @@ func Functions() *schema.Table {
 				Name:          "aws_lambda_function_aliases",
 				Description:   "Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).",
 				Resolver:      fetchLambdaFunctionAliases,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -593,6 +597,7 @@ func Functions() *schema.Table {
 				Name:        "aws_lambda_function_versions",
 				Description: "Details about a function's configuration.",
 				Resolver:    fetchLambdaFunctionVersions,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "function_cq_id",
@@ -833,6 +838,7 @@ func Functions() *schema.Table {
 						Name:          "aws_lambda_function_version_file_system_configs",
 						Description:   "Details about the connection between a Lambda function and an Amazon EFS file system (https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html).",
 						Resolver:      fetchLambdaFunctionVersionFileSystemConfigs,
+						IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -857,6 +863,7 @@ func Functions() *schema.Table {
 						Name:        "aws_lambda_function_version_layers",
 						Description: "An Lambda layer (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html).",
 						Resolver:    fetchLambdaFunctionVersionLayers,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "function_version_cq_id",
@@ -894,6 +901,7 @@ func Functions() *schema.Table {
 				Name:          "aws_lambda_function_concurrency_configs",
 				Description:   "Details about the provisioned concurrency configuration for a function alias or version.",
 				Resolver:      fetchLambdaFunctionConcurrencyConfigs,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -944,6 +952,7 @@ func Functions() *schema.Table {
 				Name:          "aws_lambda_function_event_source_mappings",
 				Description:   "A mapping between an Amazon Web Services resource and a Lambda function",
 				Resolver:      fetchLambdaFunctionEventSourceMappings,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{

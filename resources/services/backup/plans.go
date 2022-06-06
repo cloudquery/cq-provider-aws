@@ -93,7 +93,7 @@ func Plans() *schema.Table {
 				Name:        "aws_backup_plan_rules",
 				Description: "Specifies a scheduled task used to back up a selection of resources.",
 				Resolver:    fetchPlanRules,
-				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "plan_cq_id",
@@ -171,7 +171,7 @@ func Plans() *schema.Table {
 				Name:        "aws_backup_plan_selections",
 				Description: "Contains metadata about a BackupSelection object.",
 				Resolver:    fetchBackupSelections,
-				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "plan_cq_id",

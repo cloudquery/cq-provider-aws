@@ -105,8 +105,9 @@ func Ec2EbsVolumes() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_ec2_ebs_volume_attachments",
-				Resolver: fetchEc2EbsVolumeAttachments,
+				Name:        "aws_ec2_ebs_volume_attachments",
+				Resolver:    fetchEc2EbsVolumeAttachments,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:     "ebs_volume_cq_id",

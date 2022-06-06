@@ -18,6 +18,7 @@ func LambdaRuntimes() *schema.Table {
 		Description:  "All known values for Runtime",
 		Resolver:     fetchLambdaRuntimes,
 		DeleteFilter: client.DeleteAllFilter,
+		IgnoreError:  client.IgnoreCommonErrors,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"name"}},
 		Global:       true,
 		Columns: []schema.Column{

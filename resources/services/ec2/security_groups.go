@@ -86,6 +86,7 @@ func Ec2SecurityGroups() *schema.Table {
 				Name:        "aws_ec2_security_group_ip_permissions",
 				Description: "Describes a set of permissions for a security group rule.",
 				Resolver:    fetchEc2SecurityGroupIpPermissions,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "security_group_cq_id",
@@ -118,6 +119,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_ip_ranges",
 						Description: "Details of a cidr range associated with a security group rule",
 						Resolver:    fetchEc2SecurityGroupIpPermissionIpRanges,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -145,6 +147,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:          "aws_ec2_security_group_ip_permission_prefix_list_ids",
 						Description:   "Describes a prefix list ID.",
 						Resolver:      fetchEc2SecurityGroupIpPermissionPrefixListIds,
+						IgnoreError:   client.IgnoreCommonErrors,
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -169,6 +172,7 @@ func Ec2SecurityGroups() *schema.Table {
 						Name:        "aws_ec2_security_group_ip_permission_user_id_group_pairs",
 						Description: "Describes a security group and AWS account ID pair.",
 						Resolver:    fetchEc2SecurityGroupIpPermissionUserIdGroupPairs,
+						IgnoreError: client.IgnoreCommonErrors,
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",

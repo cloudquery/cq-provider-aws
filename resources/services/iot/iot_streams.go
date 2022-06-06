@@ -78,6 +78,7 @@ func IotStreams() *schema.Table {
 				Name:        "aws_iot_stream_files",
 				Description: "Represents a file to stream.",
 				Resolver:    fetchIotStreamFiles,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "stream_cq_id",

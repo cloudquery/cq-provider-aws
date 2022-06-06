@@ -72,6 +72,7 @@ func SagemakerEndpointConfigurations() *schema.Table {
 				Description:   "Identifies a model that you want to host and the resources chosen to deploy for hosting it",
 				Resolver:      fetchSagemakerEndpointConfigurationProductionVariants,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "endpoint_configuration_cq_id",

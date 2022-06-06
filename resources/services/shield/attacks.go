@@ -70,6 +70,7 @@ func Attacks() *schema.Table {
 				Name:        "aws_shield_attack_properties",
 				Description: "Details of a Shield event",
 				Resolver:    fetchShieldAttackProperties,
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "attack_cq_id",
@@ -109,6 +110,7 @@ func Attacks() *schema.Table {
 				Name:        "aws_shield_attack_sub_resources",
 				Description: "The attack information for the specified SubResource",
 				Resolver:    fetchShieldAttackSubResources,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "attack_cq_id",

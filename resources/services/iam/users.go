@@ -199,6 +199,7 @@ func IamUsers() *schema.Table {
 				Name:                 "aws_iam_user_access_keys",
 				Resolver:             fetchIamUserAccessKeys,
 				PostResourceResolver: postIamUserAccessKeyResolver,
+				IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "user_cq_id",
@@ -248,6 +249,7 @@ func IamUsers() *schema.Table {
 				Name:          "aws_iam_user_groups",
 				Resolver:      fetchIamUserGroups,
 				IgnoreInTests: true,
+				IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 				Columns: []schema.Column{
 					{
 						Name:        "user_cq_id",
@@ -290,8 +292,9 @@ func IamUsers() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_iam_user_attached_policies",
-				Resolver: fetchIamUserAttachedPolicies,
+				Name:        "aws_iam_user_attached_policies",
+				Resolver:    fetchIamUserAttachedPolicies,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "user_cq_id",

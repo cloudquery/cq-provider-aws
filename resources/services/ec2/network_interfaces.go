@@ -266,6 +266,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "aws_ec2_network_interface_private_ip_addresses",
 				Description: "Describes the private IPv4 address of a network interface.",
 				Resolver:    fetchEc2NetworkInterfacePrivateIpAddresses,
+				IgnoreError: client.IgnoreCommonErrors,
 				Columns: []schema.Column{
 					{
 						Name:        "network_interface_cq_id",

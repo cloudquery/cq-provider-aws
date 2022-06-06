@@ -20,6 +20,7 @@ func ApplicationautoscalingPolicies() *schema.Table {
 		Multiplex:     client.ServiceAccountRegionNamespaceMultiplexer("application-autoscaling"),
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreError:   client.IgnoreCommonErrors,
 		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
