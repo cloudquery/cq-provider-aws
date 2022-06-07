@@ -669,7 +669,7 @@ func getCredentialReport(ctx context.Context, meta schema.ClientMeta) (reportUse
 				}
 				time.Sleep(5 * time.Second)
 			}
-		case "ReportInProgress", "LimitExceeded":
+		case "ReportInProgress":
 			meta.Logger().Debug("Waiting for credential report to be generated", "resource", "iam.users")
 			time.Sleep(5 * time.Second)
 		default:
