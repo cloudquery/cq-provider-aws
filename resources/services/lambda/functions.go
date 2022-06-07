@@ -1426,7 +1426,7 @@ func resolveFunctionEventSourceMappingsSourceAccessConfigurations(ctx context.Co
 func resolveFunctionsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*lambda.GetFunctionOutput)
 	if r.Tags == nil {
-		return resource.Set(c.Name, make(map[string]string))
+		return diag.WrapError(resource.Set(c.Name, make(map[string]string)))
 	}
 	return resource.Set(c.Name, r.Tags)
 }
