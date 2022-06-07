@@ -1428,5 +1428,5 @@ func resolveFunctionsTags(ctx context.Context, meta schema.ClientMeta, resource 
 	if r.Tags == nil {
 		return diag.WrapError(resource.Set(c.Name, make(map[string]string)))
 	}
-	return resource.Set(c.Name, r.Tags)
+	return diag.WrapError(resource.Set(c.Name, r.Tags))
 }
