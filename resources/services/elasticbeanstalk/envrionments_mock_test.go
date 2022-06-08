@@ -1,8 +1,10 @@
 package elasticbeanstalk
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elasticbeanstalkTypes "github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -20,18 +22,25 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 		t.Fatal(err)
 	}
 
-	l := elasticbeanstalkTypes.EnvironmentDescription{
-		ApplicationName: la.ApplicationName,
-	}
-	err = faker.FakeData(&l)
+	// l := elasticbeanstalkTypes.EnvironmentDescription{
+	// 	ApplicationName: la.ApplicationName,
+	// }
+	environmentDescriptionsList, err := faker.FakeDataNullablePermutations(elasticbeanstalkTypes.EnvironmentDescription{})
 	if err != nil {
 		t.Fatal(err)
 	}
+	describeEnvOutput := elasticbeanstalk.DescribeEnvironmentsOutput{
+		Environments: environmentDescriptionsList.([]elasticbeanstalkTypes.EnvironmentDescription),
+	}
+	for i := range describeEnvOutput.Environments {
+		describeEnvOutput.Environments[i].ApplicationName = la.ApplicationName
+		describeEnvOutput.Environments[i].PlatformArn = aws.String(fmt.Sprintf("arn-%d", i))
+		describeEnvOutput.Environments[i].EnvironmentArn = aws.String(fmt.Sprintf("arn-%d", i))
+		describeEnvOutput.Environments[i].EnvironmentId = aws.String(fmt.Sprintf("id-%d", i))
+	}
 
 	m.EXPECT().DescribeEnvironments(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&elasticbeanstalk.DescribeEnvironmentsOutput{
-			Environments: []elasticbeanstalkTypes.EnvironmentDescription{l},
-		}, nil)
+		&describeEnvOutput, nil)
 
 	tags := elasticbeanstalk.ListTagsForResourceOutput{}
 	err = faker.FakeData(&tags)
@@ -39,7 +48,7 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 		t.Fatal(err)
 	}
 
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(
 		&tags, nil)
 
 	configSettingsOutput := elasticbeanstalk.DescribeConfigurationSettingsOutput{}
@@ -47,14 +56,14 @@ func buildElasticbeanstalkEnvironments(t *testing.T, ctrl *gomock.Controller) cl
 	if err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().DescribeConfigurationSettings(gomock.Any(), gomock.Any(), gomock.Any()).Return(&configSettingsOutput, nil)
+	m.EXPECT().DescribeConfigurationSettings(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(&configSettingsOutput, nil)
 
 	configOptsOutput := elasticbeanstalk.DescribeConfigurationOptionsOutput{}
 	err = faker.FakeData(&configOptsOutput)
 	if err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().DescribeConfigurationOptions(gomock.Any(), gomock.Any(), gomock.Any()).Return(&configOptsOutput, nil)
+	m.EXPECT().DescribeConfigurationOptions(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(&configOptsOutput, nil)
 
 	return client.Services{
 		ElasticBeanstalk: m,

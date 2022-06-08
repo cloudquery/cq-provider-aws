@@ -1,6 +1,7 @@
 package applicationautoscaling
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
@@ -17,11 +18,18 @@ func buildApplicationAutoscalingPoliciesMock(t *testing.T, ctrl *gomock.Controll
 		ApplicationAutoscaling: m,
 	}
 	c := types.ScalingPolicy{}
-	if err := faker.FakeData(&c); err != nil {
+	cList, err := faker.FakeDataNullablePermutations(c)
+	if err != nil {
 		t.Fatal(err)
 	}
+	fmt.Println("hello")
 	output := &applicationautoscaling.DescribeScalingPoliciesOutput{
-		ScalingPolicies: []types.ScalingPolicy{c},
+		ScalingPolicies: cList.([]types.ScalingPolicy),
+	}
+
+	for i := range output.ScalingPolicies {
+		s := "somearn" + fmt.Sprintf("%d", i)
+		output.ScalingPolicies[i].PolicyARN = &s
 	}
 	m.EXPECT().DescribeScalingPolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		output,

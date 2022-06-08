@@ -292,7 +292,9 @@ func resolveCloudwatchAlarmDimensions(ctx context.Context, meta schema.ClientMet
 	alarm := resource.Item.(types.MetricAlarm)
 	dimensions := make(map[string]*string)
 	for _, d := range alarm.Dimensions {
-		dimensions[*d.Name] = d.Value
+		if d.Name != nil {
+			dimensions[*d.Name] = d.Value
+		}
 	}
 	return diag.WrapError(resource.Set("dimensions", dimensions))
 }
@@ -308,7 +310,9 @@ func resolveCloudwatchAlarmMetricMetricStatMetricDimensions(ctx context.Context,
 	}
 	dimensions := make(map[string]*string)
 	for _, d := range metric.MetricStat.Metric.Dimensions {
-		dimensions[*d.Name] = d.Value
+		if d.Name != nil {
+			dimensions[*d.Name] = d.Value
+		}
 	}
 	return diag.WrapError(resource.Set("metric_stat_metric_dimensions", dimensions))
 }

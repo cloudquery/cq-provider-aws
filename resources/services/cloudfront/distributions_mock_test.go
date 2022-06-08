@@ -1,6 +1,7 @@
 package cloudfront
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
@@ -17,13 +18,18 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 		Cloudfront: m,
 	}
 	ds := cloudfrontTypes.DistributionSummary{}
-	if err := faker.FakeData(&ds); err != nil {
+	dsList, err := faker.FakeDataNullablePermutations(ds)
+	if err != nil {
 		t.Fatal(err)
 	}
 	cloudfrontOutput := &cloudfront.ListDistributionsOutput{
 		DistributionList: &cloudfrontTypes.DistributionList{
-			Items: []cloudfrontTypes.DistributionSummary{ds},
+			Items: dsList.([]cloudfrontTypes.DistributionSummary),
 		},
+	}
+	for i := range cloudfrontOutput.DistributionList.Items {
+		s := "somearn" + fmt.Sprintf("%d", i)
+		cloudfrontOutput.DistributionList.Items[i].ARN = &s
 	}
 	m.EXPECT().ListDistributions(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		cloudfrontOutput,
@@ -34,7 +40,8 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 	if err := faker.FakeData(&distribution); err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().GetDistribution(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+
+	m.EXPECT().GetDistribution(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(
 		distribution,
 		nil,
 	)
@@ -43,7 +50,7 @@ func buildCloudfrontDistributionsMock(t *testing.T, ctrl *gomock.Controller) cli
 	if err := faker.FakeData(&tags); err != nil {
 		t.Fatal(err)
 	}
-	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	m.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(
 		tags,
 		nil,
 	)

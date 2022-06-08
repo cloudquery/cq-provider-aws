@@ -16,15 +16,17 @@ func buildACMCertificates(t *testing.T, ctrl *gomock.Controller) client.Services
 	mock := mocks.NewMockACMClient(ctrl)
 
 	var cs types.CertificateSummary
-	if err := faker.FakeData(&cs); err != nil {
+	csList, err := faker.FakeDataNullablePermutations(cs)
+	if err != nil {
 		t.Fatal(err)
 	}
+
 	mock.EXPECT().ListCertificates(
 		gomock.Any(),
 		&acm.ListCertificatesInput{},
 		gomock.Any(),
 	).Return(
-		&acm.ListCertificatesOutput{CertificateSummaryList: []types.CertificateSummary{cs}},
+		&acm.ListCertificatesOutput{CertificateSummaryList: csList.([]types.CertificateSummary)},
 		nil,
 	)
 

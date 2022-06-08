@@ -1,6 +1,7 @@
 package cloudtrail
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -17,13 +18,18 @@ func buildCloudtrailTrailsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 	services := client.Services{
 		Cloudtrail: m,
 	}
-	trail := cloudtrailTypes.Trail{}
-	err := faker.FakeData(&trail)
+	trailList, err := faker.FakeDataNullablePermutations(cloudtrailTypes.Trail{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	trail.TrailARN = aws.String("arn:aws:cloudtrail:eu-central-1:testAccount:trail/test-trail")
+	describeTrailOutput := cloudtrail.DescribeTrailsOutput{
+		TrailList: trailList.([]cloudtrailTypes.Trail),
+	}
+
+	for i := range describeTrailOutput.TrailList {
+		describeTrailOutput.TrailList[i].TrailARN = aws.String(fmt.Sprintf("arn:aws:cloudtrail:eu-central-1:testAccount:trail/test-%d", i))
+	}
 
 	trailStatus := cloudtrail.GetTrailStatusOutput{}
 	err = faker.FakeData(&trailStatus)
@@ -36,12 +42,10 @@ func buildCloudtrailTrailsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 		t.Fatal(err)
 	}
 	m.EXPECT().DescribeTrails(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&cloudtrail.DescribeTrailsOutput{
-			TrailList: []cloudtrailTypes.Trail{trail},
-		},
+		&describeTrailOutput,
 		nil,
 	)
-	m.EXPECT().GetTrailStatus(gomock.Any(), gomock.Any(), gomock.Any()).Return(
+	m.EXPECT().GetTrailStatus(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(
 		&trailStatus,
 		nil,
 	)
@@ -56,9 +60,9 @@ func buildCloudtrailTrailsMock(t *testing.T, ctrl *gomock.Controller) client.Ser
 	if err != nil {
 		t.Fatal(err)
 	}
-	tags.ResourceTagList[0].ResourceId = trail.TrailARN
+	tags.ResourceTagList[0].ResourceId = aws.String(fmt.Sprintf("arn:aws:cloudtrail:eu-central-1:testAccount:trail/test-%d", 1))
 	tags.NextToken = nil
-	m.EXPECT().ListTags(gomock.Any(), gomock.Any(), gomock.Any()).Return(&tags, nil)
+	m.EXPECT().ListTags(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(&tags, nil)
 
 	return services
 }

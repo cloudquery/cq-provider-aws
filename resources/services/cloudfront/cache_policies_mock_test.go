@@ -1,6 +1,7 @@
 package cloudfront
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
@@ -17,14 +18,19 @@ func buildCloudfrontCachePoliciesMock(t *testing.T, ctrl *gomock.Controller) cli
 		Cloudfront: m,
 	}
 	cp := cloudfrontTypes.CachePolicySummary{}
-	if err := faker.FakeData(&cp); err != nil {
+	cpList, err := faker.FakeDataNullablePermutations(cp)
+	if err != nil {
 		t.Fatal(err)
 	}
 
 	cloudfrontOutput := &cloudfront.ListCachePoliciesOutput{
 		CachePolicyList: &cloudfrontTypes.CachePolicyList{
-			Items: []cloudfrontTypes.CachePolicySummary{cp},
+			Items: cpList.([]cloudfrontTypes.CachePolicySummary),
 		},
+	}
+	for i := range cloudfrontOutput.CachePolicyList.Items {
+		s := "somearn" + fmt.Sprintf("%d", i)
+		cloudfrontOutput.CachePolicyList.Items[i].CachePolicy.Id = &s
 	}
 	m.EXPECT().ListCachePolicies(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		cloudfrontOutput,

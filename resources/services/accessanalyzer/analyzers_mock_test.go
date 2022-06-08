@@ -14,7 +14,8 @@ import (
 func buildAccessAnalyzer(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockAnalyzerClient(ctrl)
 	u := types.AnalyzerSummary{}
-	if err := faker.FakeData(&u); err != nil {
+	uList, err := faker.FakeDataNullablePermutations(u)
+	if err != nil {
 		t.Fatal(err)
 	}
 	f := types.FindingSummary{}
@@ -24,7 +25,7 @@ func buildAccessAnalyzer(t *testing.T, ctrl *gomock.Controller) client.Services 
 
 	m.EXPECT().ListAnalyzers(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&accessanalyzer.ListAnalyzersOutput{
-			Analyzers: []types.AnalyzerSummary{u},
+			Analyzers: uList.([]types.AnalyzerSummary),
 		}, nil)
 
 	m.EXPECT().ListFindings(gomock.Any(), gomock.Any(), gomock.Any()).Return(

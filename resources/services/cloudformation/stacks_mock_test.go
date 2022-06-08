@@ -1,6 +1,7 @@
 package cloudformation
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
@@ -14,16 +15,30 @@ import (
 func buildStacks(t *testing.T, ctrl *gomock.Controller) client.Services {
 	mock := mocks.NewMockCloudFormationClient(ctrl)
 
-	var stack types.Stack
-	if err := faker.FakeData(&stack); err != nil {
+	if err := faker.SetRandomMapAndSliceMinSize(1); err != nil {
 		t.Fatal(err)
+	}
+	if err := faker.SetRandomMapAndSliceMaxSize(1); err != nil {
+		t.Fatal(err)
+	}
+
+	var stack types.Stack
+	stackList, err := faker.FakeDataNullablePermutations(stack)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := cloudformation.DescribeStacksOutput{Stacks: stackList.([]types.Stack)}
+	for i := range o.Stacks {
+		s := "somearn" + fmt.Sprintf("%d", i)
+		o.Stacks[i].StackId = &s
 	}
 	mock.EXPECT().DescribeStacks(
 		gomock.Any(),
 		&cloudformation.DescribeStacksInput{},
 		gomock.Any(),
 	).Return(
-		&cloudformation.DescribeStacksOutput{Stacks: []types.Stack{stack}},
+		&o,
 		nil,
 	)
 

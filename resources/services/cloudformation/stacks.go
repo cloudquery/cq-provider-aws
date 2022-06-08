@@ -320,7 +320,9 @@ func resolveStacksTags(_ context.Context, _ schema.ClientMeta, resource *schema.
 	r := resource.Item.(types.Stack)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
+		if t.Key != nil {
+			tags[*t.Key] = t.Value
+		}
 	}
 	return diag.WrapError(resource.Set("tags", tags))
 }
