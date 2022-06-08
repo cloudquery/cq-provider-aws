@@ -52,8 +52,8 @@ resource "aws" "ec2" "egress_only_internet_gateways" {
   }
 
   userDefinedColumn "arn" {
-    type        = "string"
-    description = "The Amazon Resource Name (ARN) for the egress-only internet gateway."
+    type              = "string"
+    description       = "The Amazon Resource Name (ARN) for the egress-only internet gateway."
     generate_resolver = false
   }
 
@@ -130,14 +130,14 @@ resource "aws" "ec2" "network_interfaces" {
   }
 
   userDefinedColumn "arn" {
-    type        = "string"
-    description = "The Amazon Resource Name (ARN) for the egress-only internet gateway."
+    type              = "string"
+    description       = "The Amazon Resource Name (ARN) for the egress-only internet gateway."
     generate_resolver = false
   }
 
   userDefinedColumn "tags" {
-    type        = "json"
-    description = "Any tags assigned to the network interface."
+    type              = "json"
+    description       = "Any tags assigned to the network interface."
     generate_resolver = false
   }
 
@@ -211,9 +211,84 @@ resource "aws" "ec2" "hosts" {
   }
 
   userDefinedColumn "arn" {
-    type        = "string"
-    description = "The Amazon Resource Name (ARN) for the dedicated host."
+    type              = "string"
+    description       = "The Amazon Resource Name (ARN) for the dedicated host."
     generate_resolver = false
   }
 
+}
+
+
+resource "aws" "ec2" "eips" {
+  path = "github.com/aws/aws-sdk-go-v2/service/ec2/types.Address"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["ec2"]
+  }
+
+
+  options {
+    primary_keys = ["account_id", "public_ip"]
+  }
+
+  userDefinedColumn "account_id" {
+    description = "The AWS Account ID of the resource."
+    type        = "string"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "private_ip_address" {
+    type = "inet"
+    resolver "ColumnResolver" {
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.IPAddressResolver"
+      params = ["PrivateIpAddress"]
+    }
+  }
+
+  column "public_ip" {
+    type = "inet"
+    resolver "ColumnResolver" {
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.IPAddressResolver"
+      params = ["PublicIp"]
+    }
+  }
+
+  column "customer_owned_ip" {
+    type = "inet"
+    resolver "ColumnResolver" {
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.IPAddressResolver"
+      params = ["CustomerOwnedIp"]
+    }
+  }
+
+
+  column "carrier_ip" {
+    type = "inet"
+    resolver "ColumnResolver" {
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.IPAddressResolver"
+      params = ["CarrierIp"]
+    }
+  }
+
+
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+    description       = "Any tags assigned to the Elastic IP address."
+  }
 }

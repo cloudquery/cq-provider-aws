@@ -10,7 +10,8 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func Ec2Eips() *schema.Table {
+//go:generate cq-gen --resource eips --config gen.hcl --output .
+func Eips() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_ec2_eips",
 		Description:  "Describes an Elastic IP address, or a carrier IP address.",
@@ -18,7 +19,7 @@ func Ec2Eips() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
 		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "allocation_id"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "public_ip"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -75,7 +76,7 @@ func Ec2Eips() *schema.Table {
 			},
 			{
 				Name:        "network_border_group",
-				Description: "The name of the unique set of Availability Zones, Local Zones, or Wavelength Zones from which AWS advertises IP addresses.",
+				Description: "The name of the unique set of Availability Zones, Local Zones, or Wavelength Zones from which Amazon Web Services advertises IP addresses.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -85,7 +86,7 @@ func Ec2Eips() *schema.Table {
 			},
 			{
 				Name:        "network_interface_owner_id",
-				Description: "The ID of the AWS account that owns the network interface.",
+				Description: "The ID of the Amazon Web Services account that owns the network interface.",
 				Type:        schema.TypeString,
 			},
 			{
@@ -109,7 +110,7 @@ func Ec2Eips() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the Elastic IP address.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEc2eipTags,
+				Resolver:    resolveEipsTags,
 			},
 		},
 	}
@@ -118,6 +119,7 @@ func Ec2Eips() *schema.Table {
 // ====================================================================================================================
 //                                               Table Resolver Functions
 // ====================================================================================================================
+
 func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
@@ -130,11 +132,11 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	res <- output.Addresses
 	return nil
 }
-func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveEipsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Address)
 	tags := map[string]*string{}
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return diag.WrapError(resource.Set(c.Name, tags))
 }
