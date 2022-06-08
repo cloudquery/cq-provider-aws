@@ -428,7 +428,7 @@ func fetchAthenaWorkGroups(ctx context.Context, meta schema.ClientMeta, parent *
 			func(summary types.WorkGroupSummary) {
 				errs.Go(func() error {
 					defer sem.Release(1)
-					return fetchWorkGroup(ctx, res, svc, c.Region, summary)
+					return fetchWorkGroup(ctx, res, c, c.Region, summary)
 				})
 			}(d)
 		}
@@ -491,6 +491,9 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.PreparedStatement
@@ -517,12 +520,14 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 		}
 		for _, d := range response.QueryExecutionIds {
 			dc, err := svc.GetQueryExecution(ctx, &athena.GetQueryExecutionInput{
-
 				QueryExecutionId: aws.String(d),
 			}, func(options *athena.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.QueryExecution
@@ -554,6 +559,9 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.NamedQuery
@@ -571,13 +579,17 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-func fetchWorkGroup(ctx context.Context, res chan<- interface{}, svc client.AthenaClient, region string, groupSummary types.WorkGroupSummary) error {
+func fetchWorkGroup(ctx context.Context, res chan<- interface{}, c *client.Client, region string, groupSummary types.WorkGroupSummary) error {
+	svc := c.Services().Athena
 	dc, err := svc.GetWorkGroup(ctx, &athena.GetWorkGroupInput{
 		WorkGroup: groupSummary.Name,
 	}, func(options *athena.Options) {
 		options.Region = region
 	})
 	if err != nil {
+		if c.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 	res <- *dc.WorkGroup
