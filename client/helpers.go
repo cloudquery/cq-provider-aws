@@ -15,7 +15,6 @@ import (
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -38,7 +37,7 @@ type SupportedServiceRegionsData struct {
 
 type ListResolver func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
 
-type DetailResolver func(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error
+type DetailResolver func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
 
 const (
 	ApigatewayService           AWSService = "apigateway"
@@ -393,26 +392,38 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 }
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolver, details DetailResolver) error {
+	var diags diag.Diagnostics
+	var wg sync.WaitGroup
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
-	errs, ctx := errgroup.WithContext(ctx)
+	errorChan := make(chan error)
 	response, err := list(ctx, meta)
 	if err != nil {
 		return diag.WrapError(err)
 	}
+	// All items will be attempted to be fetched, but could return an error
+	wg.Add(len(response))
 	for _, item := range response {
 		if err := sem.Acquire(ctx, 1); err != nil {
 			return diag.WrapError(err)
 		}
 		func(summary interface{}) {
-			errs.Go(func() error {
-				defer sem.Release(1)
-				return details(ctx, meta, res, summary)
-			})
+			defer wg.Done()
+			defer sem.Release(1)
+			details(ctx, meta, res, errorChan, summary)
+
 		}(item)
 	}
-	err = errs.Wait()
-	if err != nil {
-		return diag.WrapError(err)
+	// Ensure all items have been attempted to be fetched
+	wg.Wait()
+
+	// empty the error channel and convert to Diags
+	for len(errorChan) > 0 {
+		diags = diags.Add(diag.FromError(<-errorChan, diag.RESOLVING))
+	}
+
+	// Only return the diags if there is an error
+	if diags.HasErrors() {
+		return diags
 	}
 	return nil
 }
