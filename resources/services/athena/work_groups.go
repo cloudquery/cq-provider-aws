@@ -572,7 +572,6 @@ func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan
 	if err != nil {
 		errorChan <- err
 	}
-
 	resultsChan <- *dc.WorkGroup
 
 }

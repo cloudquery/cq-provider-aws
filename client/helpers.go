@@ -410,7 +410,6 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 			defer wg.Done()
 			defer sem.Release(1)
 			details(ctx, meta, res, errorChan, summary)
-
 		}(item)
 	}
 	// Ensure all items have been attempted to be fetched
