@@ -17,7 +17,8 @@ func WorkGroups() *schema.Table {
 		Name:        "aws_athena_work_groups",
 		Description: "A workgroup, which contains a name, description, creation time, state, and other configuration, listed under WorkGroup$Configuration",
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listWorkGroups, getWorkGroupDetail))
+			err := diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listWorkGroups, getWorkGroupDetail))
+			return err
 		},
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -559,7 +560,7 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, summary interface{}) error {
+func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{}) {
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	wg := summary.(types.WorkGroupSummary)
@@ -569,10 +570,11 @@ func getWorkGroupDetail(ctx context.Context, meta schema.ClientMeta, res chan<- 
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		errorChan <- err
 	}
-	res <- *dc.WorkGroup
-	return nil
+
+	resultsChan <- *dc.WorkGroup
+
 }
 
 func createWorkGroupArn(cl *client.Client, groupName string) string {
