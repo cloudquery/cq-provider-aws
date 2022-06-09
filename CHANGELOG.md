@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.12.8](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.7...v0.12.8) (2022-06-08)
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.11.0 ([#1023](https://github.com/cloudquery/cq-provider-aws/issues/1023)) ([ae18dbb](https://github.com/cloudquery/cq-provider-aws/commit/ae18dbbdc3511d6533ed01ae37643fb79415a22a))
+* Ignore listener certs for gateway listeners ([#1005](https://github.com/cloudquery/cq-provider-aws/issues/1005)) ([6553c8c](https://github.com/cloudquery/cq-provider-aws/commit/6553c8c7febdaa99af5fff9662aafab013561f62))
+* Lambda function Tags null ([#1016](https://github.com/cloudquery/cq-provider-aws/issues/1016)) ([35721ba](https://github.com/cloudquery/cq-provider-aws/commit/35721ba79fddf132b4d78cfd07dabbc395e5f2e7))
+* Panic in fetchRdsInstanceDbSubnetGroupSubnets ([#1020](https://github.com/cloudquery/cq-provider-aws/issues/1020)) ([0aa25cf](https://github.com/cloudquery/cq-provider-aws/commit/0aa25cfb47eb3271387dcd16fd88a18d3aa9b5f4))
+* Panic in IsInvalidParameterValueError ([#1019](https://github.com/cloudquery/cq-provider-aws/issues/1019)) ([32df59e](https://github.com/cloudquery/cq-provider-aws/commit/32df59e1e15a6ffcc9c173f86c2b9fbea6d4237a))
+* Update endpoints ([#1025](https://github.com/cloudquery/cq-provider-aws/issues/1025)) ([bf3e6ec](https://github.com/cloudquery/cq-provider-aws/commit/bf3e6ec3f660f3a180bd7a05e73c1f53cffa8c41))
+
+## [0.12.7](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.6...v0.12.7) (2022-06-07)
+
+
+### Bug Fixes
+
+* AWS configuration error level owerwrite removed ([#999](https://github.com/cloudquery/cq-provider-aws/issues/999)) ([32d60e6](https://github.com/cloudquery/cq-provider-aws/commit/32d60e69a030c6b90ac9c5b4caa6a329c952ac7d))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.10.10 ([#1014](https://github.com/cloudquery/cq-provider-aws/issues/1014)) ([2398536](https://github.com/cloudquery/cq-provider-aws/commit/23985362a12a2050457243b4a90413bee2325f38))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.10.11 ([#1015](https://github.com/cloudquery/cq-provider-aws/issues/1015)) ([0c3cf3f](https://github.com/cloudquery/cq-provider-aws/commit/0c3cf3f501293e8632ad8a5d0e82a2a0b6856c83))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.10.9 ([#1012](https://github.com/cloudquery/cq-provider-aws/issues/1012)) ([f566007](https://github.com/cloudquery/cq-provider-aws/commit/f566007556de1d4cc2b048d7fc38c603dedb048e))
+* Not Supported region added to error classifier ([#1006](https://github.com/cloudquery/cq-provider-aws/issues/1006)) ([be79739](https://github.com/cloudquery/cq-provider-aws/commit/be7973907251f089dcc988ae0d094a3e2416a5fe))
+* Update endpoints ([#1017](https://github.com/cloudquery/cq-provider-aws/issues/1017)) ([729f230](https://github.com/cloudquery/cq-provider-aws/commit/729f23097a0c40659dff2aca154d82dcec409136))
+
+## [0.12.6](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.5...v0.12.6) (2022-06-07)
+
+
+### Features
+
+* Added Target Health Descriptions to Target Groups ([#996](https://github.com/cloudquery/cq-provider-aws/issues/996)) ([d1ffc37](https://github.com/cloudquery/cq-provider-aws/commit/d1ffc372bd5715c5756b206b3d1a885e0dd5c636))
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.10.8 ([#1011](https://github.com/cloudquery/cq-provider-aws/issues/1011)) ([0d8f687](https://github.com/cloudquery/cq-provider-aws/commit/0d8f687579c78ba1a11b3bc8ceb415ab6aa9d872))
+* Update endpoints ([#1008](https://github.com/cloudquery/cq-provider-aws/issues/1008)) ([6bfa91a](https://github.com/cloudquery/cq-provider-aws/commit/6bfa91ae63f5707ee17e135244731157882703ae))
+
 ## [0.12.5](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.4...v0.12.5) (2022-06-06)
 
 
