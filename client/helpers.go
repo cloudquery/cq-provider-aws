@@ -394,8 +394,19 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolver, details DetailResolver) error {
 	var diags diag.Diagnostics
 	var wg sync.WaitGroup
-	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	errorChan := make(chan error)
+
+	// Channel that will communicate with goroutine that is aggregating the errors
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for detailError := range errorChan {
+			diags = diags.Add(diag.FromError(detailError, diag.RESOLVING))
+		}
+	}()
+
+	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
+
 	response, err := list(ctx, meta)
 	if err != nil {
 		return diag.WrapError(err)
@@ -415,10 +426,8 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	// Ensure all items have been attempted to be fetched
 	wg.Wait()
 
-	// empty the error channel and convert to Diags
-	for len(errorChan) > 0 {
-		diags = diags.Add(diag.FromError(<-errorChan, diag.RESOLVING))
-	}
+	// This will trigger aggregating go routine to stop
+	close(errorChan)
 
 	// Only return the diags if there is an error
 	if diags.HasErrors() {
