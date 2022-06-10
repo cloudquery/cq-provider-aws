@@ -309,20 +309,6 @@ func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) strin
 	return makeARN(service, c.Partition, "", "", idParts...).String()
 }
 
-func (c *Client) withPartitionAccountID(partition, accountID string) *Client {
-	return &Client{
-		Partition:            partition,
-		logLevel:             c.logLevel,
-		maxRetries:           c.maxRetries,
-		maxBackoff:           c.maxBackoff,
-		ServicesManager:      c.ServicesManager,
-		logger:               c.logger.With("account_id", obfuscateAccountId(accountID)),
-		AccountID:            accountID,
-		Region:               c.GlobalRegion,
-		AutoscalingNamespace: c.AutoscalingNamespace,
-	}
-}
-
 func (c *Client) withPartitionAccountIDAndRegion(partition, accountID, region string) *Client {
 	return &Client{
 		Partition:            partition,
