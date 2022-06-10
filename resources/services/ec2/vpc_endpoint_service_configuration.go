@@ -164,13 +164,9 @@ func resolveEc2VpcEndpointServiceConfigurationServiceType(ctx context.Context, m
 	for _, std := range r.ServiceType {
 		st = append(st, string(std.ServiceType))
 	}
-	return diag.WrapError(resource.Set("service_type", st))
+	return diag.WrapError(resource.Set(c.Name, st))
 }
 func resolveEc2VpcEndpointServiceConfigurationTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ServiceConfiguration)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }

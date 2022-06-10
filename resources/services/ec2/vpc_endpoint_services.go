@@ -147,7 +147,7 @@ func resolveEc2VpcEndpointServicePrivateDnsNames(ctx context.Context, meta schem
 	for _, n := range r.PrivateDnsNames {
 		pdn = append(pdn, *n.PrivateDnsName)
 	}
-	return diag.WrapError(resource.Set("private_dns_names", pdn))
+	return diag.WrapError(resource.Set(c.Name, pdn))
 }
 func resolveEc2VpcEndpointServiceServiceType(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ServiceDetail)
@@ -155,13 +155,9 @@ func resolveEc2VpcEndpointServiceServiceType(ctx context.Context, meta schema.Cl
 	for _, std := range r.ServiceType {
 		st = append(st, string(std.ServiceType))
 	}
-	return diag.WrapError(resource.Set("service_type", st))
+	return diag.WrapError(resource.Set(c.Name, st))
 }
 func resolveEc2VpcEndpointServiceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ServiceDetail)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
