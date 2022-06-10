@@ -58,7 +58,7 @@ func TestRemovePII(t *testing.T) {
 	}
 	for i, tc := range cases {
 
-		res := removePII([]string{"012345678910"}, tc.Input)
+		res := removePII([]string{"123456789"}, tc.Input)
 		assert.Equalf(t, tc.Expected, res, "Case #%d", i+1)
 	}
 }
