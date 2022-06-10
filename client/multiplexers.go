@@ -12,8 +12,10 @@ var AllNamespaces = []string{ // this is only used in applicationautoscaling
 func AccountMultiplex(meta schema.ClientMeta) []schema.ClientMeta {
 	var l = make([]schema.ClientMeta, 0)
 	client := meta.(*Client)
-	for accountID := range client.ServicesManager.services {
-		l = append(l, client.withAccountID(accountID))
+	for partition := range client.ServicesManager.services {
+		for accountID := range client.ServicesManager.services[partition] {
+			l = append(l, client.withPartitionAccountID(partition, accountID))
+		}
 	}
 	return l
 }
@@ -22,13 +24,15 @@ func ServiceAccountRegionMultiplexer(service string) func(meta schema.ClientMeta
 	return func(meta schema.ClientMeta) []schema.ClientMeta {
 		var l = make([]schema.ClientMeta, 0)
 		client := meta.(*Client)
-		for accountID := range client.ServicesManager.services {
-			for region := range client.ServicesManager.services[accountID] {
-				if !isSupportedServiceForRegion(service, region) {
-					meta.Logger().Trace("region is not supported for service", "service", service, "region", region)
-					continue
+		for partition := range client.ServicesManager.services {
+			for accountID := range client.ServicesManager.services[partition] {
+				for region := range client.ServicesManager.services[partition][accountID] {
+					if !isSupportedServiceForRegion(service, region) {
+						meta.Logger().Trace("region is not supported for service", "service", service, "region", region, "partition", partition)
+						continue
+					}
+					l = append(l, client.withPartitionAccountIDAndRegion(partition, accountID, region))
 				}
-				l = append(l, client.withAccountIDAndRegion(accountID, region))
 			}
 		}
 		return l
@@ -39,14 +43,16 @@ func ServiceAccountRegionNamespaceMultiplexer(service string) func(meta schema.C
 	return func(meta schema.ClientMeta) []schema.ClientMeta {
 		var l = make([]schema.ClientMeta, 0)
 		client := meta.(*Client)
-		for accountID := range client.ServicesManager.services {
-			for region := range client.ServicesManager.services[accountID] {
-				if !isSupportedServiceForRegion(service, region) {
-					meta.Logger().Trace("region is not supported for service", "service", service, "region", region)
-					continue
-				}
-				for _, ns := range AllNamespaces {
-					l = append(l, client.withAccountIDRegionAndNamespace(accountID, region, ns))
+		for partition := range client.ServicesManager.services {
+			for accountID := range client.ServicesManager.services[partition] {
+				for region := range client.ServicesManager.services[partition][accountID] {
+					if !isSupportedServiceForRegion(service, region) {
+						meta.Logger().Trace("region is not supported for service", "service", service, "region", region)
+						continue
+					}
+					for _, ns := range AllNamespaces {
+						l = append(l, client.withPartitionAccountIDRegionAndNamespace(partition, accountID, region, ns))
+					}
 				}
 			}
 		}
@@ -58,15 +64,17 @@ func ServiceAccountRegionScopeMultiplexer(service string) func(meta schema.Clien
 	return func(meta schema.ClientMeta) []schema.ClientMeta {
 		var l = make([]schema.ClientMeta, 0)
 		client := meta.(*Client)
-		for accountID := range client.ServicesManager.services {
-			// always fetch cloudfront related resources
-			l = append(l, client.withAccountIDRegionAndScope(accountID, cloudfrontScopeRegion, wafv2types.ScopeCloudfront))
-			for region := range client.ServicesManager.services[accountID] {
-				if !isSupportedServiceForRegion(service, region) {
-					meta.Logger().Trace("region is not supported for service", "service", service, "region", region)
-					continue
+		for partition := range client.ServicesManager.services {
+			for accountID := range client.ServicesManager.services[partition] {
+				// always fetch cloudfront related resources
+				l = append(l, client.withPartitionAccountIDRegionAndScope(partition, accountID, cloudfrontScopeRegion, wafv2types.ScopeCloudfront))
+				for region := range client.ServicesManager.services[accountID] {
+					if !isSupportedServiceForRegion(service, region) {
+						meta.Logger().Trace("region is not supported for service", "service", service, "region", region)
+						continue
+					}
+					l = append(l, client.withPartitionAccountIDRegionAndScope(partition, accountID, region, wafv2types.ScopeRegional))
 				}
-				l = append(l, client.withAccountIDRegionAndScope(accountID, region, wafv2types.ScopeRegional))
 			}
 		}
 		return l
