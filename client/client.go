@@ -264,11 +264,13 @@ func NewAwsClient(logger hclog.Logger) Client {
 }
 
 func (s ServicesPartitionAccountRegionMap) Accounts() []string {
-	keys := make([]string, 0, len(s))
-	for k := range s {
-		keys = append(keys, k)
+	accounts := make([]string, 0)
+	for partitions := range s {
+		for account := range s[partitions] {
+			accounts = append(accounts, account)
+		}
 	}
-	return keys
+	return accounts
 }
 func (c *Client) Logger() hclog.Logger {
 	return &awsLogger{c.logger, c.ServicesManager.services.Accounts()}
