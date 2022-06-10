@@ -90,6 +90,7 @@ type Client struct {
 	logger          hclog.Logger
 	// this is set by table clientList
 	AccountID            string
+	GlobalRegion         string
 	Region               string
 	AutoscalingNamespace string
 	WAFScope             wafv2types.Scope
@@ -315,7 +316,7 @@ func (c *Client) withPartitionAccountID(partition, accountID string) *Client {
 		ServicesManager:      c.ServicesManager,
 		logger:               c.logger.With("account_id", obfuscateAccountId(accountID)),
 		AccountID:            accountID,
-		Region:               c.Region,
+		Region:               c.GlobalRegion,
 		AutoscalingNamespace: c.AutoscalingNamespace,
 	}
 }
@@ -468,6 +469,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger)
+	client.GlobalRegion = awsConfig.GlobalRegion
 	var adminAccountSts AssumeRoleAPIClient
 
 	if awsConfig.Organization != nil {
