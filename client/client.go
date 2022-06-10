@@ -186,6 +186,7 @@ type ServicesManager struct {
 const (
 	defaultRegion              = "us-east-1"
 	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
+	awsOrgsFailedToFindMembers = "failed to list Org member accounts. Make sure that your credentials have the proper permissions"
 	defaultVar                 = "default"
 	cloudfrontScopeRegion      = defaultRegion
 )
@@ -465,6 +466,13 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
 			logger.Error("error getting child accounts", "err", err)
+
+			var ae smithy.APIError
+			if errors.As(err, &ae) {
+				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
+					return nil, diags.Add(diag.FromError(fmt.Errorf(awsOrgsFailedToFindMembers), diag.ACCESS, diag.WithSeverity(diag.ERROR)))
+				}
+			}
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 	}
@@ -507,7 +515,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			}
 			var ae smithy.APIError
 			if errors.As(err, &ae) {
-				if ae.ErrorCode() == "AccessDenied" {
+				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
 					diags = diags.Add(diag.FromError(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
 					continue
 				}
