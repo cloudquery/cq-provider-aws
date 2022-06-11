@@ -1,0 +1,90 @@
+{
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms" ]
+    },
+    "create" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms", "cloudwatch:PutCompositeAlarm" ]
+    },
+    "update" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms", "cloudwatch:PutCompositeAlarm" ]
+    },
+    "list" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms" ]
+    },
+    "delete" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms", "cloudwatch:DeleteAlarms" ]
+    }
+  },
+  "typeName" : "AWS::CloudWatch::CompositeAlarm",
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "description" : "The AWS::CloudWatch::CompositeAlarm type specifies an alarm which aggregates the states of other Alarms (Metric or Composite Alarms) as defined by the AlarmRule expression",
+  "createOnlyProperties" : [ "/properties/AlarmName" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AlarmName" ],
+  "properties" : {
+    "AlarmActions" : {
+      "maxItems" : 5,
+      "description" : "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Specify each action as an Amazon Resource Name (ARN).",
+      "type" : "array",
+      "items" : {
+        "minLength" : 1,
+        "description" : "Amazon Resource Name (ARN) of the action",
+        "type" : "string",
+        "maxLength" : 1024
+      }
+    },
+    "ActionsEnabled" : {
+      "description" : "Indicates whether actions should be executed during any changes to the alarm state. The default is TRUE.",
+      "type" : "boolean"
+    },
+    "AlarmName" : {
+      "minLength" : 1,
+      "description" : "The name of the Composite Alarm",
+      "type" : "string",
+      "maxLength" : 255
+    },
+    "AlarmDescription" : {
+      "minLength" : 0,
+      "description" : "The description of the alarm",
+      "type" : "string",
+      "maxLength" : 1024
+    },
+    "AlarmRule" : {
+      "minLength" : 1,
+      "description" : "Expression which aggregates the state of other Alarms (Metric or Composite Alarms)",
+      "type" : "string",
+      "maxLength" : 10240
+    },
+    "InsufficientDataActions" : {
+      "maxItems" : 5,
+      "description" : "The actions to execute when this alarm transitions to the INSUFFICIENT_DATA state from any other state. Each action is specified as an Amazon Resource Name (ARN).",
+      "type" : "array",
+      "items" : {
+        "minLength" : 1,
+        "description" : "Amazon Resource Name (ARN) of the action",
+        "type" : "string",
+        "maxLength" : 1024
+      }
+    },
+    "Arn" : {
+      "minLength" : 1,
+      "description" : "Amazon Resource Name (ARN) of the alarm",
+      "type" : "string",
+      "maxLength" : 1600
+    },
+    "OKActions" : {
+      "maxItems" : 5,
+      "description" : "The actions to execute when this alarm transitions to the OK state from any other state. Each action is specified as an Amazon Resource Name (ARN).",
+      "type" : "array",
+      "items" : {
+        "minLength" : 1,
+        "description" : "Amazon Resource Name (ARN) of the action",
+        "type" : "string",
+        "maxLength" : 1024
+      }
+    }
+  },
+  "required" : [ "AlarmName", "AlarmRule" ]
+}

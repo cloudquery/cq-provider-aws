@@ -1,0 +1,56 @@
+resources:
+#  - name: aws_acmpca_certificate # doesn't support list
+  - name: aws_accessanalyzer_analyzer
+#  - name: aws_apigateway_apikey
+  - name: aws_athena_workgroup
+#  - name: aws_athena_datacatalog # looks like something buggy here
+  - name: aws_autoscaling_launchconfiguration
+#  - name: aws_backup_backupplan # doesn't support list operations
+#  - name: aws_cloudformation_stackset # Issue reading stackset
+  # - name: aws_cloudfront_cachepolicy # account multiplexer
+  # - name: aws_cloudfront_distribution # account multiplexer
+  # - name: aws_cloudtrail_trail
+  - name: aws_cloudwatch_compositealarm
+#   - name: aws_config_conformancepack # the type conformancepack cannot be found
+  # - name: aws_config_configurationaggregator
+  - name: aws_dynamodb_globaltable
+  - name: aws_ec2_egressonlyinternetgateway
+  - name: aws_ec2_flowlog
+  - name: aws_ec2_host
+  - name: aws_ec2_internetgateway
+  - name: aws_ec2_networkacl
+  # - name: aws_ec2_networkinterface
+  - name: aws_ec2_routetable
+  # - name: aws_ec2_subnet # doesn't support list
+  # - name: aws_ec2_transitgateway should be supported but not supported for some way
+  - name: aws_ec2_vpc
+  - name: aws_ec2_vpcpeeringconnection
+  # - name: aws_ecr_repository # error parsing schema
+  - name: aws_ecs_cluster
+  - name: aws_ecs_taskdefinition
+  - name: aws_efs_filesystem
+  - name: aws_eks_cluster
+  # - name: aws_kms_key
+  # - name: aws_lambda_function
+  # - name: aws_rds_dbclusterparametergroup
+  # - name: aws_rds_dbparametergroup
+  # - name: aws_rds_dbsubnetgroup
+  # - name: aws_rds_globalcluster
+  # - name: aws_rds_eventsubscription
+  # - name: aws_iam_role
+  # - name: aws_iam_samlprovider
+  # - name: aws_iam_virtualmfadevice
+  # - name: aws_iam_servercertificate
+  # - name: aws_iot_certificate
+  # - name: aws_iot_jobtemplate
+  # - name: aws_iot_securityprofile
+  # - name: aws_iot_topicrule
+  - name: aws_redshift_cluster
+  - name: aws_sqs_queue
+  # - name: aws_ssm_document
+  # - name: aws_wafv2_ipset
+  # - name: aws_wafv2_rulegroup
+  # - name: aws_wafv2_webacl
+  # - name: aws_wafv2_regexpatternset
+  # - name: aws_xray_group
+  # - name: aws_xray_samplingrule

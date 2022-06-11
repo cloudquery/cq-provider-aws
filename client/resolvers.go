@@ -25,9 +25,9 @@ func ResolveAWSNamespace(_ context.Context, meta schema.ClientMeta, r *schema.Re
 	return r.Set("namespace", client.AutoscalingNamespace)
 }
 
-func ResolveWAFScope(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
-	return diag.WrapError(r.Set(c.Name, meta.(*Client).WAFScope))
-}
+// func ResolveWAFScope(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+// 	return diag.WrapError(r.Set(c.Name, meta.(*Client).WAFScope))
+// }
 
 func ResolveTags(ctx context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
 	return ResolveTagField("Tags")(ctx, meta, r, c)

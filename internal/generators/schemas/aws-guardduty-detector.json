@@ -1,0 +1,63 @@
+{
+  "typeName" : "AWS::GuardDuty::Detector",
+  "description" : "Resource Type definition for AWS::GuardDuty::Detector",
+  "additionalProperties" : false,
+  "properties" : {
+    "FindingPublishingFrequency" : {
+      "type" : "string"
+    },
+    "Enable" : {
+      "type" : "boolean"
+    },
+    "DataSources" : {
+      "$ref" : "#/definitions/CFNDataSourceConfigurations"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "CFNS3LogsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enable" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "CFNKubernetesAuditLogsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enable" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "CFNKubernetesConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AuditLogs" : {
+          "$ref" : "#/definitions/CFNKubernetesAuditLogsConfiguration"
+        }
+      }
+    },
+    "CFNDataSourceConfigurations" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Logs" : {
+          "$ref" : "#/definitions/CFNS3LogsConfiguration"
+        },
+        "Kubernetes" : {
+          "$ref" : "#/definitions/CFNKubernetesConfiguration"
+        }
+      }
+    }
+  },
+  "required" : [ "Enable" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -13,7 +12,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 type AWSService string
@@ -231,51 +229,51 @@ func makeARN(service AWSService, partition, accountID, region string, idParts ..
 	}
 }
 
-func resolveARN(service AWSService, resourceID func(resource *schema.Resource) ([]string, error), useRegion, useAccountID bool) schema.ColumnResolver {
-	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-		cl := meta.(*Client)
-		idParts, err := resourceID(resource)
-		if err != nil {
-			return fmt.Errorf("error resolving resource id: %w", err)
-		}
-		var accountID, region string
-		if useAccountID {
-			accountID = cl.AccountID
-		}
-		if useRegion {
-			region = cl.Region
-		}
-		return resource.Set(c.Name, makeARN(service, cl.Partition, accountID, region, idParts...).String())
-	}
-}
+// func resolveARN(service AWSService, resourceID func(resource *schema.Resource) ([]string, error), useRegion, useAccountID bool) schema.ColumnResolver {
+// 	return func(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+// 		cl := meta.(*Client)
+// 		idParts, err := resourceID(resource)
+// 		if err != nil {
+// 			return fmt.Errorf("error resolving resource id: %w", err)
+// 		}
+// 		var accountID, region string
+// 		if useAccountID {
+// 			accountID = cl.AccountID
+// 		}
+// 		if useRegion {
+// 			region = cl.Region
+// 		}
+// 		return resource.Set(c.Name, makeARN(service, cl.Partition, accountID, region, idParts...).String())
+// 	}
+// }
 
 // ResolveARNWithAccount returns a column resolver that will set a field value to a proper ARN
 // based on provided AWS service and resource id value returned by resourceID function.
 // Region is left empty and account id is set to the value of the client.
-func ResolveARNWithAccount(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
-	return resolveARN(service, resourceID, false, true)
-}
+// func ResolveARNWithAccount(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
+// 	return resolveARN(service, resourceID, false, true)
+// }
 
 // ResolveARNWithRegion returns a column resolver that will set a field value to a proper ARN
 // based on provided AWS service and resource id value returned by resourceID function.
 // Region is set to the value of the client and account id is left empty.
-func ResolveARNWithRegion(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
-	return resolveARN(service, resourceID, true, false)
-}
+// func ResolveARNWithRegion(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
+// 	return resolveARN(service, resourceID, true, false)
+// }
 
 // ResolveARN returns a column resolver that will set a field value to a proper ARN
 // based on provided AWS service and resource id value returned by resourceID function.
 // Region and account id are set to the values of the client.
-func ResolveARN(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
-	return resolveARN(service, resourceID, true, true)
-}
+// func ResolveARN(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
+// 	return resolveARN(service, resourceID, true, true)
+// }
 
 // ResolveARNGlobal returns a column resolver that will set a field value to a proper ARN
 // based on provided AWS service and resource id value returned by resourceID function.
 // Region  and account id are left empty.
-func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
-	return resolveARN(service, resourceID, false, false)
-}
+// func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resource) ([]string, error)) schema.ColumnResolver {
+// 	return resolveARN(service, resourceID, false, false)
+// }
 
 // IsNotFoundError checks if api error should be ignored
 func (c *Client) IsNotFoundError(err error) bool {
