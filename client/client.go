@@ -201,6 +201,7 @@ var envVarsToCheck = []string{
 	"AWS_SHARED_CREDENTIALS_FILE",
 }
 
+// Test comment
 var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
 var errUnknownRegion = func(region string) error {
 	return fmt.Errorf("unknown region: %q", region)
