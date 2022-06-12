@@ -199,6 +199,7 @@ func ParseSummaryMessage(err error) diag.BaseErrorOption {
 }
 
 // RedactError redacts a given diagnostic and returns a RedactedDiagnostic containing both original and redacted versions
+// Remove me after test
 func RedactError(aa []string, e diag.Diagnostic) diag.Diagnostic {
 	r := diag.NewBaseError(
 		nil,
