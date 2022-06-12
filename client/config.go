@@ -32,6 +32,7 @@ type Config struct {
 	GlobalRegion string    `hcl:"global_region,optional" default:"us-east-1"`
 }
 
+// Add comment
 func (Config) Example() string {
 	return ` configuration {
   // Optional, Repeated. Add an 'accounts' block for every account you want to assume-role into and fetch data from.
