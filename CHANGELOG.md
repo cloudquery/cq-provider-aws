@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.12.10](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.9...v0.12.10) (2022-06-12)
+
+
+### Bug Fixes
+
+* Update endpoints ([#1032](https://github.com/cloudquery/cq-provider-aws/issues/1032)) ([bd6159a](https://github.com/cloudquery/cq-provider-aws/commit/bd6159a4a34f795c402fad46d7aa5cbb663dec40))
+
 ## [0.12.9](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.8...v0.12.9) (2022-06-10)
 
 
