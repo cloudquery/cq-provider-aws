@@ -583,9 +583,9 @@ func workGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan ch
 	})
 	if err != nil {
 		if c.IsNotFoundError(err) {
-			return nil
+			return
 		}
-		return diag.WrapError(err)
+		errorChan <- diag.WrapError(err)
 	}
 	resultsChan <- *dc.WorkGroup
 }
