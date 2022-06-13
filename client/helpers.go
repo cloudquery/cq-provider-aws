@@ -35,9 +35,9 @@ type SupportedServiceRegionsData struct {
 	regionVsPartition map[string]string
 }
 
-type ListResolver func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
+type ListResolverFunc func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
 
-type DetailResolver func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
+type DetailResolverFunc func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
 
 const (
 	ApigatewayService           AWSService = "apigateway"
@@ -386,11 +386,11 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 	return ret
 }
 
-func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolver, details DetailResolver) error {
+func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {
 	var diags diag.Diagnostics
 	var wg sync.WaitGroup
 	errorChan := make(chan error)
-
+	// detailChan := make(chan interface{})
 	// Channel that will communicate with goroutine that is aggregating the errors
 	done := make(chan struct{})
 	go func() {
