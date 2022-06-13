@@ -71,12 +71,11 @@ var (
 	supportedServiceRegion     *SupportedServiceRegionsData
 )
 
-var notFoundErrorPrefixes = []string{
-	"ResourceNotFoundException",
-	"WAFNonexistentItemException",
+var notFoundErrorSubstrings = []string{
 	"NoSuch",
 	"NotFound",
-	"NotFoundError",
+	"ResourceNotFoundException",
+	"WAFNonexistentItemException",
 }
 
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
@@ -219,9 +218,9 @@ func IgnoreNotAvailableRegion(err error) bool {
 	return false
 }
 
-func accountObfusactor(aa []Account, msg string) string {
+func accountObfusactor(aa []string, msg string) string {
 	for _, a := range aa {
-		msg = strings.ReplaceAll(msg, a.ID, obfuscateAccountId(a.ID))
+		msg = strings.ReplaceAll(msg, a, obfuscateAccountId(a))
 	}
 	return msg
 }
@@ -300,7 +299,7 @@ func isNotFoundError(err error) bool {
 		return false
 	}
 	errorCode := ae.ErrorCode()
-	for _, s := range notFoundErrorPrefixes {
+	for _, s := range notFoundErrorSubstrings {
 		if strings.Contains(errorCode, s) {
 			return true
 		}
@@ -310,11 +309,7 @@ func isNotFoundError(err error) bool {
 
 func IsInvalidParameterValueError(err error) bool {
 	var apiErr smithy.APIError
-	if errors.As(err, &apiErr); apiErr.ErrorCode() == "InvalidParameterValue" {
-		return true
-	}
-
-	return false
+	return errors.As(err, &apiErr) && apiErr.ErrorCode() == "InvalidParameterValue"
 }
 
 func IsAWSError(err error, code ...string) bool {

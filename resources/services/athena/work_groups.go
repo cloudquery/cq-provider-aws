@@ -2,10 +2,13 @@ package athena
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/athena/types"
+	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -21,7 +24,7 @@ func WorkGroups() *schema.Table {
 			return err
 		},
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -481,6 +484,9 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.PreparedStatement
@@ -512,6 +518,9 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) || isQueryExecutionNotFound(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.QueryExecution
@@ -543,6 +552,9 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 				options.Region = c.Region
 			})
 			if err != nil {
+				if c.IsNotFoundError(err) {
+					continue
+				}
 				return diag.WrapError(err)
 			}
 			res <- *dc.NamedQuery
@@ -570,11 +582,22 @@ func workGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan ch
 		options.Region = c.Region
 	})
 	if err != nil {
-		errorChan <- err
+		if c.IsNotFoundError(err) {
+			return nil
+		}
+		return diag.WrapError(err)
 	}
 	resultsChan <- *dc.WorkGroup
 }
 
 func createWorkGroupArn(cl *client.Client, groupName string) string {
 	return cl.ARN(client.Athena, "workgroup", groupName)
+}
+
+func isQueryExecutionNotFound(err error) bool {
+	var ae smithy.APIError
+	if !errors.As(err, &ae) {
+		return false
+	}
+	return ae.ErrorCode() == "InvalidRequestException" && strings.Contains(ae.ErrorMessage(), "was not found")
 }

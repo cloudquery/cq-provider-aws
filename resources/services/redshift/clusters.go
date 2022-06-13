@@ -18,7 +18,7 @@ func RedshiftClusters() *schema.Table {
 		Description:  "Describes a cluster.",
 		Resolver:     fetchRedshiftClusters,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("redshift"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -880,6 +880,9 @@ func fetchRedshiftClusterDeferredMaintenanceWindows(ctx context.Context, meta sc
 }
 func fetchRedshiftClusterEndpointVpcEndpoints(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster := parent.Item.(types.Cluster)
+	if cluster.Endpoint == nil {
+		return nil
+	}
 	res <- cluster.Endpoint.VpcEndpoints
 	return nil
 }
