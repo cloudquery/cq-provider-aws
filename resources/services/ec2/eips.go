@@ -131,7 +131,6 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 		return diag.WrapError(err)
 	}
 	res <- output.Addresses
-
 	return nil
 }
 func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
