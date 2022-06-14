@@ -130,10 +130,12 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 		return diag.WrapError(err)
 	}
 	for _, address := range output.Addresses {
-		if address.AllocationId != nil {
-			res <- address
+		if address.AllocationId == nil {
+			diags = diags.Add(diag.FromError(fmt.Errorf("eip for EC2 Classic is not supported"), diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+			continue
 		}
-		diags = diags.Add(diag.FromError(fmt.Errorf("eip for EC2 Classic is not supported"), diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+		res <- address
+
 	}
 
 	return diags
