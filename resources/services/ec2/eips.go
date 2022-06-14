@@ -120,7 +120,6 @@ func Ec2Eips() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	var diags diag.Diagnostics
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	output, err := svc.DescribeAddresses(ctx, &ec2.DescribeAddressesInput{
@@ -133,7 +132,7 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	}
 	res <- output.Addresses
 
-	return diags
+	return nil
 }
 func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Address)
