@@ -135,7 +135,6 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 			continue
 		}
 		res <- address
-
 	}
 
 	return diags
