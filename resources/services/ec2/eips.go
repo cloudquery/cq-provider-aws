@@ -2,6 +2,7 @@ package ec2
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -119,6 +120,7 @@ func Ec2Eips() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var diags diag.Diagnostics
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	output, err := svc.DescribeAddresses(ctx, &ec2.DescribeAddressesInput{}, func(options *ec2.Options) {
@@ -127,8 +129,14 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	if err != nil {
 		return diag.WrapError(err)
 	}
-	res <- output.Addresses
-	return nil
+	for _, address := range output.Addresses {
+		if address.AllocationId != nil {
+			res <- address
+		}
+		diags = diags.Add(diag.FromError(fmt.Errorf("eip for EC2 Classic is not supported"), diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+	}
+
+	return diags
 }
 func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Address)
