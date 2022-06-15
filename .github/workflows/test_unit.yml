@@ -73,7 +73,7 @@ jobs:
 
       - name: Build
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
-        run: go build -v .
+        run: go build -v -i .
 
       - name: Test
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
