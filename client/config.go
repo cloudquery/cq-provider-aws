@@ -82,7 +82,7 @@ func (c Config) Example() string {
   # The maximum number of times that a request will be retried for failures. Defaults to 10 retry attempts.
   # max_retries: 10
   # The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts. Defaults to 30 seconds.
-  // max_backoff: 30
+  # max_backoff: 30
 `
 	}
 }
