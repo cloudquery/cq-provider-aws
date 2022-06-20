@@ -392,8 +392,9 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	errorChan := make(chan error)
 	detailChan := make(chan interface{})
 	// Channel that will communicate with goroutine that is aggregating the errors
-
+	done := make(chan struct{})
 	go func() {
+		defer close(done)
 		for detailError := range errorChan {
 			diags = diags.Add(diag.FromError(detailError, diag.RESOLVING))
 		}
