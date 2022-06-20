@@ -34,7 +34,7 @@ type WrappedBucket struct {
 // fetchS3BucketsPoolSize describes the amount of go routines that resolve the S3 buckets
 const fetchS3BucketsPoolSize = 10
 
-func S3Buckets() *schema.Table {
+func Buckets() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_s3_buckets",
 		Description:  "An Amazon S3 bucket is a public cloud storage resource available in Amazon Web Services' (AWS) Simple Storage Service (S3)",
