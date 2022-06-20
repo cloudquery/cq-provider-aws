@@ -29,4 +29,10 @@ resource "aws" "ecr" "repositories" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
   }
+
+
+  user_relation "aws" "access_analyzer" "findings" {
+    options {}
+    path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageDetail"
+  }
 }
