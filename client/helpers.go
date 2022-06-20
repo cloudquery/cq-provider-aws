@@ -420,9 +420,9 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	if err != nil {
 		return diag.WrapError(err)
 	}
-	// All items will be attempted to be fetched, but could return an error
 
-	// This will trigger aggregating go routine to stop
+	// All items will be attempted to be fetched, and all errors will be aggregated
+	<-done
 
 	// Only return the diags if there is an error
 	if diags.HasErrors() {
