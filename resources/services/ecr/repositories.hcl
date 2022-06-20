@@ -65,5 +65,8 @@ resource "aws" "ecr" "repositories" {
         path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
       }
     }
+    // user_relation "aws" "ecr" "image_scan_findings" {
+    //   path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageScanFindings"
+    // }
   }
 }
