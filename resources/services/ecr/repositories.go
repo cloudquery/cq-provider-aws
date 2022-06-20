@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-func EcrRepositories() *schema.Table {
+func Repositories() *schema.Table {
 	return &schema.Table{
 		Name:          "aws_ecr_repositories",
 		Description:   "An object representing a repository.",
