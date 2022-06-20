@@ -412,20 +412,19 @@ func WorkGroups() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func listWorkGroups(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error) {
+func listWorkGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListWorkGroupsInput{}
-	workGroups := make([]interface{}, 0)
 	for {
 		response, err := svc.ListWorkGroups(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
 		})
 		if err != nil {
-			return nil, diag.WrapError(err)
+			return diag.WrapError(err)
 		}
 		for _, item := range response.WorkGroups {
-			workGroups = append(workGroups, item)
+			detailChan <- item
 		}
 
 		if aws.ToString(response.NextToken) == "" {
@@ -433,7 +432,8 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta) ([]interface{},
 		}
 		input.NextToken = response.NextToken
 	}
-	return workGroups, nil
+
+	return nil
 }
 
 func ResolveAthenaWorkGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {

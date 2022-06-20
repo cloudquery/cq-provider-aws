@@ -35,7 +35,7 @@ type SupportedServiceRegionsData struct {
 	regionVsPartition map[string]string
 }
 
-type ListResolverFunc func(ctx context.Context, meta schema.ClientMeta) ([]interface{}, error)
+type ListResolverFunc func(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error
 
 type DetailResolverFunc func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
 
@@ -390,35 +390,40 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	var diags diag.Diagnostics
 	var wg sync.WaitGroup
 	errorChan := make(chan error)
-	// detailChan := make(chan interface{})
+	detailChan := make(chan interface{})
 	// Channel that will communicate with goroutine that is aggregating the errors
-	done := make(chan struct{})
+	doneDetail := make(chan struct{})
+
 	go func() {
-		defer close(done)
+		defer close(doneDetail)
 		for detailError := range errorChan {
 			diags = diags.Add(diag.FromError(detailError, diag.RESOLVING))
 		}
 	}()
-
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
 
-	response, err := list(ctx, meta)
+	go func() {
+		for item := range detailChan {
+			if err := sem.Acquire(ctx, 1); err != nil {
+				continue
+			}
+			wg.Add(1)
+			func(summary interface{}) {
+				defer wg.Done()
+				defer sem.Release(1)
+				details(ctx, meta, res, errorChan, summary)
+			}(item)
+		}
+	}()
+
+	err := list(ctx, meta, detailChan)
+	close(detailChan)
 	if err != nil {
 		return diag.WrapError(err)
 	}
 	// All items will be attempted to be fetched, but could return an error
-	wg.Add(len(response))
-	for _, item := range response {
-		if err := sem.Acquire(ctx, 1); err != nil {
-			return diag.WrapError(err)
-		}
-		func(summary interface{}) {
-			defer wg.Done()
-			defer sem.Release(1)
-			details(ctx, meta, res, errorChan, summary)
-		}(item)
-	}
-	// Ensure all items have been attempted to be fetched
+
+	// Ensure all items details have been attempted to be fetched
 	wg.Wait()
 
 	// This will trigger aggregating go routine to stop
