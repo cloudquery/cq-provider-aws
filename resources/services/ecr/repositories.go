@@ -13,13 +13,14 @@ import (
 
 func Repositories() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ecr_repositories",
-		Description:  "An object representing a repository.",
-		Resolver:     fetchEcrRepositories,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("api.ecr"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
+		Name:          "aws_ecr_repositories",
+		Description:   "An object representing a repository.",
+		Resolver:      fetchEcrRepositories,
+		Multiplex:     client.ServiceAccountRegionMultiplexer("api.ecr"),
+		IgnoreError:   client.IgnoreCommonErrors,
+		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
