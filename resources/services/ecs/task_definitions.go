@@ -11,7 +11,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
 type TaskDefinitionWrapper struct {
@@ -19,7 +18,7 @@ type TaskDefinitionWrapper struct {
 	Tags []types.Tag
 }
 
-const MAX_GOROUTINES = 10
+const maxGoroutines = 10
 
 func EcsTaskDefinitions() *schema.Table {
 	return &schema.Table{
@@ -641,7 +640,6 @@ func fetchEcsTaskDefinition(ctx context.Context, res chan<- interface{}, svc cli
 
 func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	var config ecs.ListTaskDefinitionsInput
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ECS
 	for {
@@ -655,13 +653,10 @@ func listEcsTaskDefinitions(ctx context.Context, meta schema.ClientMeta, parent 
 			return nil
 		}
 		errs, ctx := errgroup.WithContext(ctx)
+		errs.SetLimit(maxGoroutines)
 		for _, t := range listClustersOutput.TaskDefinitionArns {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
 			func(arn string) {
 				errs.Go(func() error {
-					defer sem.Release(1)
 					return fetchEcsTaskDefinition(ctx, res, svc, region, arn)
 				})
 			}(t)

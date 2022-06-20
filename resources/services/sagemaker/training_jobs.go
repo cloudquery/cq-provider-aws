@@ -11,10 +11,9 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
-const MAX_GOROUTINES = 10
+const maxGoroutines = 10
 
 func SagemakerTrainingJobs() *schema.Table {
 	return &schema.Table{
@@ -585,7 +584,6 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 	c := meta.(*client.Client)
 	svc := c.Services().SageMaker
 	config := sagemaker.ListTrainingJobsInput{}
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 
 	for {
 		response, err := svc.ListTrainingJobs(ctx, &config, func(options *sagemaker.Options) {
@@ -595,13 +593,10 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 			return diag.WrapError(err)
 		}
 		errs, ctx := errgroup.WithContext(ctx)
+		errs.SetLimit(maxGoroutines)
 		for _, d := range response.TrainingJobSummaries {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
 			func(summary types.TrainingJobSummary) {
 				errs.Go(func() error {
-					defer sem.Release(1)
 					return fetchTrainingJobDefinition(ctx, res, svc, c.Region, summary)
 				})
 			}(d)

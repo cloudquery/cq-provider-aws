@@ -10,10 +10,9 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
-const MAX_GOROUTINES = 10
+const maxGoroutines = 10
 
 //go:generate cq-gen --resource data_catalogs --config gen.hcl --output .
 func DataCatalogs() *schema.Table {
@@ -218,7 +217,6 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListDataCatalogsInput{}
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	for {
 		response, err := svc.ListDataCatalogs(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
@@ -227,13 +225,10 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 			return diag.WrapError(err)
 		}
 		errs, ctx := errgroup.WithContext(ctx)
+		errs.SetLimit(maxGoroutines)
 		for _, d := range response.DataCatalogsSummary {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
 			func(summary types.DataCatalogSummary) {
 				errs.Go(func() error {
-					defer sem.Release(1)
 					return fetchDataCatalog(ctx, res, c, summary)
 				})
 			}(d)

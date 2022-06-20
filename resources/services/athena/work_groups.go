@@ -13,7 +13,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
 //go:generate cq-gen --resource work_groups --config gen.hcl --output .
@@ -415,7 +414,6 @@ func fetchAthenaWorkGroups(ctx context.Context, meta schema.ClientMeta, parent *
 	c := meta.(*client.Client)
 	svc := c.Services().Athena
 	input := athena.ListWorkGroupsInput{}
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	for {
 		response, err := svc.ListWorkGroups(ctx, &input, func(options *athena.Options) {
 			options.Region = c.Region
@@ -424,13 +422,10 @@ func fetchAthenaWorkGroups(ctx context.Context, meta schema.ClientMeta, parent *
 			return diag.WrapError(err)
 		}
 		errs, ctx := errgroup.WithContext(ctx)
+		errs.SetLimit(maxGoroutines)
 		for _, d := range response.WorkGroups {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
 			func(summary types.WorkGroupSummary) {
 				errs.Go(func() error {
-					defer sem.Release(1)
 					return fetchWorkGroup(ctx, res, c, summary)
 				})
 			}(d)
