@@ -52,18 +52,18 @@ resource "aws" "ecr" "repositories" {
   user_relation "aws" "ecr" "images" {
     path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageDetail"
     userDefinedColumn "account_id" {
-    description = "The AWS Account ID of the resource."
-    type        = "string"
-    resolver "resolveAWSAccount" {
-      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+      description = "The AWS Account ID of the resource."
+      type        = "string"
+      resolver "resolveAWSAccount" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+      }
     }
-  }
-  userDefinedColumn "region" {
-    description = "The AWS Region of the resource."
-    type        = "string"
-    resolver "resolveAWSRegion" {
-      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    userDefinedColumn "region" {
+      description = "The AWS Region of the resource."
+      type        = "string"
+      resolver "resolveAWSRegion" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+      }
     }
-  }
   }
 }
