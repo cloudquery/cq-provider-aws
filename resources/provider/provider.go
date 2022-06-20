@@ -209,7 +209,7 @@ func Provider() *provider.Provider {
 			"route53.reusable_delegation_sets":        route53.Route53ReusableDelegationSets(),
 			"route53.traffic_policies":                route53.Route53TrafficPolicies(),
 			"s3.accounts":                             s3.S3Accounts(),
-			"s3.buckets":                              s3.S3Buckets(),
+			"s3.buckets":                              s3.Buckets(),
 			"sagemaker.endpoint_configurations":       sagemaker.SagemakerEndpointConfigurations(),
 			"sagemaker.models":                        sagemaker.SagemakerModels(),
 			"sagemaker.notebook_instances":            sagemaker.SagemakerNotebookInstances(),
