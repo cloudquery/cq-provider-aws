@@ -412,7 +412,6 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 				details(ctx, meta, res, errorChan, summary)
 			}(item)
 		}
-
 	}()
 
 	err := list(ctx, meta, detailChan)
