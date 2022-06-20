@@ -388,6 +388,7 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {
 	var diags diag.Diagnostics
+
 	errorChan := make(chan error)
 	detailChan := make(chan interface{})
 	// Channel that will communicate with goroutine that is aggregating the errors
@@ -400,6 +401,7 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
 
 	go func() {
+		defer close(errorChan)
 		for item := range detailChan {
 			if err := sem.Acquire(ctx, 1); err != nil {
 				continue
@@ -409,6 +411,7 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 				details(ctx, meta, res, errorChan, summary)
 			}(item)
 		}
+
 	}()
 
 	err := list(ctx, meta, detailChan)
@@ -419,7 +422,6 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	// All items will be attempted to be fetched, but could return an error
 
 	// This will trigger aggregating go routine to stop
-	close(errorChan)
 
 	// Only return the diags if there is an error
 	if diags.HasErrors() {
