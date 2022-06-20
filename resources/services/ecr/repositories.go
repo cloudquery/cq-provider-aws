@@ -240,14 +240,3 @@ func fetchEcrRepositoryImages(ctx context.Context, meta schema.ClientMeta, paren
 	}
 	return nil
 }
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func fetchAccessAnalyzerRepositoryImages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchAccessAnalyzerRepositoryFindings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
