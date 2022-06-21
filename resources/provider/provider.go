@@ -59,6 +59,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
+	"github.com/cloudquery/cq-provider-sdk/cqproto"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -148,7 +149,7 @@ func Provider() *provider.Provider {
 			"ec2.vpc_peering_connections":             ec2.Ec2VpcPeeringConnections(),
 			"ec2.vpcs":                                ec2.Ec2Vpcs(),
 			"ec2.vpn_gateways":                        ec2.Ec2VpnGateways(),
-			"ecr.repositories":                        ecr.EcrRepositories(),
+			"ecr.repositories":                        ecr.Repositories(),
 			"ecs.clusters":                            ecs.Clusters(),
 			"ecs.task_definitions":                    ecs.EcsTaskDefinitions(),
 			"efs.filesystems":                         efs.EfsFilesystems(),
@@ -244,8 +245,8 @@ func Provider() *provider.Provider {
 			"xray.sampling_rules":                     xray.SamplingRules(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
-		Config: func() provider.Config {
-			return &client.Config{}
+		Config: func(f cqproto.ConfigFormat) provider.Config {
+			return client.NewConfig(f)
 		},
 	}
 }
