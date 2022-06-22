@@ -424,7 +424,7 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	<-done
 
 	// Only return the diags if there is an error
-	if diags.HasErrors() {
+	if diags.HasDiags() {
 		return diags
 	}
 	return nil
