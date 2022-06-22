@@ -13,8 +13,8 @@ import (
 
 func buildEcrRepositoriesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	m := mocks.NewMockEcrClient(ctrl)
-	l := types.Repository{}
-	err := faker.FakeData(&l)
+	r := types.Repository{}
+	err := faker.FakeData(&r)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,16 +23,36 @@ func buildEcrRepositoriesMock(t *testing.T, ctrl *gomock.Controller) client.Serv
 	if err != nil {
 		t.Fatal(err)
 	}
+	i.RepositoryName = r.RepositoryName
+	maxResults := int32(1000)
 
 	m.EXPECT().DescribeRepositories(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ecr.DescribeRepositoriesOutput{
-			Repositories: []types.Repository{l},
+			Repositories: []types.Repository{r},
 		}, nil)
 
 	m.EXPECT().DescribeImages(gomock.Any(), gomock.Any(), gomock.Any()).Return(
 		&ecr.DescribeImagesOutput{
 			ImageDetails: []types.ImageDetail{i},
 		}, nil)
+
+	var f types.ImageScanFindings
+	if err := faker.FakeData(&f); err != nil {
+		t.Fatal(err)
+	}
+	m.EXPECT().DescribeImageScanFindings(
+		gomock.Any(),
+		&ecr.DescribeImageScanFindingsInput{
+			ImageId:        &types.ImageIdentifier{ImageDigest: i.ImageDigest},
+			RepositoryName: r.RepositoryName,
+			MaxResults:     &maxResults,
+		},
+		gomock.Any(),
+	).Return(
+		&ecr.DescribeImageScanFindingsOutput{ImageScanFindings: &f},
+		nil,
+	)
+
 	return client.Services{
 		ECR: m,
 	}

@@ -65,8 +65,46 @@ resource "aws" "ecr" "repositories" {
         path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
       }
     }
-    // user_relation "aws" "ecr" "image_scan_findings" {
-    //   path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageScanFindings"
-    // }
+    user_relation "aws" "ecr" "scan_findings" {
+      path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageScanFindings"
+
+      column "enhanced_findings" {
+        rename = "enhanced"
+      }
+
+      relation "aws" "ecr" "enhanced" {
+        path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.EnhancedImageScanFinding"
+
+        column "package_vulnerability_details_cvss" {
+          type = "json"
+          generate_resolver = true
+        }
+
+        column "package_vulnerability_details_vulnerable_packages" {
+          type = "json"
+          generate_resolver = true
+        }
+
+        column "score_details_cvss_adjustments" {
+          type = "json"
+          generate_resolver = true
+        }
+
+        relation "aws" "ecr" "resources" {
+          path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.Resource"
+          column "details" {
+            skip_prefix = true
+          }
+        }
+      }
+
+      relation "aws" "ecr" "findings" {
+        path = "github.com/aws/aws-sdk-go-v2/service/ecr/types.ImageScanFinding"
+        column "attributes" {
+          type = "json"
+          generate_resolver = true
+        }
+      }
+    }
   }
 }
