@@ -586,6 +586,7 @@ func workGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan ch
 			return
 		}
 		errorChan <- diag.WrapError(err)
+		return
 	}
 	resultsChan <- *dc.WorkGroup
 }
