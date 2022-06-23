@@ -42,13 +42,13 @@ resource "aws" "lightsail" "buckets" {
 
 
   column "tags" {
-    type = "json"
+    type              = "json"
+    generate_resolver = true
   }
 
-  column "resources_receiving_access"{
+  column "resources_receiving_access" {
     type = "json"
   }
-
 
 
   user_relation "aws" "lightsail" "access_keys" {
