@@ -50,7 +50,6 @@ resource "aws" "lightsail" "buckets" {
     type = "json"
   }
 
-
   user_relation "aws" "lightsail" "access_keys" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.AccessKey"
   }
