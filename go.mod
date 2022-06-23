@@ -43,6 +43,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/iot v1.20.0
 	github.com/aws/aws-sdk-go-v2/service/kms v1.17.0
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.22.0
+	github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.1
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/organizations v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/qldb v1.14.3
@@ -79,7 +80,6 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.1 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/lorenzosaino/go-sysctl v0.3.0 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
