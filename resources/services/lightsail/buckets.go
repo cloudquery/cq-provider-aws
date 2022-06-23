@@ -242,13 +242,13 @@ func resolveBucketsTags(ctx context.Context, meta schema.ClientMeta, resource *s
 }
 func fetchLightsailBucketAccessKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Bucket)
-	client := meta.(*client.Client)
-	svc := client.Services().Lightsail
+	cl := meta.(*client.Client)
+	svc := cl.Services().Lightsail
 	input := lightsail.GetBucketAccessKeysInput{
 		BucketName: r.Name,
 	}
 	response, err := svc.GetBucketAccessKeys(ctx, &input, func(options *lightsail.Options) {
-		options.Region = client.Region
+		options.Region = cl.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)
