@@ -157,9 +157,10 @@ func Buckets() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_lightsail_bucket_access_keys",
-				Description: "Describes an access key for an Amazon Lightsail bucket",
-				Resolver:    fetchLightsailBucketAccessKeys,
+				Name:          "aws_lightsail_bucket_access_keys",
+				Description:   "Describes an access key for an Amazon Lightsail bucket",
+				Resolver:      fetchLightsailBucketAccessKeys,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "bucket_cq_id",
