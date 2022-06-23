@@ -15,12 +15,26 @@ import (
 const ssoInvalidOrExpired = "failed to refresh cached credentials, the SSO session has expired or is invalid"
 
 var (
-	requestIdRegex         = regexp.MustCompile(`\s([Rr]equest[ _]{0,1}(ID|Id|id):)\s[A-Za-z0-9-]+`)
-	hostIdRegex            = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
-	arnIdRegex             = regexp.MustCompile(`(\s)(arn:aws[A-Za-z0-9-]*:)[^ \.\(\)\[\]\{\}\;\,]+(\s?)`)
-	urlRegex               = regexp.MustCompile(`([\s"])http(s?):\/\/[a-z0-9_\-\./]+([":\s]?)`)
-	lookupRegex            = regexp.MustCompile(`(\slookup\s)[-A-Za-z0-9\.]+\son\s([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.+?)([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})->([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.*)`)
-	dialRegex              = regexp.MustCompile(`(\sdial\s)(tcp|udp)(\s)([0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]{1,5})(:.+?)`)
+	ipv4Regex          = `\d+\.\d+\.\d+\.\d+`
+	ipv6Regex          = `(?:(?:[a-fA-F0-9]{0,4}:)){2,7}[a-fA-F0-9]{0,4}`
+	bracketedIpv6Regex = fmt.Sprintf(`\[%s\]`, ipv6Regex)
+
+	requestIdRegex = regexp.MustCompile(`\s([Rr]equest[ _]{0,1}(ID|Id|id):)\s[A-Za-z0-9-]+`)
+	hostIdRegex    = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
+	arnIdRegex     = regexp.MustCompile(`(\s)(arn:aws[A-Za-z0-9-]*:)[^ \.\(\)\[\]\{\}\;\,]+(\s?)`)
+	urlRegex       = regexp.MustCompile(`([\s"])http(s?):\/\/[a-z0-9_\-\./]+([":\s]?)`)
+	lookupRegex    = regexp.MustCompile(
+		`\blookup\s[-A-Za-z0-9\.]+\s` + // " lookup host.name "
+			`on\s\S+:\d+`, // "on 123.123.123.123:53"
+	)
+	readXonYRegex = regexp.MustCompile(
+		`\bread\s(udp|tcp)\s` + // "read udp "
+			`\S+:\d+->\S+:\d+`, // "192.168.1.2:5353->192.168.1.1:53"
+	)
+	dialRegex = regexp.MustCompile(
+		`\bdial\s(tcp|udp)\s` + // "dial tcp "
+			fmt.Sprintf(`(?:%s|%s):\d+`, ipv4Regex, bracketedIpv6Regex), // "192.168.1.2:123" or "[::1]:123"
+	)
 	encAuthRegex           = regexp.MustCompile(`(\s)(Encoded authorization failure message:)\s[A-Za-z0-9_-]+`)
 	userRegex              = regexp.MustCompile(`(\s)(is not authorized to perform: .+ on resource:\s)(user)\s.+`)
 	s3Regex                = regexp.MustCompile(`(\s)(S3(Key|Bucket))=(.+?)([,;\s])`)
@@ -153,6 +167,19 @@ func classifyError(err error, fallbackType diag.Type, accounts []string, opts ..
 			),
 		}
 	}
+	if strings.Contains(err.Error(), "socket: too many open files") {
+		return diag.Diagnostics{
+			RedactError(accounts, diag.NewBaseError(err,
+				diag.THROTTLE,
+				append(opts,
+					diag.WithType(diag.THROTTLE),
+					diag.WithSeverity(diag.WARNING),
+					ParseSummaryMessage(err),
+					diag.WithDetails("CloudQuery AWS provider has been throttled. Too many open files, try to increase your max file descriptors in your system or contact us on discord (https://cloudquery.io/discord)"),
+				)...),
+			),
+		}
+	}
 
 	// Take over from SDK and always return diagnostics, redacting PII
 	if d, ok := err.(diag.Diagnostic); ok {
@@ -235,8 +262,9 @@ func removePII(aa []string, msg string) string {
 	msg = hostIdRegex.ReplaceAllString(msg, " HostID: xxxx")
 	msg = arnIdRegex.ReplaceAllString(msg, "${1}${2}xxxx${3}")
 	msg = urlRegex.ReplaceAllString(msg, "${1}http${2}://xxxx${3}")
-	msg = lookupRegex.ReplaceAllString(msg, "${1}xxxx${3}xxxx->xxxx${6}")
-	msg = dialRegex.ReplaceAllString(msg, "${1}${2}${3}xxxx${5}")
+	msg = lookupRegex.ReplaceAllString(msg, "lookup xxxx on xxxx:xx")
+	msg = readXonYRegex.ReplaceAllString(msg, "read $1 xxxx:xx->xxxx:xx")
+	msg = dialRegex.ReplaceAllString(msg, "dial $1 xxxx:xx")
 	msg = encAuthRegex.ReplaceAllString(msg, "${1}${2} xxxx")
 	msg = userRegex.ReplaceAllString(msg, "${1}${2}${3} xxxx")
 	msg = s3Regex.ReplaceAllString(msg, "${1}${2}=xxxx${5}")

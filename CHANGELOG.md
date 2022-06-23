@@ -6,6 +6,81 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.12.16](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.15...v0.12.16) (2022-06-22)
+
+
+### Features
+
+* YAML config support ([#1067](https://github.com/cloudquery/cq-provider-aws/issues/1067)) ([24d2722](https://github.com/cloudquery/cq-provider-aws/commit/24d27225fc6cf8494865ca06eb46be37a2b0c23f))
+
+
+### Bug Fixes
+
+* **deps:** Upgrade AWS ECR SDK ([#1079](https://github.com/cloudquery/cq-provider-aws/issues/1079)) ([7de5bda](https://github.com/cloudquery/cq-provider-aws/commit/7de5bdacfe58433883448d24bff9f31ba2e17dc7))
+* Classify to many open files ([#1064](https://github.com/cloudquery/cq-provider-aws/issues/1064)) ([89b1684](https://github.com/cloudquery/cq-provider-aws/commit/89b1684652e61aeb58fd3d2dec7faf9e2aea6a12))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.12.1 ([#1083](https://github.com/cloudquery/cq-provider-aws/issues/1083)) ([6a4dc83](https://github.com/cloudquery/cq-provider-aws/commit/6a4dc8348463e8068ca699808edb88818b5ee4fa))
+* List buckets only us-east-1 ([#1088](https://github.com/cloudquery/cq-provider-aws/issues/1088)) ([b3d7476](https://github.com/cloudquery/cq-provider-aws/commit/b3d74768d4d8cec5e4fcdb53794cb788d2815270))
+* Rename S3 Resources ([#1082](https://github.com/cloudquery/cq-provider-aws/issues/1082)) ([757b9aa](https://github.com/cloudquery/cq-provider-aws/commit/757b9aa900f7715b6f9741f74c62fc8fe4b4f539))
+
+## [0.12.16-rc2](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.16-rc1...v0.12.16-rc2) (2022-06-22)
+
+
+### Bug Fixes
+
+* Classify to many open files ([#1064](https://github.com/cloudquery/cq-provider-aws/issues/1064)) ([89b1684](https://github.com/cloudquery/cq-provider-aws/commit/89b1684652e61aeb58fd3d2dec7faf9e2aea6a12))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.12.1 ([#1083](https://github.com/cloudquery/cq-provider-aws/issues/1083)) ([6a4dc83](https://github.com/cloudquery/cq-provider-aws/commit/6a4dc8348463e8068ca699808edb88818b5ee4fa))
+* List buckets only us-east-1 ([#1088](https://github.com/cloudquery/cq-provider-aws/issues/1088)) ([b3d7476](https://github.com/cloudquery/cq-provider-aws/commit/b3d74768d4d8cec5e4fcdb53794cb788d2815270))
+* Rename S3 Resources ([#1082](https://github.com/cloudquery/cq-provider-aws/issues/1082)) ([757b9aa](https://github.com/cloudquery/cq-provider-aws/commit/757b9aa900f7715b6f9741f74c62fc8fe4b4f539))
+
+
+### Miscellaneous Chores
+
+* Release 0.12.16-rc2 ([#1090](https://github.com/cloudquery/cq-provider-aws/issues/1090)) ([1dca452](https://github.com/cloudquery/cq-provider-aws/commit/1dca4522023c52f55b8dd4c8165a9d4c27b8e1b8))
+* Release v0.12.16 ([#1086](https://github.com/cloudquery/cq-provider-aws/issues/1086)) ([885ff24](https://github.com/cloudquery/cq-provider-aws/commit/885ff24a94a31920e2dda925ef495b9ab30cd360))
+
+## [0.12.16-rc1](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.15...v0.12.16-rc1) (2022-06-21)
+
+
+### Features
+
+* YAML config support ([#1067](https://github.com/cloudquery/cq-provider-aws/issues/1067)) ([24d2722](https://github.com/cloudquery/cq-provider-aws/commit/24d27225fc6cf8494865ca06eb46be37a2b0c23f))
+
+
+### Bug Fixes
+
+* **deps:** Upgrade AWS ECR SDK ([#1079](https://github.com/cloudquery/cq-provider-aws/issues/1079)) ([7de5bda](https://github.com/cloudquery/cq-provider-aws/commit/7de5bdacfe58433883448d24bff9f31ba2e17dc7))
+
+
+### Miscellaneous Chores
+
+* Release v0.12.16-rc1 ([#1084](https://github.com/cloudquery/cq-provider-aws/issues/1084)) ([745eb88](https://github.com/cloudquery/cq-provider-aws/commit/745eb884941be331b295b4961fc84ddfc68022f5))
+
+## [0.12.15](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.14...v0.12.15) (2022-06-20)
+
+
+### Bug Fixes
+
+* Change PK in aws_ec2_vpc_endpoint_services from (account_id, id) ([#1077](https://github.com/cloudquery/cq-provider-aws/issues/1077)) ([fbbfdc5](https://github.com/cloudquery/cq-provider-aws/commit/fbbfdc5ea8e07c2c407f547f18f7de3a101ac958))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.11.4 ([#1073](https://github.com/cloudquery/cq-provider-aws/issues/1073)) ([d58c24b](https://github.com/cloudquery/cq-provider-aws/commit/d58c24b5da42198e1d2520dcc8abceac635801bd))
+* Panic in ecs task definitions ([#1076](https://github.com/cloudquery/cq-provider-aws/issues/1076)) ([ecdd07e](https://github.com/cloudquery/cq-provider-aws/commit/ecdd07ebaeec4659c8afb82036d6a8047632efdc))
+* Redact IPv6 addresses in "dial tcp" errors ([#1075](https://github.com/cloudquery/cq-provider-aws/issues/1075)) ([fcd04d5](https://github.com/cloudquery/cq-provider-aws/commit/fcd04d58b862c4c1a1c4bdb0299b9f90a5a01ffb))
+
+## [0.12.14](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.13...v0.12.14) (2022-06-20)
+
+
+### Bug Fixes
+
+* Classify credential errors as USER type ([#1056](https://github.com/cloudquery/cq-provider-aws/issues/1056)) ([e04e493](https://github.com/cloudquery/cq-provider-aws/commit/e04e4939d4d7398fa30212dbef384b8b8165de94))
+* Redact separate error messages separately ([#1071](https://github.com/cloudquery/cq-provider-aws/issues/1071)) ([e46371b](https://github.com/cloudquery/cq-provider-aws/commit/e46371be7b6522d42465db994cf97f49475da2f0))
+
+## [0.12.13](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.12...v0.12.13) (2022-06-19)
+
+
+### Bug Fixes
+
+* Update endpoints ([#1065](https://github.com/cloudquery/cq-provider-aws/issues/1065)) ([b95d6b5](https://github.com/cloudquery/cq-provider-aws/commit/b95d6b54465639a7bd087d73680b707a1cf17ab6))
+* Update endpoints ([#1068](https://github.com/cloudquery/cq-provider-aws/issues/1068)) ([a8cf7e8](https://github.com/cloudquery/cq-provider-aws/commit/a8cf7e89fe144b03ac359e31e3b770fa35bc41ae))
+
 ## [0.12.12](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.11...v0.12.12) (2022-06-15)
 
 

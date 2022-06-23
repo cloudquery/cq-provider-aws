@@ -33,7 +33,7 @@ func TestRemovePII(t *testing.T) {
 		},
 		{
 			"operation error CloudWatch Logs: DescribeMetricFilters, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://logs.eu-central-1.amazonaws.com/\": dial tcp: lookup logs.eu-central-1.amazonaws.com on 192.168.1.1:53: read udp 192.168.1.2:5353->192.168.1.1:53: i/o timeout",
-			"operation error CloudWatch Logs: DescribeMetricFilters, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://xxxx\": dial tcp: lookup xxxx: read udp xxxx->xxxx: i/o timeout",
+			"operation error CloudWatch Logs: DescribeMetricFilters, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://xxxx\": dial tcp: lookup xxxx on xxxx:xx: read udp xxxx:xx->xxxx:xx: i/o timeout",
 		},
 		{
 			"EC2: DescribeImageAttribute - You are not authorized to perform this operation. Encoded authorization failure message: SOMEENCODEDMESSAGEWITHNUMBERS1234567ANDDASHANDUNDERSCORES-ABCDE_123123123_EXAMPLEMESSAGE",
@@ -45,7 +45,11 @@ func TestRemovePII(t *testing.T) {
 		},
 		{
 			"operation error Direct Connect: DescribeVirtualInterfaces, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://logs.eu-central-1.amazonaws.com/\": dial tcp 177.72.244.112:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.",
-			"operation error Direct Connect: DescribeVirtualInterfaces, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://xxxx\": dial tcp xxxx: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.",
+			"operation error Direct Connect: DescribeVirtualInterfaces, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post \"https://xxxx\": dial tcp xxxx:xx: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.",
+		},
+		{
+			`operation error Cognito Identity Provider: ListUserPools, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post "https://cognito-idp.us-west-2.amazonaws.com/": dial tcp [2600:1f14:917:5700:4845:5c16:891b:7127]:443: connect: network is unreachable`,
+			`operation error Cognito Identity Provider: ListUserPools, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Post "https://xxxx": dial tcp xxxx:xx: connect: network is unreachable`,
 		},
 		{
 			"operation error EC2: DescribeSnapshotAttribute, https response error StatusCode: 400, RequestID: xxxx, api error InvalidSnapshot.NotFound: The snapshot 'snap-11111111111111111' does not exist.",
@@ -54,6 +58,10 @@ func TestRemovePII(t *testing.T) {
 		{
 			"ResourceType name not found - Could not find example request type named 'resource-dev-1111'",
 			"ResourceType name not found - Could not find example request type named 'xxxx'",
+		},
+		{
+			`qldb.ledgers: failed to resolve table "aws_qldb_ledgers": error at github.com/cloudquery/cq-provider-aws/resources/services/qldb.fetchQldbLedgers[ledgers.go:264] operation error QLDB: ListLedgers, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Get "https://qldb.ap-southeast-1.amazonaws.com/ledgers": dial tcp: lookup qldb.ap-southeast-1.amazonaws.com on 172.20.0.10:53: no such host`,
+			`qldb.ledgers: failed to resolve table "aws_qldb_ledgers": error at github.com/cloudquery/cq-provider-aws/resources/services/qldb.fetchQldbLedgers[ledgers.go:264] operation error QLDB: ListLedgers, exceeded maximum number of attempts, 10, https response error StatusCode: 0, RequestID: , request send failed, Get "https://xxxx": dial tcp: lookup xxxx on xxxx:xx: no such host`,
 		},
 	}
 	for i, tc := range cases {
