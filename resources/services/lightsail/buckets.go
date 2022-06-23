@@ -147,6 +147,7 @@ func Buckets() *schema.Table {
 				Name:        "tags",
 				Description: "The tag keys and optional values for the bucket",
 				Type:        schema.TypeJSON,
+				Resolver:    resolveBucketsTags,
 			},
 			{
 				Name:        "url",
@@ -232,6 +233,12 @@ func fetchLightsailBuckets(ctx context.Context, meta schema.ClientMeta, parent *
 		input.PageToken = response.NextPageToken
 	}
 	return nil
+}
+func resolveBucketsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.Bucket)
+	tags := make(map[string]string)
+	client.TagsIntoMap(r.Tags, tags)
+	return diag.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailBucketAccessKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Bucket)
