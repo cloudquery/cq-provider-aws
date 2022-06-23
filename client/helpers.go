@@ -35,8 +35,10 @@ type SupportedServiceRegionsData struct {
 	regionVsPartition map[string]string
 }
 
+// ListResolver is responsible for iterating through entire list of resources that should be grabbed (if API is paginated). It should send list of items via the `resultsChan` so that the DetailResolver can grab the details of each item. All errors should be sent to the error channel.
 type ListResolverFunc func(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error
 
+// DetailResolveFunc is responsible for grabbing any and all metadata for a resource. All errors should be sent to the error channel.
 type DetailResolverFunc func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
 
 const (
