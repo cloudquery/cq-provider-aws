@@ -465,11 +465,6 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	client := NewAwsClient(logger)
 	client.GlobalRegion = awsConfig.GlobalRegion
 	var adminAccountSts AssumeRoleAPIClient
-	if len(awsConfig.Accounts) == 0 {
-		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID: defaultVar,
-		})
-	}
 
 	if awsConfig.Organization != nil {
 		var err error
@@ -486,6 +481,11 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 		awsConfig.Accounts = append(awsConfig.Accounts, accounts...)
+	}
+	if len(awsConfig.Accounts) == 0 {
+		awsConfig.Accounts = append(awsConfig.Accounts, Account{
+			ID: defaultVar,
+		})
 	}
 
 	for _, account := range awsConfig.Accounts {
