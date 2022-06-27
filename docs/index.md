@@ -119,7 +119,7 @@ providers:
       #  
     # list of resources to fetch
     resources:
-      - *
+      - "*"
 }
 ```
 
@@ -247,7 +247,7 @@ CloudQuery can fetch from multiple accounts in parallel by using AssumeRole (You
 providers:
   - name: aws
     resources:
-      - *
+      - "*"
     configuration:
       accounts:
         - id: <AccountID_Alias_1>
