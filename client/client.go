@@ -470,8 +470,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	}
 	if awsConfig.Organization != nil {
 		var err error
-		var accounts []Account
-		accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
+		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
 			logger.Error("error getting child accounts", "err", err)
 			var ae smithy.APIError
