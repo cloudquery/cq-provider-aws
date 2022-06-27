@@ -482,7 +482,6 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			}
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
-		awsConfig.Accounts = append(awsConfig.Accounts, accounts...)
 	}
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
