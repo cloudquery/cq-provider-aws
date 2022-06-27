@@ -465,7 +465,9 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	client := NewAwsClient(logger)
 	client.GlobalRegion = awsConfig.GlobalRegion
 	var adminAccountSts AssumeRoleAPIClient
-
+	if awsConfig.Organization != nil && len(awsConfig.Accounts) > 0 {
+		return nil, diags.Add(diag.FromError(errors.New("specifying accounts via both the Accounts and Org properties is not supported. If you want to do both, you should use multiple provider blocks"), diag.USER))
+	}
 	if awsConfig.Organization != nil {
 		var err error
 		var accounts []Account
