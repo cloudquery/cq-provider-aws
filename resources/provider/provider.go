@@ -3,6 +3,11 @@ package provider
 import (
 	"embed"
 
+	"github.com/cloudquery/cq-provider-sdk/cqproto"
+	"github.com/cloudquery/cq-provider-sdk/provider"
+	"github.com/cloudquery/cq-provider-sdk/provider/module"
+	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/resources/services/accessanalyzer"
 	"github.com/cloudquery/cq-provider-aws/resources/services/acm"
@@ -41,6 +46,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-aws/resources/services/kms"
 	"github.com/cloudquery/cq-provider-aws/resources/services/lambda"
+	"github.com/cloudquery/cq-provider-aws/resources/services/lightsail"
 	"github.com/cloudquery/cq-provider-aws/resources/services/mq"
 	"github.com/cloudquery/cq-provider-aws/resources/services/organizations"
 	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
@@ -59,10 +65,6 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
-	"github.com/cloudquery/cq-provider-sdk/cqproto"
-	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/module"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
 var (
@@ -188,6 +190,7 @@ func Provider() *provider.Provider {
 			"lambda.functions":                        lambda.Functions(),
 			"lambda.layers":                           lambda.LambdaLayers(),
 			"lambda.runtimes":                         lambda.LambdaRuntimes(),
+			"lightsail.instances":                     lightsail.Instances(),
 			"mq.brokers":                              mq.Brokers(),
 			"organizations.accounts":                  organizations.Accounts(),
 			"qldb.ledgers":                            qldb.Ledgers(),
