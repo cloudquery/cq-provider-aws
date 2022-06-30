@@ -51,6 +51,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	"github.com/aws/aws-sdk-go-v2/service/qldb"
@@ -152,6 +153,7 @@ type Services struct {
 	IOT                    IOTClient
 	KMS                    KmsClient
 	Lambda                 LambdaClient
+	Lightsail              LightsailClient
 	MQ                     MQClient
 	Organizations          OrganizationsClient
 	QLDB                   QLDBClient
@@ -620,6 +622,7 @@ func initServices(region string, c aws.Config) Services {
 		IAM:                    iam.NewFromConfig(awsCfg),
 		KMS:                    kms.NewFromConfig(awsCfg),
 		Lambda:                 lambda.NewFromConfig(awsCfg),
+		Lightsail:              lightsail.NewFromConfig(awsCfg),
 		MQ:                     mq.NewFromConfig(awsCfg),
 		Organizations:          organizations.NewFromConfig(awsCfg),
 		QLDB:                   qldb.NewFromConfig(awsCfg),

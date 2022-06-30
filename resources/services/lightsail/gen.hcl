@@ -2,7 +2,7 @@ service          = "aws"
 output_directory = "."
 add_generate     = true
 
-resource "aws" "lightsail" "instance" {
+resource "aws" "lightsail" "instances" {
   path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Instance"
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"

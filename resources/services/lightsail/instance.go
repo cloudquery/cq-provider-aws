@@ -3,8 +3,13 @@ package lightsail
 import (
 	"context"
 
-	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/lightsail"
+	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 //go:generate cq-gen --resource instance --config resources/services/lightsail/gen.hcl --output .
@@ -430,23 +435,52 @@ func Instances() *schema.Table {
 // ====================================================================================================================
 
 func fetchLightsailInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	c := meta.(*client.Client)
+	svc := c.Services().Lightsail
+	input := lightsail.GetInstancesInput{}
+	for {
+		output, err := svc.GetInstances(ctx, &input, func(o *lightsail.Options) {
+			o.Region = c.Region
+		})
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		res <- output.Instances
+
+		if aws.ToString(output.NextPageToken) == "" {
+			break
+		}
+		input.PageToken = output.NextPageToken
+	}
+	return nil
 }
 func fetchLightsailInstanceAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	instance := parent.Item.(types.Instance)
+	res <- instance.AddOns
+	return nil
 }
 func fetchLightsailInstanceHardwareDisks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	instance := parent.Item.(types.Instance)
+	res <- instance.Hardware.Disks
+	return nil
 }
 func fetchLightsailInstanceHardwareDiskAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	disk := parent.Item.(types.Disk)
+	res <- disk.AddOns
+	return nil
 }
 func fetchLightsailInstanceHardwareDiskTags(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	disk := parent.Item.(types.Disk)
+	res <- disk.Tags
+	return nil
 }
 func fetchLightsailInstanceNetworkingPorts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	instance := parent.Item.(types.Instance)
+	res <- instance.Networking.Ports
+	return nil
 }
 func fetchLightsailInstanceTags(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	instance := parent.Item.(types.Instance)
+	res <- instance.Tags
+	return nil
 }
