@@ -59,10 +59,12 @@ A few important things to note when adding functions that call the AWS API:
 
 To prepare your environment for running integration tests:
 ```bash
+# Start Postgres in a Docker container
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -d  postgres:13.3
-# login with AWS. See all options at https://hub.cloudquery.io/providers/cloudquery/aws/latest
-export AWS_ACCESS_KEY_ID={Your AWS Access Key ID}
-export AWS_SECRET_ACCESS_KEY={Your AWS secret access key}
+
+# Login with AWS. AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY can also be used here, if you wish.
+# See all options at https://hub.cloudquery.io/providers/cloudquery/aws/latest
+export AWS_PROFILE={Your AWS profile}
 ```
 
 To run an integration test for a specific table:
