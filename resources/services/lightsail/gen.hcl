@@ -40,7 +40,7 @@ resource "aws" "lightsail" "instances" {
   }
 
   relation "aws" "lightsail" "add_ons" {
-    ignore_in_tests = true
+    ignore_in_tests = true // see https://github.com/hashicorp/terraform-provider-aws/issues/23688
   }
 
   // disks attached to the instance
@@ -62,7 +62,7 @@ resource "aws" "lightsail" "instances" {
     }
 
     relation "aws" "lightsail" "add_ons" {
-      ignore_in_tests = true
+      ignore_in_tests = true // see https://github.com/hashicorp/terraform-provider-aws/issues/23688
     }
   }
 }
