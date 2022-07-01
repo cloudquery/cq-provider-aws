@@ -34,4 +34,35 @@ resource "aws" "lightsail" "instances" {
     primary_keys = ["arn"]
   }
 
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  relation "aws" "lightsail" "add_ons" {
+    ignore_in_tests = true
+  }
+
+  // disks attached to the instance
+  relation "aws" "lightsail" "hardware_disks" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Disk"
+
+    column "tags" {
+      type              = "json"
+      generate_resolver = true
+    }
+
+    // skip columns deprecated by the SDK
+    column "gb_in_use" {
+      skip = true
+    }
+
+    column "attachment_state" {
+      skip = true
+    }
+
+    relation "aws" "lightsail" "add_ons" {
+      ignore_in_tests = true
+    }
+  }
 }
