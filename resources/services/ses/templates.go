@@ -40,8 +40,9 @@ func Templates() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name: "created_timestamp",
-				Type: schema.TypeTimestamp,
+				Name:        "created_timestamp",
+				Description: "The time and date the template was created.",
+				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "name",

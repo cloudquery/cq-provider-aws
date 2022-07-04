@@ -35,12 +35,13 @@ resource "aws" "ses" "templates" {
     rename = "text_part"
   }
   column "created_timestamp" {
-    type = "timestamp"
+    type        = "timestamp"
+    description = "The time and date the template was created."
   }
 
   userDefinedColumn "arn" {
     type              = "string"
-    description = "The Amazon Resource Name (ARN) for the resource."
+    description       = "The Amazon Resource Name (ARN) for the resource."
     generate_resolver = true
   }
 
