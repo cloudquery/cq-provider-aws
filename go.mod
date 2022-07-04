@@ -12,7 +12,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.3.1
 	github.com/aws/aws-sdk-go-v2/service/applicationautoscaling v1.10.2
+	github.com/aws/aws-sdk-go-v2/service/athena v1.15.1
 	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.2.0
+	github.com/aws/aws-sdk-go-v2/service/backup v1.15.4
 	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.20.0
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.3.0
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.1.2
@@ -43,6 +45,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/iot v1.20.0
 	github.com/aws/aws-sdk-go-v2/service/kms v1.17.0
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.22.0
+	github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.1
 	github.com/aws/aws-sdk-go-v2/service/mq v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/organizations v1.2.1
 	github.com/aws/aws-sdk-go-v2/service/qldb v1.14.3
@@ -54,11 +57,13 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3control v1.14.1
 	github.com/aws/aws-sdk-go-v2/service/sagemaker v1.19.1
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.10.2
+	github.com/aws/aws-sdk-go-v2/service/shield v1.16.4
 	github.com/aws/aws-sdk-go-v2/service/sns v1.1.2
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.9.1
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.7.2
 	github.com/aws/aws-sdk-go-v2/service/waf v1.2.1
+	github.com/aws/aws-sdk-go-v2/service/wafregional v1.12.3
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/aws-sdk-go-v2/service/workspaces v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/xray v1.13.4
@@ -75,15 +80,6 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3
 	github.com/spf13/cast v1.5.0
 	github.com/stretchr/testify v1.8.0
-)
-
-require github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.1
-
-require (
-	github.com/aws/aws-sdk-go-v2/service/athena v1.15.1
-	github.com/aws/aws-sdk-go-v2/service/backup v1.15.4
-	github.com/aws/aws-sdk-go-v2/service/shield v1.16.4
-	github.com/aws/aws-sdk-go-v2/service/wafregional v1.12.3
 	github.com/thoas/go-funk v0.9.2
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 )
