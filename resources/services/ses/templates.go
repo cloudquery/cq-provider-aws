@@ -2,7 +2,6 @@ package ses
 
 import (
 	"context"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ses"
@@ -86,7 +85,6 @@ func fetchSesTemplates(ctx context.Context, meta schema.ClientMeta, parent *sche
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		nextList := time.After(time.Second)
 
 		for _, templateMeta := range output.TemplatesMetadata {
 			getInput := &ses.GetTemplateInput{TemplateName: templateMeta.Name}
@@ -98,13 +96,11 @@ func fetchSesTemplates(ctx context.Context, meta schema.ClientMeta, parent *sche
 				CreatedTimestamp: templateMeta.CreatedTimestamp,
 				Template:         template.Template,
 			}
-			<-time.After(time.Second) // wait for 1s
 		}
 		if aws.ToString(output.NextToken) == "" {
 			break
 		}
 		listInput.NextToken = output.NextToken
-		<-nextList
 	}
 
 	return nil
