@@ -10,7 +10,7 @@ resource "aws" "ses" "templates" {
   }
   multiplex "AwsAccountRegion" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
-    params = ["ses"]
+    params = ["email"]
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
