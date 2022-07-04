@@ -4574,8 +4574,7 @@
             "eu-west-3": {},
             "eu-north-1": {},
             "me-south-1": {},
-            "sa-east-1": {},
-            "us-gov-west-1": {}
+            "sa-east-1": {}
           }
         },
         "session.qldb": {
@@ -7462,6 +7461,11 @@
             "fips-us-gov-east-1": {},
             "fips-us-gov-west-1": {},
             "us-gov-east-1": {},
+            "us-gov-west-1": {}
+          }
+        },
+        "ses": {
+          "regions": {
             "us-gov-west-1": {}
           }
         },
