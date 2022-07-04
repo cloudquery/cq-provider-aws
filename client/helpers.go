@@ -425,7 +425,6 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	// All items will be attempted to be fetched, and all errors will be aggregated
 	<-done
 
-	// Only return the diags if there is an error
 	if diags.HasDiags() {
 		return diags
 	}
