@@ -3,11 +3,11 @@ module github.com/cloudquery/cq-provider-aws
 go 1.17
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.16.5
+	github.com/aws/aws-sdk-go-v2 v1.16.6
 	github.com/aws/aws-sdk-go-v2/config v1.3.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.2.1
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.2.1
-	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.0
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.7
 	github.com/aws/aws-sdk-go-v2/service/acm v1.9.1
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.4.0
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.3.1
@@ -62,7 +62,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.5.1
 	github.com/aws/aws-sdk-go-v2/service/workspaces v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/xray v1.13.4
-	github.com/aws/smithy-go v1.11.3
+	github.com/aws/smithy-go v1.12.0
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.5
@@ -95,8 +95,8 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.1.1 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.12 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.6 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.13 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.7 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/athena v1.15.1
 	github.com/aws/aws-sdk-go-v2/service/backup v1.15.4
