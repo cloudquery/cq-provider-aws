@@ -5,11 +5,10 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
-	"github.com/cloudquery/faker/v3"
-	"github.com/golang/mock/gomock"
-
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/client/mocks"
+	"github.com/cloudquery/faker/v3"
+	"github.com/golang/mock/gomock"
 )
 
 func buildInstances(t *testing.T, ctrl *gomock.Controller) client.Services {
