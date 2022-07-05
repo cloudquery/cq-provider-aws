@@ -366,7 +366,7 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 		}
 
 		if keyField.IsZero() {
-			panic("slice member is missing Key or Value fields")
+			panic("slice member is missing Key field")
 		}
 
 		dst[stringify(keyField)] = stringify(valField)
