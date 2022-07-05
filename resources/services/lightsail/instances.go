@@ -6,9 +6,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
-	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+
+	"github.com/cloudquery/cq-provider-aws/client"
 )
 
 //go:generate cq-gen --resource instances --config resources/services/lightsail/gen.hcl --output .
@@ -432,24 +433,19 @@ func fetchLightsailInstanceHardwareDiskAddOns(ctx context.Context, meta schema.C
 
 func fetchLightsailInstanceNetworkingPorts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.Instance)
+	if instance.Networking == nil {
+		return nil
+	}
 	res <- instance.Networking.Ports
 	return nil
 }
 
 func resolveInstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Instance)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
 
 func resolveInstanceHardwareDisksTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Disk)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
