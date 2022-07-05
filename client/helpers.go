@@ -339,6 +339,11 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 			panic("field is not string or *string")
 		}
 
+		if v.IsNil() {
+			// return empty string if string pointer is nil
+			return ""
+		}
+
 		return v.Elem().String()
 	}
 
@@ -353,12 +358,13 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 			panic("slice member is not struct: " + k.String())
 		}
 
+		// key cannot be nil, but value can in the case of key-only tags
 		keyField, valField := val.FieldByName("Key"), val.FieldByName("Value")
-		if (keyField.Type().Kind() == reflect.Ptr && keyField.IsNil()) || (valField.Type().Kind() == reflect.Ptr && valField.IsNil()) {
+		if keyField.Type().Kind() == reflect.Ptr && keyField.IsNil() {
 			continue
 		}
 
-		if keyField.IsZero() || valField.IsZero() {
+		if keyField.IsZero() {
 			panic("slice member is missing Key or Value fields")
 		}
 
