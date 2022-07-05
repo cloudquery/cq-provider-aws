@@ -420,6 +420,9 @@ func fetchLightsailInstanceAddOns(ctx context.Context, meta schema.ClientMeta, p
 
 func fetchLightsailInstanceHardwareDisks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.Instance)
+	if instance.Hardware == nil {
+		return nil
+	}
 	res <- instance.Hardware.Disks
 	return nil
 }
