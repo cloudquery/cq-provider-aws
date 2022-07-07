@@ -535,8 +535,7 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 		}
 		return diag.WrapError(err)
 	}
-	// This is a weird corner case by AWS API https://github.com/aws/aws-sdk-net/issues/323#issuecomment-196584538
-	// empty output == region of the bucket is us-east-1, as we set it by default we are okay
+	// AWS does not specify a region if bucket is in us-east-1, so as long as no error we can assume an empty string is us-east-1
 	resource.Region = "us-east-1"
 	if output != "" {
 		resource.Region = output
