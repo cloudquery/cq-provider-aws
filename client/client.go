@@ -463,7 +463,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 					err,
 					diag.USER,
 					diag.WithSummary("Invalid credentials for assuming role"),
-					diag.WithDetails("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the aws commercial region be sure set the default_region attribute in the cloudquery.yml file."),
+					diag.WithDetails("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file."),
 					diag.WithSeverity(diag.WARNING),
 				)
 			}
