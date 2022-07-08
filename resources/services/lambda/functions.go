@@ -1108,9 +1108,10 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			funcResponse, err := svc.GetFunction(ctx, &getFunctionInput, func(options *lambda.Options) {
 				options.Region = c.Region
 			})
+
 			if err != nil {
 				if c.IsNotFoundError(err) || c.IsAccessDeniedError(err) {
-					diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+					diags = diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
 					res <- &lambda.GetFunctionOutput{
 						Configuration: &f,
 					}
