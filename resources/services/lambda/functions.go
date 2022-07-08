@@ -1089,6 +1089,7 @@ func Functions() *schema.Table {
 // ====================================================================================================================
 
 func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var diags diag.Diagnostics
 	var input lambda.ListFunctionsInput
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
@@ -1109,12 +1110,13 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			})
 			if err != nil {
 				if c.IsNotFoundError(err) || c.IsAccessDeniedError(err) {
+					diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
 					res <- &lambda.GetFunctionOutput{
 						Configuration: &f,
 					}
 					continue
 				}
-				return diag.WrapError(err)
+				return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 			}
 			res <- funcResponse
 		}
@@ -1124,7 +1126,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 		}
 		input.Marker = response.NextMarker
 	}
-	return nil
+	return diags
 }
 func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	r := resource.Item.(*lambda.GetFunctionOutput)
