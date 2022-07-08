@@ -72,12 +72,12 @@ var notFoundErrorSubstrings = []string{
 	"WAFNonexistentItemException",
 }
 
-var accessDeniedErrorStrings = []string{
-	"AuthorizationError",
-	"AccessDenied",
-	"AccessDeniedException",
-	"InsufficientPrivilegesException",
-	"UnauthorizedOperation",
+var accessDeniedErrorStrings = map[string]struct{}{
+	"AuthorizationError":              {},
+	"AccessDenied":                    {},
+	"AccessDeniedException":           {},
+	"InsufficientPrivilegesException": {},
+	"UnauthorizedOperation":           {},
 }
 
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
@@ -321,13 +321,8 @@ func isAccessDeniedError(err error) bool {
 	if !errors.As(err, &ae) {
 		return false
 	}
-	errorCode := ae.ErrorCode()
-	for _, s := range accessDeniedErrorStrings {
-		if strings.Contains(errorCode, s) {
-			return true
-		}
-	}
-	return false
+	_, ok := accessDeniedErrorStrings[ae.ErrorCode()]
+	return ok
 }
 
 func IsInvalidParameterValueError(err error) bool {
