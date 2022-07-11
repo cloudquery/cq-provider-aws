@@ -310,7 +310,7 @@ func isNotFoundError(err error) bool {
 // IsAccessDeniedError checks if api error should be classified as a permissions issue
 func (c *Client) IsAccessDeniedError(err error) bool {
 	if isAccessDeniedError(err) {
-		c.logger.Warn("API returned \"Access Denied\" error ignoring it...", "error", err)
+		c.logger.Warn("API returned an Access Denied error, ignoring it and continuing...", "error", err)
 		return true
 	}
 	return false
