@@ -1098,7 +1098,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 		}
 
 		for _, f := range response.Functions {
