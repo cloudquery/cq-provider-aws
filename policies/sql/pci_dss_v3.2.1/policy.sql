@@ -1,6 +1,6 @@
 \set framework 'pci_dss_v3.2.1'
 \set execution_time ''''`date '+%Y-%m-%d %H:%M:%S'`''''::timestamp
-\i create_aws_policy_results.sql
+\i sql/create_aws_policy_results.sql
 
 \set check_id 'autoscaling.1'
 \echo "Executing check autoscaling.1"

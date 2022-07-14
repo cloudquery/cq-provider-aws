@@ -1,6 +1,6 @@
 \set framework 'public_egress'
 \set execution_time ''''`date '+%Y-%m-%d %H:%M:%S'`''''::timestamp
-\i create_aws_policy_results.sql
+\i sql/create_aws_policy_results.sql
 
 \echo "Creating view_aws_security_group_egress_rules"
 \i sql/views/security_group_egress_rules.sql

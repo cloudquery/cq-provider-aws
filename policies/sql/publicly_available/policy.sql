@@ -1,6 +1,6 @@
 \set framework 'publicly_available'
 \set execution_time ''''`date '+%Y-%m-%d %H:%M:%S'`''''::timestamp
-\i create_aws_policy_results.sql
+\i sql/create_aws_policy_results.sql
 
 \set check_id 'API-Gateways'
 \echo "Executing check API-Gateways"

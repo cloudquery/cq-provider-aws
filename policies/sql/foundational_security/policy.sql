@@ -1,6 +1,6 @@
 \set framework 'foundational_security'
 \set execution_time ''''`date '+%Y-%m-%d %H:%M:%S'`''''::timestamp
-\i create_aws_policy_results.sql
+\i sql/create_aws_policy_results.sql
 \i sql/foundational_security/acm.sql
 \i sql/foundational_security/apigateway.sql
 \i sql/foundational_security/autoscaling.sql
