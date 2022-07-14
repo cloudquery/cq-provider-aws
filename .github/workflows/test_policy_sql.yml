@@ -77,7 +77,7 @@ jobs:
 
           export CQ_REATTACH_PROVIDERS=.cq_reattach
           ./cloudquery provider sync aws --config ./test/policy_cq_config.yml --enable-console-log
-          cd policies && psql -h localhost -p 5432 -U postgres -d postgres -f ./sql/policy.sql
+          cd policies && PGPASSWORD=pass psql -h localhost -p 5432 -U postgres -d postgres -w -f ./sql/policy.sql
 
         env:
           CQ_PROVIDER_DEBUG: 1
