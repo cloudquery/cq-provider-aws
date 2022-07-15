@@ -66,7 +66,7 @@ jobs:
             ${{ runner.os }}-go-${{ matrix.go }}-
 
       # All bash commands are in a single step so that we can see provider log which runs in the background.
-      - name: Run test
+      - name: Prepare for test - Create tables
         run: |
           set -o xtrace
 
@@ -81,3 +81,7 @@ jobs:
 
         env:
           CQ_PROVIDER_DEBUG: 1
+
+      - name: Run all policies
+        run: |
+          cd policies && PGPASSWORD=pass psql -h localhost -p 5432 -U postgres -d postgres -w -f ./sql/policy.sql
