@@ -63,7 +63,7 @@ jobs:
 
       - name: Prepare for test - Create tables
         run: |
-          go run ./test/main.go | psql -h localhost -p 5432 -U postgres -d postgres -w
+          go run ./test/gen-tables.go | psql -h localhost -p 5432 -U postgres -d postgres -w
 
       - name: Run all policies
         run: |
