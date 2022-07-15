@@ -11,6 +11,7 @@ on:
 env: 
   CGO_ENABLED: 0
   CQ_NO_TELEMETRY: 1
+  PGPASSWORD: pass
 
 jobs:
   SQLPolicyTest:
@@ -39,11 +40,6 @@ jobs:
       - name: Check out code into the policy directory
         uses: actions/checkout@v3
 
-      - name: Download Cloudquery
-        run: |
-          curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Linux_x86_64 -o cloudquery
-          chmod a+x cloudquery
-
       - name: Set up Go 1.x
         uses: actions/setup-go@v3
         with:
@@ -65,23 +61,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.go }}-
 
-      # All bash commands are in a single step so that we can see provider log which runs in the background.
       - name: Prepare for test - Create tables
         run: |
-          set -o xtrace
-
-          go run ./main.go &
-
-          # Wait until .cq_reattach exists
-          bash -c "until test -f .cq_reattach; do echo 123; sleep 1; done"
-
-          export CQ_REATTACH_PROVIDERS=.cq_reattach
-          ./cloudquery provider sync aws --config ./test/policy_cq_config.yml --enable-console-log
-          cd policies && PGPASSWORD=pass psql -h localhost -p 5432 -U postgres -d postgres -w -f ./sql/policy.sql
-
-        env:
-          CQ_PROVIDER_DEBUG: 1
+          go run ./test/main.go | psql -h localhost -p 5432 -U postgres -d postgres -w
 
       - name: Run all policies
         run: |
-          cd policies && PGPASSWORD=pass psql -h localhost -p 5432 -U postgres -d postgres -w -f ./sql/policy.sql
+          cd policies && psql -h localhost -p 5432 -U postgres -d postgres -w -f ./sql/policy.sql
