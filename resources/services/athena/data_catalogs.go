@@ -11,8 +11,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-const MAX_GOROUTINES = 10
-
 //go:generate cq-gen --resource data_catalogs --config gen.hcl --output .
 func DataCatalogs() *schema.Table {
 	return &schema.Table{
