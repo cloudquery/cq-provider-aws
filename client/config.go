@@ -10,6 +10,7 @@ type Account struct {
 	RoleARN         string   `yaml:"role_arn,omitempty" hcl:"role_arn,optional"`
 	RoleSessionName string   `yaml:"role_session_name,omitempty" hcl:"role_session_name,optional"`
 	ExternalID      string   `yaml:"external_id,omitempty" hcl:"external_id,optional"`
+	DefaultRegion   string   `yaml:"default_region,omitempty" hcl:"default_region,optional"`
 	Regions         []string `yaml:"regions,omitempty" hcl:"regions,optional"`
 	source          string
 }
@@ -71,12 +72,11 @@ accounts:
 Optional. Role ARN we want to assume when accessing this account
     role_arn: < YOUR_ROLE_ARN >
 Optional. Named profile in config or credential file from where CQ should grab credentials
-    local_profile = < PROFILE_NAME >
-
+    local_profile: < PROFILE_NAME >
 Optional. by default assumes all regions
 regions:
   - us-east-1
-    us-west-2
+  - us-west-2
 Optional. Enable AWS SDK debug logging.
   aws_debug: false
 The maximum number of times that a request will be retried for failures. Defaults to 10 retry attempts.

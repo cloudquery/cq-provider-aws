@@ -53,6 +53,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
@@ -367,6 +368,11 @@ type KmsClient interface {
 	DescribeKey(ctx context.Context, params *kms.DescribeKeyInput, optFns ...func(*kms.Options)) (*kms.DescribeKeyOutput, error)
 	GetKeyRotationStatus(ctx context.Context, params *kms.GetKeyRotationStatusInput, optFns ...func(*kms.Options)) (*kms.GetKeyRotationStatusOutput, error)
 	ListResourceTags(ctx context.Context, params *kms.ListResourceTagsInput, optFns ...func(*kms.Options)) (*kms.ListResourceTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_lightsail.go . LightsailClient
+type LightsailClient interface {
+	GetInstances(ctx context.Context, params *lightsail.GetInstancesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
@@ -713,4 +719,10 @@ type ShieldClient interface {
 	ListAttacks(ctx context.Context, params *shield.ListAttacksInput, optFns ...func(*shield.Options)) (*shield.ListAttacksOutput, error)
 	DescribeAttack(ctx context.Context, params *shield.DescribeAttackInput, optFns ...func(*shield.Options)) (*shield.DescribeAttackOutput, error)
 	ListProtectionGroups(ctx context.Context, params *shield.ListProtectionGroupsInput, optFns ...func(*shield.Options)) (*shield.ListProtectionGroupsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/ses.go . SESClient
+type SESClient interface {
+	GetEmailTemplate(ctx context.Context, params *sesv2.GetEmailTemplateInput, optFns ...func(*sesv2.Options)) (*sesv2.GetEmailTemplateOutput, error)
+	ListEmailTemplates(ctx context.Context, params *sesv2.ListEmailTemplatesInput, optFns ...func(*sesv2.Options)) (*sesv2.ListEmailTemplatesOutput, error)
 }

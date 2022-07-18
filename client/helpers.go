@@ -13,7 +13,9 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/semaphore"
 )
 
 type AWSService string
@@ -33,6 +35,12 @@ type SupportedServiceRegionsData struct {
 	regionVsPartition map[string]string
 }
 
+// ListResolver is responsible for iterating through entire list of resources that should be grabbed (if API is paginated). It should send list of items via the `resultsChan` so that the DetailResolver can grab the details of each item. All errors should be sent to the error channel.
+type ListResolverFunc func(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error
+
+// DetailResolveFunc is responsible for grabbing any and all metadata for a resource. All errors should be sent to the error channel.
+type DetailResolverFunc func(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, summary interface{})
+
 const (
 	ApigatewayService           AWSService = "apigateway"
 	Athena                      AWSService = "athena"
@@ -47,9 +55,12 @@ const (
 	RedshiftService             AWSService = "redshift"
 	Route53Service              AWSService = "route53"
 	S3Service                   AWSService = "s3"
+	SESService                  AWSService = "ses"
 	WAFRegional                 AWSService = "waf-regional"
 	WorkspacesService           AWSService = "workspaces"
 )
+
+const MAX_GOROUTINES = 10
 
 const (
 	PartitionServiceRegionFile = "data/partition_service_region.json"
@@ -64,10 +75,21 @@ var (
 )
 
 var notFoundErrorSubstrings = []string{
+	"InvalidAMIID.Unavailable",
+	"NonExistentQueue",
 	"NoSuch",
 	"NotFound",
 	"ResourceNotFoundException",
 	"WAFNonexistentItemException",
+}
+
+var accessDeniedErrorStrings = map[string]struct{}{
+	"AuthorizationError":              {},
+	"AccessDenied":                    {},
+	"AccessDeniedException":           {},
+	"InsufficientPrivilegesException": {},
+	"UnauthorizedOperation":           {},
+	"Unauthorized":                    {},
 }
 
 func readSupportedServiceRegions() *SupportedServiceRegionsData {
@@ -174,13 +196,11 @@ func IgnoreAccessDeniedServiceDisabled(err error) bool {
 			return strings.Contains(ae.Error(), "The security token included in the request is invalid")
 		case "AWSOrganizationsNotInUseException":
 			return true
-		case "AuthorizationError", "AccessDenied", "AccessDeniedException", "InsufficientPrivilegesException", "UnauthorizedOperation":
-			return true
 		case "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId":
 			return true
 		}
 	}
-	return false
+	return isAccessDeniedError(err)
 }
 
 func IgnoreCommonErrors(err error) bool {
@@ -299,6 +319,24 @@ func isNotFoundError(err error) bool {
 	return false
 }
 
+// IsAccessDeniedError checks if api error should be classified as a permissions issue
+func (c *Client) IsAccessDeniedError(err error) bool {
+	if isAccessDeniedError(err) {
+		c.logger.Warn("API returned an Access Denied error, ignoring it and continuing...", "error", err)
+		return true
+	}
+	return false
+}
+
+func isAccessDeniedError(err error) bool {
+	var ae smithy.APIError
+	if !errors.As(err, &ae) {
+		return false
+	}
+	_, ok := accessDeniedErrorStrings[ae.ErrorCode()]
+	return ok
+}
+
 func IsInvalidParameterValueError(err error) bool {
 	var apiErr smithy.APIError
 	return errors.As(err, &apiErr) && apiErr.ErrorCode() == "InvalidParameterValue"
@@ -339,6 +377,11 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 			panic("field is not string or *string")
 		}
 
+		if v.IsNil() {
+			// return empty string if string pointer is nil
+			return ""
+		}
+
 		return v.Elem().String()
 	}
 
@@ -353,13 +396,14 @@ func TagsIntoMap(tagSlice interface{}, dst map[string]string) {
 			panic("slice member is not struct: " + k.String())
 		}
 
+		// key cannot be nil, but value can in the case of key-only tags
 		keyField, valField := val.FieldByName("Key"), val.FieldByName("Value")
-		if (keyField.Type().Kind() == reflect.Ptr && keyField.IsNil()) || (valField.Type().Kind() == reflect.Ptr && valField.IsNil()) {
+		if keyField.Type().Kind() == reflect.Ptr && keyField.IsNil() {
 			continue
 		}
 
-		if keyField.IsZero() || valField.IsZero() {
-			panic("slice member is missing Key or Value fields")
+		if keyField.IsZero() {
+			panic("slice member is missing Key field")
 		}
 
 		dst[stringify(keyField)] = stringify(valField)
@@ -376,4 +420,47 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 	ret := make(map[string]string, slc.Len())
 	TagsIntoMap(tagSlice, ret)
 	return ret
+}
+
+func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {
+	var diags diag.Diagnostics
+
+	errorChan := make(chan error)
+	detailChan := make(chan interface{})
+	// Channel that will communicate with goroutine that is aggregating the errors
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for detailError := range errorChan {
+			diags = diags.Add(diag.FromError(detailError, diag.RESOLVING))
+		}
+	}()
+	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
+
+	go func() {
+		defer close(errorChan)
+		for item := range detailChan {
+			if err := sem.Acquire(ctx, 1); err != nil {
+				continue
+			}
+			func(summary interface{}) {
+				defer sem.Release(1)
+				details(ctx, meta, res, errorChan, summary)
+			}(item)
+		}
+	}()
+
+	err := list(ctx, meta, detailChan)
+	close(detailChan)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+
+	// All items will be attempted to be fetched, and all errors will be aggregated
+	<-done
+
+	if diags.HasDiags() {
+		return diags
+	}
+	return nil
 }

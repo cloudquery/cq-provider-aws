@@ -46,7 +46,7 @@ run: build
 # Run a fetch command
 .PHONY: fetch
 fetch:
-	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v --fail-on-error
+	CQ_PROVIDER_DEBUG=1 CQ_REATTACH_PROVIDERS=.cq_reattach cloudquery fetch --dsn "postgres://postgres:pass@localhost:5432/postgres?sslmode=disable" -v
 
 # Generate mocks for mock/unit testing 
 .PHONY: generate-mocks
@@ -62,3 +62,14 @@ test-unit:
 .PHONY: test-integration
 test-integration:
 	@if [[ "$(tableName)" == "" ]]; then go test -run=TestIntegration -timeout 3m -tags=integration ./...; else go test -run="TestIntegration/$(tableName)" -timeout 3m -tags=integration ./...; fi
+
+# Install tools
+.PHONY: install-tools
+install-tools:
+	@echo Installing tools from tools/tool.go
+	@cat tools/tool.go | grep _ | awk -F'"' '{print $$2}' | xargs -tI % go install %
+
+# Install pre-commit hooks. This requires pre-commit to be installed (https://pre-commit.com/)
+.PHONY: install-hooks
+install-hooks:
+	pre-commit install

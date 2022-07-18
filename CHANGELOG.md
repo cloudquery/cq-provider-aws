@@ -6,6 +6,160 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.12.29](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.28...v0.12.29) (2022-07-13)
+
+
+### Bug Fixes
+
+* Choose correct region for S3 ([#1216](https://github.com/cloudquery/cq-provider-aws/issues/1216)) ([e75f91b](https://github.com/cloudquery/cq-provider-aws/commit/e75f91bd41be4bf6122e2672e7d09539ab115cd0))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/config to v1.15.14 ([#1204](https://github.com/cloudquery/cq-provider-aws/issues/1204)) ([6441700](https://github.com/cloudquery/cq-provider-aws/commit/64417008b0588e72541a50209fbbe964ba1aaa2c))
+* Improve Error/Diag handling for nested resources ([#1214](https://github.com/cloudquery/cq-provider-aws/issues/1214)) ([9a55267](https://github.com/cloudquery/cq-provider-aws/commit/9a55267fb951152a5b4d1d6e78b0f86661cf85fb))
+* Update endpoints ([#1212](https://github.com/cloudquery/cq-provider-aws/issues/1212)) ([83edf07](https://github.com/cloudquery/cq-provider-aws/commit/83edf07e23ab7e5d196b1723a3b4225e9e2a4624))
+* Update endpoints ([#1215](https://github.com/cloudquery/cq-provider-aws/issues/1215)) ([67f595a](https://github.com/cloudquery/cq-provider-aws/commit/67f595a34a0e6fcd7021a3d1de0756e0832f878e))
+
+## [0.12.28](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.27...v0.12.28) (2022-07-11)
+
+
+### Features
+
+* Generic list and detail ([#1000](https://github.com/cloudquery/cq-provider-aws/issues/1000)) ([16217c8](https://github.com/cloudquery/cq-provider-aws/commit/16217c824ac66196af63ba5b28d55a4e3f3cf4a5))
+* Partial lambda Function  Fetch ([#1194](https://github.com/cloudquery/cq-provider-aws/issues/1194)) ([f757824](https://github.com/cloudquery/cq-provider-aws/commit/f75782469a5d805f320c3467b3db489a5713ee40))
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/aws/aws-sdk-go-v2 to v1.16.7 ([#1203](https://github.com/cloudquery/cq-provider-aws/issues/1203)) ([35fde37](https://github.com/cloudquery/cq-provider-aws/commit/35fde37ec9007999b56ae24682a681fe7247e6f8))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/credentials to v1.12.8 ([#1205](https://github.com/cloudquery/cq-provider-aws/issues/1205)) ([103b548](https://github.com/cloudquery/cq-provider-aws/commit/103b548618cac9e1480698860f6a712f925d1d71))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/feature/s3/manager to v1.11.19 ([#1206](https://github.com/cloudquery/cq-provider-aws/issues/1206)) ([825e55f](https://github.com/cloudquery/cq-provider-aws/commit/825e55f842c0f0f07740242c1130c6f95ef36ed8))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/service/acm to v1.14.8 ([#1208](https://github.com/cloudquery/cq-provider-aws/issues/1208)) ([e0a3b4a](https://github.com/cloudquery/cq-provider-aws/commit/e0a3b4aba11637bfa39af86e0d0486d29d47b86c))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.13.5 ([#1193](https://github.com/cloudquery/cq-provider-aws/issues/1193)) ([0add41c](https://github.com/cloudquery/cq-provider-aws/commit/0add41c0e0d11169ebb12071a056ced017975a62))
+* **deps:** Update myrotvorets/set-commit-status-action digest to 987babf ([#1145](https://github.com/cloudquery/cq-provider-aws/issues/1145)) ([bf69648](https://github.com/cloudquery/cq-provider-aws/commit/bf69648c21b51200d0c9d9671b22b9bf8bc2c140))
+* **deps:** Update tubone24/update_release digest to 246880c ([#1146](https://github.com/cloudquery/cq-provider-aws/issues/1146)) ([44d9c76](https://github.com/cloudquery/cq-provider-aws/commit/44d9c7656a75016b5308114215e50af4dce6cfeb))
+* Handle invalid/malformed token ([#1210](https://github.com/cloudquery/cq-provider-aws/issues/1210)) ([5131326](https://github.com/cloudquery/cq-provider-aws/commit/51313269f5180433d44f1602b7158610bfa3198f))
+* Ignore AWS backup tags for not found resource ([#1211](https://github.com/cloudquery/cq-provider-aws/issues/1211)) ([ac11c91](https://github.com/cloudquery/cq-provider-aws/commit/ac11c91698177fe64a1e91840e8bd7299d4d262b))
+* Ignore not found errors in apigateway ([#1192](https://github.com/cloudquery/cq-provider-aws/issues/1192)) ([e963155](https://github.com/cloudquery/cq-provider-aws/commit/e963155da7c3b18bfc3bf8483ec317df46cb6abf))
+* Ignore SimpleQueueService.NonExistentQueue ([#1173](https://github.com/cloudquery/cq-provider-aws/issues/1173)) ([7452701](https://github.com/cloudquery/cq-provider-aws/commit/745270176d1bbf15e3de3da0598b3983bf48c81e))
+* Ignore some not founds in autoscaling groups ([#1181](https://github.com/cloudquery/cq-provider-aws/issues/1181)) ([33c2f11](https://github.com/cloudquery/cq-provider-aws/commit/33c2f1127fda56a9d4599710bd7a52f9e0eda741))
+* Ignore TargetGroupNotFound in target_groups ([#1174](https://github.com/cloudquery/cq-provider-aws/issues/1174)) ([1a16deb](https://github.com/cloudquery/cq-provider-aws/commit/1a16deb7aa8a068a8845dacd46398961cde8fc24))
+* Panic in cloudtrail ([#1189](https://github.com/cloudquery/cq-provider-aws/issues/1189)) ([0d98a38](https://github.com/cloudquery/cq-provider-aws/commit/0d98a385bc3ad6efe3a8b0579968d8871ecee58e))
+
+## [0.12.27](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.26...v0.12.27) (2022-07-07)
+
+
+### Features
+
+* Account specific default_region ([#1177](https://github.com/cloudquery/cq-provider-aws/issues/1177)) ([ac0e91b](https://github.com/cloudquery/cq-provider-aws/commit/ac0e91b494a5ec3eb9df705c726b8e12d3a970cc))
+* use 'unavailable' for resources without region ([#1183](https://github.com/cloudquery/cq-provider-aws/issues/1183)) ([e7dac0f](https://github.com/cloudquery/cq-provider-aws/commit/e7dac0f42224464583dc1491a296b5e6589dcacc))
+
+
+### Bug Fixes
+
+* Classify ExpiredTokenException as ACCESS err ([#1171](https://github.com/cloudquery/cq-provider-aws/issues/1171)) ([3e36d75](https://github.com/cloudquery/cq-provider-aws/commit/3e36d759ad6c85a19658606cb43ddae3cd32ca24))
+* Ec2 Panic.go ([#1185](https://github.com/cloudquery/cq-provider-aws/issues/1185)) ([dc9db0d](https://github.com/cloudquery/cq-provider-aws/commit/dc9db0d7acfadafd418402752b6862c120367a79))
+* Fix Tests ([#1178](https://github.com/cloudquery/cq-provider-aws/issues/1178)) ([8c4d01d](https://github.com/cloudquery/cq-provider-aws/commit/8c4d01d8e8e791b587504d9c953ba6633d099050))
+* Ignore rds db snapshot not found ([#1182](https://github.com/cloudquery/cq-provider-aws/issues/1182)) ([0619b4e](https://github.com/cloudquery/cq-provider-aws/commit/0619b4ee41a1afb7041f33d3623c36bdc636ecc7))
+* Ignore s3 "bucket not found" error ([#1172](https://github.com/cloudquery/cq-provider-aws/issues/1172)) ([bdb3332](https://github.com/cloudquery/cq-provider-aws/commit/bdb333257c734caec17c64459c193c2a296a8da8))
+* Ignore S3 Buckets Errors ([#1175](https://github.com/cloudquery/cq-provider-aws/issues/1175)) ([2907699](https://github.com/cloudquery/cq-provider-aws/commit/2907699a2b193762fbc278535f4afb332b114ad6))
+
+## [0.12.26](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.25...v0.12.26) (2022-07-06)
+
+
+### Features
+
+* Add support for AWS SES Template ([#1133](https://github.com/cloudquery/cq-provider-aws/issues/1133)) ([59081a8](https://github.com/cloudquery/cq-provider-aws/commit/59081a8f3e834c592dbe788ec5ab0adee3247668))
+* Add support for Lightsail Instances ([#1138](https://github.com/cloudquery/cq-provider-aws/issues/1138)) ([bcfb724](https://github.com/cloudquery/cq-provider-aws/commit/bcfb72497535c14a2f98e38d15dfbf094264a2c8))
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.13.4 ([#1164](https://github.com/cloudquery/cq-provider-aws/issues/1164)) ([7684ef4](https://github.com/cloudquery/cq-provider-aws/commit/7684ef425f9be77838005bcc01a7a3761efe3f8b))
+* Do not fail if ec2 image is not found ([#1170](https://github.com/cloudquery/cq-provider-aws/issues/1170)) ([a0d6104](https://github.com/cloudquery/cq-provider-aws/commit/a0d6104b3ded675a7b693dbba1dae08e413959e2))
+* Ignore few NotFound responses in elbv2 and apigateway ([#1161](https://github.com/cloudquery/cq-provider-aws/issues/1161)) ([24622bb](https://github.com/cloudquery/cq-provider-aws/commit/24622bbe017c98b34bb3fe40ebfc98f949d925bd))
+* Update endpoints ([#1169](https://github.com/cloudquery/cq-provider-aws/issues/1169)) ([425b8cf](https://github.com/cloudquery/cq-provider-aws/commit/425b8cf7d0164e82c8c58f4bf51bb03aa214a9e7))
+
+## [0.12.25](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.24...v0.12.25) (2022-07-04)
+
+
+### Bug Fixes
+
+* **deps:** Update github.com/gocarina/gocsv digest to 72f2e84 ([#1151](https://github.com/cloudquery/cq-provider-aws/issues/1151)) ([1c870e8](https://github.com/cloudquery/cq-provider-aws/commit/1c870e80279c72ca3f768aaaeaf7e9ab84f87cfe))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2 to v1.16.6 ([#1152](https://github.com/cloudquery/cq-provider-aws/issues/1152)) ([4ac2583](https://github.com/cloudquery/cq-provider-aws/commit/4ac2583ebe3a074a7e61bec50c22bb059f0668f2))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/service/accessanalyzer to v1.15.7 ([#1153](https://github.com/cloudquery/cq-provider-aws/issues/1153)) ([9ed2343](https://github.com/cloudquery/cq-provider-aws/commit/9ed234382f41d08c734fd56e54ca735d3bd299ec))
+* **deps:** Update module github.com/aws/aws-sdk-go-v2/service/codepipeline to v1.13.7 ([#1154](https://github.com/cloudquery/cq-provider-aws/issues/1154)) ([0a34f8e](https://github.com/cloudquery/cq-provider-aws/commit/0a34f8e4660077ce0cb5e70a3155d794c3b0309f))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.13.3 ([#1156](https://github.com/cloudquery/cq-provider-aws/issues/1156)) ([d4b0701](https://github.com/cloudquery/cq-provider-aws/commit/d4b070185414560f183a1de95d25c5f1cf536d13))
+* **docs:** Update documentation about adding new resources ([#1136](https://github.com/cloudquery/cq-provider-aws/issues/1136)) ([fe5a5ad](https://github.com/cloudquery/cq-provider-aws/commit/fe5a5ad8dabd9cd533e2899bbb769c9c4f3c1a8c))
+* **tests:** Update Lightsail terraform for Integration testing of Instances ([#1137](https://github.com/cloudquery/cq-provider-aws/issues/1137)) ([488a003](https://github.com/cloudquery/cq-provider-aws/commit/488a003a2d74faa991d5343fcfc15dd7760a1cb5))
+
+## [0.12.24](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.23...v0.12.24) (2022-07-03)
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.13.2 ([#1141](https://github.com/cloudquery/cq-provider-aws/issues/1141)) ([110e0d2](https://github.com/cloudquery/cq-provider-aws/commit/110e0d2f635b5f3ba7bdb5e4395f416edd1accbb))
+
+## [0.12.23](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.22...v0.12.23) (2022-07-03)
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.13.1 ([#1127](https://github.com/cloudquery/cq-provider-aws/issues/1127)) ([527a614](https://github.com/cloudquery/cq-provider-aws/commit/527a614d903be767d4a6acc9f50f4801f7af5c71))
+* Diagnostic blocking Use of Orgs  ([#1134](https://github.com/cloudquery/cq-provider-aws/issues/1134)) ([ca6f745](https://github.com/cloudquery/cq-provider-aws/commit/ca6f745bd95df401cb7dc93a926f3b171322aba8))
+* **docs:** Update instructions for adding new resources and add install-tools command ([#1128](https://github.com/cloudquery/cq-provider-aws/issues/1128)) ([29ac7d3](https://github.com/cloudquery/cq-provider-aws/commit/29ac7d38d8d1ec2425a67ae6e364993a191b1096))
+* Typo in example config ([#1132](https://github.com/cloudquery/cq-provider-aws/issues/1132)) ([2cdebb7](https://github.com/cloudquery/cq-provider-aws/commit/2cdebb78d361cc2b7bbbd6408bc1bb6f49612151)), closes [#1131](https://github.com/cloudquery/cq-provider-aws/issues/1131)
+
+## [0.12.22](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.21...v0.12.22) (2022-06-29)
+
+
+### Bug Fixes
+
+* Add yml test_policy configuration ([#1120](https://github.com/cloudquery/cq-provider-aws/issues/1120)) ([0c19e0a](https://github.com/cloudquery/cq-provider-aws/commit/0c19e0ad177133cde8e7e2727cae88c1774d1c7f))
+* Fix typo ([#1122](https://github.com/cloudquery/cq-provider-aws/issues/1122)) ([2b929ab](https://github.com/cloudquery/cq-provider-aws/commit/2b929abb49d0e739ed9b4425ac512561b588ca52))
+* Update endpoints ([#1126](https://github.com/cloudquery/cq-provider-aws/issues/1126)) ([4ef62d0](https://github.com/cloudquery/cq-provider-aws/commit/4ef62d050fb7fe6bb5e1a1e28392184a5255c3a5))
+
+## [0.12.21](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.20...v0.12.21) (2022-06-27)
+
+
+### Features
+
+* Add image deprecation_time ([#1099](https://github.com/cloudquery/cq-provider-aws/issues/1099)) ([55762fd](https://github.com/cloudquery/cq-provider-aws/commit/55762fdadd1b5ce9d471cece40ae0f64b5c9b3fb))
+
+
+### Bug Fixes
+
+* Docs to Yaml ([#1117](https://github.com/cloudquery/cq-provider-aws/issues/1117)) ([5145461](https://github.com/cloudquery/cq-provider-aws/commit/51454613191428c93c2472a6d12f431e42f2572c))
+* Improve Errors AWS Errors ([#1100](https://github.com/cloudquery/cq-provider-aws/issues/1100)) ([1897dbc](https://github.com/cloudquery/cq-provider-aws/commit/1897dbc4b9d4a4a00b10d8319bde3bc441c3acbc))
+* Small Fixes  ([#1089](https://github.com/cloudquery/cq-provider-aws/issues/1089)) ([f6fec91](https://github.com/cloudquery/cq-provider-aws/commit/f6fec9110e742a154e94f25d65080e24bb7b5a58))
+
+## [0.12.20](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.19...v0.12.20) (2022-06-27)
+
+
+### Bug Fixes
+
+* **deps:** fix(deps): Update module github.com/cloudquery/cq-provider-sdk to v0.12.5 ([#1113](https://github.com/cloudquery/cq-provider-aws/issues/1113)) ([f80c663](https://github.com/cloudquery/cq-provider-aws/commit/f80c66316c1e773d21cc2320ac34b61e2931eee3))
+
+## [0.12.19](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.18...v0.12.19) (2022-06-27)
+
+
+### Bug Fixes
+
+* **deps:** fix(deps): Update module github.com/cloudquery/cq-provider-sdk to v0.12.4 ([#1111](https://github.com/cloudquery/cq-provider-aws/issues/1111)) ([0dba643](https://github.com/cloudquery/cq-provider-aws/commit/0dba643fa8776940644fac936dacf8923b42393e))
+
+## [0.12.18](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.17...v0.12.18) (2022-06-26)
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.12.3 ([#1106](https://github.com/cloudquery/cq-provider-aws/issues/1106)) ([80c2ec4](https://github.com/cloudquery/cq-provider-aws/commit/80c2ec4f5de162d6469b9778e5218ce954839586))
+
+## [0.12.17](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.16...v0.12.17) (2022-06-26)
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.12.2 ([#1101](https://github.com/cloudquery/cq-provider-aws/issues/1101)) ([5a694bb](https://github.com/cloudquery/cq-provider-aws/commit/5a694bbd8e161f3dd69490db47593fe8748a7ca0))
+* Update endpoints ([#1104](https://github.com/cloudquery/cq-provider-aws/issues/1104)) ([0779d72](https://github.com/cloudquery/cq-provider-aws/commit/0779d7286cf94db6cce08681c125fc04a2185b15))
+* YAML Include accounts block ([#1103](https://github.com/cloudquery/cq-provider-aws/issues/1103)) ([6829f71](https://github.com/cloudquery/cq-provider-aws/commit/6829f7132c92c2ff39ae049c6f77daa93db48255))
+
 ## [0.12.16](https://github.com/cloudquery/cq-provider-aws/compare/v0.12.15...v0.12.16) (2022-06-22)
 
 

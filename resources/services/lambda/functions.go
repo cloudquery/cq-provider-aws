@@ -1089,6 +1089,7 @@ func Functions() *schema.Table {
 // ====================================================================================================================
 
 func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var diags diag.Diagnostics
 	var input lambda.ListFunctionsInput
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
@@ -1097,7 +1098,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 		}
 
 		for _, f := range response.Functions {
@@ -1107,11 +1108,16 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			funcResponse, err := svc.GetFunction(ctx, &getFunctionInput, func(options *lambda.Options) {
 				options.Region = c.Region
 			})
+
 			if err != nil {
-				if c.IsNotFoundError(err) {
+				if c.IsNotFoundError(err) || c.IsAccessDeniedError(err) {
+					diags = diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+					res <- &lambda.GetFunctionOutput{
+						Configuration: &f,
+					}
 					continue
 				}
-				return diag.WrapError(err)
+				return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 			}
 			res <- funcResponse
 		}
@@ -1121,7 +1127,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 		}
 		input.Marker = response.NextMarker
 	}
-	return nil
+	return diags
 }
 func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	r := resource.Item.(*lambda.GetFunctionOutput)
@@ -1159,8 +1165,9 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 	}
 
 	// skip getting CodeSigningConfig since containerized lambda functions does not support this feature
-	lambdaType := resource.Get("code_repository_type").(*string)
-	if *lambdaType == "ECR" {
+	// value can be nil if the caller doesn't have GetFunctionConfiguration permission and only has List*
+	lambdaType, ok := resource.Get("code_repository_type").(*string)
+	if !ok || *lambdaType == "ECR" {
 		return nil
 	}
 

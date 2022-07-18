@@ -465,10 +465,25 @@ func Buckets() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
+// listBucketRegion identifies the canonical region for S3 based on the partition
+// in the future we might want to make this configurable if users are alright with the fact that performing this
+// action in different regions will return different results
+func listBucketRegion(cl *client.Client) string {
+	switch cl.Partition {
+	case "aws-cn":
+		return "cn-north-1"
+	case "aws-us-gov":
+		return "us-gov-west-1"
+	default:
+		return "us-east-1"
+	}
+}
+
 func fetchS3Buckets(ctx context.Context, meta schema.ClientMeta, _ *schema.Resource, res chan<- interface{}) error {
-	svc := meta.(*client.Client).Services().S3
+	cl := meta.(*client.Client)
+	svc := cl.Services().S3
 	response, err := svc.ListBuckets(ctx, nil, func(options *s3.Options) {
-		options.Region = "us-east-1"
+		options.Region = listBucketRegion(cl)
 	})
 	if err != nil {
 		return diag.WrapError(err)
@@ -510,11 +525,10 @@ func fetchS3BucketsWorker(ctx context.Context, meta schema.ClientMeta, buckets <
 	defer wg.Done()
 	cl := meta.(*client.Client)
 	for bucket := range buckets {
-		// always set default bucket region to us-east-1
-		wb := &WrappedBucket{Bucket: bucket, Region: "us-east-1"}
+		wb := &WrappedBucket{Bucket: bucket}
 		err := resolveS3BucketsAttributes(ctx, meta, wb)
 		if err != nil {
-			if !cl.IsNotFoundError(err) {
+			if !isBucketNotFoundError(cl, err) {
 				errs <- err
 			}
 			continue
@@ -531,15 +545,18 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 
 	output, err := mgr.GetBucketRegion(ctx, *resource.Name)
 	if err != nil {
+		if c.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
-	// This is a weird corner case by AWS API https://github.com/aws/aws-sdk-net/issues/323#issuecomment-196584538
-	// empty output == region of the bucket is us-east-1, as we set it by default we are okay
+	// AWS does not specify a region if bucket is in us-east-1, so as long as no error we can assume an empty string is us-east-1
+	resource.Region = "us-east-1"
 	if output != "" {
 		resource.Region = output
 	}
 	if err = resolveBucketLogging(ctx, meta, resource, resource.Region); err != nil {
-		if c.IsNotFoundError(err) {
+		if isBucketNotFoundError(c, err) {
 			return nil
 		}
 		return diag.WrapError(err)
@@ -571,6 +588,9 @@ func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, res
 func fetchS3BucketGrants(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*WrappedBucket)
 	svc := meta.(*client.Client).Services().S3
+	if parent.Get("region").(string) == "" {
+		return nil
+	}
 	aclOutput, err := svc.GetBucketAcl(ctx, &s3.GetBucketAclInput{Bucket: r.Name}, func(options *s3.Options) {
 		options.Region = parent.Get("region").(string)
 	})
@@ -587,6 +607,9 @@ func fetchS3BucketCorsRules(ctx context.Context, meta schema.ClientMeta, parent 
 	r := parent.Item.(*WrappedBucket)
 	c := meta.(*client.Client)
 	svc := c.Services().S3
+	if parent.Get("region").(string) == "" {
+		return nil
+	}
 	corsOutput, err := svc.GetBucketCors(ctx, &s3.GetBucketCorsInput{Bucket: r.Name}, func(options *s3.Options) {
 		options.Region = parent.Get("region").(string)
 	})
@@ -605,6 +628,9 @@ func fetchS3BucketEncryptionRules(ctx context.Context, meta schema.ClientMeta, p
 	r := parent.Item.(*WrappedBucket)
 	c := meta.(*client.Client)
 	svc := c.Services().S3
+	if parent.Get("region").(string) == "" {
+		return nil
+	}
 	aclOutput, err := svc.GetBucketEncryption(ctx, &s3.GetBucketEncryptionInput{Bucket: r.Name}, func(options *s3.Options) {
 		options.Region = parent.Get("region").(string)
 	})
@@ -639,6 +665,9 @@ func fetchS3BucketLifecycles(ctx context.Context, meta schema.ClientMeta, parent
 	r := parent.Item.(*WrappedBucket)
 	c := meta.(*client.Client)
 	svc := c.Services().S3
+	if parent.Get("region").(string) == "" {
+		return nil
+	}
 	lifecycleOutput, err := svc.GetBucketLifecycleConfiguration(ctx, &s3.GetBucketLifecycleConfigurationInput{Bucket: r.Name}, func(options *s3.Options) {
 		options.Region = parent.Get("region").(string)
 	})
@@ -760,7 +789,7 @@ func resolveBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta,
 	})
 	if err != nil {
 		// If we received any error other than NoSuchPublicAccessBlockConfiguration, we return and error
-		if c.IsNotFoundError(err) {
+		if isBucketNotFoundError(c, err) {
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
@@ -876,4 +905,14 @@ func resolveBucketOwnershipControls(ctx context.Context, meta schema.ClientMeta,
 
 	resource.OwnershipControls = stringArray
 	return nil
+}
+
+func isBucketNotFoundError(cl *client.Client, err error) bool {
+	if cl.IsNotFoundError(err) {
+		return true
+	}
+	if err.Error() == "bucket not found" {
+		return true
+	}
+	return false
 }

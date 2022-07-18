@@ -63,6 +63,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
@@ -164,6 +165,7 @@ type Services struct {
 	S3                     S3Client
 	S3Control              S3ControlClient
 	S3Manager              S3ManagerClient
+	SES                    SESClient
 	Shield                 ShieldClient
 	SNS                    SnsClient
 	SQS                    SQSClient
@@ -409,6 +411,11 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 		config.WithRetryer(newRetryer(logger, awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 	}
 
+	if account.DefaultRegion != "" {
+		// According to the docs: If multiple WithDefaultRegion calls are made, the last call overrides the previous call values
+		configFns = append(configFns, config.WithDefaultRegion(account.DefaultRegion))
+	}
+
 	if account.LocalProfile != "" {
 		configFns = append(configFns, config.WithSharedConfigProfile(account.LocalProfile))
 	}
@@ -448,11 +455,26 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	// Test out retrieving credentials
 	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
 		logger.Error("error retrieving credentials", "err", err)
+
+		var ae smithy.APIError
+		if errors.As(err, &ae) {
+			if strings.Contains(ae.ErrorCode(), "InvalidClientTokenId") {
+				return awsCfg, diag.FromError(
+					err,
+					diag.USER,
+					diag.WithSummary("Invalid credentials for assuming role"),
+					diag.WithDetails("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file."),
+					diag.WithSeverity(diag.WARNING),
+				)
+			}
+		}
+
 		return awsCfg, diag.FromError(
 			err,
 			diag.USER,
 			diag.WithSummary("No credentials available"),
 			diag.WithDetails("Couldn't find any credentials in environment variables or configuration files."),
+			diag.WithSeverity(diag.WARNING),
 		)
 	}
 
@@ -467,13 +489,14 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	client := NewAwsClient(logger)
 	client.GlobalRegion = awsConfig.GlobalRegion
 	var adminAccountSts AssumeRoleAPIClient
-
+	if awsConfig.Organization != nil && len(awsConfig.Accounts) > 0 {
+		return nil, diags.Add(diag.FromError(errors.New("specifying accounts via both the Accounts and Org properties is not supported. If you want to do both, you should use multiple provider blocks"), diag.USER))
+	}
 	if awsConfig.Organization != nil {
 		var err error
 		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
 			logger.Error("error getting child accounts", "err", err)
-
 			var ae smithy.APIError
 			if errors.As(err, &ae) {
 				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
@@ -483,7 +506,6 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
 		}
 	}
-
 	if len(awsConfig.Accounts) == 0 {
 		awsConfig.Accounts = append(awsConfig.Accounts, Account{
 			ID: defaultVar,
@@ -510,14 +532,22 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		}
 
 		if isAllRegions(localRegions) {
-			logger.Info("All regions specified in config.yml. Assuming all regions")
+			logger.Info("All regions specified in `cloudquery.yml`. Assuming all regions")
 		}
 
 		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, adminAccountSts)
 		if err != nil {
 			if account.source == "org" {
 				logger.Warn("unable to assume role in account")
-				diags = diags.Add(diag.FromError(errors.New("unable to assume role in account"), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+				principal := "unknown principal"
+				// Identify the principal making the request and use it to construct the error message. Any errors can be ignored as they are only for improving the user experience.
+				awsAdminCfg, _ := configureAwsClient(ctx, logger, awsConfig, *awsConfig.Organization.AdminAccount, nil)
+				output, accountErr := getAccountId(ctx, awsAdminCfg)
+				if accountErr == nil {
+					principal = *output.Arn
+				}
+
+				diags = diags.Add(diag.FromError(err, diag.ACCESS, diag.WithDetails("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN), diag.WithSeverity(diag.WARNING)))
 				continue
 			}
 			var ae smithy.APIError
@@ -537,6 +567,10 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 			&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)},
 			func(o *ec2.Options) {
 				o.Region = defaultRegion
+				if account.DefaultRegion != "" {
+					o.Region = account.DefaultRegion
+				}
+
 				if len(localRegions) > 0 && !isAllRegions(localRegions) {
 					o.Region = localRegions[0]
 				}
@@ -554,8 +588,8 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		awsCfg.Region = account.Regions[0]
 		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			// return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
-			diags = diags.Add(diag.FromError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+			// This should only ever fail when there is a network or endpoint issue. There is no way for IAM to deny this call.
+			diags = diags.Add(diag.FromError(fmt.Errorf("failed to get caller identity. AWS Error: %w", err), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
 			continue
 		}
 		iamArn, err := arn.Parse(*output.Arn)
@@ -628,6 +662,7 @@ func initServices(region string, c aws.Config) Services {
 		S3Manager:              newS3ManagerFromConfig(awsCfg),
 		SageMaker:              sagemaker.NewFromConfig(awsCfg),
 		SecretsManager:         secretsmanager.NewFromConfig(awsCfg),
+		SES:                    sesv2.NewFromConfig(awsCfg),
 		Shield:                 shield.NewFromConfig(awsCfg),
 		SNS:                    sns.NewFromConfig(awsCfg),
 		SSM:                    ssm.NewFromConfig(awsCfg),
