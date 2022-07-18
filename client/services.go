@@ -373,6 +373,8 @@ type KmsClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_lightsail.go . LightsailClient
 type LightsailClient interface {
 	GetInstances(ctx context.Context, params *lightsail.GetInstancesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error)
+	GetBuckets(ctx context.Context, params *lightsail.GetBucketsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketsOutput, error)
+	GetBucketAccessKeys(ctx context.Context, params *lightsail.GetBucketAccessKeysInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
@@ -524,12 +526,6 @@ type LambdaClient interface {
 	GetCodeSigningConfig(ctx context.Context, params *lambda.GetCodeSigningConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetCodeSigningConfigOutput, error)
 	GetLayerVersionPolicy(ctx context.Context, params *lambda.GetLayerVersionPolicyInput, optFns ...func(*lambda.Options)) (*lambda.GetLayerVersionPolicyOutput, error)
 	GetFunctionUrlConfig(ctx context.Context, params *lambda.GetFunctionUrlConfigInput, optFns ...func(*lambda.Options)) (*lambda.GetFunctionUrlConfigOutput, error)
-}
-
-//go:generate mockgen -package=mocks -destination=./mocks/mock_lightsail.go . LightsailClient
-type LightsailClient interface {
-	GetBuckets(ctx context.Context, params *lightsail.GetBucketsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketsOutput, error)
-	GetBucketAccessKeys(ctx context.Context, params *lightsail.GetBucketAccessKeysInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_analyzer.go . AnalyzerClient
