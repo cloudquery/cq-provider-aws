@@ -17,8 +17,6 @@ type TaskDefinitionWrapper struct {
 	Tags []types.Tag
 }
 
-const MAX_GOROUTINES = 10
-
 func EcsTaskDefinitions() *schema.Table {
 	return &schema.Table{
 		Name:        "aws_ecs_task_definitions",
