@@ -1,7 +1,5 @@
 package client
 
-import "github.com/cloudquery/cq-provider-sdk/cqproto"
-
 type Account struct {
 	ID              string `yaml:"id" hcl:",label"`
 	AccountID       string
@@ -33,39 +31,10 @@ type Config struct {
 	MaxRetries   int       `yaml:"max_retries,omitempty" hcl:"max_retries,optional" default:"10"`
 	MaxBackoff   int       `yaml:"max_backoff,omitempty" hcl:"max_backoff,optional" default:"30"`
 	GlobalRegion string    `yaml:"global_region,omitempty" hcl:"global_region,optional" default:"us-east-1"`
-
-	requestedFormat cqproto.ConfigFormat
-}
-
-func NewConfig(f cqproto.ConfigFormat) *Config {
-	return &Config{
-		requestedFormat: f,
-	}
 }
 
 func (c Config) Example() string {
-	switch c.requestedFormat {
-	case cqproto.ConfigHCL:
-		return ` configuration {
-  // Optional, Repeated. Add an 'accounts' block for every account you want to assume-role into and fetch data from.
-  // accounts "<UNIQUE ACCOUNT IDENTIFIER>" {
-    // Optional. Role ARN we want to assume when accessing this account
-    // role_arn = < YOUR_ROLE_ARN >
-    // Optional. Named profile in config or credential file from where CQ should grab credentials
-    // local_profile = < PROFILE_NAME >
-  // }
-  // Optional. by default assumes all regions
-  // regions = ["us-east-1", "us-west-2"]
-  // Optional. Enable AWS SDK debug logging.
-  aws_debug = false
-  // The maximum number of times that a request will be retried for failures. Defaults to 10 retry attempts.
-  // max_retries = 10
-  // The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts. Defaults to 30 seconds.
-  // max_backoff = 30
-}
-`
-	default:
-		return `
+	return `
 Optional, Repeated. Add an accounts block for every account you want to assume-role into and fetch data from.
 accounts:
   - id: <UNIQUE ACCOUNT IDENTIFIER>
@@ -84,9 +53,4 @@ max_retries: 10
 The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts. Defaults to 30 seconds.
 max_backoff: 30
 `
-	}
-}
-
-func (c Config) Format() cqproto.ConfigFormat {
-	return c.requestedFormat
 }
