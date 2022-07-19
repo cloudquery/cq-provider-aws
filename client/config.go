@@ -33,7 +33,7 @@ type Config struct {
 	GlobalRegion string    `yaml:"global_region,omitempty" default:"us-east-1"`
 }
 
-func (c Config) Example() string {
+func (Config) Example() string {
 	return `
 Optional, Repeated. Add an accounts block for every account you want to assume-role into and fetch data from.
 accounts:

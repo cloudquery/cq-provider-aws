@@ -20,13 +20,13 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	ctrl := gomock.NewController(t)
 
 	cfg := `
-		regions = ["us-east-1"]
-		accounts "testAccount" {
-			role_arn = ""
-		}
-		aws_debug = false
-		max_retries = 3
-		max_backoff = 60
+		regions: ["us-east-1"]
+		accounts:
+			id: testAccount
+			role_arn: ""
+		aws_debug: false
+		max_retries: 3
+		max_backoff: 60
 	`
 	// accounts := []Account{
 	// 	{ID: "testAccount"},
