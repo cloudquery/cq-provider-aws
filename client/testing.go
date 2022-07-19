@@ -22,8 +22,8 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	cfg := `
 		regions: ["us-east-1"]
 		accounts:
-			id: testAccount
-			role_arn: ""
+			- id: testAccount
+			  role_arn: ""
 		aws_debug: false
 		max_retries: 3
 		max_backoff: 60
