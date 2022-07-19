@@ -2,12 +2,12 @@ package lightsail
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
-
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -55,9 +55,10 @@ func Disks() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "gb_in_use",
-				Description: "(Deprecated) The number of GB in use by the disk",
-				Type:        schema.TypeInt,
+				Name:          "gb_in_use",
+				Description:   "(Deprecated) The number of GB in use by the disk",
+				Type:          schema.TypeInt,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "iops",
@@ -158,9 +159,10 @@ func Disks() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_lightsail_disk_snapshot",
-				Description: "Describes a block storage disk snapshot",
-				Resolver:    fetchLightsailDiskSnapshots,
+				Name:          "aws_lightsail_disk_snapshot",
+				Description:   "Describes a block storage disk snapshot",
+				Resolver:      fetchLightsailDiskSnapshots,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "disk_cq_id",
