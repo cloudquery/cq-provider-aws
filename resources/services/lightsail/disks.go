@@ -126,9 +126,10 @@ func Disks() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_lightsail_disk_add_ons",
-				Description: "Describes an add-on that is enabled for an Amazon Lightsail resource",
-				Resolver:    fetchLightsailDiskAddOns,
+				Name:          "aws_lightsail_disk_add_ons",
+				Description:   "Describes an add-on that is enabled for an Amazon Lightsail resource",
+				Resolver:      fetchLightsailDiskAddOns,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "disk_cq_id",
