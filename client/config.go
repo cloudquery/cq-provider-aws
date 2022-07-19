@@ -1,36 +1,36 @@
 package client
 
 type Account struct {
-	ID              string `yaml:"id" hcl:",label"`
+	ID              string `yaml:"id"`
 	AccountID       string
-	AccountName     string   `yaml:"account_name,omitempty" hcl:"account_name,optional"`
-	LocalProfile    string   `yaml:"local_profile,omitempty" hcl:"local_profile,optional"`
-	RoleARN         string   `yaml:"role_arn,omitempty" hcl:"role_arn,optional"`
-	RoleSessionName string   `yaml:"role_session_name,omitempty" hcl:"role_session_name,optional"`
-	ExternalID      string   `yaml:"external_id,omitempty" hcl:"external_id,optional"`
-	DefaultRegion   string   `yaml:"default_region,omitempty" hcl:"default_region,optional"`
-	Regions         []string `yaml:"regions,omitempty" hcl:"regions,optional"`
+	AccountName     string   `yaml:"account_name,omitempty"`
+	LocalProfile    string   `yaml:"local_profile,omitempty"`
+	RoleARN         string   `yaml:"role_arn,omitempty"`
+	RoleSessionName string   `yaml:"role_session_name,omitempty"`
+	ExternalID      string   `yaml:"external_id,omitempty"`
+	DefaultRegion   string   `yaml:"default_region,omitempty"`
+	Regions         []string `yaml:"regions,omitempty"`
 	source          string
 }
 
 type AwsOrg struct {
-	OrganizationUnits           []string `yaml:"organization_units,omitempty" hcl:"organization_units,optional"`
-	AdminAccount                *Account `yaml:"admin_account" hcl:"admin_account,block"`
-	MemberCredentials           *Account `yaml:"member_trusted_principal" hcl:"member_trusted_principal,block"`
-	ChildAccountRoleName        string   `yaml:"member_role_name,omitempty" hcl:"member_role_name,optional"`
-	ChildAccountRoleSessionName string   `yaml:"member_role_session_name,omitempty" hcl:"member_role_session_name,optional"`
-	ChildAccountExternalID      string   `yaml:"member_external_id,omitempty" hcl:"member_external_id,optional"`
-	ChildAccountRegions         []string `yaml:"member_regions,omitempty" hcl:"member_regions,optional"`
+	OrganizationUnits           []string `yaml:"organization_units,omitempty"`
+	AdminAccount                *Account `yaml:"admin_account"`
+	MemberCredentials           *Account `yaml:"member_trusted_principal"`
+	ChildAccountRoleName        string   `yaml:"member_role_name,omitempty"`
+	ChildAccountRoleSessionName string   `yaml:"member_role_session_name,omitempty"`
+	ChildAccountExternalID      string   `yaml:"member_external_id,omitempty"`
+	ChildAccountRegions         []string `yaml:"member_regions,omitempty"`
 }
 
 type Config struct {
-	Regions      []string  `yaml:"regions,omitempty" hcl:"regions,optional"`
-	Accounts     []Account `yaml:"accounts" hcl:"accounts,block"`
-	Organization *AwsOrg   `yaml:"org" hcl:"org,block"`
-	AWSDebug     bool      `yaml:"aws_debug,omitempty" hcl:"aws_debug,optional"`
-	MaxRetries   int       `yaml:"max_retries,omitempty" hcl:"max_retries,optional" default:"10"`
-	MaxBackoff   int       `yaml:"max_backoff,omitempty" hcl:"max_backoff,optional" default:"30"`
-	GlobalRegion string    `yaml:"global_region,omitempty" hcl:"global_region,optional" default:"us-east-1"`
+	Regions      []string  `yaml:"regions,omitempty"`
+	Accounts     []Account `yaml:"accounts"`
+	Organization *AwsOrg   `yaml:"org"`
+	AWSDebug     bool      `yaml:"aws_debug,omitempty"`
+	MaxRetries   int       `yaml:"max_retries,omitempty" default:"10"`
+	MaxBackoff   int       `yaml:"max_backoff,omitempty" default:"30"`
+	GlobalRegion string    `yaml:"global_region,omitempty" default:"us-east-1"`
 }
 
 func (c Config) Example() string {
