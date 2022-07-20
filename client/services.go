@@ -375,6 +375,11 @@ type LightsailClient interface {
 	GetInstances(ctx context.Context, params *lightsail.GetInstancesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error)
 	GetBuckets(ctx context.Context, params *lightsail.GetBucketsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketsOutput, error)
 	GetBucketAccessKeys(ctx context.Context, params *lightsail.GetBucketAccessKeysInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error)
+	GetRelationalDatabases(ctx context.Context, params *lightsail.GetRelationalDatabasesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabasesOutput, error)
+	GetRelationalDatabaseSnapshots(ctx context.Context, params *lightsail.GetRelationalDatabaseSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseSnapshotsOutput, error)
+	GetRelationalDatabaseParameters(ctx context.Context, params *lightsail.GetRelationalDatabaseParametersInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseParametersOutput, error)
+	GetRelationalDatabaseEvents(ctx context.Context, params *lightsail.GetRelationalDatabaseEventsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseEventsOutput, error)
+	GetRelationalDatabaseLogEvents(ctx context.Context, params *lightsail.GetRelationalDatabaseLogEventsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseLogEventsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient

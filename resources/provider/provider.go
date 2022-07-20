@@ -191,6 +191,7 @@ func Provider() *provider.Provider {
 			"lambda.layers":                           lambda.LambdaLayers(),
 			"lambda.runtimes":                         lambda.LambdaRuntimes(),
 			"lightsail.buckets":                       lightsail.Buckets(),
+			"lightsail.databases":                     lightsail.Databases(),
 			"lightsail.instances":                     lightsail.Instances(),
 			"mq.brokers":                              mq.Brokers(),
 			"organizations.accounts":                  organizations.Accounts(),
