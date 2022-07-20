@@ -375,6 +375,7 @@ type LightsailClient interface {
 	GetInstances(ctx context.Context, params *lightsail.GetInstancesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error)
 	GetBuckets(ctx context.Context, params *lightsail.GetBucketsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketsOutput, error)
 	GetBucketAccessKeys(ctx context.Context, params *lightsail.GetBucketAccessKeysInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error)
+	GetCertificates(ctx context.Context, params *lightsail.GetCertificatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetCertificatesOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
