@@ -20,7 +20,7 @@ func Alarms() *schema.Table {
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:  client.DeleteAccountRegionFilter,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
-		IgnoreInTests: true,
+		IgnoreInTests: true, // it can't be included into e2e test, because there is no way to deploy it using terraform
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
