@@ -37,4 +37,4 @@ Currently we have a pre-built compliance dashboard on top of the `aws_policy_res
 
 <img alt="Azure Asset Inventory Grafana Dashboard" src="../dashboards/grafana/compliance.png" width=50% height=50%>
 
-See instlattion [instructions](../dashboards/README.md)
+See [installation instructions](../dashboards/README.md)
