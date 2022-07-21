@@ -33,7 +33,7 @@ psql -U postgres -c "select * from aws_policy_results" --html
 
 ## Visualization
 
-Currently we have a pre-built compliance dashboard on top of `aws_policy_results` table which is available [here](../dashboards/grafana/compliance.json)
+Currently we have a pre-built compliance dashboard on top of the `aws_policy_results` table which is available [here](../dashboards/grafana/compliance.json)
 
 <img alt="Azure Asset Inventory Grafana Dashboard" src="../dashboards/grafana/compliance.png" width=50% height=50%>
 
