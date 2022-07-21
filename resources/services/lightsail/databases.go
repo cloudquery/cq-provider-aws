@@ -137,22 +137,25 @@ func Databases() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "pending_modified_values_backup_retention_enabled",
-				Description: "A Boolean value indicating whether automated backup retention is enabled",
-				Type:        schema.TypeBool,
-				Resolver:    schema.PathResolver("PendingModifiedValues.BackupRetentionEnabled"),
+				Name:          "pending_modified_values_backup_retention_enabled",
+				Description:   "A Boolean value indicating whether automated backup retention is enabled",
+				Type:          schema.TypeBool,
+				Resolver:      schema.PathResolver("PendingModifiedValues.BackupRetentionEnabled"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "pending_modified_values_engine_version",
-				Description: "The database engine version",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("PendingModifiedValues.EngineVersion"),
+				Name:          "pending_modified_values_engine_version",
+				Description:   "The database engine version",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("PendingModifiedValues.EngineVersion"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "pending_modified_values_master_user_password",
-				Description: "The password for the master user of the database",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("PendingModifiedValues.MasterUserPassword"),
+				Name:          "pending_modified_values_master_user_password",
+				Description:   "The password for the master user of the database",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("PendingModifiedValues.MasterUserPassword"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "preferred_backup_window",
@@ -185,9 +188,10 @@ func Databases() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "secondary_availability_zone",
-				Description: "Describes the secondary Availability Zone of a high availability database",
-				Type:        schema.TypeString,
+				Name:          "secondary_availability_zone",
+				Description:   "Describes the secondary Availability Zone of a high availability database",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "state",
@@ -224,9 +228,10 @@ func Databases() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "current_apply_date",
-						Description: "The effective date of the pending database maintenance action",
-						Type:        schema.TypeTimestamp,
+						Name:          "current_apply_date",
+						Description:   "The effective date of the pending database maintenance action",
+						Type:          schema.TypeTimestamp,
+						IgnoreInTests: true,
 					},
 					{
 						Name:        "description",
@@ -324,8 +329,9 @@ func Databases() *schema.Table {
 				},
 			},
 			{
-				Name:     "aws_lightsail_database_log_events",
-				Resolver: fetchLightsailDatabaseLogEvents,
+				Name:          "aws_lightsail_database_log_events",
+				Resolver:      fetchLightsailDatabaseLogEvents,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "database_cq_id",
