@@ -11,8 +11,7 @@ Describes a static IP
 |created_at|timestamp without time zone|The timestamp when the static IP was created (eg, 1479735304222)|
 |ip_address|text|The static IP address|
 |is_attached|boolean|A Boolean value indicating whether the static IP is attached|
-|location_availability_zone|text|The Availability Zone|
-|location_region_name|text|The AWS Region name|
+|availability_zone|text|The Availability Zone|
 |name|text|The name of the static IP (eg, StaticIP-Ohio-EXAMPLE)|
 |resource_type|text|The resource type (usually StaticIp)|
 |support_code|text|The support code|
