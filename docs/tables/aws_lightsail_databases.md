@@ -17,7 +17,6 @@ Describes a database
 |hardware_ram_size_in_gb|float|The amount of RAM in GB for the database|
 |latest_restorable_time|timestamp without time zone|The latest point in time to which the database can be restored|
 |availability_zone|text|The Availability Zone|
-|region_name|text|The AWS Region name|
 |master_database_name|text|The name of the master database created when the Lightsail database resource is created|
 |master_endpoint_address|text|Specifies the DNS address of the database|
 |master_endpoint_port|integer|Specifies the port that the database is listening on|

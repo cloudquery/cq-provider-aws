@@ -164,15 +164,18 @@ resource "aws" "lightsail" "databases" {
     skip_prefix = true
   }
 
+  column "region_name" {
+    skip = true
+  }
 
   user_relation "aws" "lightsail" "parameters" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabaseParameter"
 
-    column "parameter_name"{
+    column "parameter_name" {
       rename = "name"
     }
 
-    column "parameter_value"{
+    column "parameter_value" {
       rename = "value"
     }
   }
@@ -182,6 +185,10 @@ resource "aws" "lightsail" "databases" {
   }
 
   user_relation "aws" "lightsail" "log_events" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LogEvent"
+    path = "github.com/cloudquery/cq-provider-aws/resources/services/lightsail.LogEventWrapper"
+
+    column "log_event" {
+      skip_prefix = true
+    }
   }
 }

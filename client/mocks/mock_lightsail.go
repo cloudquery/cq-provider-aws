@@ -135,6 +135,26 @@ func (mr *MockLightsailClientMockRecorder) GetRelationalDatabaseLogEvents(arg0, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRelationalDatabaseLogEvents", reflect.TypeOf((*MockLightsailClient)(nil).GetRelationalDatabaseLogEvents), varargs...)
 }
 
+// GetRelationalDatabaseLogStreams mocks base method.
+func (m *MockLightsailClient) GetRelationalDatabaseLogStreams(arg0 context.Context, arg1 *lightsail.GetRelationalDatabaseLogStreamsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseLogStreamsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetRelationalDatabaseLogStreams", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetRelationalDatabaseLogStreamsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRelationalDatabaseLogStreams indicates an expected call of GetRelationalDatabaseLogStreams.
+func (mr *MockLightsailClientMockRecorder) GetRelationalDatabaseLogStreams(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRelationalDatabaseLogStreams", reflect.TypeOf((*MockLightsailClient)(nil).GetRelationalDatabaseLogStreams), varargs...)
+}
+
 // GetRelationalDatabaseParameters mocks base method.
 func (m *MockLightsailClient) GetRelationalDatabaseParameters(arg0 context.Context, arg1 *lightsail.GetRelationalDatabaseParametersInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseParametersOutput, error) {
 	m.ctrl.T.Helper()

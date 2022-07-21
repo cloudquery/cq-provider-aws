@@ -2,6 +2,8 @@ package lightsail
 
 import (
 	"context"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -11,6 +13,8 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
+
+const MAX_GOROUTINES = 10
 
 //go:generate cq-gen --resource databases --config gen.hcl --output .
 func Databases() *schema.Table {
@@ -93,12 +97,6 @@ func Databases() *schema.Table {
 				Description: "The Availability Zone",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Location.AvailabilityZone"),
-			},
-			{
-				Name:        "region_name",
-				Description: "The AWS Region name",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Location.RegionName"),
 			},
 			{
 				Name:        "master_database_name",
@@ -320,9 +318,8 @@ func Databases() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_lightsail_database_log_events",
-				Description: "Describes a database log event",
-				Resolver:    fetchLightsailDatabaseLogEvents,
+				Name:     "aws_lightsail_database_log_events",
+				Resolver: fetchLightsailDatabaseLogEvents,
 				Columns: []schema.Column{
 					{
 						Name:        "database_cq_id",
@@ -334,10 +331,17 @@ func Databases() *schema.Table {
 						Name:        "created_at",
 						Description: "The timestamp when the database log event was created",
 						Type:        schema.TypeTimestamp,
+						Resolver:    schema.PathResolver("LogEvent.CreatedAt"),
 					},
 					{
 						Name:        "message",
 						Description: "The message of the database log event",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("LogEvent.Message"),
+					},
+					{
+						Name:        "log_stream_name",
+						Description: "An object describing the result of your get relational database log streams request",
 						Type:        schema.TypeString,
 					},
 				},
@@ -427,15 +431,51 @@ func fetchLightsailDatabaseEvents(ctx context.Context, meta schema.ClientMeta, p
 }
 func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.RelationalDatabase)
-	endTime := time.Now()
-	startTime := endTime.Add(-time.Hour * 24 * 14) //two weeks
-	input := lightsail.GetRelationalDatabaseLogEventsInput{
+	input := lightsail.GetRelationalDatabaseLogStreamsInput{
 		RelationalDatabaseName: r.Name,
-		StartTime:              &startTime,
-		EndTime:                &endTime,
 	}
 	c := meta.(*client.Client)
 	svc := c.Services().Lightsail
+	streams, err := svc.GetRelationalDatabaseLogStreams(ctx, &input, func(options *lightsail.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	endTime := time.Now()
+	startTime := endTime.Add(-time.Hour * 24 * 14) //two weeks
+	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
+	errs, ctx := errgroup.WithContext(ctx)
+	for _, s := range streams.LogStreams {
+		if err := sem.Acquire(ctx, 1); err != nil {
+			return diag.WrapError(err)
+		}
+		func(database, stream string, startTime, endTime time.Time) {
+			errs.Go(func() error {
+				defer sem.Release(1)
+				return fetchLogEvents(ctx, res, c, database, stream, startTime, endTime)
+			})
+		}(*r.Name, s, startTime, endTime)
+	}
+	err = errs.Wait()
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return nil
+}
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
+func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Client, database, stream string, startTime, endTime time.Time) error {
+	svc := c.Services().Lightsail
+	input := lightsail.GetRelationalDatabaseLogEventsInput{
+		RelationalDatabaseName: &database,
+		LogStreamName:          &stream,
+		StartTime:              &startTime,
+		EndTime:                &endTime,
+	}
 	for {
 		response, err := svc.GetRelationalDatabaseLogEvents(ctx, &input, func(options *lightsail.Options) {
 			options.Region = c.Region
@@ -444,10 +484,19 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 			return diag.WrapError(err)
 		}
 		res <- response.ResourceLogEvents
-		if aws.ToString(response.NextForwardToken) == "" {
+		for _, e := range response.ResourceLogEvents {
+			res <- LogEventWrapper{e, stream}
+		}
+		if aws.ToString(response.NextForwardToken) == "" || len(response.ResourceLogEvents) == 0 {
 			break
 		}
 		input.PageToken = response.NextForwardToken
 	}
 	return nil
+}
+
+type LogEventWrapper struct {
+	types.LogEvent
+	// An object describing the result of your get relational database log streams request.
+	LogStreamName string
 }
