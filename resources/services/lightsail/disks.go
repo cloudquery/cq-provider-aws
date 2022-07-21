@@ -55,12 +55,6 @@ func Disks() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:          "gb_in_use",
-				Description:   "(Deprecated) The number of GB in use by the disk",
-				Type:          schema.TypeInt,
-				IgnoreInTests: true,
-			},
-			{
 				Name:        "iops",
 				Description: "The input/output operations per second (IOPS) of the disk",
 				Type:        schema.TypeInt,

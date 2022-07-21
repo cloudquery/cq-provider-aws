@@ -154,6 +154,10 @@ resource "aws" "lightsail" "disks" {
     }
   }
 
+  // skip columns deprecated by the SDK
+  column "gb_in_use" {
+    skip = true
+  }
 
   column "tags" {
     type              = "json"
