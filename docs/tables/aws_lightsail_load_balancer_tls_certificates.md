@@ -15,8 +15,8 @@ Describes a load balancer SSL/TLS certificate
 |issuer|text|The issuer of the certificate|
 |key_algorithm|text|The algorithm used to generate the key pair (the public and private key)|
 |load_balancer_name|text|The load balancer name where your SSL/TLS certificate is attached|
-|location_availability_zone|text|The Availability Zone|
-|location_region_name|text|The AWS Region name|
+|availability_zone|text|The Availability Zone|
+|region_name|text|The AWS Region name|
 |name|text|The name of the SSL/TLS certificate (eg, my-certificate)|
 |not_after|timestamp without time zone|The timestamp when the SSL/TLS certificate expires|
 |not_before|timestamp without time zone|The timestamp when the SSL/TLS certificate is first valid|

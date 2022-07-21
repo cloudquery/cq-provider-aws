@@ -166,6 +166,10 @@ resource "aws" "lightsail" "load_balancers" {
     skip_prefix = true
   }
 
+  column "region_name" {
+    skip = true
+  }
+
   user_relation "aws" "lightsail" "tls_certificates" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancerTlsCertificate"
     column "tags" {
@@ -176,6 +180,11 @@ resource "aws" "lightsail" "load_balancers" {
     column "renewal_summary_domain_validation_options" {
       type = "json"
     }
+
+    column "location" {
+      skip_prefix = true
+    }
+
 
     column "domain_validation_records" {
       type = "json"

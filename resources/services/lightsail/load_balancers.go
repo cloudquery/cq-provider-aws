@@ -81,12 +81,6 @@ func LoadBalancers() *schema.Table {
 				Resolver:    schema.PathResolver("Location.AvailabilityZone"),
 			},
 			{
-				Name:        "region_name",
-				Description: "The AWS Region name",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Location.RegionName"),
-			},
-			{
 				Name:        "name",
 				Description: "The name of the load balancer (eg, my-load-balancer)",
 				Type:        schema.TypeString,
@@ -245,13 +239,13 @@ func LoadBalancers() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "location_availability_zone",
+						Name:        "availability_zone",
 						Description: "The Availability Zone",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Location.AvailabilityZone"),
 					},
 					{
-						Name:        "location_region_name",
+						Name:        "region_name",
 						Description: "The AWS Region name",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Location.RegionName"),

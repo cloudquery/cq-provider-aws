@@ -15,7 +15,6 @@ Describes a load balancer
 |instance_port|integer|The port where the load balancer will direct traffic to your Lightsail instances|
 |ip_address_type|text|The IP address type of the load balancer|
 |availability_zone|text|The Availability Zone|
-|region_name|text|The AWS Region name|
 |name|text|The name of the load balancer (eg, my-load-balancer)|
 |protocol|text|The protocol you have enabled for your load balancer|
 |public_ports|integer[]|An array of public port settings for your load balancer|
