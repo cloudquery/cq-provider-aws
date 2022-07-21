@@ -2,8 +2,6 @@ package lightsail
 
 import (
 	"context"
-	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -12,9 +10,17 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
 const MAX_GOROUTINES = 10
+
+type LogEventWrapper struct {
+	types.LogEvent
+	// An object describing the result of your get relational database log streams request.
+	LogStreamName string
+}
 
 //go:generate cq-gen --resource databases --config gen.hcl --output .
 func Databases() *schema.Table {
@@ -467,7 +473,6 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 // ====================================================================================================================
 //                                                  User Defined Helpers
 // ====================================================================================================================
-
 func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Client, database, stream string, startTime, endTime time.Time) error {
 	svc := c.Services().Lightsail
 	input := lightsail.GetRelationalDatabaseLogEventsInput{
@@ -493,10 +498,4 @@ func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Clien
 		input.PageToken = response.NextForwardToken
 	}
 	return nil
-}
-
-type LogEventWrapper struct {
-	types.LogEvent
-	// An object describing the result of your get relational database log streams request.
-	LogStreamName string
 }
