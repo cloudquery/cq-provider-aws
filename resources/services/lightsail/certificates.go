@@ -59,9 +59,10 @@ func Certificates() *schema.Table {
 				Type:        schema.TypeInt,
 			},
 			{
-				Name:        "issued_at",
-				Description: "The timestamp when the certificate was issued",
-				Type:        schema.TypeTimestamp,
+				Name:          "issued_at",
+				Description:   "The timestamp when the certificate was issued",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "issuer_ca",
@@ -80,14 +81,16 @@ func Certificates() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "not_after",
-				Description: "The timestamp when the certificate expires",
-				Type:        schema.TypeTimestamp,
+				Name:          "not_after",
+				Description:   "The timestamp when the certificate expires",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "not_before",
-				Description: "The timestamp when the certificate is first valid",
-				Type:        schema.TypeTimestamp,
+				Name:          "not_before",
+				Description:   "The timestamp when the certificate is first valid",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "renewal_summary_status",
@@ -96,16 +99,18 @@ func Certificates() *schema.Table {
 				Resolver:    schema.PathResolver("RenewalSummary.RenewalStatus"),
 			},
 			{
-				Name:        "renewal_summary_reason",
-				Description: "The reason for the renewal status of the certificate",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("RenewalSummary.RenewalStatusReason"),
+				Name:          "renewal_summary_reason",
+				Description:   "The reason for the renewal status of the certificate",
+				Type:          schema.TypeString,
+				Resolver:      schema.PathResolver("RenewalSummary.RenewalStatusReason"),
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "renewal_summary_updated_at",
-				Description: "The timestamp when the certificate was last updated",
-				Type:        schema.TypeTimestamp,
-				Resolver:    schema.PathResolver("RenewalSummary.UpdatedAt"),
+				Name:          "renewal_summary_updated_at",
+				Description:   "The timestamp when the certificate was last updated",
+				Type:          schema.TypeTimestamp,
+				Resolver:      schema.PathResolver("RenewalSummary.UpdatedAt"),
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "request_failure_reason",
@@ -113,19 +118,22 @@ func Certificates() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "revocation_reason",
-				Description: "The reason the certificate was revoked",
-				Type:        schema.TypeString,
+				Name:          "revocation_reason",
+				Description:   "The reason the certificate was revoked",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "revoked_at",
-				Description: "The timestamp when the certificate was revoked",
-				Type:        schema.TypeTimestamp,
+				Name:          "revoked_at",
+				Description:   "The timestamp when the certificate was revoked",
+				Type:          schema.TypeTimestamp,
+				IgnoreInTests: true,
 			},
 			{
-				Name:        "serial_number",
-				Description: "The serial number of the certificate",
-				Type:        schema.TypeString,
+				Name:          "serial_number",
+				Description:   "The serial number of the certificate",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "status",
@@ -151,9 +159,10 @@ func Certificates() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_lightsail_certificate_domain_validation_records",
-				Description: "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
-				Resolver:    fetchLightsailCertificateDomainValidationRecords,
+				Name:          "aws_lightsail_certificate_domain_validation_records",
+				Description:   "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
+				Resolver:      fetchLightsailCertificateDomainValidationRecords,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "certificate_cq_id",
@@ -187,9 +196,10 @@ func Certificates() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_lightsail_certificate_renewal_summary_domain_validation_records",
-				Description: "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
-				Resolver:    fetchLightsailCertificateRenewalSummaryDomainValidationRecords,
+				Name:          "aws_lightsail_certificate_renewal_summary_domain_validation_records",
+				Description:   "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
+				Resolver:      fetchLightsailCertificateRenewalSummaryDomainValidationRecords,
+				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
 						Name:        "certificate_cq_id",
@@ -231,7 +241,9 @@ func Certificates() *schema.Table {
 // ====================================================================================================================
 
 func fetchLightsailCertificates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	var input lightsail.GetCertificatesInput
+	input := lightsail.GetCertificatesInput{
+		IncludeCertificateDetails: true,
+	}
 	c := meta.(*client.Client)
 	svc := c.Services().Lightsail
 	response, err := svc.GetCertificates(ctx, &input, func(options *lightsail.Options) {
