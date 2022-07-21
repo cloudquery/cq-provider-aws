@@ -10,6 +10,7 @@ Describes a block storage disk
 |attached_to|text|The resources to which the disk is attached|
 |attachment_state|text|(Deprecated) The attachment state of the disk|
 |created_at|timestamp without time zone|The date when the disk was created|
+|gb_in_use|integer|(Deprecated) The number of GB in use by the disk|
 |iops|integer|The input/output operations per second (IOPS) of the disk|
 |is_attached|boolean|A Boolean value indicating whether the disk is attached|
 |is_system_disk|boolean|A Boolean value indicating whether this disk is a system disk (has an operating system loaded on it)|
