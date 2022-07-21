@@ -152,9 +152,11 @@ resource "aws" "lightsail" "static_ips" {
     }
   }
 
-
   column "location" {
     skip_prefix = true
   }
 
+  column "region_name" {
+    skip = true
+  }
 }

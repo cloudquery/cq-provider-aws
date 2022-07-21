@@ -59,16 +59,10 @@ func StaticIps() *schema.Table {
 				Type:        schema.TypeBool,
 			},
 			{
-				Name:        "location_availability_zone",
+				Name:        "availability_zone",
 				Description: "The Availability Zone",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Location.AvailabilityZone"),
-			},
-			{
-				Name:        "location_region_name",
-				Description: "The AWS Region name",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("Location.RegionName"),
 			},
 			{
 				Name:        "name",
