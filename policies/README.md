@@ -37,7 +37,7 @@ Currently we have a pre-built compliance dashboard on top of `aws_policy_results
 
 <img alt="Azure Asset Inventory Grafana Dashboard" src="../dashboards/grafana/compliance.png" width=50% height=50%>
 
-### Instaltion
+### Installation
 
 1. Execute one or more of the above policies.
 2. Add the CloudQuery postgres database as a data source to Grafana (`Configuration -> Data Sources -> Add Data Source`)
