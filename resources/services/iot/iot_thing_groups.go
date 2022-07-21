@@ -150,9 +150,7 @@ func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *sc
 
 	svc := c.Services().IOT
 	for {
-		response, err := svc.ListThingGroups(ctx, &input, func(options *iot.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListThingGroups(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

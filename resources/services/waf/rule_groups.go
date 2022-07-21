@@ -71,9 +71,7 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 	service := c.Services().Waf
 	config := waf.ListRuleGroupsInput{}
 	for {
-		output, err := service.ListRuleGroups(ctx, &config, func(options *waf.Options) {
-			options.Region = c.Region
-		})
+		output, err := service.ListRuleGroups(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

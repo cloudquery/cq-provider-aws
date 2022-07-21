@@ -588,9 +588,7 @@ func fetchSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, _ *
 	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 
 	for {
-		response, err := svc.ListTrainingJobs(ctx, &config, func(options *sagemaker.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListTrainingJobs(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

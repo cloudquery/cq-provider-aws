@@ -744,9 +744,7 @@ func fetchApigatewayRestApis(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().Apigateway
 	for {
-		response, err := svc.GetRestApis(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetRestApis(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -764,9 +762,7 @@ func fetchApigatewayRestApiAuthorizers(ctx context.Context, meta schema.ClientMe
 	svc := c.Services().Apigateway
 	config := apigateway.GetAuthorizersInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetAuthorizers(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetAuthorizers(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -787,9 +783,7 @@ func fetchApigatewayRestApiDeployments(ctx context.Context, meta schema.ClientMe
 	svc := c.Services().Apigateway
 	config := apigateway.GetDeploymentsInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetDeployments(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetDeployments(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -810,9 +804,7 @@ func fetchApigatewayRestApiDocumentationParts(ctx context.Context, meta schema.C
 	svc := c.Services().Apigateway
 	config := apigateway.GetDocumentationPartsInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetDocumentationParts(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetDocumentationParts(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -833,9 +825,7 @@ func fetchApigatewayRestApiDocumentationVersions(ctx context.Context, meta schem
 	svc := c.Services().Apigateway
 	config := apigateway.GetDocumentationVersionsInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetDocumentationVersions(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetDocumentationVersions(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -856,9 +846,7 @@ func fetchApigatewayRestApiGatewayResponses(ctx context.Context, meta schema.Cli
 	svc := c.Services().Apigateway
 	config := apigateway.GetGatewayResponsesInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetGatewayResponses(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetGatewayResponses(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -879,9 +867,7 @@ func fetchApigatewayRestApiModels(ctx context.Context, meta schema.ClientMeta, p
 	svc := c.Services().Apigateway
 	config := apigateway.GetModelsInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetModels(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetModels(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -935,9 +921,7 @@ func fetchApigatewayRestApiRequestValidators(ctx context.Context, meta schema.Cl
 	svc := c.Services().Apigateway
 	config := apigateway.GetRequestValidatorsInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetRequestValidators(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetRequestValidators(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
@@ -958,9 +942,7 @@ func fetchApigatewayRestApiResources(ctx context.Context, meta schema.ClientMeta
 	svc := c.Services().Apigateway
 	config := apigateway.GetResourcesInput{RestApiId: r.Id}
 	for {
-		response, err := svc.GetResources(ctx, &config, func(options *apigateway.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.GetResources(ctx, &config)
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil

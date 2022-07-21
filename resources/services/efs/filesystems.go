@@ -160,9 +160,7 @@ func fetchEfsFilesystems(ctx context.Context, meta schema.ClientMeta, parent *sc
 	c := meta.(*client.Client)
 	svc := c.Services().EFS
 	for {
-		response, err := svc.DescribeFileSystems(ctx, &config, func(options *efs.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.DescribeFileSystems(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

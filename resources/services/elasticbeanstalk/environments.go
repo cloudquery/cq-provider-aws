@@ -406,9 +406,7 @@ func fetchElasticbeanstalkEnvironments(ctx context.Context, meta schema.ClientMe
 	c := meta.(*client.Client)
 	svc := c.Services().ElasticBeanstalk
 	for {
-		response, err := svc.DescribeEnvironments(ctx, &config, func(options *elasticbeanstalk.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.DescribeEnvironments(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

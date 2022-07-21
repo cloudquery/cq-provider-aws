@@ -416,9 +416,7 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan
 	svc := c.Services().Athena
 	input := athena.ListWorkGroupsInput{}
 	for {
-		response, err := svc.ListWorkGroups(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListWorkGroups(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -469,9 +467,7 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 	wg := parent.Item.(types.WorkGroup)
 	input := athena.ListPreparedStatementsInput{WorkGroup: wg.Name}
 	for {
-		response, err := svc.ListPreparedStatements(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListPreparedStatements(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -504,9 +500,7 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 	wg := parent.Item.(types.WorkGroup)
 	input := athena.ListQueryExecutionsInput{WorkGroup: wg.Name}
 	for {
-		response, err := svc.ListQueryExecutions(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListQueryExecutions(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -538,9 +532,7 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 	wg := parent.Item.(types.WorkGroup)
 	input := athena.ListNamedQueriesInput{WorkGroup: wg.Name}
 	for {
-		response, err := svc.ListNamedQueries(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListNamedQueries(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

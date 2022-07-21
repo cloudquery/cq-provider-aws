@@ -121,9 +121,7 @@ func fetchIotCaCertificates(ctx context.Context, meta schema.ClientMeta, parent 
 
 	svc := c.Services().IOT
 	for {
-		response, err := svc.ListCACertificates(ctx, &input, func(options *iot.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListCACertificates(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

@@ -1094,9 +1094,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
 	for {
-		response, err := svc.ListFunctions(ctx, &input, func(options *lambda.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListFunctions(ctx, &input)
 		if err != nil {
 			return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 		}

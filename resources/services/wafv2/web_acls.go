@@ -357,9 +357,7 @@ func fetchWafv2WebAcls(ctx context.Context, meta schema.ClientMeta, parent *sche
 		Limit: aws.Int32(100),
 	}
 	for {
-		output, err := service.ListWebACLs(ctx, &config, func(options *wafv2.Options) {
-			options.Region = c.Region
-		})
+		output, err := service.ListWebACLs(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

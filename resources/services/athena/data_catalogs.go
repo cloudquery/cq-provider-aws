@@ -220,9 +220,7 @@ func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent
 	input := athena.ListDataCatalogsInput{}
 	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	for {
-		response, err := svc.ListDataCatalogs(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListDataCatalogs(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -284,9 +282,7 @@ func fetchAthenaDataCatalogDatabases(ctx context.Context, meta schema.ClientMeta
 		CatalogName: parent.Item.(types.DataCatalog).Name,
 	}
 	for {
-		response, err := svc.ListDatabases(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListDatabases(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

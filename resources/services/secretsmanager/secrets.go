@@ -150,9 +150,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 	svc := c.Services().SecretsManager
 	cfg := secretsmanager.ListSecretsInput{}
 	for {
-		response, err := svc.ListSecrets(ctx, &cfg, func(options *secretsmanager.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListSecrets(ctx, &cfg)
 		if err != nil {
 			return diag.WrapError(err)
 		}

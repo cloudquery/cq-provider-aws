@@ -202,9 +202,7 @@ func fetchKmsKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	c := meta.(*client.Client)
 	svc := c.Services().KMS
 	for {
-		response, err := svc.ListKeys(ctx, &input, func(options *kms.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListKeys(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

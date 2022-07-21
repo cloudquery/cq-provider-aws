@@ -161,9 +161,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 	service := c.Services().Waf
 	config := waf.ListWebACLsInput{}
 	for {
-		output, err := service.ListWebACLs(ctx, &config, func(options *waf.Options) {
-			options.Region = c.Region
-		})
+		output, err := service.ListWebACLs(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

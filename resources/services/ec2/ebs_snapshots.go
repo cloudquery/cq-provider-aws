@@ -129,9 +129,7 @@ func fetchEc2EbsSnapshots(ctx context.Context, meta schema.ClientMeta, parent *s
 	svc := c.Services().EC2
 	config.OwnerIds = []string{c.AccountID}
 	for {
-		output, err := svc.DescribeSnapshots(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeSnapshots(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

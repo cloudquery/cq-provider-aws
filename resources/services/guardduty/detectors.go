@@ -200,9 +200,7 @@ func fetchGuarddutyDetectorMembers(ctx context.Context, meta schema.ClientMeta, 
 	svc := c.Services().GuardDuty
 	config := &guardduty.ListMembersInput{DetectorId: aws.String(detector.Id)}
 	for {
-		output, err := svc.ListMembers(ctx, config, func(options *guardduty.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.ListMembers(ctx, config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

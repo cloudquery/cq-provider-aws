@@ -96,9 +96,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 
 	svc := c.Services().IOT
 	for {
-		response, err := svc.ListBillingGroups(ctx, &input, func(options *iot.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListBillingGroups(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

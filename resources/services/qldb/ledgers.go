@@ -257,9 +257,7 @@ func fetchQldbLedgers(ctx context.Context, meta schema.ClientMeta, _ *schema.Res
 	svc := c.Services().QLDB
 	config := qldb.ListLedgersInput{}
 	for {
-		response, err := svc.ListLedgers(ctx, &config, func(options *qldb.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListLedgers(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

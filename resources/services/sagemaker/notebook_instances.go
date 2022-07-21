@@ -154,9 +154,7 @@ func fetchSagemakerNotebookInstances(ctx context.Context, meta schema.ClientMeta
 	svc := c.Services().SageMaker
 	config := sagemaker.ListNotebookInstancesInput{}
 	for {
-		response, err := svc.ListNotebookInstances(ctx, &config, func(options *sagemaker.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListNotebookInstances(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

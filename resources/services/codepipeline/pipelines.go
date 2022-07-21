@@ -242,9 +242,7 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 	svc := c.Services().CodePipeline
 	config := codepipeline.ListPipelinesInput{}
 	for {
-		response, err := svc.ListPipelines(ctx, &config, func(options *codepipeline.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListPipelines(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
