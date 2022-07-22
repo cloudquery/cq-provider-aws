@@ -35,6 +35,26 @@ func (m *MockLightsailClient) EXPECT() *MockLightsailClientMockRecorder {
 	return m.recorder
 }
 
+// GetAlarms mocks base method.
+func (m *MockLightsailClient) GetAlarms(arg0 context.Context, arg1 *lightsail.GetAlarmsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetAlarmsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetAlarms", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetAlarmsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAlarms indicates an expected call of GetAlarms.
+func (mr *MockLightsailClientMockRecorder) GetAlarms(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAlarms", reflect.TypeOf((*MockLightsailClient)(nil).GetAlarms), varargs...)
+}
+
 // GetBucketAccessKeys mocks base method.
 func (m *MockLightsailClient) GetBucketAccessKeys(arg0 context.Context, arg1 *lightsail.GetBucketAccessKeysInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error) {
 	m.ctrl.T.Helper()
@@ -75,6 +95,66 @@ func (mr *MockLightsailClientMockRecorder) GetBuckets(arg0, arg1 interface{}, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBuckets", reflect.TypeOf((*MockLightsailClient)(nil).GetBuckets), varargs...)
 }
 
+// GetCertificates mocks base method.
+func (m *MockLightsailClient) GetCertificates(arg0 context.Context, arg1 *lightsail.GetCertificatesInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetCertificatesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetCertificates", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetCertificatesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCertificates indicates an expected call of GetCertificates.
+func (mr *MockLightsailClientMockRecorder) GetCertificates(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCertificates", reflect.TypeOf((*MockLightsailClient)(nil).GetCertificates), varargs...)
+}
+
+// GetDiskSnapshots mocks base method.
+func (m *MockLightsailClient) GetDiskSnapshots(arg0 context.Context, arg1 *lightsail.GetDiskSnapshotsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetDiskSnapshotsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetDiskSnapshots", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetDiskSnapshotsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDiskSnapshots indicates an expected call of GetDiskSnapshots.
+func (mr *MockLightsailClientMockRecorder) GetDiskSnapshots(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDiskSnapshots", reflect.TypeOf((*MockLightsailClient)(nil).GetDiskSnapshots), varargs...)
+}
+
+// GetDisks mocks base method.
+func (m *MockLightsailClient) GetDisks(arg0 context.Context, arg1 *lightsail.GetDisksInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetDisksOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetDisks", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetDisksOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDisks indicates an expected call of GetDisks.
+func (mr *MockLightsailClientMockRecorder) GetDisks(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDisks", reflect.TypeOf((*MockLightsailClient)(nil).GetDisks), varargs...)
+}
+
 // GetInstances mocks base method.
 func (m *MockLightsailClient) GetInstances(arg0 context.Context, arg1 *lightsail.GetInstancesInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error) {
 	m.ctrl.T.Helper()
@@ -95,42 +175,42 @@ func (mr *MockLightsailClientMockRecorder) GetInstances(arg0, arg1 interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInstances", reflect.TypeOf((*MockLightsailClient)(nil).GetInstances), varargs...)
 }
 
-// GetLoadBalancerTlsCertificates mocks base method.
-func (m *MockLightsailClient) GetLoadBalancerTlsCertificates(arg0 context.Context, arg1 *lightsail.GetLoadBalancerTlsCertificatesInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetLoadBalancerTlsCertificatesOutput, error) {
+// GetRelationalDatabaseSnapshots mocks base method.
+func (m *MockLightsailClient) GetRelationalDatabaseSnapshots(arg0 context.Context, arg1 *lightsail.GetRelationalDatabaseSnapshotsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseSnapshotsOutput, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "GetLoadBalancerTlsCertificates", varargs...)
-	ret0, _ := ret[0].(*lightsail.GetLoadBalancerTlsCertificatesOutput)
+	ret := m.ctrl.Call(m, "GetRelationalDatabaseSnapshots", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetRelationalDatabaseSnapshotsOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetLoadBalancerTlsCertificates indicates an expected call of GetLoadBalancerTlsCertificates.
-func (mr *MockLightsailClientMockRecorder) GetLoadBalancerTlsCertificates(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// GetRelationalDatabaseSnapshots indicates an expected call of GetRelationalDatabaseSnapshots.
+func (mr *MockLightsailClientMockRecorder) GetRelationalDatabaseSnapshots(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLoadBalancerTlsCertificates", reflect.TypeOf((*MockLightsailClient)(nil).GetLoadBalancerTlsCertificates), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRelationalDatabaseSnapshots", reflect.TypeOf((*MockLightsailClient)(nil).GetRelationalDatabaseSnapshots), varargs...)
 }
 
-// GetLoadBalancers mocks base method.
-func (m *MockLightsailClient) GetLoadBalancers(arg0 context.Context, arg1 *lightsail.GetLoadBalancersInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetLoadBalancersOutput, error) {
+// GetStaticIps mocks base method.
+func (m *MockLightsailClient) GetStaticIps(arg0 context.Context, arg1 *lightsail.GetStaticIpsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetStaticIpsOutput, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "GetLoadBalancers", varargs...)
-	ret0, _ := ret[0].(*lightsail.GetLoadBalancersOutput)
+	ret := m.ctrl.Call(m, "GetStaticIps", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetStaticIpsOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetLoadBalancers indicates an expected call of GetLoadBalancers.
-func (mr *MockLightsailClientMockRecorder) GetLoadBalancers(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// GetStaticIps indicates an expected call of GetStaticIps.
+func (mr *MockLightsailClientMockRecorder) GetStaticIps(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLoadBalancers", reflect.TypeOf((*MockLightsailClient)(nil).GetLoadBalancers), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStaticIps", reflect.TypeOf((*MockLightsailClient)(nil).GetStaticIps), varargs...)
 }

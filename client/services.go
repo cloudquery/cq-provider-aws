@@ -375,6 +375,12 @@ type LightsailClient interface {
 	GetInstances(ctx context.Context, params *lightsail.GetInstancesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancesOutput, error)
 	GetBuckets(ctx context.Context, params *lightsail.GetBucketsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketsOutput, error)
 	GetBucketAccessKeys(ctx context.Context, params *lightsail.GetBucketAccessKeysInput, optFns ...func(*lightsail.Options)) (*lightsail.GetBucketAccessKeysOutput, error)
+	GetDisks(ctx context.Context, params *lightsail.GetDisksInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDisksOutput, error)
+	GetDiskSnapshots(ctx context.Context, params *lightsail.GetDiskSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDiskSnapshotsOutput, error)
+	GetAlarms(ctx context.Context, params *lightsail.GetAlarmsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetAlarmsOutput, error)
+	GetCertificates(ctx context.Context, params *lightsail.GetCertificatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetCertificatesOutput, error)
+	GetStaticIps(ctx context.Context, params *lightsail.GetStaticIpsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetStaticIpsOutput, error)
+	GetRelationalDatabaseSnapshots(ctx context.Context, params *lightsail.GetRelationalDatabaseSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseSnapshotsOutput, error)
 	GetLoadBalancers(ctx context.Context, params *lightsail.GetLoadBalancersInput, optFns ...func(*lightsail.Options)) (*lightsail.GetLoadBalancersOutput, error)
 	GetLoadBalancerTlsCertificates(ctx context.Context, params *lightsail.GetLoadBalancerTlsCertificatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetLoadBalancerTlsCertificatesOutput, error)
 }
