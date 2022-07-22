@@ -98,7 +98,7 @@ func LoadBalancers() *schema.Table {
 			},
 			{
 				Name:        "resource_type",
-				Description: "The resource type (eg, LoadBalancer",
+				Description: "Type of the lightsail resource",
 				Type:        schema.TypeString,
 			},
 			{
@@ -392,6 +392,9 @@ func fetchLightsailLoadBalancerTlsCertificates(ctx context.Context, meta schema.
 		options.Region = c.Region
 	})
 	if err != nil {
+		if c.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 	res <- response.TlsCertificates

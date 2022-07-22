@@ -18,7 +18,7 @@ Describes a load balancer
 |name|text|The name of the load balancer (eg, my-load-balancer)|
 |protocol|text|The protocol you have enabled for your load balancer|
 |public_ports|integer[]|An array of public port settings for your load balancer|
-|resource_type|text|The resource type (eg, LoadBalancer|
+|resource_type|text|Type of the lightsail resource|
 |state|text|The status of your load balancer|
 |support_code|text|The support code|
 |tags|jsonb|The tag keys and optional values for the resource|

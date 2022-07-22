@@ -170,6 +170,10 @@ resource "aws" "lightsail" "load_balancers" {
     skip = true
   }
 
+  column "resource_type"{
+    description = "Type of the lightsail resource"
+  }
+
   user_relation "aws" "lightsail" "tls_certificates" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancerTlsCertificate"
     column "tags" {
