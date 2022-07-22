@@ -16,11 +16,9 @@ func SagemakerTrainingJobs() *schema.Table {
 	return &schema.Table{
 		Name:        "aws_sagemaker_training_jobs",
 		Description: "Provides summary information about a training job.",
-		// Resolver:      fetch,
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listSagemakerTrainingJobs, sagemakerTrainingJobsDetail))
 		},
-
 		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter:  client.DeleteAccountRegionFilter,

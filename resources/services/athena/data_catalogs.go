@@ -16,7 +16,6 @@ func DataCatalogs() *schema.Table {
 	return &schema.Table{
 		Name:        "aws_athena_data_catalogs",
 		Description: "Contains information about a data catalog in an Amazon Web Services account",
-		// Resolver:     fetchAthenaDataCatalogs,
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDataCatalogs, dataCatalogDetail))
 		},
