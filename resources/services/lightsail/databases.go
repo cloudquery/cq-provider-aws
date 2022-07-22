@@ -11,7 +11,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
 
 const MAX_GOROUTINES = 10
@@ -456,15 +455,11 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 	}
 	endTime := time.Now()
 	startTime := endTime.Add(-time.Hour * 24 * 14) //two weeks
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
 	errs, ctx := errgroup.WithContext(ctx)
+	errs.SetLimit(MAX_GOROUTINES)
 	for _, s := range streams.LogStreams {
-		if err := sem.Acquire(ctx, 1); err != nil {
-			return diag.WrapError(err)
-		}
 		func(database, stream string, startTime, endTime time.Time) {
 			errs.Go(func() error {
-				defer sem.Release(1)
 				return fetchLogEvents(ctx, res, c, database, stream, startTime, endTime)
 			})
 		}(*r.Name, s, startTime, endTime)
