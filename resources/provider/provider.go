@@ -61,7 +61,6 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
-	"github.com/cloudquery/cq-provider-sdk/cqproto"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -190,8 +189,10 @@ func Provider() *provider.Provider {
 			"lambda.functions":                        lambda.Functions(),
 			"lambda.layers":                           lambda.LambdaLayers(),
 			"lambda.runtimes":                         lambda.LambdaRuntimes(),
+			"lightsail.alarms":                        lightsail.Alarms(),
 			"lightsail.buckets":                       lightsail.Buckets(),
 			"lightsail.certificates":                  lightsail.Certificates(),
+			"lightsail.disks":                         lightsail.Disks(),
 			"lightsail.instances":                     lightsail.Instances(),
 			"mq.brokers":                              mq.Brokers(),
 			"organizations.accounts":                  organizations.Accounts(),
