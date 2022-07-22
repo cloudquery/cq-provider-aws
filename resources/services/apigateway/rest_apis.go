@@ -897,9 +897,7 @@ func resolveApigatewayRestAPIModelModelTemplate(ctx context.Context, meta schema
 		ModelName: r.Name,
 	}
 
-	response, err := svc.GetModelTemplate(ctx, &config, func(options *apigateway.Options) {
-		options.Region = cl.Region
-	})
+	response, err := svc.GetModelTemplate(ctx, &config)
 	if err != nil {
 		if client.IsAWSError(err, "BadRequestException") {
 			// This is an application level error and the user has nothing to do with that.
@@ -963,9 +961,7 @@ func fetchApigatewayRestApiStages(ctx context.Context, meta schema.ClientMeta, p
 	svc := c.Services().Apigateway
 	config := apigateway.GetStagesInput{RestApiId: r.Id}
 
-	response, err := svc.GetStages(ctx, &config, func(options *apigateway.Options) {
-		options.Region = c.Region
-	})
+	response, err := svc.GetStages(ctx, &config)
 	if err != nil {
 		if c.IsNotFoundError(err) {
 			return nil

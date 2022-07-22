@@ -103,9 +103,7 @@ func fetchRdsEventSubscriptions(ctx context.Context, meta schema.ClientMeta, par
 	svc := cl.Services().RDS
 	var input rds.DescribeEventSubscriptionsInput
 	for {
-		out, err := svc.DescribeEventSubscriptions(ctx, &input, func(o *rds.Options) {
-			o.Region = cl.Region
-		})
+		out, err := svc.DescribeEventSubscriptions(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

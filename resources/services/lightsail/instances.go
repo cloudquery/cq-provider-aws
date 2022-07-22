@@ -396,9 +396,7 @@ func fetchLightsailInstances(ctx context.Context, meta schema.ClientMeta, parent
 	svc := c.Services().Lightsail
 	input := lightsail.GetInstancesInput{}
 	for {
-		output, err := svc.GetInstances(ctx, &input, func(o *lightsail.Options) {
-			o.Region = c.Region
-		})
+		output, err := svc.GetInstances(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

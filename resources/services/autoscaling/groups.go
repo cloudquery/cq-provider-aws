@@ -577,9 +577,7 @@ func fetchAutoscalingGroups(ctx context.Context, meta schema.ClientMeta, parent 
 
 	config := autoscaling.DescribeAutoScalingGroupsInput{}
 	for {
-		output, err := svc.DescribeAutoScalingGroups(ctx, &config, func(o *autoscaling.Options) {
-			o.Region = c.Region
-		})
+		output, err := svc.DescribeAutoScalingGroups(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -611,9 +609,7 @@ func resolveAutoscalingGroupLoadBalancers(ctx context.Context, meta schema.Clien
 	config := autoscaling.DescribeLoadBalancersInput{AutoScalingGroupName: p.AutoScalingGroupName}
 	j := map[string]interface{}{}
 	for {
-		output, err := svc.DescribeLoadBalancers(ctx, &config, func(o *autoscaling.Options) {
-			o.Region = cl.Region
-		})
+		output, err := svc.DescribeLoadBalancers(ctx, &config)
 		if err != nil {
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil
@@ -638,9 +634,7 @@ func resolveAutoscalingGroupLoadBalancerTargetGroups(ctx context.Context, meta s
 	config := autoscaling.DescribeLoadBalancerTargetGroupsInput{AutoScalingGroupName: p.AutoScalingGroupName}
 	j := map[string]interface{}{}
 	for {
-		output, err := svc.DescribeLoadBalancerTargetGroups(ctx, &config, func(o *autoscaling.Options) {
-			o.Region = cl.Region
-		})
+		output, err := svc.DescribeLoadBalancerTargetGroups(ctx, &config)
 		if err != nil {
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil
@@ -701,9 +695,7 @@ func fetchAutoscalingGroupScalingPolicies(ctx context.Context, meta schema.Clien
 	config := autoscaling.DescribePoliciesInput{AutoScalingGroupName: p.AutoScalingGroupName}
 
 	for {
-		output, err := svc.DescribePolicies(ctx, &config, func(o *autoscaling.Options) {
-			o.Region = cl.Region
-		})
+		output, err := svc.DescribePolicies(ctx, &config)
 		if err != nil {
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil

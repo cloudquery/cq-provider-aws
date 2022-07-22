@@ -475,8 +475,6 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 			dc, err := svc.GetPreparedStatement(ctx, &athena.GetPreparedStatementInput{
 				WorkGroup:     wg.Name,
 				StatementName: d.StatementName,
-			}, func(options *athena.Options) {
-				options.Region = c.Region
 			})
 			if err != nil {
 				if c.IsNotFoundError(err) {
@@ -507,8 +505,6 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 		for _, d := range response.QueryExecutionIds {
 			dc, err := svc.GetQueryExecution(ctx, &athena.GetQueryExecutionInput{
 				QueryExecutionId: aws.String(d),
-			}, func(options *athena.Options) {
-				options.Region = c.Region
 			})
 			if err != nil {
 				if c.IsNotFoundError(err) || isQueryExecutionNotFound(err) {
@@ -539,8 +535,6 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 		for _, d := range response.NamedQueryIds {
 			dc, err := svc.GetNamedQuery(ctx, &athena.GetNamedQueryInput{
 				NamedQueryId: aws.String(d),
-			}, func(options *athena.Options) {
-				options.Region = c.Region
 			})
 			if err != nil {
 				if c.IsNotFoundError(err) {
@@ -569,8 +563,6 @@ func workGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan ch
 	wg := summary.(types.WorkGroupSummary)
 	dc, err := svc.GetWorkGroup(ctx, &athena.GetWorkGroupInput{
 		WorkGroup: wg.Name,
-	}, func(options *athena.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		if c.IsNotFoundError(err) {

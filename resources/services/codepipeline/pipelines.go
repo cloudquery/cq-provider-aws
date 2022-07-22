@@ -247,9 +247,7 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 			return diag.WrapError(err)
 		}
 		for i := range response.Pipelines {
-			response, err := svc.GetPipeline(ctx, &codepipeline.GetPipelineInput{Name: response.Pipelines[i].Name}, func(o *codepipeline.Options) {
-				o.Region = c.Region
-			})
+			response, err := svc.GetPipeline(ctx, &codepipeline.GetPipelineInput{Name: response.Pipelines[i].Name})
 			if err != nil {
 				if c.IsNotFoundError(err) {
 					continue
@@ -273,8 +271,6 @@ func ResolveCodepipelinePipelineTags(ctx context.Context, meta schema.ClientMeta
 	svc := cl.Services().CodePipeline
 	response, err := svc.ListTagsForResource(ctx, &codepipeline.ListTagsForResourceInput{
 		ResourceArn: pipeline.Metadata.PipelineArn,
-	}, func(options *codepipeline.Options) {
-		options.Region = cl.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)

@@ -93,9 +93,7 @@ func fetchRdsDbSecurityGroups(ctx context.Context, meta schema.ClientMeta, paren
 	svc := cl.Services().RDS
 	var input rds.DescribeDBSecurityGroupsInput
 	for {
-		output, err := svc.DescribeDBSecurityGroups(ctx, &input, func(o *rds.Options) {
-			o.Region = cl.Region
-		})
+		output, err := svc.DescribeDBSecurityGroups(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

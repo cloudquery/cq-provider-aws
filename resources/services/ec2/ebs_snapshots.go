@@ -148,8 +148,6 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 	output, err := svc.DescribeSnapshotAttribute(ctx, &ec2.DescribeSnapshotAttributeInput{
 		Attribute:  types.SnapshotAttributeNameCreateVolumePermission,
 		SnapshotId: r.SnapshotId,
-	}, func(options *ec2.Options) {
-		options.Region = cl.Region
 	})
 
 	if err != nil {

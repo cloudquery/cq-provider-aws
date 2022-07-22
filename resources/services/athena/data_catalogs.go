@@ -333,8 +333,6 @@ func fetchDataCatalog(ctx context.Context, res chan<- interface{}, c *client.Cli
 	svc := c.Services().Athena
 	dc, err := svc.GetDataCatalog(ctx, &athena.GetDataCatalogInput{
 		Name: catalogSummary.CatalogName,
-	}, func(options *athena.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		// retrieving of default data catalog (AwsDataCatalog) returns "not found error" but it exists and its

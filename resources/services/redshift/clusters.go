@@ -791,9 +791,7 @@ func fetchRedshiftClusters(ctx context.Context, meta schema.ClientMeta, parent *
 	c := meta.(*client.Client)
 	svc := c.Services().Redshift
 	for {
-		response, err := svc.DescribeClusters(ctx, &config, func(o *redshift.Options) {
-			o.Region = c.Region
-		})
+		response, err := svc.DescribeClusters(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -848,9 +846,7 @@ func fetchRedshiftClusterParameter(ctx context.Context, meta schema.ClientMeta, 
 	c := meta.(*client.Client)
 	svc := c.Services().Redshift
 	for {
-		response, err := svc.DescribeClusterParameters(ctx, &config, func(o *redshift.Options) {
-			o.Region = c.Region
-		})
+		response, err := svc.DescribeClusterParameters(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}

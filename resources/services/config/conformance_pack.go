@@ -208,9 +208,7 @@ func fetchConfigConformancePackRuleCompliances(ctx context.Context, meta schema.
 				},
 			}
 			for {
-				output, err := cs.GetConformancePackComplianceDetails(ctx, detailParams, func(options *configservice.Options) {
-					options.Region = c.Region
-				})
+				output, err := cs.GetConformancePackComplianceDetails(ctx, detailParams)
 				if err != nil {
 					return diag.WrapError(err)
 				}

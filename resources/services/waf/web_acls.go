@@ -215,9 +215,7 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 	outputTags := make(map[string]*string)
 	tagsConfig := waf.ListTagsForResourceInput{ResourceARN: webACL.WebACLArn}
 	for {
-		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *waf.Options) {
-			options.Region = awsClient.Region
-		})
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig)
 		if err != nil {
 			return diag.WrapError(err)
 		}

@@ -115,9 +115,7 @@ func fetchSnsTopics(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	svc := c.Services().SNS
 	config := sns.ListTopicsInput{}
 	for {
-		output, err := svc.ListTopics(ctx, &config, func(o *sns.Options) {
-			o.Region = c.Region
-		})
+		output, err := svc.ListTopics(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
