@@ -483,7 +483,9 @@ func ResolveLightsailInstanceAccessDetails(ctx context.Context, meta schema.Clie
 		return diag.WrapError(err)
 	}
 	j, err := json.Marshal(output.AccessDetails)
-
+	if err != nil {
+		return diag.WrapError(err)
+	}
 	return diag.WrapError(resource.Set(c.Name, j))
 }
 func resolveInstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
