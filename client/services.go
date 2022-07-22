@@ -380,7 +380,6 @@ type LightsailClient interface {
 	GetAlarms(ctx context.Context, params *lightsail.GetAlarmsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetAlarmsOutput, error)
 	GetInstanceSnapshots(ctx context.Context, params *lightsail.GetInstanceSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceSnapshotsOutput, error)
 	GetInstancePortStates(ctx context.Context, params *lightsail.GetInstancePortStatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancePortStatesOutput, error)
-	GetInstanceMetricData(ctx context.Context, params *lightsail.GetInstanceMetricDataInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceMetricDataOutput, error)
 	GetInstanceAccessDetails(ctx context.Context, params *lightsail.GetInstanceAccessDetailsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceAccessDetailsOutput, error)
 }
 

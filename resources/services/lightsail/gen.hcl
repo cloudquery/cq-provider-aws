@@ -55,7 +55,9 @@ resource "aws" "lightsail" "instances" {
       type              = "json"
       generate_resolver = true
     }
-
+    column "gb_in_use" {
+      ignore_in_tests = true
+    }
     column "attachment_state" {
       skip = true
     }
@@ -70,13 +72,6 @@ resource "aws" "lightsail" "instances" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstancePortState"
   }
 
-  user_relation "aws" "lightsail" "metric_data" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail.GetInstanceMetricDataOutput"
-  }
-
-  user_relation "aws" "lightsail" "metric_data" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail.GetInstanceMetricDataOutput"
-  }
 
   userDefinedColumn "access_details" {
     type              = "json"
