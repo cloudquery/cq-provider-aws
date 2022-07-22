@@ -1,0 +1,52 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://example.com/product.schema.json",
+  "title":"CloudQuery AWS Provider Config",
+  "description":"CloudQuery AWS Provider Configuration Schema",
+  "type":"object",
+  "properties":{
+    "accounts": {
+      "description": "List of AWS accounts",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique account identifier"
+          },
+          "role_arn": {
+            "type": "string",
+            "description": "Role ARN we want to assume when accessing this account"
+          },
+          "local_profile": {
+            "type": "string",
+            "description": "Named profile in config or credential file from where CQ should grab credentials"
+          }
+        },
+        "required":[
+          "id"
+        ]
+      }
+    },
+    "regions": {
+      "type":"array",
+      "description":"List of regions to query. By default assumes all regions",
+      "items":{
+        "type":"string"
+      }
+    },
+    "aws_debug": {
+      "type": "boolean",
+      "description": "Enable AWS SDK debug logging"
+    },
+    "max_retries": {
+      "type": "integer",
+      "description": "The maximum number of times that a request will be retried for failures. Defaults to 10 retry attempts."
+    },
+    "max_backoff": {
+      "type": "integer",
+      "description": "The maximum back off delay between attempts. The backoff delays exponentially with a jitter based on the number of attempts."
+    }
+  }
+}

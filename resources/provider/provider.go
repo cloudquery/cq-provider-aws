@@ -70,6 +70,9 @@ var (
 	//go:embed moduledata/*
 	moduleData embed.FS
 
+	//go:embed config_schema.json
+	configSchema string
+
 	Version = "Development"
 )
 
@@ -260,5 +263,6 @@ func Provider() *provider.Provider {
 		Config: func() provider.Config {
 			return &client.Config{}
 		},
+		ConfigSchema: configSchema,
 	}
 }
