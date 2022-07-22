@@ -432,9 +432,7 @@ func resolveWafv2webACLResourcesForWebACL(ctx context.Context, meta schema.Clien
 			params.Marker = output.DistributionList.NextMarker
 		}
 	} else {
-		output, err := service.ListResourcesForWebACL(ctx, &wafv2.ListResourcesForWebACLInput{WebACLArn: webACL.ARN}, func(options *wafv2.Options) {
-			options.Region = cl.Region
-		})
+		output, err := service.ListResourcesForWebACL(ctx, &wafv2.ListResourcesForWebACLInput{WebACLArn: webACL.ARN})
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -452,9 +450,7 @@ func resolveWafv2webACLTags(ctx context.Context, meta schema.ClientMeta, resourc
 	outputTags := make(map[string]*string)
 	tagsConfig := wafv2.ListTagsForResourceInput{ResourceARN: webACL.ARN}
 	for {
-		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *wafv2.Options) {
-			options.Region = cl.Region
-		})
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig)
 		if err != nil {
 			return diag.WrapError(err)
 		}

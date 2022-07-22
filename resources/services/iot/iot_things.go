@@ -107,9 +107,7 @@ func ResolveIotThingPrincipals(ctx context.Context, meta schema.ClientMeta, reso
 	var principals []string
 
 	for {
-		response, err := svc.ListThingPrincipals(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListThingPrincipals(ctx, &input)
 
 		if err != nil {
 			return diag.WrapError(err)

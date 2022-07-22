@@ -303,9 +303,7 @@ func fetchAthenaDataCatalogDatabaseTables(ctx context.Context, meta schema.Clien
 		DatabaseName: parent.Item.(types.Database).Name,
 	}
 	for {
-		response, err := svc.ListTableMetadata(ctx, &input, func(options *athena.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTableMetadata(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

@@ -173,9 +173,7 @@ func resolveWafv2ruleGroupTags(ctx context.Context, meta schema.ClientMeta, reso
 	outputTags := make(map[string]*string)
 	tagsConfig := wafv2.ListTagsForResourceInput{ResourceARN: ruleGroup.ARN}
 	for {
-		tags, err := service.ListTagsForResource(ctx, &tagsConfig, func(options *wafv2.Options) {
-			options.Region = cl.Region
-		})
+		tags, err := service.ListTagsForResource(ctx, &tagsConfig)
 		if err != nil {
 			return diag.WrapError(err)
 		}

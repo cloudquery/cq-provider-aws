@@ -154,9 +154,7 @@ func ResolveIotCaCertificateCertificates(ctx context.Context, meta schema.Client
 
 	var certs []string
 	for {
-		response, err := svc.ListCertificatesByCA(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListCertificatesByCA(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}

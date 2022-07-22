@@ -248,9 +248,7 @@ func resolveKeysTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 	params := kms.ListResourceTagsInput{KeyId: key.KeyId}
 	tags := make(map[string]string)
 	for {
-		result, err := svc.ListResourceTags(ctx, &params, func(options *kms.Options) {
-			options.Region = cl.Region
-		})
+		result, err := svc.ListResourceTags(ctx, &params)
 		if err != nil {
 			return diag.WrapError(err)
 		}

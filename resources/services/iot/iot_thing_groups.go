@@ -184,9 +184,7 @@ func ResolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 
 	var things []string
 	for {
-		response, err := svc.ListThingsInThingGroup(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListThingsInThingGroup(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -211,9 +209,7 @@ func ResolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, r
 
 	var policies []string
 	for {
-		response, err := svc.ListAttachedPolicies(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListAttachedPolicies(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -239,9 +235,7 @@ func ResolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resou
 	tags := make(map[string]string)
 
 	for {
-		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTagsForResource(ctx, &input)
 
 		if err != nil {
 			return diag.WrapError(err)

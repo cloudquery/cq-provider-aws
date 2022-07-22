@@ -130,9 +130,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 
 	var things []string
 	for {
-		response, err := svc.ListThingsInBillingGroup(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListThingsInBillingGroup(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -156,9 +154,7 @@ func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, res
 	tags := make(map[string]string)
 
 	for {
-		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTagsForResource(ctx, &input)
 
 		if err != nil {
 			return diag.WrapError(err)
