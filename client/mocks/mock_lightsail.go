@@ -95,6 +95,26 @@ func (mr *MockLightsailClientMockRecorder) GetBuckets(arg0, arg1 interface{}, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBuckets", reflect.TypeOf((*MockLightsailClient)(nil).GetBuckets), varargs...)
 }
 
+// GetCertificates mocks base method.
+func (m *MockLightsailClient) GetCertificates(arg0 context.Context, arg1 *lightsail.GetCertificatesInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetCertificatesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetCertificates", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetCertificatesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCertificates indicates an expected call of GetCertificates.
+func (mr *MockLightsailClientMockRecorder) GetCertificates(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCertificates", reflect.TypeOf((*MockLightsailClient)(nil).GetCertificates), varargs...)
+}
+
 // GetDiskSnapshots mocks base method.
 func (m *MockLightsailClient) GetDiskSnapshots(arg0 context.Context, arg1 *lightsail.GetDiskSnapshotsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetDiskSnapshotsOutput, error) {
 	m.ctrl.T.Helper()
@@ -155,22 +175,22 @@ func (mr *MockLightsailClientMockRecorder) GetInstances(arg0, arg1 interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInstances", reflect.TypeOf((*MockLightsailClient)(nil).GetInstances), varargs...)
 }
 
-// GetRelationalDatabaseSnapshots mocks base method.
-func (m *MockLightsailClient) GetRelationalDatabaseSnapshots(arg0 context.Context, arg1 *lightsail.GetRelationalDatabaseSnapshotsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetRelationalDatabaseSnapshotsOutput, error) {
+// GetStaticIps mocks base method.
+func (m *MockLightsailClient) GetStaticIps(arg0 context.Context, arg1 *lightsail.GetStaticIpsInput, arg2 ...func(*lightsail.Options)) (*lightsail.GetStaticIpsOutput, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "GetRelationalDatabaseSnapshots", varargs...)
-	ret0, _ := ret[0].(*lightsail.GetRelationalDatabaseSnapshotsOutput)
+	ret := m.ctrl.Call(m, "GetStaticIps", varargs...)
+	ret0, _ := ret[0].(*lightsail.GetStaticIpsOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetRelationalDatabaseSnapshots indicates an expected call of GetRelationalDatabaseSnapshots.
-func (mr *MockLightsailClientMockRecorder) GetRelationalDatabaseSnapshots(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// GetStaticIps indicates an expected call of GetStaticIps.
+func (mr *MockLightsailClientMockRecorder) GetStaticIps(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRelationalDatabaseSnapshots", reflect.TypeOf((*MockLightsailClient)(nil).GetRelationalDatabaseSnapshots), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStaticIps", reflect.TypeOf((*MockLightsailClient)(nil).GetStaticIps), varargs...)
 }
