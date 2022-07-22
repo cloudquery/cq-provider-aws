@@ -56,11 +56,6 @@ resource "aws" "lightsail" "instances" {
       generate_resolver = true
     }
 
-    // skip columns deprecated by the SDK
-    column "gb_in_use" {
-      skip = true
-    }
-
     column "attachment_state" {
       skip = true
     }
@@ -68,6 +63,24 @@ resource "aws" "lightsail" "instances" {
     relation "aws" "lightsail" "add_ons" {
       ignore_in_tests = true // see https://github.com/hashicorp/terraform-provider-aws/issues/23688
     }
+  }
+
+  // todo maybe skip original ports column
+  user_relation "aws" "lightsail" "port_states" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstancePortState"
+  }
+
+  user_relation "aws" "lightsail" "metric_data" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail.GetInstanceMetricDataOutput"
+  }
+
+  user_relation "aws" "lightsail" "metric_data" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail.GetInstanceMetricDataOutput"
+  }
+
+  userDefinedColumn "access_details" {
+    type              = "json"
+    generate_resolver = true
   }
 }
 
@@ -213,5 +226,59 @@ resource "aws" "lightsail" "alarms" {
   }
   column "monitored_resource_info_resource_type" {
     rename = "monitored_resource_resource_type"
+  }
+}
+
+
+resource "aws" "lightsail" "instance_snapshots" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstanceSnapshot"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+  column "region_name" {
+    skip = true
+  }
+
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  relation "aws" "lightsail" "from_attached_disks" {
+    column "tags" {
+      type              = "json"
+      generate_resolver = true
+    }
   }
 }

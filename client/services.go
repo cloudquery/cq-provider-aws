@@ -378,6 +378,10 @@ type LightsailClient interface {
 	GetDisks(ctx context.Context, params *lightsail.GetDisksInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDisksOutput, error)
 	GetDiskSnapshots(ctx context.Context, params *lightsail.GetDiskSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDiskSnapshotsOutput, error)
 	GetAlarms(ctx context.Context, params *lightsail.GetAlarmsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetAlarmsOutput, error)
+	GetInstanceSnapshots(ctx context.Context, params *lightsail.GetInstanceSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceSnapshotsOutput, error)
+	GetInstancePortStates(ctx context.Context, params *lightsail.GetInstancePortStatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancePortStatesOutput, error)
+	GetInstanceMetricData(ctx context.Context, params *lightsail.GetInstanceMetricDataInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceMetricDataOutput, error)
+	GetInstanceAccessDetails(ctx context.Context, params *lightsail.GetInstanceAccessDetailsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceAccessDetailsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
