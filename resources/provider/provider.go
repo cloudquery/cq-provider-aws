@@ -252,8 +252,8 @@ func Provider() *provider.Provider {
 			"xray.sampling_rules":                     xray.SamplingRules(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
-		Config: func(f cqproto.ConfigFormat) provider.Config {
-			return client.NewConfig(f)
+		Config: func() provider.Config {
+			return &client.Config{}
 		},
 	}
 }
