@@ -5,7 +5,6 @@ import (
 
 	"github.com/cloudquery/cq-provider-sdk/logging"
 	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
 	"github.com/golang/mock/gomock"
@@ -36,7 +35,7 @@ max_backoff: 60
 		Provider: &provider.Provider{
 			Name:    "aws_mock_test_provider",
 			Version: "development",
-			Configure: func(logger hclog.Logger, i interface{}) (schema.ClientMeta, diag.Diagnostics) {
+			Configure: func(logger hclog.Logger, i interface{}) (schema.ClientMeta, error) {
 				c := NewAwsClient(logging.New(&hclog.LoggerOptions{
 					Level: hclog.Warn,
 				}))

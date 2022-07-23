@@ -481,9 +481,8 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	return awsCfg, err
 }
 
-func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, diag.Diagnostics) {
+func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	var diags diag.Diagnostics
-
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger)
@@ -605,7 +604,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	if len(client.ServicesManager.services) == 0 {
 		return nil, diags.Add(diag.FromError(errors.New("no accounts instantiated"), diag.USER))
 	}
-	return &client, diags
+	return &client, nil
 }
 
 func initServices(region string, c aws.Config) Services {

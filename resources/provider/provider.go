@@ -1,8 +1,6 @@
 package provider
 
 import (
-	"embed"
-
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/resources/services/accessanalyzer"
 	"github.com/cloudquery/cq-provider-aws/resources/services/acm"
@@ -66,9 +64,6 @@ import (
 )
 
 var (
-	//go:embed moduledata/*
-	moduleData embed.FS
-
 	Version = "Development"
 )
 
