@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/organizations/types"
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -98,7 +98,7 @@ func fetchOrganizationsAccounts(ctx context.Context, meta schema.ClientMeta, _ *
 			}
 		}
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Accounts
 		if aws.ToString(response.NextToken) == "" {
@@ -119,7 +119,7 @@ func ResolveOrganizationsAccountTags(ctx context.Context, meta schema.ClientMeta
 	for {
 		response, err := cl.Services().Organizations.ListTagsForResource(ctx, &input)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, t := range response.Tags {
 			allTags[*t.Key] = t.Value
@@ -129,5 +129,5 @@ func ResolveOrganizationsAccountTags(ctx context.Context, meta schema.ClientMeta
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set("tags", allTags))
+	return helpers.WrapError(resource.Set("tags", allTags))
 }

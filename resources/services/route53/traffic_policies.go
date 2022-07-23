@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -125,7 +125,7 @@ func fetchRoute53TrafficPolicies(ctx context.Context, meta schema.ClientMeta, pa
 	for {
 		response, err := svc.ListTrafficPolicies(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.TrafficPolicySummaries
 
@@ -143,7 +143,7 @@ func fetchRoute53TrafficPolicyVersions(ctx context.Context, meta schema.ClientMe
 	for {
 		response, err := svc.ListTrafficPolicyVersions(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.TrafficPolicies
 		if aws.ToString(response.TrafficPolicyVersionMarker) == "" {
@@ -158,7 +158,7 @@ func resolveRoute53trafficPolicyVersionDocument(ctx context.Context, meta schema
 	var value interface{}
 	err := json.Unmarshal([]byte(*r.Document), &value)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, value))
+	return helpers.WrapError(resource.Set(c.Name, value))
 }

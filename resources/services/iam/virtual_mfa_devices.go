@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -122,7 +122,7 @@ func fetchIamVirtualMfaDevices(ctx context.Context, meta schema.ClientMeta, pare
 	for {
 		response, err := svc.ListVirtualMFADevices(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.VirtualMFADevices
 		if aws.ToString(response.Marker) == "" {
@@ -139,7 +139,7 @@ func resolveIamVirtualMfaDeviceTags(ctx context.Context, meta schema.ClientMeta,
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func resolveIamVirtualMfaDeviceUserTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.VirtualMFADevice)
@@ -150,5 +150,5 @@ func resolveIamVirtualMfaDeviceUserTags(ctx context.Context, meta schema.ClientM
 	for _, t := range r.User.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

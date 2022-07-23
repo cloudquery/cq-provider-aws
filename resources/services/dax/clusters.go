@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dax"
 	"github.com/aws/aws-sdk-go-v2/service/dax/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -236,7 +236,7 @@ func fetchDaxClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- output.Clusters
@@ -260,9 +260,9 @@ func resolveDaxClusterTags(ctx context.Context, meta schema.ClientMeta, resource
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(response.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(response.Tags)))
 }
 func resolveDaxClusterSecurityGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Cluster)
@@ -273,7 +273,7 @@ func resolveDaxClusterSecurityGroups(ctx context.Context, meta schema.ClientMeta
 			"status":     r.SecurityGroups[i].Status,
 		}
 	}
-	return diag.WrapError(resource.Set(c.Name, val))
+	return helpers.WrapError(resource.Set(c.Name, val))
 }
 func fetchDaxClusterNodes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Cluster)

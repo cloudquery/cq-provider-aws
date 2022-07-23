@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -154,7 +154,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		var secrets []WrappedSecret
@@ -168,7 +168,7 @@ func fetchSecretsmanagerSecrets(ctx context.Context, meta schema.ClientMeta, _ *
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			secrets = append(secrets, WrappedSecret{
@@ -199,13 +199,13 @@ func fetchSecretsmanagerSecretPolicy(ctx context.Context, meta schema.ClientMeta
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	b, err := json.Marshal(response.ResourcePolicy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveSecretsmanagerSecretReplicationStatus(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -223,9 +223,9 @@ func resolveSecretsmanagerSecretReplicationStatus(_ context.Context, _ schema.Cl
 	}
 	b, err := json.Marshal(replicationStatus)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveSecretsmanagerSecretsTags(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -234,5 +234,5 @@ func resolveSecretsmanagerSecretsTags(_ context.Context, _ schema.ClientMeta, re
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

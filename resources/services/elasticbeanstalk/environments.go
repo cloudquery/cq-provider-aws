@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -410,7 +410,7 @@ func fetchElasticbeanstalkEnvironments(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Environments
 		if aws.ToString(response.NextToken) == "" {
@@ -429,7 +429,7 @@ func resolveElasticbeanstalkEnvironmentTags(ctx context.Context, meta schema.Cli
 	for _, l := range p.Resources.LoadBalancer.Listeners {
 		listeners[l.Port] = l.Protocol
 	}
-	return diag.WrapError(resource.Set(c.Name, listeners))
+	return helpers.WrapError(resource.Set(c.Name, listeners))
 }
 func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.EnvironmentDescription)
@@ -444,7 +444,7 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 		if cl.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if len(tagsOutput.ResourceTags) == 0 {
 		return nil
@@ -453,7 +453,7 @@ func resolveElasticbeanstalkEnvironmentListeners(ctx context.Context, meta schem
 	for _, s := range tagsOutput.ResourceTags {
 		tags[*s.Key] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchElasticbeanstalkEnvironmentLinks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.EnvironmentDescription)
@@ -479,7 +479,7 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 			meta.Logger().Debug("Failed extracting configuration options for environment. It might be terminated", "environment", p.EnvironmentName, "application", p.ApplicationName)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	for _, option := range output.Options {
@@ -510,7 +510,7 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 			meta.Logger().Debug("Failed extracting configuration settings for environment. It might be terminated", "environment", p.EnvironmentName, "application", p.ApplicationName)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	for _, option := range output.ConfigurationSettings {

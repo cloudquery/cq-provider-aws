@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -234,7 +234,7 @@ func fetchSsmInstances(ctx context.Context, meta schema.ClientMeta, parent *sche
 	for {
 		output, err := svc.DescribeInstanceInformation(ctx, &input, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.InstanceInformationList
 		if aws.ToString(output.NextToken) == "" {
@@ -258,7 +258,7 @@ func fetchSsmInstanceComplianceItems(ctx context.Context, meta schema.ClientMeta
 	for {
 		output, err := svc.ListComplianceItems(ctx, &input, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.ComplianceItems
 		if aws.ToString(output.NextToken) == "" {
@@ -272,5 +272,5 @@ func fetchSsmInstanceComplianceItems(ctx context.Context, meta schema.ClientMeta
 func resolveSSMInstanceARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	instance := resource.Item.(types.InstanceInformation)
 	cl := meta.(*client.Client)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("ssm", "managed-instance", *instance.InstanceId)))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN("ssm", "managed-instance", *instance.InstanceId)))
 }

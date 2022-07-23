@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -210,7 +210,7 @@ func fetchEksClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, name := range listClustersOutput.Clusters {
 			describeClusterOutput, err := svc.DescribeCluster(ctx, &eks.DescribeClusterInput{Name: &name}, func(options *eks.Options) {
@@ -220,7 +220,7 @@ func fetchEksClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- describeClusterOutput.Cluster
 		}
@@ -250,5 +250,5 @@ func resolveEksClusterLoggingTypes(ctx context.Context, meta schema.ClientMeta, 
 	for i, l := range logSetup.Types {
 		logTypes[i] = string(l)
 	}
-	return diag.WrapError(resource.Set("types", logTypes))
+	return helpers.WrapError(resource.Set("types", logTypes))
 }

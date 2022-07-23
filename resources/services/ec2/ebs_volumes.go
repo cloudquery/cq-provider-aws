@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -155,7 +155,7 @@ func fetchEc2EbsVolumes(ctx context.Context, meta schema.ClientMeta, _ *schema.R
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Volumes
 		if aws.ToString(response.NextToken) == "" {
@@ -171,7 +171,7 @@ func resolveEc2EbsVolumeTags(_ context.Context, _ schema.ClientMeta, resource *s
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchEc2EbsVolumeAttachments(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	volume := parent.Item.(types.Volume)
@@ -182,5 +182,5 @@ func fetchEc2EbsVolumeAttachments(_ context.Context, _ schema.ClientMeta, parent
 func resolveEbsVolumeArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	ebs := resource.Item.(types.Volume)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "volume", *ebs.VolumeId)))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "volume", *ebs.VolumeId)))
 }

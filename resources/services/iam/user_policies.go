@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -75,13 +75,13 @@ func fetchIamUserPolicies(ctx context.Context, meta schema.ClientMeta, parent *s
 			if c.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, p := range output.PolicyNames {
 			policyCfg := &iam.GetUserPolicyInput{PolicyName: &p, UserName: user.UserName}
 			policyResult, err := svc.GetUserPolicy(ctx, policyCfg)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- policyResult
 		}
@@ -97,13 +97,13 @@ func resolveIamUserPolicyPolicyDocument(ctx context.Context, meta schema.ClientM
 
 	decodedDocument, err := url.QueryUnescape(*r.PolicyDocument)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	var document map[string]interface{}
 	err = json.Unmarshal([]byte(decodedDocument), &document)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, document))
+	return helpers.WrapError(resource.Set(c.Name, document))
 }

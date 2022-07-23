@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -98,14 +98,14 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, ruleSum := range output.Rules {
 			rule, err := service.GetRule(ctx, &waf.GetRuleInput{RuleId: ruleSum.RuleId}, func(options *waf.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- rule.Rule
 		}
@@ -120,7 +120,7 @@ func fetchWafRules(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 func resolveWafRuleArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	rule := resource.Item.(*types.Rule)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("waf", "rule", aws.ToString(rule.RuleId))))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN("waf", "rule", aws.ToString(rule.RuleId))))
 }
 func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	rule := resource.Item.(*types.Rule)
@@ -140,7 +140,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 			options.Region = "us-east-1"
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -150,7 +150,7 @@ func resolveWafRuleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 		}
 		tagsConfig.NextMarker = tags.NextMarker
 	}
-	return diag.WrapError(resource.Set("tags", outputTags))
+	return helpers.WrapError(resource.Set("tags", outputTags))
 }
 func fetchWafRulePredicates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	rule := parent.Item.(*types.Rule)

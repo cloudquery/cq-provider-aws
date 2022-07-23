@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -557,7 +557,7 @@ func fetchAutoscalingGroups(ctx context.Context, meta schema.ClientMeta, parent 
 				o.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			configurations = append(configurations, output.NotificationConfigurations...)
 			if aws.ToString(output.NextToken) == "" {
@@ -581,7 +581,7 @@ func fetchAutoscalingGroups(ctx context.Context, meta schema.ClientMeta, parent 
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		groups := output.AutoScalingGroups
 		for i := 0; i < len(groups); i += 255 {
@@ -593,7 +593,7 @@ func fetchAutoscalingGroups(ctx context.Context, meta schema.ClientMeta, parent 
 			t := groups[i:end]
 			err := processGroupsBundle(t)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 		}
 
@@ -618,7 +618,7 @@ func resolveAutoscalingGroupLoadBalancers(ctx context.Context, meta schema.Clien
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, lb := range output.LoadBalancers {
 			j[*lb.LoadBalancerName] = *lb.State
@@ -629,7 +629,7 @@ func resolveAutoscalingGroupLoadBalancers(ctx context.Context, meta schema.Clien
 		}
 		config.NextToken = output.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveAutoscalingGroupLoadBalancerTargetGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(autoscalingGroupWrapper)
@@ -645,7 +645,7 @@ func resolveAutoscalingGroupLoadBalancerTargetGroups(ctx context.Context, meta s
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, lb := range output.LoadBalancerTargetGroups {
 			j[*lb.LoadBalancerTargetGroupARN] = *lb.State
@@ -656,7 +656,7 @@ func resolveAutoscalingGroupLoadBalancerTargetGroups(ctx context.Context, meta s
 		}
 		config.NextToken = output.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveAutoscalingGroupNotificationsConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(autoscalingGroupWrapper)
@@ -664,7 +664,7 @@ func resolveAutoscalingGroupNotificationsConfigurations(ctx context.Context, met
 	for _, n := range p.NotificationConfigurations {
 		j[*n.NotificationType] = *n.TopicARN
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveAutoscalingGroupsEnabledMetrics(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(autoscalingGroupWrapper)
@@ -673,7 +673,7 @@ func resolveAutoscalingGroupsEnabledMetrics(ctx context.Context, meta schema.Cli
 		j[*em.Metric] = *em.Granularity
 	}
 
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveAutoscalingGroupsSuspendedProcesses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(autoscalingGroupWrapper)
@@ -682,7 +682,7 @@ func resolveAutoscalingGroupsSuspendedProcesses(ctx context.Context, meta schema
 		j[*sp.ProcessName] = *sp.SuspensionReason
 	}
 
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func fetchAutoscalingGroupInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(autoscalingGroupWrapper)
@@ -708,7 +708,7 @@ func fetchAutoscalingGroupScalingPolicies(ctx context.Context, meta schema.Clien
 			if isAutoScalingGroupNotExistsError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.ScalingPolicies
 
@@ -725,15 +725,15 @@ func resolveAutoscalingGroupScalingPoliciesAlarms(ctx context.Context, meta sche
 	for _, a := range p.Alarms {
 		j[*a.AlarmName] = *a.AlarmARN
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveAutoscalingGroupScalingPoliciesStepAdjustments(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.ScalingPolicy)
 	data, err := json.Marshal(p.StepAdjustments)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveAutoscalingGroupScalingPoliciesTargetTrackingConfigurationCustomizedMetricDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.ScalingPolicy)
@@ -744,7 +744,7 @@ func resolveAutoscalingGroupScalingPoliciesTargetTrackingConfigurationCustomized
 	for _, d := range p.TargetTrackingConfiguration.CustomizedMetricSpecification.Dimensions {
 		j[*d.Name] = *d.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func fetchAutoscalingGroupLifecycleHooks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(autoscalingGroupWrapper)
@@ -759,7 +759,7 @@ func fetchAutoscalingGroupLifecycleHooks(ctx context.Context, meta schema.Client
 		if isAutoScalingGroupNotExistsError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- output.LifecycleHooks
 	return nil

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -172,7 +172,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, ct := range response.Certificates {
@@ -182,7 +182,7 @@ func fetchIotCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 				options.Region = cl.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- cert.CertificateDescription
 		}
@@ -209,7 +209,7 @@ func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, 
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, p := range response.Policies {
@@ -221,5 +221,5 @@ func ResolveIotCertificatePolicies(ctx context.Context, meta schema.ClientMeta, 
 		}
 		input.Marker = response.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, policies))
+	return helpers.WrapError(resource.Set(c.Name, policies))
 }

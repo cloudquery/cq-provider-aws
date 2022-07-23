@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -241,7 +241,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	})
 
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	getBundledTrailsWithTags := func(trails []types.Trail, region string) ([]CloudTrailWrapper, error) {
@@ -282,7 +282,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 				options.Region = region
 			})
 			if err != nil {
-				return nil, diag.WrapError(err)
+				return nil, helpers.WrapError(err)
 			}
 			for i, tr := range processed {
 				client.TagsIntoMap(getCloudTrailTagsByResourceID(*tr.TrailARN, response.ResourceTagList), processed[i].Tags)
@@ -299,7 +299,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 	// since api returns all the cloudtrails despite region we aggregate trails by region to get tags.
 	aggregatedTrails, err := aggregateCloudTrails(response.TrailList)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	for region, trails := range aggregatedTrails {
 		for i := 0; i < len(trails); i += 20 {
@@ -311,7 +311,7 @@ func fetchCloudtrailTrails(ctx context.Context, meta schema.ClientMeta, parent *
 			t := trails[i:end]
 			processed, err := getBundledTrailsWithTags(t, region)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- processed
 		}
@@ -329,39 +329,39 @@ func postCloudtrailTrailResolver(ctx context.Context, meta schema.ClientMeta, re
 			o.Region = *r.HomeRegion
 		})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("is_logging", response.IsLogging); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_cloud_watch_logs_delivery_error", response.LatestCloudWatchLogsDeliveryError); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_cloud_watch_logs_delivery_time", response.LatestCloudWatchLogsDeliveryTime); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_delivery_error", response.LatestDeliveryError); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_delivery_time", response.LatestDeliveryTime); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_digest_delivery_error", response.LatestDigestDeliveryError); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_digest_delivery_time", response.LatestDigestDeliveryTime); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_notification_error", response.LatestNotificationError); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("latest_notification_time", response.LatestNotificationTime); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("start_logging_time", response.StartLoggingTime); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set("stop_logging_time", response.StopLoggingTime))
+	return helpers.WrapError(resource.Set("stop_logging_time", response.StopLoggingTime))
 }
 
 func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -379,7 +379,7 @@ func resolveCloudtrailTrailCloudwatchLogsLogGroupName(ctx context.Context, meta 
 		log.Info("CloudWatchLogsLogGroupARN is empty")
 	}
 
-	return diag.WrapError(resource.Set("cloudwatch_logs_log_group_name", groupName))
+	return helpers.WrapError(resource.Set("cloudwatch_logs_log_group_name", groupName))
 }
 
 func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -390,7 +390,7 @@ func fetchCloudtrailTrailEventSelectors(ctx context.Context, meta schema.ClientM
 		options.Region = *r.HomeRegion
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- response.EventSelectors
 	return nil
@@ -409,7 +409,7 @@ func aggregateCloudTrails(trails []types.Trail) (map[string][]types.Trail, error
 	resp := make(map[string][]types.Trail)
 	for _, t := range trails {
 		if t.HomeRegion == nil {
-			return nil, diag.WrapError(fmt.Errorf("got cloudtrail with HomeRegion == nil"))
+			return nil, helpers.WrapError(fmt.Errorf("got cloudtrail with HomeRegion == nil"))
 		}
 		resp[*t.HomeRegion] = append(resp[*t.HomeRegion], t)
 	}

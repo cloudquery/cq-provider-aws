@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -165,7 +165,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, webAcl := range output.WebACLs {
 			webAclConfig := waf.GetWebACLInput{WebACLId: webAcl.WebACLId}
@@ -173,7 +173,7 @@ func fetchWafWebAcls(ctx context.Context, meta schema.ClientMeta, _ *schema.Reso
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			cfg := waf.GetLoggingConfigurationInput{
@@ -221,7 +221,7 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 			options.Region = awsClient.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -231,7 +231,7 @@ func resolveWafWebACLTags(ctx context.Context, meta schema.ClientMeta, resource 
 		}
 		tagsConfig.NextMarker = tags.NextMarker
 	}
-	return diag.WrapError(resource.Set("tags", outputTags))
+	return helpers.WrapError(resource.Set("tags", outputTags))
 }
 func fetchWafWebAclRules(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	webACL := parent.Item.(*WebACLWrapper)
@@ -244,7 +244,7 @@ func resolveWafWebACLRuleExcludedRules(ctx context.Context, meta schema.ClientMe
 	for i := range rule.ExcludedRules {
 		excludedRules[i] = aws.ToString(rule.ExcludedRules[i].RuleId)
 	}
-	return diag.WrapError(resource.Set(c.Name, excludedRules))
+	return helpers.WrapError(resource.Set(c.Name, excludedRules))
 }
 func fetchWafWebACLLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, res chan<- interface{}) error {
 	rule := resource.Item.(*WebACLWrapper)
@@ -255,16 +255,16 @@ func resolveWafWebACLLoggingConfigurationRedactedFields(ctx context.Context, met
 	if conf := resource.Item.(*types.LoggingConfiguration); conf != nil {
 		out, err := json.Marshal(conf.RedactedFields)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
-		return diag.WrapError(resource.Set(c.Name, out))
+		return helpers.WrapError(resource.Set(c.Name, out))
 	}
 	return nil
 }
 
 func resolveWafWebACLRuleLoggingConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	if rule := resource.Item.(*WebACLWrapper); rule.LoggingConfiguration != nil {
-		return diag.WrapError(resource.Set(c.Name, rule.LoggingConfiguration.LogDestinationConfigs))
+		return helpers.WrapError(resource.Set(c.Name, rule.LoggingConfiguration.LogDestinationConfigs))
 	}
 	return nil
 }

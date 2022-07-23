@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	wafv2types "github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/mitchellh/mapstructure"
 )
@@ -314,7 +314,7 @@ func fetchElbv2LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.LoadBalancers
 		if aws.ToString(response.NextMarker) == "" {
@@ -341,13 +341,13 @@ func resolveElbv2loadBalancerWebACLArn(ctx context.Context, meta schema.ClientMe
 			}
 		}
 
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if response.WebACL == nil {
 		return nil
 	}
 
-	return diag.WrapError(resource.Set(c.Name, response.WebACL.ARN))
+	return helpers.WrapError(resource.Set(c.Name, response.WebACL.ARN))
 }
 func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -365,7 +365,7 @@ func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, r
 		if cl.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if len(tagsOutput.TagDescriptions) == 0 {
 		return nil
@@ -377,7 +377,7 @@ func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, r
 		}
 	}
 
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchElbv2LoadBalancerAvailabilityZones(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.LoadBalancer)
@@ -402,7 +402,7 @@ func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMet
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	m := make(map[string]interface{})
 	for _, a := range result.Attributes {
@@ -411,10 +411,10 @@ func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMet
 	var attrs lbAttributes
 	dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{WeaklyTypedInput: true, Result: &attrs})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := dec.Decode(m); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- attrs
 	return nil

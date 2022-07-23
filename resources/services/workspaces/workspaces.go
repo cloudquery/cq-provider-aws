@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/workspaces"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -167,7 +167,7 @@ func fetchWorkspacesWorkspaces(ctx context.Context, meta schema.ClientMeta, _ *s
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Workspaces
 		if aws.ToString(output.NextToken) == "" {
@@ -185,7 +185,7 @@ func resolveWorkspacesModificationStates(_ context.Context, _ schema.ClientMeta,
 
 	data, err := json.Marshal(r.ModificationStates)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }

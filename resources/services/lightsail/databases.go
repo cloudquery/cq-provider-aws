@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/errgroup"
 )
@@ -374,7 +374,7 @@ func fetchLightsailDatabases(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.RelationalDatabases
 		if aws.ToString(response.NextPageToken) == "" {
@@ -388,7 +388,7 @@ func resolveDatabasesTags(ctx context.Context, meta schema.ClientMeta, resource 
 	r := resource.Item.(types.RelationalDatabase)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailDatabasePendingMaintenanceActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.RelationalDatabase)
@@ -407,7 +407,7 @@ func fetchLightsailDatabaseParameters(ctx context.Context, meta schema.ClientMet
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Parameters
 		if aws.ToString(response.NextPageToken) == "" {
@@ -430,7 +430,7 @@ func fetchLightsailDatabaseEvents(ctx context.Context, meta schema.ClientMeta, p
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.RelationalDatabaseEvents
 		if aws.ToString(response.NextPageToken) == "" {
@@ -451,7 +451,7 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	endTime := time.Now()
 	startTime := endTime.Add(-time.Hour * 24 * 14) //two weeks
@@ -466,7 +466,7 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 	}
 	err = errs.Wait()
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	return nil
 }
@@ -487,7 +487,7 @@ func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Clien
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.ResourceLogEvents
 		for _, e := range response.ResourceLogEvents {

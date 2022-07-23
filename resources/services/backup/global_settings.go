@@ -5,7 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -60,7 +60,7 @@ func fetchBackupGlobalSettings(ctx context.Context, meta schema.ClientMeta, pare
 			meta.Logger().Debug("Feature Cross Account Backup is not available in current region on DescribeGlobalSettings", "err", err)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- output
 	return nil

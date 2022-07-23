@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -356,12 +356,12 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 		}
 		tagsResponse, err := svc.ListTagsForResources(ctx, tagsCfg)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, h := range hostedZones {
 			gotHostedZone, err := svc.GetHostedZone(ctx, &route53.GetHostedZoneInput{Id: h.Id})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			var delegationSetId *string
 			if gotHostedZone.DelegationSet != nil {
@@ -381,7 +381,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 	for {
 		response, err := svc.ListHostedZones(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for i := 0; i < len(response.HostedZones); i += 10 {
@@ -393,7 +393,7 @@ func fetchRoute53HostedZones(ctx context.Context, meta schema.ClientMeta, parent
 			zones := response.HostedZones[i:end]
 			err := processHostedZonesBundle(zones)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 		}
 
@@ -411,7 +411,7 @@ func fetchRoute53HostedZoneQueryLoggingConfigs(ctx context.Context, meta schema.
 	for {
 		response, err := svc.ListQueryLoggingConfigs(ctx, &config, func(options *route53.Options) {})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.QueryLoggingConfigs
 		if aws.ToString(response.NextToken) == "" {
@@ -428,7 +428,7 @@ func fetchRoute53HostedZoneResourceRecordSets(ctx context.Context, meta schema.C
 	for {
 		response, err := svc.ListResourceRecordSets(ctx, &config, func(options *route53.Options) {})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- response.ResourceRecordSets
@@ -449,7 +449,7 @@ func resolveRoute53hostedZoneResourceRecordSetResourceRecords(ctx context.Contex
 	for _, t := range r.ResourceRecords {
 		recordSets = append(recordSets, *t.Value)
 	}
-	return diag.WrapError(resource.Set(c.Name, recordSets))
+	return helpers.WrapError(resource.Set(c.Name, recordSets))
 }
 func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(Route53HostedZoneWrapper)
@@ -458,7 +458,7 @@ func fetchRoute53HostedZoneTrafficPolicyInstances(ctx context.Context, meta sche
 	for {
 		response, err := svc.ListTrafficPolicyInstancesByHostedZone(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.TrafficPolicyInstances
 		if aws.ToString(response.TrafficPolicyInstanceNameMarker) == "" {
@@ -485,20 +485,20 @@ func getRoute53tagsByResourceID(id string, set []types.ResourceTagSet) []types.T
 func resolveRoute53HostedZoneArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	hz := resource.Item.(Route53HostedZoneWrapper)
-	return diag.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "hostedzone", *hz.Id)))
+	return helpers.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "hostedzone", *hz.Id)))
 }
 func resolveRoute53HostedZoneQueryLoggingConfigsArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	ql := resource.Item.(types.QueryLoggingConfig)
-	return diag.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "queryloggingconfig", *ql.Id)))
+	return helpers.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "queryloggingconfig", *ql.Id)))
 }
 func resolveRoute53HostedZoneTrafficPolicyInstancesArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	tp := resource.Item.(types.TrafficPolicyInstance)
-	return diag.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "trafficpolicyinstance", *tp.Id)))
+	return helpers.WrapError(resource.Set(c.Name, cl.PartitionGlobalARN(client.Route53Service, "trafficpolicyinstance", *tp.Id)))
 }
 func resolveRoute53HostedZoneVpcArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	vpc := resource.Item.(types.VPC)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "vpc", *vpc.VPCId)))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "vpc", *vpc.VPCId)))
 }

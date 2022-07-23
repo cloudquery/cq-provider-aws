@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/qldb"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -261,7 +261,7 @@ func fetchQldbLedgers(ctx context.Context, meta schema.ClientMeta, _ *schema.Res
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		ledgers := make([]*qldb.DescribeLedgerOutput, 0, len(response.Ledgers))
 		for _, l := range response.Ledgers {
@@ -272,7 +272,7 @@ func fetchQldbLedgers(ctx context.Context, meta schema.ClientMeta, _ *schema.Res
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			ledgers = append(ledgers, response)
 		}
@@ -295,9 +295,9 @@ func ResolveQldbLedgerTags(ctx context.Context, meta schema.ClientMeta, resource
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, response.Tags))
+	return helpers.WrapError(resource.Set(c.Name, response.Tags))
 }
 func fetchQldbLedgerJournalKinesisStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	ledger := parent.Item.(*qldb.DescribeLedgerOutput)
@@ -311,7 +311,7 @@ func fetchQldbLedgerJournalKinesisStreams(ctx context.Context, meta schema.Clien
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- response.Streams
@@ -335,7 +335,7 @@ func fetchQldbLedgerJournalS3Exports(ctx context.Context, meta schema.ClientMeta
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- response.JournalS3Exports

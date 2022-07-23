@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/aws-sdk-go-v2/service/xray/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -145,7 +145,7 @@ func fetchXraySamplingRules(ctx context.Context, meta schema.ClientMeta, parent 
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.SamplingRuleRecords
 
@@ -169,11 +169,11 @@ func ResolveXraySamplingRuleTags(ctx context.Context, meta schema.ClientMeta, re
 		if cl.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	tags := map[string]string{}
 	client.TagsIntoMap(output.Tags, tags)
 
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

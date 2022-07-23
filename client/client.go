@@ -77,7 +77,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/smithy-go"
 	"github.com/aws/smithy-go/logging"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/hashicorp/go-hclog"
 )
@@ -459,30 +458,17 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 		var ae smithy.APIError
 		if errors.As(err, &ae) {
 			if strings.Contains(ae.ErrorCode(), "InvalidClientTokenId") {
-				return awsCfg, diag.FromError(
-					err,
-					diag.USER,
-					diag.WithSummary("Invalid credentials for assuming role"),
-					diag.WithDetails("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file."),
-					diag.WithSeverity(diag.WARNING),
-				)
+				logger.Warn("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file.")
 			}
 		}
-
-		return awsCfg, diag.FromError(
-			err,
-			diag.USER,
-			diag.WithSummary("No credentials available"),
-			diag.WithDetails("Couldn't find any credentials in environment variables or configuration files."),
-			diag.WithSeverity(diag.WARNING),
-		)
+		logger.Warn("Couldn't find any credentials in environment variables or configuration files.")
+		return awsCfg, nil
 	}
 
 	return awsCfg, err
 }
 
 func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
-	var diags diag.Diagnostics
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger)
@@ -517,7 +503,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		}
 
 		if err := verifyRegions(localRegions); err != nil {
-			return nil, diags.Add(classifyError(err, diag.USER, nil))
+			return nil, err
 		}
 
 		if isAllRegions(localRegions) {
@@ -569,14 +555,13 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
-			diags = diags.Add(diag.FromError(fmt.Errorf("no enabled regions provided in config for account %s", account.AccountName), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+			logger.Warn(fmt.Sprintf("no enabled regions provided in config for account %s", account.AccountName), "type", "access")
 			continue
 		}
 		awsCfg.Region = account.Regions[0]
 		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			// This should only ever fail when there is a network or endpoint issue. There is no way for IAM to deny this call.
-			diags = diags.Add(diag.FromError(fmt.Errorf("failed to get caller identity. AWS Error: %w", err), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+			logger.Warn("failed to get caller identity. AWS Error: %w", err)
 			continue
 		}
 		iamArn, err := arn.Parse(*output.Arn)

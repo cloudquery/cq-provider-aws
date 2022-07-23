@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -235,7 +235,7 @@ func fetchDirectconnectVirtualInterfaces(ctx context.Context, meta schema.Client
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- output.VirtualInterfaces
 	return nil
@@ -246,7 +246,7 @@ func resolveDirectconnectVirtualInterfaceRouteFilterPrefixes(ctx context.Context
 	for i, prefix := range r.RouteFilterPrefixes {
 		routeFilterPrefixes[i] = prefix.Cidr
 	}
-	return diag.WrapError(resource.Set("route_filter_prefixes", routeFilterPrefixes))
+	return helpers.WrapError(resource.Set("route_filter_prefixes", routeFilterPrefixes))
 }
 func resolveDirectconnectVirtualInterfaceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.VirtualInterface)
@@ -254,7 +254,7 @@ func resolveDirectconnectVirtualInterfaceTags(ctx context.Context, meta schema.C
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchDirectconnectVirtualInterfaceBgpPeers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	virtualInterface := parent.Item.(types.VirtualInterface)

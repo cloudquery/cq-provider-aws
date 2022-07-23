@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -115,7 +115,7 @@ func fetchApplicationautoscalingPolicies(ctx context.Context, meta schema.Client
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- output.ScalingPolicies
@@ -134,7 +134,7 @@ func resolveApplicationautoscalingPolicyAlarms(ctx context.Context, meta schema.
 		return nil
 	}
 	b, _ := json.Marshal(r.Alarms)
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveApplicationautoscalingPolicyStepScalingPolicyConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ScalingPolicy)
@@ -142,7 +142,7 @@ func resolveApplicationautoscalingPolicyStepScalingPolicyConfiguration(ctx conte
 		return nil
 	}
 	b, _ := json.Marshal(r.StepScalingPolicyConfiguration)
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveApplicationautoscalingPolicyTargetTrackingScalingPolicyConfiguration(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ScalingPolicy)
@@ -150,5 +150,5 @@ func resolveApplicationautoscalingPolicyTargetTrackingScalingPolicyConfiguration
 		return nil
 	}
 	b, _ := json.Marshal(r.TargetTrackingScalingPolicyConfiguration)
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/directconnect"
 	"github.com/aws/aws-sdk-go-v2/service/directconnect/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -192,7 +192,7 @@ func fetchDirectconnectConnections(ctx context.Context, meta schema.ClientMeta, 
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- output.Connections
 	return nil
@@ -204,7 +204,7 @@ func resolveDirectconnectConnectionTags(ctx context.Context, meta schema.ClientM
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchDirectconnectConnectionMacSecKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	connection := parent.Item.(types.Connection)

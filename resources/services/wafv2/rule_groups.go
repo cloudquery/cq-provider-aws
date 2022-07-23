@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -142,7 +142,7 @@ func fetchWafv2RuleGroups(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		// Get RuleGroup object
@@ -153,7 +153,7 @@ func fetchWafv2RuleGroups(ctx context.Context, meta schema.ClientMeta, parent *s
 				Scope: c.WAFScope,
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- ruleGroup.RuleGroup
 		}
@@ -179,7 +179,7 @@ func resolveWafv2ruleGroupTags(ctx context.Context, meta schema.ClientMeta, reso
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -189,7 +189,7 @@ func resolveWafv2ruleGroupTags(ctx context.Context, meta schema.ClientMeta, reso
 		}
 		tagsConfig.NextMarker = tags.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, outputTags))
+	return helpers.WrapError(resource.Set(c.Name, outputTags))
 }
 func resolveWafv2ruleGroupPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -205,12 +205,12 @@ func resolveWafv2ruleGroupPolicy(ctx context.Context, meta schema.ClientMeta, re
 		// we may get WAFNonexistentItemException error until SetPermissionPolicy is called on a rule group
 		var e *types.WAFNonexistentItemException
 		if errors.As(err, &e) {
-			return diag.WrapError(resource.Set(c.Name, "null"))
+			return helpers.WrapError(resource.Set(c.Name, "null"))
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, policy.Policy))
+	return helpers.WrapError(resource.Set(c.Name, policy.Policy))
 }
 func resolveWafv2ruleGroupRules(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -219,9 +219,9 @@ func resolveWafv2ruleGroupRules(ctx context.Context, meta schema.ClientMeta, res
 	}
 	data, err := json.Marshal(ruleGroup.Rules)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveWafv2AvailableLabels(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -229,7 +229,7 @@ func resolveWafv2AvailableLabels(ctx context.Context, meta schema.ClientMeta, re
 	for i, l := range ruleGroup.AvailableLabels {
 		labels[i] = *l.Name
 	}
-	return diag.WrapError(resource.Set(c.Name, labels))
+	return helpers.WrapError(resource.Set(c.Name, labels))
 }
 func resolveWafv2ConsumedLabels(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -237,5 +237,5 @@ func resolveWafv2ConsumedLabels(ctx context.Context, meta schema.ClientMeta, res
 	for i, l := range ruleGroup.ConsumedLabels {
 		labels[i] = *l.Name
 	}
-	return diag.WrapError(resource.Set(c.Name, labels))
+	return helpers.WrapError(resource.Set(c.Name, labels))
 }

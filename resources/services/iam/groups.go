@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -77,7 +77,7 @@ func fetchIamGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	for {
 		response, err := svc.ListGroups(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Groups
 		if aws.ToString(response.Marker) == "" {
@@ -95,11 +95,11 @@ func resolveIamGroupPolicies(ctx context.Context, meta schema.ClientMeta, resour
 	}
 	response, err := svc.ListAttachedGroupPolicies(ctx, &config)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	policyMap := map[string]*string{}
 	for _, p := range response.AttachedPolicies {
 		policyMap[*p.PolicyArn] = p.PolicyName
 	}
-	return diag.WrapError(resource.Set(c.Name, policyMap))
+	return helpers.WrapError(resource.Set(c.Name, policyMap))
 }

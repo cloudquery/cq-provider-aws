@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -101,7 +101,7 @@ func fetchWafv2Ipsets(ctx context.Context, meta schema.ClientMeta, parent *schem
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, s := range result.IPSets {
 			info, err := svc.GetIPSet(
@@ -114,7 +114,7 @@ func fetchWafv2Ipsets(ctx context.Context, meta schema.ClientMeta, parent *schem
 				func(options *wafv2.Options) { options.Region = cl.Region },
 			)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- info.IPSet
 		}
@@ -132,11 +132,11 @@ func resolveIpsetAddresses(ctx context.Context, meta schema.ClientMeta, resource
 	for _, a := range s.Addresses {
 		_, n, err := net.ParseCIDR(a)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		addrs = append(addrs, n)
 	}
-	return diag.WrapError(resource.Set(c.Name, addrs))
+	return helpers.WrapError(resource.Set(c.Name, addrs))
 }
 
 func resolveIpsetTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -148,7 +148,7 @@ func resolveIpsetTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 	for {
 		result, err := svc.ListTagsForResource(ctx, &params, func(options *wafv2.Options) { options.Region = cl.Region })
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if result != nil || result.TagInfoForResource != nil {
 			for _, t := range result.TagInfoForResource.TagList {
@@ -160,5 +160,5 @@ func resolveIpsetTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 		}
 		params.NextMarker = result.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

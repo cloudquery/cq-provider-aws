@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -758,7 +758,7 @@ func fetchRdsInstances(ctx context.Context, meta schema.ClientMeta, parent *sche
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.DBInstances
 		if aws.ToString(response.Marker) == "" {
@@ -774,7 +774,7 @@ func resolveRdsInstancePendingModifiedValuesProcessorFeatures(ctx context.Contex
 	for _, t := range r.PendingModifiedValues.ProcessorFeatures {
 		pendingProcessorFeatures[*t.Name] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, pendingProcessorFeatures))
+	return helpers.WrapError(resource.Set(c.Name, pendingProcessorFeatures))
 }
 func resolveRdsInstanceProcessorFeatures(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.DBInstance)
@@ -782,7 +782,7 @@ func resolveRdsInstanceProcessorFeatures(ctx context.Context, meta schema.Client
 	for _, t := range r.ProcessorFeatures {
 		processorFeatures[*t.Name] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, processorFeatures))
+	return helpers.WrapError(resource.Set(c.Name, processorFeatures))
 }
 func resolveRdsInstanceTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.DBInstance)
@@ -790,7 +790,7 @@ func resolveRdsInstanceTags(ctx context.Context, meta schema.ClientMeta, resourc
 	for _, t := range r.TagList {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchRdsInstanceAssociatedRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.DBInstance)
@@ -833,9 +833,9 @@ func resolveRdsInstanceStatusInfos(ctx context.Context, meta schema.ClientMeta, 
 	instance := resource.Item.(types.DBInstance)
 	data, err := json.Marshal(instance.StatusInfos)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchRdsInstanceVpcSecurityGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.DBInstance)

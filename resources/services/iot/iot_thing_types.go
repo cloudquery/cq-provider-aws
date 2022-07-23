@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -104,7 +104,7 @@ func fetchIotThingTypes(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- response.ThingTypes
@@ -131,7 +131,7 @@ func ResolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resour
 		})
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		client.TagsIntoMap(response.Tags, tags)
@@ -141,5 +141,5 @@ func ResolveIotThingTypeTags(ctx context.Context, meta schema.ClientMeta, resour
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

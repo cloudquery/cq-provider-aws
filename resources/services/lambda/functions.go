@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -1089,7 +1089,6 @@ func Functions() *schema.Table {
 // ====================================================================================================================
 
 func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	var diags diag.Diagnostics
 	var input lambda.ListFunctionsInput
 	c := meta.(*client.Client)
 	svc := c.Services().Lambda
@@ -1098,7 +1097,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
+			return helpers.WrapError(err)
 		}
 
 		for _, f := range response.Functions {
@@ -1111,13 +1110,13 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 
 			if err != nil {
 				if c.IsNotFoundError(err) || c.IsAccessDeniedError(err) {
-					diags = diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+					meta.Logger().Warn("Function not found or access denied", "function", f.FunctionName, "error", err.Error())
 					res <- &lambda.GetFunctionOutput{
 						Configuration: &f,
 					}
 					continue
 				}
-				return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
+				return helpers.WrapError(err)
 			}
 			res <- funcResponse
 		}
@@ -1127,7 +1126,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 		}
 		input.Marker = response.NextMarker
 	}
-	return diags
+	return nil
 }
 func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
 	r := resource.Item.(*lambda.GetFunctionOutput)
@@ -1147,20 +1146,20 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		if client.IsAWSError(err, "ResourceNotFoundException") {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	if response != nil {
 		if err := resource.Set("policy_revision_id", response.RevisionId); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		var policyDocument map[string]interface{}
 		err = json.Unmarshal([]byte(*response.Policy), &policyDocument)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if err := resource.Set("policy_document", policyDocument); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 	}
 
@@ -1177,7 +1176,7 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if functionSigning.CodeSigningConfigArn == nil {
 		return nil
@@ -1192,37 +1191,37 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		if c.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if signing.CodeSigningConfig == nil {
 		return nil
 	}
 
 	if err := resource.Set("code_signing_allowed_publishers_version_arns", signing.CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("code_signing_config_arn", signing.CodeSigningConfig.CodeSigningConfigArn); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("code_signing_config_id", signing.CodeSigningConfig.CodeSigningConfigId); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("code_signing_policies_untrusted_artifact_on_deployment", signing.CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("code_signing_description", signing.CodeSigningConfig.Description); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	location, err := time.LoadLocation("UTC")
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	codeSigningLastModified, err := time.ParseInLocation(time.RFC3339, *signing.CodeSigningConfig.LastModified, location)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set("code_signing_last_modified", codeSigningLastModified))
+	return helpers.WrapError(resource.Set("code_signing_last_modified", codeSigningLastModified))
 }
 func fetchLambdaFunctionFileSystemConfigs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*lambda.GetFunctionOutput)
@@ -1259,7 +1258,7 @@ func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.Clie
 			if cl.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.FunctionEventInvokeConfigs
 		if output.NextMarker == nil {
@@ -1284,13 +1283,13 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 	for {
 		output, err := svc.ListAliases(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if err != nil {
 			if c.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		aliases := make([]AliasWrapper, 0, len(output.Aliases))
 		for _, a := range output.Aliases {
@@ -1300,7 +1299,7 @@ func fetchLambdaFunctionAliases(ctx context.Context, meta schema.ClientMeta, par
 				Qualifier:    alias.Name,
 			})
 			if err != nil && !c.IsNotFoundError(err) {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			aliases = append(aliases, AliasWrapper{&alias, urlConfig})
 		}
@@ -1319,9 +1318,9 @@ func resolveFunctionAliasesUrlConfigCors(ctx context.Context, meta schema.Client
 	}
 	data, err := json.Marshal(p.UrlConfig.Cors)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(*lambda.GetFunctionOutput)
@@ -1340,7 +1339,7 @@ func fetchLambdaFunctionVersions(ctx context.Context, meta schema.ClientMeta, pa
 			if meta.(*client.Client).IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Versions
 		if output.NextMarker == nil {
@@ -1380,7 +1379,7 @@ func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.Clie
 			if cl.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.ProvisionedConcurrencyConfigs
 		if output.NextMarker == nil {
@@ -1408,7 +1407,7 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 			if cl.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.EventSourceMappings
 		if output.NextMarker == nil {
@@ -1429,7 +1428,7 @@ func resolveFunctionEventSourceMappingsCriteriaFilters(ctx context.Context, meta
 		filters = append(filters, *f.Pattern)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, filters))
+	return helpers.WrapError(resource.Set(c.Name, filters))
 }
 func resolveFunctionEventSourceMappingsSourceAccessConfigurations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.EventSourceMappingConfiguration)
@@ -1439,15 +1438,15 @@ func resolveFunctionEventSourceMappingsSourceAccessConfigurations(ctx context.Co
 
 	data, err := json.Marshal(p.SourceAccessConfigurations)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 
 func resolveFunctionsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*lambda.GetFunctionOutput)
 	if r.Tags == nil {
-		return diag.WrapError(resource.Set(c.Name, make(map[string]string)))
+		return helpers.WrapError(resource.Set(c.Name, make(map[string]string)))
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Tags))
+	return helpers.WrapError(resource.Set(c.Name, r.Tags))
 }

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/thoas/go-funk"
 )
@@ -26,7 +26,7 @@ func ResolveAWSNamespace(_ context.Context, meta schema.ClientMeta, r *schema.Re
 }
 
 func ResolveWAFScope(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
-	return diag.WrapError(r.Set(c.Name, meta.(*Client).WAFScope))
+	return helpers.WrapError(r.Set(c.Name, meta.(*Client).WAFScope))
 }
 
 func ResolveTags(ctx context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
@@ -48,12 +48,12 @@ func ResolveTagField(fieldName string) func(context.Context, schema.ClientMeta, 
 		}
 		f := val.FieldByName(fieldName)
 		if f.IsNil() {
-			return diag.WrapError(r.Set(c.Name, map[string]string{})) // can't have nil or the integration test will make a fuss
+			return helpers.WrapError(r.Set(c.Name, map[string]string{})) // can't have nil or the integration test will make a fuss
 		} else if f.IsZero() {
 			panic("no such field " + fieldName)
 		}
 		data := TagsToMap(f.Interface())
-		return diag.WrapError(r.Set(c.Name, data))
+		return helpers.WrapError(r.Set(c.Name, data))
 	}
 }
 
@@ -63,7 +63,7 @@ func ResolveTimestampField(path string, rfcs ...string) func(_ context.Context, 
 
 		value := funk.Get(r.Item, path, funk.WithAllowZero())
 		if value == nil {
-			return diag.WrapError(r.Set(c.Name, nil))
+			return helpers.WrapError(r.Set(c.Name, nil))
 		}
 
 		if reflect.TypeOf(value).Kind() == reflect.Ptr {
@@ -74,11 +74,11 @@ func ResolveTimestampField(path string, rfcs ...string) func(_ context.Context, 
 
 		switch val.Kind() {
 		case reflect.Int32, reflect.Int64:
-			return diag.WrapError(r.Set(c.Name, time.Unix(val.Int(), 0)))
+			return helpers.WrapError(r.Set(c.Name, time.Unix(val.Int(), 0)))
 		case reflect.String:
 			return schema.DateResolver(path, rfcs...)(ctx, cl, r, c)
 		default:
-			return diag.WrapError(r.Set(c.Name, nil))
+			return helpers.WrapError(r.Set(c.Name, nil))
 		}
 	}
 }

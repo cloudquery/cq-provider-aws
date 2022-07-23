@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafregional"
 	"github.com/aws/aws-sdk-go-v2/service/wafregional/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -132,7 +132,7 @@ func fetchWafregionalWebAcls(ctx context.Context, meta schema.ClientMeta, parent
 	for {
 		result, err := svc.ListWebACLs(ctx, &params, func(o *wafregional.Options) { o.Region = cl.Region })
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range result.WebACLs {
 			detail, err := svc.GetWebACL(
@@ -141,7 +141,7 @@ func fetchWafregionalWebAcls(ctx context.Context, meta schema.ClientMeta, parent
 				func(o *wafregional.Options) { o.Region = cl.Region },
 			)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if detail.WebACL == nil {
 				continue
@@ -168,7 +168,7 @@ func resolveWebACLRulesExcludedRules(ctx context.Context, meta schema.ClientMeta
 			ids = append(ids, *item.RuleId)
 		}
 	}
-	return diag.WrapError(resource.Set(c.Name, ids))
+	return helpers.WrapError(resource.Set(c.Name, ids))
 }
 func resolveWebAclTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -178,7 +178,7 @@ func resolveWebAclTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 	for {
 		result, err := svc.ListTagsForResource(ctx, &params)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if result.TagInfoForResource != nil {
 			client.TagsIntoMap(result.TagInfoForResource.TagList, tags)
@@ -188,5 +188,5 @@ func resolveWebAclTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 		}
 		params.NextMarker = result.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

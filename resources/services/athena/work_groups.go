@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -20,7 +20,7 @@ func WorkGroups() *schema.Table {
 		Name:        "aws_athena_work_groups",
 		Description: "A workgroup, which contains a name, description, creation time, state, and other configuration, listed under WorkGroup$Configuration",
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listWorkGroups, workGroupDetail))
+			return helpers.WrapError(client.ListAndDetailResolver(ctx, meta, res, listWorkGroups, workGroupDetail))
 		},
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreCommonErrors,
@@ -420,7 +420,7 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range response.WorkGroups {
 			detailChan <- item
@@ -438,7 +438,7 @@ func listWorkGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan
 func ResolveAthenaWorkGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	dc := resource.Item.(types.WorkGroup)
-	return diag.WrapError(resource.Set(c.Name, createWorkGroupArn(cl, *dc.Name)))
+	return helpers.WrapError(resource.Set(c.Name, createWorkGroupArn(cl, *dc.Name)))
 }
 func ResolveAthenaWorkGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -453,7 +453,7 @@ func ResolveAthenaWorkGroupTags(ctx context.Context, meta schema.ClientMeta, res
 			if cl.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		client.TagsIntoMap(result.Tags, tags)
 		if aws.ToString(result.NextToken) == "" {
@@ -461,7 +461,7 @@ func ResolveAthenaWorkGroupTags(ctx context.Context, meta schema.ClientMeta, res
 		}
 		params.NextToken = result.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
@@ -473,7 +473,7 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, d := range response.PreparedStatements {
 			dc, err := svc.GetPreparedStatement(ctx, &athena.GetPreparedStatementInput{
@@ -486,7 +486,7 @@ func fetchAthenaWorkGroupPreparedStatements(ctx context.Context, meta schema.Cli
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- *dc.PreparedStatement
 			return nil
@@ -508,7 +508,7 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, d := range response.QueryExecutionIds {
 			dc, err := svc.GetQueryExecution(ctx, &athena.GetQueryExecutionInput{
@@ -520,7 +520,7 @@ func fetchAthenaWorkGroupQueryExecutions(ctx context.Context, meta schema.Client
 				if c.IsNotFoundError(err) || isQueryExecutionNotFound(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- *dc.QueryExecution
 			return nil
@@ -542,7 +542,7 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, d := range response.NamedQueryIds {
 			dc, err := svc.GetNamedQuery(ctx, &athena.GetNamedQueryInput{
@@ -554,7 +554,7 @@ func fetchAthenaWorkGroupNamedQueries(ctx context.Context, meta schema.ClientMet
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- *dc.NamedQuery
 			return nil
@@ -584,7 +584,7 @@ func workGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan ch
 		if c.IsNotFoundError(err) {
 			return
 		}
-		errorChan <- diag.WrapError(err)
+		errorChan <- err
 		return
 	}
 	resultsChan <- *dc.WorkGroup

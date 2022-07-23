@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -173,7 +173,7 @@ func fetchEc2Subnets(ctx context.Context, meta schema.ClientMeta, parent *schema
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Subnets
 		if aws.ToString(output.NextToken) == "" {
@@ -189,7 +189,7 @@ func resolveEc2SubnetsTags(ctx context.Context, meta schema.ClientMeta, resource
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchEc2SubnetIpv6CidrBlockAssociationSets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Subnet)

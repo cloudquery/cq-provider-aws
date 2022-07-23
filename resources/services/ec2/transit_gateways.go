@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -392,7 +392,7 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGateways
 		if aws.ToString(output.NextToken) == "" {
@@ -421,7 +421,7 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGatewayAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -450,7 +450,7 @@ func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMe
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGatewayRouteTables
 		if aws.ToString(output.NextToken) == "" {
@@ -479,7 +479,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGatewayVpcAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -509,7 +509,7 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGatewayPeeringAttachments
 		if aws.ToString(output.NextToken) == "" {
@@ -539,7 +539,7 @@ func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.Cli
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.TransitGatewayMulticastDomains
 		if aws.ToString(output.NextToken) == "" {
@@ -556,7 +556,7 @@ func resolveEc2TransitGatewayTags(ctx context.Context, meta schema.ClientMeta, r
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveEc2TransitGatewayAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -565,7 +565,7 @@ func resolveEc2TransitGatewayAttachmentTags(ctx context.Context, meta schema.Cli
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveEc2TransitGatewayRouteTableTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -574,7 +574,7 @@ func resolveEc2TransitGatewayRouteTableTags(ctx context.Context, meta schema.Cli
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveEc2TransitGatewayVpcAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -583,7 +583,7 @@ func resolveEc2TransitGatewayVpcAttachmentTags(ctx context.Context, meta schema.
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveEc2TransitGatewayPeeringAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -592,7 +592,7 @@ func resolveEc2TransitGatewayPeeringAttachmentTags(ctx context.Context, meta sch
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveEc2TransitGatewayMulticastDomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -601,5 +601,5 @@ func resolveEc2TransitGatewayMulticastDomainTags(ctx context.Context, meta schem
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }

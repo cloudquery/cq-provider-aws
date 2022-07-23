@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -133,7 +133,7 @@ func fetchEc2EbsSnapshots(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Snapshots
 		if aws.ToString(output.NextToken) == "" {
@@ -159,7 +159,7 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 			meta.Logger().Debug("Failed extracting snapshot volume permissions", "SnapshotId", r.SnapshotId, "error", err)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	createVolumePermissions := make([]map[string]string, len(output.CreateVolumePermissions))
@@ -174,10 +174,10 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 	}
 	b, err := json.Marshal(createVolumePermissions)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set("create_volume_permissions", b))
+	return helpers.WrapError(resource.Set("create_volume_permissions", b))
 }
 func resolveEc2ebsSnapshotTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Snapshot)
@@ -185,5 +185,5 @@ func resolveEc2ebsSnapshotTags(ctx context.Context, meta schema.ClientMeta, reso
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }

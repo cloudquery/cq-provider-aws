@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -17,7 +17,7 @@ func DataCatalogs() *schema.Table {
 		Name:        "aws_athena_data_catalogs",
 		Description: "Contains information about a data catalog in an Amazon Web Services account",
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDataCatalogs, dataCatalogDetail))
+			return helpers.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDataCatalogs, dataCatalogDetail))
 		},
 		Multiplex:    client.ServiceAccountRegionMultiplexer("athena"),
 		IgnoreError:  client.IgnoreCommonErrors,
@@ -221,7 +221,7 @@ func listDataCatalogs(ctx context.Context, meta schema.ClientMeta, detailChan ch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range response.DataCatalogsSummary {
 			detailChan <- item
@@ -236,7 +236,7 @@ func listDataCatalogs(ctx context.Context, meta schema.ClientMeta, detailChan ch
 func ResolveAthenaDataCatalogArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	dc := resource.Item.(types.DataCatalog)
-	return diag.WrapError(resource.Set(c.Name, createDataCatalogArn(cl, *dc.Name)))
+	return helpers.WrapError(resource.Set(c.Name, createDataCatalogArn(cl, *dc.Name)))
 }
 func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -251,7 +251,7 @@ func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, r
 			if cl.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		client.TagsIntoMap(result.Tags, tags)
 		if aws.ToString(result.NextToken) == "" {
@@ -259,7 +259,7 @@ func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, r
 		}
 		params.NextToken = result.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchAthenaDataCatalogDatabases(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
@@ -272,7 +272,7 @@ func fetchAthenaDataCatalogDatabases(ctx context.Context, meta schema.ClientMeta
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.DatabaseList
 
@@ -295,7 +295,7 @@ func fetchAthenaDataCatalogDatabaseTables(ctx context.Context, meta schema.Clien
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.TableMetadataList
 
@@ -338,7 +338,7 @@ func dataCatalogDetail(ctx context.Context, meta schema.ClientMeta, resultsChan 
 		if c.IsNotFoundError(err) {
 			return
 		}
-		errorChan <- diag.WrapError(err)
+		errorChan <- helpers.WrapError(err)
 	}
 	resultsChan <- *dc.DataCatalog
 }

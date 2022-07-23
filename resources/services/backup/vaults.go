@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/backup/types"
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -255,7 +255,7 @@ func fetchBackupVaults(ctx context.Context, meta schema.ClientMeta, parent *sche
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- result.BackupVaultList
 		if aws.ToString(result.NextToken) == "" {
@@ -278,7 +278,7 @@ func resolveVaultTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 			break
 		}
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for k, v := range result.Tags {
 			tags[k] = v
@@ -288,7 +288,7 @@ func resolveVaultTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 		}
 		params.NextToken = result.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 
 func resolveVaultAccessPolicy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -304,9 +304,9 @@ func resolveVaultAccessPolicy(ctx context.Context, meta schema.ClientMeta, resou
 		if cl.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, result.Policy))
+	return helpers.WrapError(resource.Set(c.Name, result.Policy))
 }
 
 func resolveVaultNotifications(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
@@ -321,18 +321,18 @@ func resolveVaultNotifications(ctx context.Context, meta schema.ClientMeta, reso
 	if err != nil {
 		var ae smithy.APIError
 		if !errors.As(err, &ae) {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if ae.ErrorCode() == "ERROR_2106" {
 			// trying to ignore "ERROR_2106: Failed reading notifications from database for Backup vault ..."
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("notification_events", result.BackupVaultEvents); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set("notification_sns_topic_arn", result.SNSTopicArn))
+	return helpers.WrapError(resource.Set("notification_sns_topic_arn", result.SNSTopicArn))
 }
 
 func fetchVaultRecoveryPoints(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -345,7 +345,7 @@ func fetchVaultRecoveryPoints(ctx context.Context, meta schema.ClientMeta, paren
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- result.RecoveryPoints
 		if aws.ToString(result.NextToken) == "" {
@@ -360,9 +360,9 @@ func resolveVaultRecoveryPointCreatedBy(ctx context.Context, meta schema.ClientM
 	rp := resource.Item.(types.RecoveryPointByBackupVault)
 	b, err := json.Marshal(rp.CreatedBy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -372,7 +372,7 @@ func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resou
 	}
 	resourceARN, err := arn.Parse(*rp.ResourceArn)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	// decide if the backed up resource supports tags
@@ -403,7 +403,7 @@ func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resou
 				// advanced backup features are not enabled for dynamodb
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		if result == nil {
@@ -419,5 +419,5 @@ func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resou
 		}
 		params.NextToken = result.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -795,7 +795,7 @@ func fetchRedshiftClusters(ctx context.Context, meta schema.ClientMeta, parent *
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Clusters
 		if aws.ToString(response.Marker) == "" {
@@ -811,7 +811,7 @@ func resolveRedshiftClusterTags(ctx context.Context, meta schema.ClientMeta, res
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func resolveRedshiftClusterLoggingStatus(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Cluster)
@@ -825,10 +825,10 @@ func resolveRedshiftClusterLoggingStatus(ctx context.Context, meta schema.Client
 		o.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, response))
+	return helpers.WrapError(resource.Set(c.Name, response))
 }
 func fetchRedshiftClusterNodes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster := parent.Item.(types.Cluster)
@@ -852,7 +852,7 @@ func fetchRedshiftClusterParameter(ctx context.Context, meta schema.ClientMeta, 
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Parameters
 		if aws.ToString(response.Marker) == "" {

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -129,7 +129,7 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if len(resp.ConfigurationRecorders) == 0 {
 		return nil
@@ -142,7 +142,7 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 		ConfigurationRecorderNames: names,
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	for _, configurationRecorder := range resp.ConfigurationRecorders {
 		if configurationRecorder.Name == nil {
@@ -176,5 +176,5 @@ func fetchConfigConfigurationRecorders(ctx context.Context, meta schema.ClientMe
 func generateConfigRecorderArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	cfg := resource.Item.(configurationRecorderWrapper)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("config", "config-recorder", *cfg.Name)))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN("config", "config-recorder", *cfg.Name)))
 }

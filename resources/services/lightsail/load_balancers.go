@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -347,7 +347,7 @@ func fetchLightsailLoadBalancers(ctx context.Context, meta schema.ClientMeta, pa
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.LoadBalancers
 		if aws.ToString(response.NextPageToken) == "" {
@@ -363,13 +363,13 @@ func resolveLoadBalancersPublicPorts(ctx context.Context, meta schema.ClientMeta
 	for _, p := range r.PublicPorts {
 		ports = append(ports, int(p))
 	}
-	return diag.WrapError(resource.Set(c.Name, ports))
+	return helpers.WrapError(resource.Set(c.Name, ports))
 }
 func resolveLoadBalancersTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.LoadBalancer)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailLoadBalancerInstanceHealthSummaries(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.LoadBalancer)
@@ -395,7 +395,7 @@ func fetchLightsailLoadBalancerTlsCertificates(ctx context.Context, meta schema.
 		if c.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- response.TlsCertificates
 	return nil
@@ -404,5 +404,5 @@ func resolveLoadBalancerTLSCertificatesTags(ctx context.Context, meta schema.Cli
 	r := resource.Item.(types.LoadBalancerTlsCertificate)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

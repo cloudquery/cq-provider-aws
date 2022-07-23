@@ -7,7 +7,7 @@ import (
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -405,7 +405,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 		}
 		tagsResponse, err := svc.DescribeTags(ctx, tagsCfg)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, lb := range loadBalancers {
 			loadBalancerAttributes, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv1.DescribeLoadBalancerAttributesInput{LoadBalancerName: lb.LoadBalancerName})
@@ -413,7 +413,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			wrapper := ELBv1LoadBalancerWrapper{
@@ -433,7 +433,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for i := 0; i < len(response.LoadBalancerDescriptions); i += 20 {
@@ -444,7 +444,7 @@ func fetchElbv1LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 			}
 			loadBalancers := response.LoadBalancerDescriptions[i:end]
 			if err := processLoadBalancers(loadBalancers); err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 		}
 
@@ -461,28 +461,28 @@ func resolveElbv1loadBalancerAttributesAccessLogEnabled(ctx context.Context, met
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.Enabled))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.Enabled))
 }
 func resolveElbv1loadBalancerAttributesAccessLogS3BucketName(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.S3BucketName))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.S3BucketName))
 }
 func resolveElbv1loadBalancerAttributesAccessLogS3BucketPrefix(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.S3BucketPrefix))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.S3BucketPrefix))
 }
 func resolveElbv1loadBalancerAttributesAccessLogEmitInterval(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.AccessLog == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.EmitInterval))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.AccessLog.EmitInterval))
 }
 func resolveElbv1loadBalancerAttributesConnectionSettingsIdleTimeout(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -490,28 +490,28 @@ func resolveElbv1loadBalancerAttributesConnectionSettingsIdleTimeout(ctx context
 		return nil
 	}
 
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.ConnectionSettings.IdleTimeout))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.ConnectionSettings.IdleTimeout))
 }
 func resolveElbv1loadBalancerAttributesCrossZoneLoadBalancingEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.CrossZoneLoadBalancing == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.CrossZoneLoadBalancing.Enabled))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.CrossZoneLoadBalancing.Enabled))
 }
 func resolveElbv1loadBalancerAttributesConnectionDrainingEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.ConnectionDraining == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.ConnectionDraining.Enabled))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.ConnectionDraining.Enabled))
 }
 func resolveElbv1loadBalancerAttributesConnectionDrainingTimeout(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
 	if r.Attributes == nil && r.Attributes.ConnectionDraining == nil {
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, r.Attributes.ConnectionDraining.Timeout))
+	return helpers.WrapError(resource.Set(c.Name, r.Attributes.ConnectionDraining.Timeout))
 }
 func resolveElbv1loadBalancerAttributesAdditionalAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -523,7 +523,7 @@ func resolveElbv1loadBalancerAttributesAdditionalAttributes(ctx context.Context,
 	for _, a := range r.Attributes.AdditionalAttributes {
 		response[*a.Key] = a.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, response))
+	return helpers.WrapError(resource.Set(c.Name, response))
 }
 func resolveElbv1loadBalancerInstances(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(ELBv1LoadBalancerWrapper)
@@ -531,7 +531,7 @@ func resolveElbv1loadBalancerInstances(ctx context.Context, meta schema.ClientMe
 	for _, i := range r.Instances {
 		response = append(response, *i.InstanceId)
 	}
-	return diag.WrapError(resource.Set(c.Name, response))
+	return helpers.WrapError(resource.Set(c.Name, response))
 }
 func fetchElbv1LoadBalancerBackendServerDescriptions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(ELBv1LoadBalancerWrapper)
@@ -569,7 +569,7 @@ func fetchElbv1LoadBalancerPolicies(ctx context.Context, meta schema.ClientMeta,
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- response.PolicyDescriptions
 	return nil
@@ -581,7 +581,7 @@ func resolveElbv1loadBalancerPolicyPolicyAttributeDescriptions(ctx context.Conte
 	for _, a := range r.PolicyAttributeDescriptions {
 		response[*a.AttributeName] = a.AttributeValue
 	}
-	return diag.WrapError(resource.Set(c.Name, response))
+	return helpers.WrapError(resource.Set(c.Name, response))
 }
 
 // ====================================================================================================================

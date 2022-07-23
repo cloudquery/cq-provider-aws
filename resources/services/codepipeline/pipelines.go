@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
 	"github.com/aws/aws-sdk-go-v2/service/codepipeline/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -246,7 +246,7 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for i := range response.Pipelines {
 			response, err := svc.GetPipeline(ctx, &codepipeline.GetPipelineInput{Name: response.Pipelines[i].Name}, func(o *codepipeline.Options) {
@@ -256,7 +256,7 @@ func fetchCodepipelinePipelines(ctx context.Context, meta schema.ClientMeta, par
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- response
 		}
@@ -279,10 +279,10 @@ func ResolveCodepipelinePipelineTags(ctx context.Context, meta schema.ClientMeta
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(response.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(response.Tags)))
 }
 func fetchCodepipelinePipelineStages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*codepipeline.GetPipelineOutput)
@@ -298,9 +298,9 @@ func resolvePipelineStagesBlockers(ctx context.Context, meta schema.ClientMeta, 
 	r := resource.Item.(StageWrapper)
 	data, err := json.Marshal(r.Blockers)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchCodepipelinePipelineStageActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(StageWrapper)
@@ -313,7 +313,7 @@ func resolvePipelineStageActionsInputArtifacts(ctx context.Context, meta schema.
 	for _, a := range r.InputArtifacts {
 		artifacts = append(artifacts, a.Name)
 	}
-	return diag.WrapError(resource.Set(c.Name, artifacts))
+	return helpers.WrapError(resource.Set(c.Name, artifacts))
 }
 func resolvePipelineStageActionsOutputArtifacts(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ActionDeclaration)
@@ -321,5 +321,5 @@ func resolvePipelineStageActionsOutputArtifacts(ctx context.Context, meta schema
 	for _, a := range r.OutputArtifacts {
 		artifacts = append(artifacts, a.Name)
 	}
-	return diag.WrapError(resource.Set(c.Name, artifacts))
+	return helpers.WrapError(resource.Set(c.Name, artifacts))
 }

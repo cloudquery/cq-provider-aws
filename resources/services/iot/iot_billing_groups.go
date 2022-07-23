@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -100,7 +100,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, g := range response.BillingGroups {
 			group, err := svc.DescribeBillingGroup(ctx, &iot.DescribeBillingGroupInput{
@@ -109,7 +109,7 @@ func fetchIotBillingGroups(ctx context.Context, meta schema.ClientMeta, parent *
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- group
 		}
@@ -136,7 +136,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		things = append(things, response.Things...)
@@ -146,7 +146,7 @@ func ResolveIotBillingGroupThingsInGroup(ctx context.Context, meta schema.Client
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, things))
+	return helpers.WrapError(resource.Set(c.Name, things))
 }
 func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.DescribeBillingGroupOutput)
@@ -163,7 +163,7 @@ func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, res
 		})
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		client.TagsIntoMap(response.Tags, tags)
@@ -173,5 +173,5 @@ func ResolveIotBillingGroupTags(ctx context.Context, meta schema.ClientMeta, res
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

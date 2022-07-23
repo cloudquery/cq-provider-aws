@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -228,13 +228,13 @@ func fetchSsmDocuments(ctx context.Context, meta schema.ClientMeta, parent *sche
 	for {
 		output, err := svc.ListDocuments(ctx, &params, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, d := range output.DocumentIdentifiers {
 			dd, err := svc.DescribeDocument(ctx, &ssm.DescribeDocumentInput{Name: d.Name}, optsFn)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- dd.Document
 		}
@@ -251,9 +251,9 @@ func resolveSSMDocumentJSONField(getter func(d *types.DocumentDescription) inter
 		d := resource.Item.(*types.DocumentDescription)
 		b, err := json.Marshal(getter(d))
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
-		return diag.WrapError(resource.Set(c.Name, b))
+		return helpers.WrapError(resource.Set(c.Name, b))
 	}
 }
 
@@ -273,7 +273,7 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 	for {
 		output, err := svc.DescribeDocumentPermission(ctx, &input, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		accountIDs = append(accountIDs, output.AccountIds...)
 		infoList = append(infoList, output.AccountSharingInfoList...)
@@ -283,17 +283,17 @@ func ssmDocumentPostResolver(ctx context.Context, meta schema.ClientMeta, resour
 		input.NextToken = output.NextToken
 	}
 	if err := resource.Set("account_ids", accountIDs); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	b, err := json.Marshal(infoList)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set("account_sharing_info_list", b))
+	return helpers.WrapError(resource.Set("account_sharing_info_list", b))
 }
 
 func resolveSSMDocumentARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	d := resource.Item.(*types.DocumentDescription)
 	cl := meta.(*client.Client)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("ssm", "document", *d.Name)))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN("ssm", "document", *d.Name)))
 }

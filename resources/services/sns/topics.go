@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/aws/aws-sdk-go-v2/service/sns/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/spf13/cast"
 )
@@ -119,7 +119,7 @@ func fetchSnsTopics(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Topics
 
@@ -142,48 +142,48 @@ func resolveTopicAttributes(ctx context.Context, meta schema.ClientMeta, resourc
 		o.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	// Set all attributes
 	if err := resource.Set("subscriptions_confirmed", cast.ToInt(output.Attributes["SubscriptionsConfirmed"])); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("subscriptions_deleted", cast.ToInt(output.Attributes["SubscriptionsDeleted"])); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("subscriptions_pending", cast.ToInt(output.Attributes["SubscriptionsPending"])); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("fifo_topic", cast.ToBool(output.Attributes["FifoTopic"])); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("content_based_deduplication", cast.ToBool(output.Attributes["ContentBasedDeduplication"])); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if p, ok := output.Attributes["Policy"]; ok && p != "" {
 		if err := resource.Set("policy", p); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 	}
 	if p, ok := output.Attributes["DeliveryPolicy"]; ok && p != "" {
 		if err := resource.Set("delivery_policy", p); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 	}
 	if err := resource.Set("display_name", output.Attributes["DisplayName"]); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := resource.Set("owner", output.Attributes["Owner"]); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if p, ok := output.Attributes["EffectiveDeliveryPolicy"]; ok && p != "" {
 		if err := resource.Set("effective_delivery_policy", p); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 	}
 	if p, ok := output.Attributes["KmsMasterKeyId"]; ok && p != "" {
 		if err := resource.Set("kms_master_key_id", p); err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 	}
 
@@ -201,7 +201,7 @@ func resolveTopicTags(ctx context.Context, meta schema.ClientMeta, resource *sch
 		o.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(col.Name, client.TagsToMap(tags.Tags)))
+	return helpers.WrapError(resource.Set(col.Name, client.TagsToMap(tags.Tags)))
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -129,7 +129,7 @@ func fetchLightsailDatabaseSnapshots(ctx context.Context, meta schema.ClientMeta
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.RelationalDatabaseSnapshots
 		if aws.ToString(response.NextPageToken) == "" {
@@ -143,5 +143,5 @@ func resolveDatabaseSnapshotsTags(ctx context.Context, meta schema.ClientMeta, r
 	r := resource.Item.(types.RelationalDatabaseSnapshot)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

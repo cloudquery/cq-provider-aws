@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -460,7 +460,7 @@ func fetchLightsailInstances(ctx context.Context, meta schema.ClientMeta, parent
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Instances
 
@@ -480,17 +480,17 @@ func ResolveLightsailInstanceAccessDetails(ctx context.Context, meta schema.Clie
 		o.Region = cli.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	j, err := json.Marshal(output.AccessDetails)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveInstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Instance)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
 func fetchLightsailInstanceAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.Instance)
@@ -507,7 +507,7 @@ func fetchLightsailInstanceHardwareDisks(ctx context.Context, meta schema.Client
 }
 func resolveInstanceHardwareDisksTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Disk)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }
 func fetchLightsailInstanceHardwareDiskAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	disk := parent.Item.(types.Disk)
@@ -532,7 +532,7 @@ func fetchLightsailInstancePortStates(ctx context.Context, meta schema.ClientMet
 		o.Region = cli.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	res <- output.PortStates

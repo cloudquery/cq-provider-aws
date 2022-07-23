@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -121,7 +121,7 @@ func fetchRedshiftSubnetGroups(ctx context.Context, meta schema.ClientMeta, pare
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.ClusterSubnetGroups
 		if aws.ToString(response.Marker) == "" {
@@ -137,7 +137,7 @@ func resolveRedshiftSubnetGroupTags(ctx context.Context, meta schema.ClientMeta,
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchRedshiftSubnetGroupSubnets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	clusterSubnetGroup := parent.Item.(types.ClusterSubnetGroup)
@@ -150,5 +150,5 @@ func resolveRedshiftSubnetGroupSubnetSubnetAvailabilityZoneSupportedPlatforms(ct
 	for i, p := range r.SubnetAvailabilityZone.SupportedPlatforms {
 		platforms[i] = p.Name
 	}
-	return diag.WrapError(resource.Set("subnet_availability_zone_supported_platforms", platforms))
+	return helpers.WrapError(resource.Set("subnet_availability_zone_supported_platforms", platforms))
 }

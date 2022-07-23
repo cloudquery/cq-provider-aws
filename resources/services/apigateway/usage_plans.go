@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -204,7 +204,7 @@ func fetchApigatewayUsagePlans(ctx context.Context, meta schema.ClientMeta, pare
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {
@@ -229,7 +229,7 @@ func fetchApigatewayUsagePlanKeys(ctx context.Context, meta schema.ClientMeta, p
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Items
 		if aws.ToString(response.Position) == "" {

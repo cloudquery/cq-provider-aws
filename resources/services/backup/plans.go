@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 	"github.com/aws/aws-sdk-go-v2/service/backup/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -250,7 +250,7 @@ func fetchBackupPlans(ctx context.Context, meta schema.ClientMeta, parent *schem
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, m := range result.BackupPlansList {
 			plan, err := svc.GetBackupPlan(
@@ -259,7 +259,7 @@ func fetchBackupPlans(ctx context.Context, meta schema.ClientMeta, parent *schem
 				func(o *backup.Options) { o.Region = cl.Region },
 			)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if plan != nil {
 				res <- *plan
@@ -277,9 +277,9 @@ func resolvePlanAdvancedBackupSettings(ctx context.Context, meta schema.ClientMe
 	plan := resource.Item.(backup.GetBackupPlanOutput)
 	b, err := json.Marshal(plan.AdvancedBackupSettings)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolvePlanTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -294,7 +294,7 @@ func resolvePlanTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 			break
 		}
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for k, v := range result.Tags {
 			tags[k] = v
@@ -304,7 +304,7 @@ func resolvePlanTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 		}
 		params.NextToken = result.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 
 func fetchBackupSelections(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -320,7 +320,7 @@ func fetchBackupSelections(ctx context.Context, meta schema.ClientMeta, parent *
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, m := range result.BackupSelectionsList {
 			s, err := svc.GetBackupSelection(
@@ -329,7 +329,7 @@ func fetchBackupSelections(ctx context.Context, meta schema.ClientMeta, parent *
 				func(o *backup.Options) { o.Region = cl.Region },
 			)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if s != nil {
 				res <- *s
@@ -356,9 +356,9 @@ func resolveRuleCopyActions(ctx context.Context, meta schema.ClientMeta, resourc
 	rule := resource.Item.(types.BackupRule)
 	b, err := json.Marshal(rule.CopyActions)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveSelectionConditions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -368,9 +368,9 @@ func resolveSelectionConditions(ctx context.Context, meta schema.ClientMeta, res
 	}
 	b, err := json.Marshal(s.BackupSelection.Conditions)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveSelectionListOfTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -380,7 +380,7 @@ func resolveSelectionListOfTags(ctx context.Context, meta schema.ClientMeta, res
 	}
 	b, err := json.Marshal(s.BackupSelection.ListOfTags)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }

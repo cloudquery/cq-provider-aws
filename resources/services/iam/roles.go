@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -126,7 +126,7 @@ func fetchIamRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.R
 	for {
 		response, err := svc.ListRoles(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.Roles
 		if aws.ToString(response.Marker) == "" {
@@ -150,7 +150,7 @@ func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resourc
 			if c.IsNotFoundError(err) {
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, p := range response.AttachedPolicies {
 			policies[*p.PolicyArn] = p.PolicyName
@@ -160,7 +160,7 @@ func resolveIamRolePolicies(ctx context.Context, meta schema.ClientMeta, resourc
 		}
 		input.Marker = response.Marker
 	}
-	return diag.WrapError(resource.Set("policies", policies))
+	return helpers.WrapError(resource.Set("policies", policies))
 }
 
 func resolveIamRoleAssumeRolePolicyDocument(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -168,9 +168,9 @@ func resolveIamRoleAssumeRolePolicyDocument(ctx context.Context, meta schema.Cli
 	if r.AssumeRolePolicyDocument != nil {
 		decodedDocument, err := url.QueryUnescape(*r.AssumeRolePolicyDocument)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
-		return diag.WrapError(resource.Set("assume_role_policy_document", decodedDocument))
+		return helpers.WrapError(resource.Set("assume_role_policy_document", decodedDocument))
 	}
 	return nil
 }
@@ -184,11 +184,11 @@ func resolveIamRoleTags(ctx context.Context, meta schema.ClientMeta, resource *s
 			meta.Logger().Debug("ListRoleTags: role does not exist", "err", err)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	tags := map[string]*string{}
 	for _, t := range response.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }

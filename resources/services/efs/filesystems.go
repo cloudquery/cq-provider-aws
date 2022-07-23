@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/efs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -164,7 +164,7 @@ func fetchEfsFilesystems(ctx context.Context, meta schema.ClientMeta, parent *sc
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.FileSystems
 		if aws.ToString(response.Marker) == "" {
@@ -186,15 +186,15 @@ func ResolveEfsFilesystemBackupPolicyStatus(ctx context.Context, meta schema.Cli
 	})
 	if err != nil {
 		if cl.IsNotFoundError(err) {
-			return diag.WrapError(resource.Set(c.Name, types.StatusDisabled))
+			return helpers.WrapError(resource.Set(c.Name, types.StatusDisabled))
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if response.BackupPolicy == nil {
 		return nil
 	}
 
-	return diag.WrapError(resource.Set(c.Name, response.BackupPolicy.Status))
+	return helpers.WrapError(resource.Set(c.Name, response.BackupPolicy.Status))
 }
 func resolveEfsFilesystemsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.FileSystemDescription)
@@ -202,5 +202,5 @@ func resolveEfsFilesystemsTags(ctx context.Context, meta schema.ClientMeta, reso
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -597,12 +597,12 @@ func fetchCognitoUserPools(ctx context.Context, meta schema.ClientMeta, parent *
 	for {
 		out, err := svc.ListUserPools(ctx, &params, optsFunc)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range out.UserPools {
 			upo, err := svc.DescribeUserPool(ctx, &cognitoidentityprovider.DescribeUserPoolInput{UserPoolId: item.Id}, optsFunc)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- upo.UserPool
 		}
@@ -618,9 +618,9 @@ func resolveCognitoUserPoolAccountRecoverySetting(ctx context.Context, meta sche
 	pool := resource.Item.(*types.UserPoolType)
 	data, err := json.Marshal(pool.AccountRecoverySetting)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 
 func fetchCognitoUserPoolSchemaAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -638,7 +638,7 @@ func fetchCognitoUserPoolIdentityProviders(ctx context.Context, meta schema.Clie
 	for {
 		out, err := svc.ListIdentityProviders(ctx, &params, optsFunc)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range out.Providers {
 			pd, err := svc.DescribeIdentityProvider(ctx, &cognitoidentityprovider.DescribeIdentityProviderInput{
@@ -646,7 +646,7 @@ func fetchCognitoUserPoolIdentityProviders(ctx context.Context, meta schema.Clie
 				UserPoolId:   pool.Id,
 			}, optsFunc)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- pd.IdentityProvider
 		}

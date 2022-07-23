@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/codebuild"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -695,7 +695,7 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if len(response.Projects) == 0 {
 			break
@@ -704,7 +704,7 @@ func fetchCodebuildProjects(ctx context.Context, meta schema.ClientMeta, parent 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- projectsOutput.Projects
@@ -721,7 +721,7 @@ func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta s
 	for _, v := range p.SecondarySourceVersions {
 		j[*v.SourceIdentifier] = *v.SourceVersion
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveCodebuildProjectsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Project)
@@ -729,7 +729,7 @@ func resolveCodebuildProjectsTags(ctx context.Context, meta schema.ClientMeta, r
 	for _, v := range p.Tags {
 		j[*v.Key] = *v.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Project)
@@ -738,9 +738,9 @@ func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schem
 	}
 	data, err := json.Marshal(p.Webhook.FilterGroups)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchCodebuildProjectEnvironmentVariables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.Project)

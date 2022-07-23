@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -95,7 +95,7 @@ func fetchEc2CustomerGateways(ctx context.Context, meta schema.ClientMeta, paren
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- response.CustomerGateways
 	return nil
@@ -106,11 +106,11 @@ func resolveEc2customerGatewayTags(ctx context.Context, meta schema.ClientMeta, 
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveCustomerGatewayArn(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	cg := resource.Item.(types.CustomerGateway)
-	return diag.WrapError(diag.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "customer-gateway", *cg.CustomerGatewayId))))
+	return helpers.WrapError(helpers.WrapError(resource.Set(c.Name, cl.ARN(client.EC2Service, "customer-gateway", *cg.CustomerGatewayId))))
 }

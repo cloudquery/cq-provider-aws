@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -115,7 +115,7 @@ func fetchRedshiftEventSubscriptions(ctx context.Context, meta schema.ClientMeta
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- result.EventSubscriptionsList
 		if aws.ToString(result.Marker) == "" {
@@ -129,7 +129,7 @@ func fetchRedshiftEventSubscriptions(ctx context.Context, meta schema.ClientMeta
 func resolveEventSubscriptionARN(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	sub := resource.Item.(types.EventSubscription)
-	return diag.WrapError(resource.Set(c.Name, eventSubscriptionARN(cl, *sub.CustSubscriptionId)))
+	return helpers.WrapError(resource.Set(c.Name, eventSubscriptionARN(cl, *sub.CustSubscriptionId)))
 }
 
 func eventSubscriptionARN(cl *client.Client, name string) string {

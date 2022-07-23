@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -250,7 +250,7 @@ func fetchLightsailCertificates(ctx context.Context, meta schema.ClientMeta, par
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	for _, cer := range response.Certificates {
 		res <- cer.CertificateDetail
@@ -261,7 +261,7 @@ func resolveCertificatesTags(ctx context.Context, meta schema.ClientMeta, resour
 	r := resource.Item.(*types.Certificate)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailCertificateDomainValidationRecords(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*types.Certificate)

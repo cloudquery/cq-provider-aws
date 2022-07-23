@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -1442,7 +1442,7 @@ func fetchEcsClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if len(listClustersOutput.ClusterArns) == 0 {
 			return nil
@@ -1451,7 +1451,7 @@ func fetchEcsClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- describeClusterOutput.Clusters
 
@@ -1465,42 +1465,42 @@ func fetchEcsClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 func resolveClustersDefaultCapacityProviderStrategy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cluster, ok := resource.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
 	}
 	data, err := json.Marshal(cluster.DefaultCapacityProviderStrategy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClustersSettings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cluster, ok := resource.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
 	}
 	settings := make(map[string]*string)
 	for _, s := range cluster.Settings {
 		settings[string(s.Name)] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, settings))
+	return helpers.WrapError(resource.Set(c.Name, settings))
 }
 func resolveClustersStatistics(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cluster, ok := resource.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
 	}
 	stats := make(map[string]*string)
 	for _, s := range cluster.Statistics {
 		stats[*s.Name] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, stats))
+	return helpers.WrapError(resource.Set(c.Name, stats))
 }
 func resolveClustersTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ECS
 	cluster, ok := resource.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", resource.Item))
 	}
 	listTagsForResourceOutput, err := svc.ListTagsForResource(ctx, &ecs.ListTagsForResourceInput{
 		ResourceArn: cluster.ClusterArn,
@@ -1508,18 +1508,18 @@ func resolveClustersTags(ctx context.Context, meta schema.ClientMeta, resource *
 		o.Region = region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	tags := make(map[string]*string)
 	for _, s := range listTagsForResourceOutput.Tags {
 		tags[*s.Key] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchEcsClusterAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster, ok := parent.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", parent.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", parent.Item))
 	}
 	res <- cluster.Attachments
 	return nil
@@ -1527,18 +1527,18 @@ func fetchEcsClusterAttachments(ctx context.Context, meta schema.ClientMeta, par
 func resolveClusterAttachmentsDetails(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	attachment, ok := resource.Item.(types.Attachment)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Attachment but got %T", resource.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Attachment but got %T", resource.Item))
 	}
 	details := make(map[string]*string)
 	for _, s := range attachment.Details {
 		details[*s.Name] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, details))
+	return helpers.WrapError(resource.Set(c.Name, details))
 }
 func fetchEcsClusterTasks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster, ok := parent.Item.(types.Cluster)
 	if !ok {
-		return diag.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", parent.Item))
+		return helpers.WrapError(fmt.Errorf("expected to have types.Cluster but got %T", parent.Item))
 	}
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ECS
@@ -1550,7 +1550,7 @@ func fetchEcsClusterTasks(ctx context.Context, meta schema.ClientMeta, parent *s
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if len(listTasks.TaskArns) == 0 {
 			return nil
@@ -1563,7 +1563,7 @@ func fetchEcsClusterTasks(ctx context.Context, meta schema.ClientMeta, parent *s
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- describeTasks.Tasks
@@ -1579,17 +1579,17 @@ func resolveClusterTasksAttributes(ctx context.Context, meta schema.ClientMeta, 
 	p := resource.Item.(types.Task)
 	data, err := json.Marshal(p.Attributes)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClusterTasksInferenceAccelerators(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Task)
 	data, err := json.Marshal(p.InferenceAccelerators)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClusterTasksOverrides(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Task)
@@ -1598,9 +1598,9 @@ func resolveClusterTasksOverrides(ctx context.Context, meta schema.ClientMeta, r
 	}
 	data, err := json.Marshal(p.Overrides)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchEcsClusterTaskAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.Task)
@@ -1614,7 +1614,7 @@ func resolveClusterTaskAttachmentsDetails(ctx context.Context, meta schema.Clien
 		j[*i.Name] = *i.Value
 	}
 
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func fetchEcsClusterTaskContainers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	p := parent.Item.(types.Task)
@@ -1625,25 +1625,25 @@ func resolveClusterTaskContainersManagedAgents(ctx context.Context, meta schema.
 	p := resource.Item.(types.Container)
 	data, err := json.Marshal(p.ManagedAgents)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClusterTaskContainersNetworkBindings(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Container)
 	data, err := json.Marshal(p.NetworkBindings)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClusterTaskContainersNetworkInterfaces(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	p := resource.Item.(types.Container)
 	data, err := json.Marshal(p.NetworkInterfaces)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchEcsClusterServices(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster := parent.Item.(types.Cluster)
@@ -1657,7 +1657,7 @@ func fetchEcsClusterServices(ctx context.Context, meta schema.ClientMeta, parent
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if len(listServicesOutput.ServiceArns) == 0 {
 			return nil
@@ -1670,7 +1670,7 @@ func fetchEcsClusterServices(ctx context.Context, meta schema.ClientMeta, parent
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- describeServicesOutput.Services
@@ -1686,9 +1686,9 @@ func resolveClusterServicesCapacityProviderStrategy(ctx context.Context, meta sc
 	service := resource.Item.(types.Service)
 	data, err := json.Marshal(service.CapacityProviderStrategy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveClusterServicesPlacementConstraints(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	service := resource.Item.(types.Service)
@@ -1697,7 +1697,7 @@ func resolveClusterServicesPlacementConstraints(ctx context.Context, meta schema
 		j[string(i.Type)] = aws.ToString(i.Expression)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveClusterServicesPlacementStrategy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	service := resource.Item.(types.Service)
@@ -1706,7 +1706,7 @@ func resolveClusterServicesPlacementStrategy(ctx context.Context, meta schema.Cl
 		j[string(i.Type)] = aws.ToString(i.Field)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func fetchEcsClusterServiceDeployments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	service := parent.Item.(types.Service)
@@ -1717,9 +1717,9 @@ func resolveClusterServiceDeploymentsCapacityProviderStrategy(ctx context.Contex
 	deployment := resource.Item.(types.Deployment)
 	data, err := json.Marshal(deployment.CapacityProviderStrategy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchEcsClusterServiceEvents(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	service := parent.Item.(types.Service)
@@ -1745,9 +1745,9 @@ func resolveClusterServiceTaskSetsCapacityProviderStrategy(ctx context.Context, 
 	taskSet := resource.Item.(types.TaskSet)
 	data, err := json.Marshal(taskSet.CapacityProviderStrategy)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchEcsClusterServiceTaskSetLoadBalancers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	taskSet := parent.Item.(types.TaskSet)
@@ -1771,7 +1771,7 @@ func fetchEcsClusterContainerInstances(ctx context.Context, meta schema.ClientMe
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if len(listContainerInstances.ContainerInstanceArns) == 0 {
 			return nil
@@ -1784,7 +1784,7 @@ func fetchEcsClusterContainerInstances(ctx context.Context, meta schema.ClientMe
 			o.Region = region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		res <- describeContainerInstances.ContainerInstances
@@ -1807,7 +1807,7 @@ func resolveClusterContainerInstanceAttachmentsDetails(ctx context.Context, meta
 	for _, s := range attachment.Details {
 		details[*s.Name] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, details))
+	return helpers.WrapError(resource.Set(c.Name, details))
 }
 func fetchEcsClusterContainerInstanceAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.ContainerInstance)

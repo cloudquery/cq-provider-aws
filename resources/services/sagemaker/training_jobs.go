@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -17,7 +17,7 @@ func SagemakerTrainingJobs() *schema.Table {
 		Name:        "aws_sagemaker_training_jobs",
 		Description: "Provides summary information about a training job.",
 		Resolver: func(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-			return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listSagemakerTrainingJobs, sagemakerTrainingJobsDetail))
+			return helpers.WrapError(client.ListAndDetailResolver(ctx, meta, res, listSagemakerTrainingJobs, sagemakerTrainingJobsDetail))
 		},
 		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
 		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
@@ -575,7 +575,7 @@ func sagemakerTrainingJobsDetail(ctx context.Context, meta schema.ClientMeta, re
 		options.Region = c.Region
 	})
 	if err != nil {
-		errorChan <- diag.WrapError(err)
+		errorChan <- helpers.WrapError(err)
 		return
 	}
 	resultsChan <- response
@@ -591,7 +591,7 @@ func listSagemakerTrainingJobs(ctx context.Context, meta schema.ClientMeta, res 
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, d := range response.TrainingJobSummaries {
 			res <- d
@@ -628,9 +628,9 @@ func resolveSagemakerTrainingJobAlgorithmSpecificationsMetricDefinitions(_ conte
 	}
 	b, err := json.Marshal(metricDefinitions)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func fetchSagemakerTrainingJobDebugHookConfigs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -657,9 +657,9 @@ func resolveSagemakerTrainingJobDebugHookConfigsCollectionConfigurations(_ conte
 	}
 	b, err := json.Marshal(collectionConfigurations)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func fetchSagemakerTrainingJobDebugRuleConfigurations(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -696,7 +696,7 @@ func resolveSagemakerTrainingJobCheckpointConfig(_ context.Context, _ schema.Cli
 		"s3_uri":     aws.ToString(r.CheckpointConfig.S3Uri),
 		"local_path": aws.ToString(r.CheckpointConfig.LocalPath),
 	}
-	return diag.WrapError(resource.Set(c.Name, checkpointConfig))
+	return helpers.WrapError(resource.Set(c.Name, checkpointConfig))
 }
 func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -709,7 +709,7 @@ func resolveSagemakerTrainingJobExperimentConfig(_ context.Context, _ schema.Cli
 		"trial_component_display_name": aws.ToString(r.ExperimentConfig.TrialComponentDisplayName),
 		"trial_name":                   aws.ToString(r.ExperimentConfig.TrialName),
 	}
-	return diag.WrapError(resource.Set(c.Name, experimentConfig))
+	return helpers.WrapError(resource.Set(c.Name, experimentConfig))
 }
 func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -720,7 +720,7 @@ func resolveSagemakerTrainingJobModelArtifacts(__ context.Context, _ schema.Clie
 	modelArtifacts := map[string]interface{}{
 		"s3_model_artifacts": aws.ToString(r.ModelArtifacts.S3ModelArtifacts),
 	}
-	return diag.WrapError(resource.Set(c.Name, modelArtifacts))
+	return helpers.WrapError(resource.Set(c.Name, modelArtifacts))
 }
 func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -732,7 +732,7 @@ func resolveSagemakerTrainingJobOutputDataConfig(_ context.Context, _ schema.Cli
 		"s3_output_path": aws.ToString(r.OutputDataConfig.S3OutputPath),
 		"kms_key_id":     aws.ToString(r.OutputDataConfig.KmsKeyId),
 	}
-	return diag.WrapError(resource.Set(c.Name, outputDataConfig))
+	return helpers.WrapError(resource.Set(c.Name, outputDataConfig))
 }
 func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -745,7 +745,7 @@ func resolveSagemakerTrainingJobProfilerConfig(_ context.Context, _ schema.Clien
 		"profiling_interval_in_ms": aws.ToInt64(r.ProfilerConfig.ProfilingIntervalInMilliseconds),
 		"profiling_parameters":     r.ProfilerConfig.ProfilingParameters,
 	}
-	return diag.WrapError(resource.Set(c.Name, profilerConfig))
+	return helpers.WrapError(resource.Set(c.Name, profilerConfig))
 }
 func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -759,7 +759,7 @@ func resolveSagemakerTrainingJobResourceConfig(_ context.Context, _ schema.Clien
 		"volume_size_in_gb": r.ResourceConfig.VolumeSizeInGB,
 		"volume_kms_key_id": aws.ToString(r.ResourceConfig.VolumeKmsKeyId),
 	}
-	return diag.WrapError(resource.Set(c.Name, resourceConfig))
+	return helpers.WrapError(resource.Set(c.Name, resourceConfig))
 }
 func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -771,7 +771,7 @@ func resolveSagemakerTrainingJobStoppingCondition(_ context.Context, _ schema.Cl
 		"max_runtime_in_seconds":   r.StoppingCondition.MaxRuntimeInSeconds,
 		"max_wait_time_in_seconds": r.StoppingCondition.MaxWaitTimeInSeconds,
 	}
-	return diag.WrapError(resource.Set(c.Name, stoppingCondition))
+	return helpers.WrapError(resource.Set(c.Name, stoppingCondition))
 }
 func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -783,7 +783,7 @@ func resolveSagemakerTrainingJobTensorBoardOutputConfig(_ context.Context, _ sch
 		"s3_output_path": r.TensorBoardOutputConfig.S3OutputPath,
 		"local_path":     r.TensorBoardOutputConfig.LocalPath,
 	}
-	return diag.WrapError(resource.Set(c.Name, tensorBoardOutputConfig))
+	return helpers.WrapError(resource.Set(c.Name, tensorBoardOutputConfig))
 }
 func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -795,7 +795,7 @@ func resolveSagemakerTrainingJobVpcConfig(_ context.Context, _ schema.ClientMeta
 		"subnets":            r.VpcConfig.Subnets,
 		"security_group_ids": r.VpcConfig.SecurityGroupIds,
 	}
-	return diag.WrapError(resource.Set(c.Name, vpcConfig))
+	return helpers.WrapError(resource.Set(c.Name, vpcConfig))
 }
 func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -812,7 +812,7 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))
@@ -820,7 +820,7 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 		tags[*t.Key] = t.Value
 	}
 
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -840,9 +840,9 @@ func resolveSagemakerTrainingJobSecondaryStatusTransitions(_ context.Context, _ 
 	}
 	b, err := json.Marshal(secondaryStatusTransitions)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*sagemaker.DescribeTrainingJobOutput)
@@ -860,7 +860,7 @@ func resolveSagemakerTrainingJobFinalMetricDataList(_ context.Context, _ schema.
 	}
 	b, err := json.Marshal(finalMetricDataList)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }

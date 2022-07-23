@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -306,7 +306,7 @@ func fetchCloudformationStacks(ctx context.Context, meta schema.ClientMeta, _ *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Stacks
 		if aws.ToString(output.NextToken) == "" {
@@ -322,7 +322,7 @@ func resolveStacksTags(_ context.Context, _ schema.ClientMeta, resource *schema.
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchCloudformationStackOutputs(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Stack)
@@ -345,7 +345,7 @@ func fetchCloudformationStackResources(ctx context.Context, meta schema.ClientMe
 				meta.Logger().Debug("received ValidationError on ListStackResources, stack does not exist", "region", c.Region, "err", err)
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.StackResourceSummaries
 		if aws.ToString(output.NextToken) == "" {

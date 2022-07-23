@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/shield"
 	"github.com/aws/aws-sdk-go-v2/service/shield/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -162,7 +162,7 @@ func fetchShieldAttacks(ctx context.Context, meta schema.ClientMeta, parent *sch
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, a := range output.AttackSummaries {
 			config := shield.DescribeAttackInput{AttackId: a.AttackId}
@@ -170,7 +170,7 @@ func fetchShieldAttacks(ctx context.Context, meta schema.ClientMeta, parent *sch
 				o.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- attack.Attack
 		}
@@ -186,9 +186,9 @@ func resolveAttacksAttackCounters(ctx context.Context, meta schema.ClientMeta, r
 	r := resource.Item.(*types.AttackDetail)
 	marshalledJson, err := json.Marshal(r.AttackCounters)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, marshalledJson))
+	return helpers.WrapError(resource.Set(c.Name, marshalledJson))
 }
 func resolveAttacksMitigations(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.AttackDetail)
@@ -196,7 +196,7 @@ func resolveAttacksMitigations(ctx context.Context, meta schema.ClientMeta, reso
 	for _, m := range r.Mitigations {
 		mitigations = append(mitigations, *m.MitigationName)
 	}
-	return diag.WrapError(resource.Set(c.Name, mitigations))
+	return helpers.WrapError(resource.Set(c.Name, mitigations))
 }
 func fetchShieldAttackProperties(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*types.AttackDetail)
@@ -209,7 +209,7 @@ func resolveAttackPropertiesTopContributors(ctx context.Context, meta schema.Cli
 	for _, c := range r.TopContributors {
 		marshalledJson[*c.Name] = c.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, marshalledJson))
+	return helpers.WrapError(resource.Set(c.Name, marshalledJson))
 }
 func fetchShieldAttackSubResources(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*types.AttackDetail)
@@ -220,16 +220,16 @@ func resolveAttackSubResourcesAttackVectors(ctx context.Context, meta schema.Cli
 	r := resource.Item.(types.SubResourceSummary)
 	marshalledJson, err := json.Marshal(r.AttackVectors)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, marshalledJson))
+	return helpers.WrapError(resource.Set(c.Name, marshalledJson))
 }
 
 func resolveAttackSubResourcesCounters(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.SubResourceSummary)
 	marshalledJson, err := json.Marshal(r.Counters)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, marshalledJson))
+	return helpers.WrapError(resource.Set(c.Name, marshalledJson))
 }

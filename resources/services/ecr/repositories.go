@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -207,7 +207,7 @@ func fetchEcrRepositories(ctx context.Context, meta schema.ClientMeta, parent *s
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Repositories
 		if aws.ToString(output.NextToken) == "" {
@@ -231,7 +231,7 @@ func fetchEcrRepositoryImages(ctx context.Context, meta schema.ClientMeta, paren
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.ImageDetails
 		if aws.ToString(output.NextToken) == "" {

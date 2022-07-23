@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -251,7 +251,7 @@ func fetchRedshiftSnapshots(ctx context.Context, meta schema.ClientMeta, parent 
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- result.Snapshots
 		if aws.ToString(result.Marker) == "" {
@@ -271,7 +271,7 @@ func fetchRedshiftSnapshotAccountsWithRestoreAccesses(ctx context.Context, meta 
 func resolveSnapshotARN(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	snapshot := resource.Item.(types.Snapshot)
-	return diag.WrapError(resource.Set(c.Name, snapshotARN(cl, *snapshot.ClusterIdentifier, *snapshot.SnapshotIdentifier)))
+	return helpers.WrapError(resource.Set(c.Name, snapshotARN(cl, *snapshot.ClusterIdentifier, *snapshot.SnapshotIdentifier)))
 }
 
 func snapshotARN(cl *client.Client, clusterName, snapshotName string) string {

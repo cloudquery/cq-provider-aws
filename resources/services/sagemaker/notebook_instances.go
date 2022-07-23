@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	sagemakertypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -158,7 +158,7 @@ func fetchSagemakerNotebookInstances(ctx context.Context, meta schema.ClientMeta
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		// get more details about the notebook instance
@@ -170,7 +170,7 @@ func fetchSagemakerNotebookInstances(ctx context.Context, meta schema.ClientMeta
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			notebook := WrappedSageMakerNotebookInstance{
@@ -201,7 +201,7 @@ func resolveSagemakerNotebookInstanceTags(ctx context.Context, meta schema.Clien
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))
@@ -209,14 +209,14 @@ func resolveSagemakerNotebookInstanceTags(ctx context.Context, meta schema.Clien
 		tags[*t.Key] = t.Value
 	}
 
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func resolveSagemakerNotebookInstanceDirectInternetAccess(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
 	r := resource.Item.(WrappedSageMakerNotebookInstance)
 	if r.DirectInternetAccess == sagemakertypes.DirectInternetAccessEnabled {
-		return diag.WrapError(resource.Set("direct_internet_access", true))
+		return helpers.WrapError(resource.Set("direct_internet_access", true))
 	}
 
-	return diag.WrapError(resource.Set("direct_internet_access", false))
+	return helpers.WrapError(resource.Set("direct_internet_access", false))
 }

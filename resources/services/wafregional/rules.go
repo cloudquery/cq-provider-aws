@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafregional"
 	"github.com/aws/aws-sdk-go-v2/service/wafregional/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -107,7 +107,7 @@ func fetchWafregionalRules(ctx context.Context, meta schema.ClientMeta, parent *
 	for {
 		result, err := svc.ListRules(ctx, &params, func(o *wafregional.Options) { o.Region = cl.Region })
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, r := range result.Rules {
 			detail, err := svc.GetRule(
@@ -116,7 +116,7 @@ func fetchWafregionalRules(ctx context.Context, meta schema.ClientMeta, parent *
 				func(o *wafregional.Options) { o.Region = cl.Region },
 			)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if detail.Rule == nil {
 				continue
@@ -144,7 +144,7 @@ func resolveRuleTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 	for {
 		result, err := svc.ListTagsForResource(ctx, &params)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		if result.TagInfoForResource != nil {
 			client.TagsIntoMap(result.TagInfoForResource.TagList, tags)
@@ -154,10 +154,10 @@ func resolveRuleTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 		}
 		params.NextMarker = result.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func resolveRuleARN(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	return diag.WrapError(resource.Set(c.Name, ruleARN(meta, *resource.Item.(types.Rule).RuleId)))
+	return helpers.WrapError(resource.Set(c.Name, ruleARN(meta, *resource.Item.(types.Rule).RuleId)))
 }
 func ruleARN(meta schema.ClientMeta, id string) string {
 	cl := meta.(*client.Client)

@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -836,7 +836,7 @@ func fetchEc2Instances(ctx context.Context, meta schema.ClientMeta, parent *sche
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, reservation := range output.Reservations {
 			res <- reservation.Instances
@@ -866,7 +866,7 @@ func resolveEc2InstanceStateTransitionReasonTime(ctx context.Context, meta schem
 		// failed to parse last transition time
 		return nil
 	}
-	return diag.WrapError(resource.Set(c.Name, tm))
+	return helpers.WrapError(resource.Set(c.Name, tm))
 }
 func resolveEc2InstancesLicenses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	instance := resource.Item.(types.Instance)
@@ -874,7 +874,7 @@ func resolveEc2InstancesLicenses(ctx context.Context, meta schema.ClientMeta, re
 	for i, l := range instance.Licenses {
 		licenses[i] = *l.LicenseConfigurationArn
 	}
-	return diag.WrapError(resource.Set(c.Name, licenses))
+	return helpers.WrapError(resource.Set(c.Name, licenses))
 }
 func resolveEc2InstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Instance)
@@ -882,7 +882,7 @@ func resolveEc2InstancesTags(ctx context.Context, meta schema.ClientMeta, resour
 	for _, t := range r.Tags {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchEc2InstanceBlockDeviceMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.Instance)
@@ -910,7 +910,7 @@ func resolveEc2InstanceNetworkInterfacesIpv4Prefixes(ctx context.Context, meta s
 	for _, p := range instanceNetworkInterface.Ipv4Prefixes {
 		ips = append(ips, *p.Ipv4Prefix)
 	}
-	return diag.WrapError(resource.Set(c.Name, ips))
+	return helpers.WrapError(resource.Set(c.Name, ips))
 }
 func resolveEc2InstanceNetworkInterfacesIpv6Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	instanceNetworkInterface := resource.Item.(types.InstanceNetworkInterface)
@@ -918,7 +918,7 @@ func resolveEc2InstanceNetworkInterfacesIpv6Prefixes(ctx context.Context, meta s
 	for _, p := range instanceNetworkInterface.Ipv6Prefixes {
 		ips = append(ips, *p.Ipv6Prefix)
 	}
-	return diag.WrapError(resource.Set(c.Name, ips))
+	return helpers.WrapError(resource.Set(c.Name, ips))
 }
 func fetchEc2InstanceNetworkInterfaceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instanceNetworkInterface := parent.Item.(types.InstanceNetworkInterface)

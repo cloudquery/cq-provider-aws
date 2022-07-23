@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/configservice/types"
 	"github.com/aws/smithy-go"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -171,7 +171,7 @@ func fetchConfigConformancePacks(ctx context.Context, meta schema.ClientMeta, pa
 		}
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- resp.ConformancePackDetails
 		if resp.NextToken == nil {
@@ -187,7 +187,7 @@ func resolveConfigConformancePackConformancePackInputParameters(ctx context.Cont
 	for _, p := range conformancePack.ConformancePackInputParameters {
 		params[*p.ParameterName] = p.ParameterValue
 	}
-	return diag.WrapError(resource.Set(c.Name, params))
+	return helpers.WrapError(resource.Set(c.Name, params))
 }
 
 func fetchConfigConformancePackRuleCompliances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -202,7 +202,7 @@ func fetchConfigConformancePackRuleCompliances(ctx context.Context, meta schema.
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, conformancePackRuleCompliance := range resp.ConformancePackRuleComplianceList {
 			detailParams := &configservice.GetConformancePackComplianceDetailsInput{
@@ -216,7 +216,7 @@ func fetchConfigConformancePackRuleCompliances(ctx context.Context, meta schema.
 					options.Region = c.Region
 				})
 				if err != nil {
-					return diag.WrapError(err)
+					return helpers.WrapError(err)
 				}
 				for _, conformancePackComplianceDetail := range output.ConformancePackRuleEvaluationResults {
 					res <- ConformancePackComplianceWrapper{

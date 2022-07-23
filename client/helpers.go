@@ -13,7 +13,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"golang.org/x/sync/semaphore"
 )
@@ -424,7 +424,6 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 }
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {
-	var diags diag.Diagnostics
 
 	errorChan := make(chan error)
 	detailChan := make(chan interface{})
@@ -433,7 +432,7 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	go func() {
 		defer close(done)
 		for detailError := range errorChan {
-			diags = diags.Add(diag.FromError(detailError, diag.RESOLVING))
+			meta.Logger().Error(detailError.Error())
 		}
 	}()
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
@@ -454,14 +453,11 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	err := list(ctx, meta, detailChan)
 	close(detailChan)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	// All items will be attempted to be fetched, and all errors will be aggregated
 	<-done
 
-	if diags.HasDiags() {
-		return diags
-	}
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -267,7 +267,7 @@ func fetchLightsailInstanceSnapshots(ctx context.Context, meta schema.ClientMeta
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.InstanceSnapshots
 		if aws.ToString(response.NextPageToken) == "" {
@@ -281,7 +281,7 @@ func resolveInstanceSnapshotsTags(ctx context.Context, meta schema.ClientMeta, r
 	r := resource.Item.(types.InstanceSnapshot)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailInstanceSnapshotFromAttachedDisks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.InstanceSnapshot)
@@ -292,7 +292,7 @@ func resolveInstanceSnapshotFromAttachedDisksTags(ctx context.Context, meta sche
 	r := resource.Item.(types.Disk)
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailInstanceSnapshotFromAttachedDiskAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.Disk)

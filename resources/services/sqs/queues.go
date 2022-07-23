@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/mitchellh/mapstructure"
 )
@@ -205,7 +205,7 @@ func fetchSQSQueues(ctx context.Context, meta schema.ClientMeta, parent *schema.
 	for {
 		result, err := sqsClient.ListQueues(ctx, &params, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, url := range result.QueueUrls {
@@ -221,22 +221,22 @@ func fetchSQSQueues(ctx context.Context, meta schema.ClientMeta, parent *schema.
 				if cl.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			var q sqsQueue
 			d, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{WeaklyTypedInput: true, Result: &q})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if err := d.Decode(out.Attributes); err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			q.URL = url
 
 			tagsOut, err := sqsClient.ListQueueTags(ctx, &sqs.ListQueueTagsInput{QueueUrl: &url}, optsFn)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			q.Tags = tagsOut.Tags
 			res <- q

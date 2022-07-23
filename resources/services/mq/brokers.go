@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 	xj "github.com/basgys/goxml2json"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -375,14 +375,14 @@ func fetchMqBrokers(ctx context.Context, meta schema.ClientMeta, parent *schema.
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, bs := range response.BrokerSummaries {
 			output, err := svc.DescribeBroker(ctx, &mq.DescribeBrokerInput{BrokerId: bs.BrokerId}, func(options *mq.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- output
 		}
@@ -397,42 +397,42 @@ func resolveBrokersBrokerInstances(ctx context.Context, meta schema.ClientMeta, 
 	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.BrokerInstances)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveBrokersLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.LdapServerMetadata)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveBrokersLogs(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.Logs)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func resolveBrokersMaintenanceWindowStartTime(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.MaintenanceWindowStartTime)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 
 func resolveBrokersPendingLdapServerMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	broker := resource.Item.(*mq.DescribeBrokerOutput)
 	data, err := json.Marshal(broker.PendingLdapServerMetadata)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }
 func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	broker := parent.Item.(*mq.DescribeBrokerOutput)
@@ -467,7 +467,7 @@ func fetchMqBrokerConfigurations(ctx context.Context, meta schema.ClientMeta, pa
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		configurations = append(configurations, *output)
 	}
@@ -485,7 +485,7 @@ func fetchMqBrokerConfigurationRevisions(ctx context.Context, meta schema.Client
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, rev := range output.Revisions {
 			revId := strconv.Itoa(int(rev.Revision))
@@ -493,7 +493,7 @@ func fetchMqBrokerConfigurationRevisions(ctx context.Context, meta schema.Client
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- output
 		}
@@ -509,15 +509,15 @@ func resolveBrokerConfigurationRevisionsData(ctx context.Context, meta schema.Cl
 	revision := resource.Item.(*mq.DescribeConfigurationRevisionOutput)
 	rawDecodedText, err := base64.StdEncoding.DecodeString(*revision.Data)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	xml := bytes.NewReader(rawDecodedText)
 	marshalledJson, err := xj.Convert(xml)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, marshalledJson.Bytes()))
+	return helpers.WrapError(resource.Set(c.Name, marshalledJson.Bytes()))
 }
 
 func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
@@ -533,7 +533,7 @@ func fetchMqBrokerUsers(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output
 	}
@@ -543,7 +543,7 @@ func resolveBrokerUsersPending(ctx context.Context, meta schema.ClientMeta, reso
 	user := resource.Item.(*mq.DescribeUserOutput)
 	data, err := json.Marshal(user.Pending)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }

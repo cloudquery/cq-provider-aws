@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -273,7 +273,7 @@ func fetchIotJobs(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, s := range response.Jobs {
@@ -283,7 +283,7 @@ func fetchIotJobs(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 				options.Region = cl.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- job.Job
 		}
@@ -310,7 +310,7 @@ func ResolveIotJobTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 		})
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		client.TagsIntoMap(response.Tags, tags)
@@ -320,7 +320,7 @@ func ResolveIotJobTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func fetchIotJobAbortConfigCriteriaLists(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i := parent.Item.(*types.Job)

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -206,7 +206,7 @@ func fetchKmsKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range response.Keys {
 			d, err := svc.DescribeKey(ctx, &kms.DescribeKeyInput{KeyId: item.KeyId}, func(options *kms.Options) {
@@ -216,7 +216,7 @@ func fetchKmsKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 				if c.IsNotFoundError(err) {
 					continue
 				}
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			if d.KeyMetadata != nil {
 				res <- *d.KeyMetadata
@@ -236,9 +236,9 @@ func resolveKeysReplicaKeys(ctx context.Context, meta schema.ClientMeta, resourc
 	}
 	b, err := json.Marshal(key.MultiRegionConfiguration.ReplicaKeys)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveKeysTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -254,7 +254,7 @@ func resolveKeysTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, v := range result.Tags {
 			tags[aws.ToString(v.TagKey)] = aws.ToString(v.TagValue)
@@ -264,7 +264,7 @@ func resolveKeysTags(ctx context.Context, meta schema.ClientMeta, resource *sche
 		}
 		params.Marker = result.NextMarker
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func resolveKeysRotationEnabled(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -277,7 +277,7 @@ func resolveKeysRotationEnabled(ctx context.Context, meta schema.ClientMeta, res
 		options.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, result.KeyRotationEnabled))
+	return helpers.WrapError(resource.Set(c.Name, result.KeyRotationEnabled))
 }

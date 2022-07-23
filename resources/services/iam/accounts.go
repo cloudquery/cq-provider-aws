@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 	"github.com/mitchellh/mapstructure"
 )
@@ -198,21 +198,21 @@ func fetchAccountSummary(ctx context.Context, meta schema.ClientMeta, _ *schema.
 
 	summary, err := svc.GetAccountSummary(ctx, &iam.GetAccountSummaryInput{})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	var accSummary account
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{TagName: "json", WeaklyTypedInput: true, Result: &accSummary})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if err := decoder.Decode(summary.SummaryMap); err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	config := iam.ListAccountAliasesInput{}
 	for {
 		response, err := svc.ListAccountAliases(ctx, &config)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		accSummary.Aliases = append(accSummary.Aliases, response.AccountAliases...)

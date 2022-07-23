@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/waf"
 	"github.com/aws/aws-sdk-go-v2/service/waf/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -75,14 +75,14 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, rG := range output.RuleGroups {
 			ruleGroup, err := service.GetRuleGroup(ctx, &waf.GetRuleGroupInput{RuleGroupId: rG.RuleGroupId}, func(options *waf.Options) {
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- ruleGroup.RuleGroup
 		}
@@ -97,7 +97,7 @@ func fetchWafRuleGroups(ctx context.Context, meta schema.ClientMeta, parent *sch
 func resolveWafRuleGroupArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	ruleGroup := resource.Item.(*types.RuleGroup)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("waf", "rulegroup", aws.ToString(ruleGroup.RuleGroupId))))
+	return helpers.WrapError(resource.Set(c.Name, cl.ARN("waf", "rulegroup", aws.ToString(ruleGroup.RuleGroupId))))
 }
 func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -112,7 +112,7 @@ func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, res
 			options.Region = awsClient.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, rule := range rules.ActivatedRules {
 			ruleIDs = append(ruleIDs, aws.ToString(rule.RuleId))
@@ -123,7 +123,7 @@ func resolveWafRuleGroupRuleIds(ctx context.Context, meta schema.ClientMeta, res
 		}
 		listActivatedRulesConfig.NextMarker = rules.NextMarker
 	}
-	return diag.WrapError(resource.Set("rule_ids", ruleIDs))
+	return helpers.WrapError(resource.Set("rule_ids", ruleIDs))
 }
 func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	ruleGroup := resource.Item.(*types.RuleGroup)
@@ -143,7 +143,7 @@ func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resour
 			options.Region = "us-east-1"
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, t := range tags.TagInfoForResource.TagList {
 			outputTags[*t.Key] = t.Value
@@ -153,5 +153,5 @@ func resolveWafRuleGroupTags(ctx context.Context, meta schema.ClientMeta, resour
 		}
 		tagsConfig.NextMarker = tags.NextMarker
 	}
-	return diag.WrapError(resource.Set("tags", outputTags))
+	return helpers.WrapError(resource.Set("tags", outputTags))
 }

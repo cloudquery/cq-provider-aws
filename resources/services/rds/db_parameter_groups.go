@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -150,7 +150,7 @@ func fetchRdsDbParameterGroups(ctx context.Context, meta schema.ClientMeta, pare
 			o.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.DBParameterGroups
 		if aws.ToString(output.Marker) == "" {
@@ -175,7 +175,7 @@ func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.Clien
 				cl.Logger().Debug("received DBParameterGroupNotFound on DescribeDBParameters", "region", cl.Region, "err", err)
 				return nil
 			}
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.Parameters
 		if aws.ToString(output.Marker) == "" {
@@ -194,7 +194,7 @@ func resolveRdsDbParameterGroupTags(ctx context.Context, meta schema.ClientMeta,
 		o.Region = cl.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(out.TagList)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(out.TagList)))
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/acm"
 	"github.com/aws/aws-sdk-go-v2/service/acm/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -217,12 +217,12 @@ func fetchAcmCertificates(ctx context.Context, meta schema.ClientMeta, parent *s
 	for {
 		output, err := svc.ListCertificates(ctx, &input, optsFn)
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		for _, item := range output.CertificateSummaryList {
 			do, err := svc.DescribeCertificate(ctx, &acm.DescribeCertificateInput{CertificateArn: item.CertificateArn}, optsFn)
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- do.Certificate
 		}
@@ -240,7 +240,7 @@ func resolveACMCertificateKeyUsages(ctx context.Context, meta schema.ClientMeta,
 	for _, v := range cert.KeyUsages {
 		result = append(result, string(v.Name))
 	}
-	return diag.WrapError(resource.Set(c.Name, result))
+	return helpers.WrapError(resource.Set(c.Name, result))
 }
 
 func resolveACMCertificateJSONField(getter func(*types.CertificateDetail) interface{}) func(context.Context, schema.ClientMeta, *schema.Resource, schema.Column) error {
@@ -248,9 +248,9 @@ func resolveACMCertificateJSONField(getter func(*types.CertificateDetail) interf
 		cert := resource.Item.(*types.CertificateDetail)
 		b, err := json.Marshal(getter(cert))
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
-		return diag.WrapError(resource.Set(c.Name, b))
+		return helpers.WrapError(resource.Set(c.Name, b))
 	}
 }
 
@@ -260,7 +260,7 @@ func resolveACMCertificateTags(ctx context.Context, meta schema.ClientMeta, reso
 	svc := cl.Services().ACM
 	out, err := svc.ListTagsForCertificate(ctx, &acm.ListTagsForCertificateInput{CertificateArn: cert.CertificateArn})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(out.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(out.Tags)))
 }

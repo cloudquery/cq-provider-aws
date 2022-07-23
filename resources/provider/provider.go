@@ -69,10 +69,10 @@ var (
 
 func Provider() *provider.Provider {
 	return &provider.Provider{
-		Name:            "aws",
-		Version:         Version,
-		Configure:       client.Configure,
-		ErrorClassifier: client.ErrorClassifier,
+		Name:      "aws",
+		Version:   Version,
+		Configure: client.Configure,
+		// ErrorClassifier: client.ErrorClassifier,
 		ResourceMap: map[string]*schema.Table{
 			"accessanalyzer.analyzers":                accessanalyzer.Analyzers(),
 			"acm.certificates":                        acm.AcmCertificates(),

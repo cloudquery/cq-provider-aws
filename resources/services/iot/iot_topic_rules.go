@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -1315,7 +1315,7 @@ func fetchIotTopicRules(ctx context.Context, meta schema.ClientMeta, parent *sch
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, s := range response.Rules {
@@ -1325,7 +1325,7 @@ func fetchIotTopicRules(ctx context.Context, meta schema.ClientMeta, parent *sch
 				options.Region = cl.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- rule
 		}
@@ -1352,7 +1352,7 @@ func ResolveIotTopicRuleTags(ctx context.Context, meta schema.ClientMeta, resour
 		})
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		client.TagsIntoMap(response.Tags, tags)
@@ -1362,7 +1362,7 @@ func ResolveIotTopicRuleTags(ctx context.Context, meta schema.ClientMeta, resour
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 func resolveIotTopicRulesErrorActionHttpHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.GetTopicRuleOutput)
@@ -1373,7 +1373,7 @@ func resolveIotTopicRulesErrorActionHttpHeaders(ctx context.Context, meta schema
 	for _, h := range i.Rule.ErrorAction.Http.Headers {
 		j[*h.Key] = *h.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveIotTopicRulesErrorActionIotSiteWise(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.GetTopicRuleOutput)
@@ -1382,9 +1382,9 @@ func resolveIotTopicRulesErrorActionIotSiteWise(ctx context.Context, meta schema
 	}
 	b, err := json.Marshal(i.Rule.ErrorAction.IotSiteWise)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveIotTopicRulesErrorActionTimestreamDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.GetTopicRuleOutput)
@@ -1395,7 +1395,7 @@ func resolveIotTopicRulesErrorActionTimestreamDimensions(ctx context.Context, me
 	for _, h := range i.Rule.ErrorAction.Timestream.Dimensions {
 		j[*h.Name] = *h.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func fetchIotTopicRuleActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i := parent.Item.(*iot.GetTopicRuleOutput)
@@ -1414,7 +1414,7 @@ func resolveIotTopicRuleActionsHttpHeaders(ctx context.Context, meta schema.Clie
 	for _, h := range i.Http.Headers {
 		j[*h.Key] = *h.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }
 func resolveIotTopicRuleActionsIotSiteWise(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(types.Action)
@@ -1423,9 +1423,9 @@ func resolveIotTopicRuleActionsIotSiteWise(ctx context.Context, meta schema.Clie
 	}
 	b, err := json.Marshal(i.IotSiteWise)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func resolveIotTopicRuleActionsTimestreamDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(types.Action)
@@ -1436,5 +1436,5 @@ func resolveIotTopicRuleActionsTimestreamDimensions(ctx context.Context, meta sc
 	for _, h := range i.Timestream.Dimensions {
 		j[*h.Name] = *h.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, j))
+	return helpers.WrapError(resource.Set(c.Name, j))
 }

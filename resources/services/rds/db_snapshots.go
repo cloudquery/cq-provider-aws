@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -231,7 +231,7 @@ func resolveRDSDBSnapshotTags(ctx context.Context, meta schema.ClientMeta, resou
 	for _, t := range s.TagList {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }
 
 func resolveRDSDBSnapshotAttributes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, column schema.Column) error {
@@ -249,7 +249,7 @@ func resolveRDSDBSnapshotAttributes(ctx context.Context, meta schema.ClientMeta,
 		if c.IsNotFoundError(err) {
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if out.DBSnapshotAttributesResult == nil {
 		return nil
@@ -257,9 +257,9 @@ func resolveRDSDBSnapshotAttributes(ctx context.Context, meta schema.ClientMeta,
 
 	b, err := json.Marshal(out.DBSnapshotAttributesResult.DBSnapshotAttributes)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(column.Name, b))
+	return helpers.WrapError(resource.Set(column.Name, b))
 }
 
 func resolveRDSDBSnapshotProcessorFeatures(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, column schema.Column) error {
@@ -267,7 +267,7 @@ func resolveRDSDBSnapshotProcessorFeatures(ctx context.Context, meta schema.Clie
 
 	b, err := json.Marshal(s.ProcessorFeatures)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(column.Name, b))
+	return helpers.WrapError(resource.Set(column.Name, b))
 }

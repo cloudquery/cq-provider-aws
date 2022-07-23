@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -498,7 +498,7 @@ func fetchRdsClusters(ctx context.Context, meta schema.ClientMeta, parent *schem
 			o.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- response.DBClusters
 		if aws.ToString(response.Marker) == "" {
@@ -514,7 +514,7 @@ func resolveRdsClusterTags(ctx context.Context, meta schema.ClientMeta, resource
 	for _, t := range r.TagList {
 		tags[*t.Key] = t.Value
 	}
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 func fetchRdsClusterAssociatedRoles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cluster := parent.Item.(types.DBCluster)
@@ -535,7 +535,7 @@ func resolveRdsClusterDbClusterOptionGroupMemberships(ctx context.Context, meta 
 	for _, m := range cluster.DBClusterOptionGroupMemberships {
 		memberships[*m.DBClusterOptionGroupName] = m.Status
 	}
-	return diag.WrapError(resource.Set(c.Name, memberships))
+	return helpers.WrapError(resource.Set(c.Name, memberships))
 }
 
 func fetchRdsClusterDomainMemberships(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {

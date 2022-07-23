@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -153,7 +153,7 @@ func fetchEc2VpcEndpointServiceConfigurations(ctx context.Context, meta schema.C
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 		res <- output.ServiceConfigurations
 		if aws.ToString(output.NextToken) == "" {
@@ -169,9 +169,9 @@ func resolveEc2VpcEndpointServiceConfigurationServiceType(ctx context.Context, m
 	for _, std := range r.ServiceType {
 		st = append(st, string(std.ServiceType))
 	}
-	return diag.WrapError(resource.Set(c.Name, st))
+	return helpers.WrapError(resource.Set(c.Name, st))
 }
 func resolveEc2VpcEndpointServiceConfigurationTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.ServiceConfiguration)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
+	return helpers.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }

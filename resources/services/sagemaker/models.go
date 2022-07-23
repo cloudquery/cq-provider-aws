@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -187,7 +187,7 @@ func fetchSagemakerModels(ctx context.Context, meta schema.ClientMeta, _ *schema
 			options.Region = c.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		// get more details about the notebook instance
@@ -199,7 +199,7 @@ func fetchSagemakerModels(ctx context.Context, meta schema.ClientMeta, _ *schema
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 
 			model := WrappedSageMakerModel{
@@ -230,7 +230,7 @@ func resolveSagemakerModelTags(ctx context.Context, meta schema.ClientMeta, reso
 		options.Region = c.Region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
 	tags := make(map[string]*string, len(response.Tags))
@@ -238,7 +238,7 @@ func resolveSagemakerModelTags(ctx context.Context, meta schema.ClientMeta, reso
 		tags[*t.Key] = t.Value
 	}
 
-	return diag.WrapError(resource.Set("tags", tags))
+	return helpers.WrapError(resource.Set("tags", tags))
 }
 
 func fetchSagemakerModelContainers(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot"
 	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -198,7 +198,7 @@ func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, paren
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, s := range response.SecurityProfileIdentifiers {
@@ -208,7 +208,7 @@ func fetchIotSecurityProfiles(ctx context.Context, meta schema.ClientMeta, paren
 				options.Region = cl.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- profile
 		}
@@ -235,7 +235,7 @@ func ResolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMet
 			options.Region = cl.Region
 		})
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, t := range response.SecurityProfileTargets {
@@ -247,7 +247,7 @@ func ResolveIotSecurityProfileTargets(ctx context.Context, meta schema.ClientMet
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(resource.Set(c.Name, targets))
+	return helpers.WrapError(resource.Set(c.Name, targets))
 }
 func ResolveIotSecurityProfileTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.DescribeSecurityProfileOutput)
@@ -264,7 +264,7 @@ func ResolveIotSecurityProfileTags(ctx context.Context, meta schema.ClientMeta, 
 		})
 
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		client.TagsIntoMap(response.Tags, tags)
@@ -274,7 +274,7 @@ func ResolveIotSecurityProfileTags(ctx context.Context, meta schema.ClientMeta, 
 		}
 		input.NextToken = response.NextToken
 	}
-	return diag.WrapError(diag.WrapError(resource.Set(c.Name, tags)))
+	return helpers.WrapError(helpers.WrapError(resource.Set(c.Name, tags)))
 }
 func resolveIotSecurityProfilesAdditionalMetricsToRetainV2(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	i := resource.Item.(*iot.DescribeSecurityProfileOutput)
@@ -285,9 +285,9 @@ func resolveIotSecurityProfilesAdditionalMetricsToRetainV2(ctx context.Context, 
 
 	b, err := json.Marshal(i.AdditionalMetricsToRetainV2)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 func fetchIotSecurityProfileBehaviors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	i := parent.Item.(*iot.DescribeSecurityProfileOutput)
@@ -306,8 +306,8 @@ func resolveIotSecurityProfileBehaviorsCriteriaValue(ctx context.Context, meta s
 
 	data, err := json.Marshal(i.Criteria.Value)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 
-	return diag.WrapError(resource.Set(c.Name, data))
+	return helpers.WrapError(resource.Set(c.Name, data))
 }

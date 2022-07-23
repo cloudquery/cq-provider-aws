@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice/types"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -440,7 +440,7 @@ func fetchElasticsearchDomains(ctx context.Context, meta schema.ClientMeta, pare
 	svc := c.Services().ElasticSearch
 	out, err := svc.ListDomainNames(ctx, &elasticsearchservice.ListDomainNamesInput{}, optsFunc)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	for _, info := range out.DomainNames {
 		domainOutput, err := svc.DescribeElasticsearchDomain(ctx, &elasticsearchservice.DescribeElasticsearchDomainInput{DomainName: info.DomainName}, optsFunc)
@@ -461,7 +461,7 @@ func resolveElasticsearchDomainTags(ctx context.Context, meta schema.ClientMeta,
 		o.Region = region
 	})
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	if len(tagsOutput.TagList) == 0 {
 		return nil
@@ -470,5 +470,5 @@ func resolveElasticsearchDomainTags(ctx context.Context, meta schema.ClientMeta,
 	for _, s := range tagsOutput.TagList {
 		tags[*s.Key] = s.Value
 	}
-	return diag.WrapError(resource.Set(c.Name, tags))
+	return helpers.WrapError(resource.Set(c.Name, tags))
 }

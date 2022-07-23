@@ -6,7 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -113,7 +113,7 @@ func fetchEmrBlockPublicAccessConfigs(ctx context.Context, meta schema.ClientMet
 			meta.Logger().Debug("received InvalidRequestException on GetBlockPublicAccessConfiguration, api is not available in the current Region.", "err", err)
 			return nil
 		}
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
 	res <- out
 	return nil
@@ -126,9 +126,9 @@ func resolveEmrBlockPublicAccessConfigConfigurations(ctx context.Context, meta s
 	}
 	b, err := json.Marshal(out.BlockPublicAccessConfiguration.Configurations)
 	if err != nil {
-		return diag.WrapError(err)
+		return helpers.WrapError(err)
 	}
-	return diag.WrapError(resource.Set(c.Name, b))
+	return helpers.WrapError(resource.Set(c.Name, b))
 }
 
 func fetchEmrBlockPublicAccessConfigPermittedPublicSecurityGroupRuleRanges(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {

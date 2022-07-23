@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/cloudquery/cq-provider-aws/client"
-	"github.com/cloudquery/cq-provider-sdk/provider/diag"
+	"github.com/cloudquery/cq-provider-sdk/helpers"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -84,14 +84,14 @@ func fetchSesTemplates(ctx context.Context, meta schema.ClientMeta, parent *sche
 	for {
 		output, err := svc.ListEmailTemplates(ctx, listInput, func(o *sesv2.Options) { o.Region = c.Region })
 		if err != nil {
-			return diag.WrapError(err)
+			return helpers.WrapError(err)
 		}
 
 		for _, templateMeta := range output.TemplatesMetadata {
 			getInput := &sesv2.GetEmailTemplateInput{TemplateName: templateMeta.TemplateName}
 			getOutput, err := svc.GetEmailTemplate(ctx, getInput, func(o *sesv2.Options) { o.Region = c.Region })
 			if err != nil {
-				return diag.WrapError(err)
+				return helpers.WrapError(err)
 			}
 			res <- &Template{
 				TemplateName:         getOutput.TemplateName,
