@@ -62,7 +62,6 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
 	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -75,11 +74,10 @@ var (
 
 func Provider() *provider.Provider {
 	return &provider.Provider{
-		Name:             "aws",
-		Version:          Version,
-		Configure:        client.Configure,
-		ErrorClassifier:  client.ErrorClassifier,
-		ModuleInfoReader: module.EmbeddedReader(moduleData, "moduledata"),
+		Name:            "aws",
+		Version:         Version,
+		Configure:       client.Configure,
+		ErrorClassifier: client.ErrorClassifier,
 		ResourceMap: map[string]*schema.Table{
 			"accessanalyzer.analyzers":                accessanalyzer.Analyzers(),
 			"acm.certificates":                        acm.AcmCertificates(),
