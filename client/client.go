@@ -489,20 +489,13 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 	client.GlobalRegion = awsConfig.GlobalRegion
 	var adminAccountSts AssumeRoleAPIClient
 	if awsConfig.Organization != nil && len(awsConfig.Accounts) > 0 {
-		return nil, diags.Add(diag.FromError(errors.New("specifying accounts via both the Accounts and Org properties is not supported. If you want to do both, you should use multiple provider blocks"), diag.USER))
+		return nil, fmt.Errorf("specifying accounts via both the Accounts and Org properties is not supported. If you want to do both, you should use multiple provider blocks")
 	}
 	if awsConfig.Organization != nil {
 		var err error
 		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
 		if err != nil {
-			logger.Error("error getting child accounts", "err", err)
-			var ae smithy.APIError
-			if errors.As(err, &ae) {
-				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
-					return nil, diags.Add(diag.FromError(fmt.Errorf(awsOrgsFailedToFindMembers), diag.ACCESS, diag.WithSeverity(diag.ERROR)))
-				}
-			}
-			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
+			return nil, err
 		}
 	}
 	if len(awsConfig.Accounts) == 0 {
@@ -513,9 +506,6 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 
 	for _, account := range awsConfig.Accounts {
 		logger.Debug("user defined account", "account", account)
-		if account.AccountID != "" {
-			return nil, diags.Add(diag.FromError(errors.New("account_id is no longer supported. To specify a profile use `local_profile`. To specify an account alias use `account_name`"), diag.USER))
-		}
 
 		if account.AccountName == "" {
 			account.AccountName = account.ID
@@ -545,19 +535,17 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				if accountErr == nil {
 					principal = *output.Arn
 				}
-
-				diags = diags.Add(diag.FromError(err, diag.ACCESS, diag.WithDetails("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN), diag.WithSeverity(diag.WARNING)))
+				logger.Warn(fmt.Sprintf("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN), "type", "access")
 				continue
 			}
 			var ae smithy.APIError
 			if errors.As(err, &ae) {
 				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
-					diags = diags.Add(diag.FromError(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+					logger.Warn(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()).Error(), "type", "access")
 					continue
 				}
 			}
-
-			return nil, diags.Add(diag.FromError(err, diag.ACCESS))
+			return nil, err
 		}
 
 		// This is a work-around to skip disabled regions
@@ -575,7 +563,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 				}
 			})
 		if err != nil {
-			diags = diags.Add(diag.FromError(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err), diag.ACCESS, diag.WithSeverity(diag.WARNING)))
+			logger.Warn(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err).Error(), "type", "access")
 			continue
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
@@ -593,7 +581,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		}
 		iamArn, err := arn.Parse(*output.Arn)
 		if err != nil {
-			return nil, diags.Add(classifyError(err, diag.INTERNAL, nil))
+			return nil, fmt.Errorf("failed to parse caller identity: %w", err)
 		}
 
 		for _, region := range account.Regions {
@@ -602,7 +590,7 @@ func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMe
 		client.ServicesManager.InitServicesForPartitionAccountAndScope(iamArn.Partition, *output.Account, initServices(cloudfrontScopeRegion, awsCfg))
 	}
 	if len(client.ServicesManager.services) == 0 {
-		return nil, diags.Add(diag.FromError(errors.New("no accounts instantiated"), diag.USER))
+		return nil, fmt.Errorf("no accounts instantiated")
 	}
 	return &client, nil
 }

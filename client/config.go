@@ -1,8 +1,7 @@
 package client
 
 type Account struct {
-	ID              string `yaml:"id"`
-	AccountID       string
+	ID              string   `yaml:"id"`
 	AccountName     string   `yaml:"account_name,omitempty"`
 	LocalProfile    string   `yaml:"local_profile,omitempty"`
 	RoleARN         string   `yaml:"role_arn,omitempty"`
