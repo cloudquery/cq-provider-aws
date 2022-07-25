@@ -55,12 +55,9 @@ resource "aws" "lightsail" "instances" {
       type              = "json"
       generate_resolver = true
     }
-
-    // skip columns deprecated by the SDK
     column "gb_in_use" {
-      skip = true
+      ignore_in_tests = true
     }
-
     column "attachment_state" {
       skip = true
     }
@@ -68,6 +65,17 @@ resource "aws" "lightsail" "instances" {
     relation "aws" "lightsail" "add_ons" {
       ignore_in_tests = true // see https://github.com/hashicorp/terraform-provider-aws/issues/23688
     }
+  }
+
+  // todo maybe skip original ports column
+  user_relation "aws" "lightsail" "port_states" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstancePortState"
+  }
+
+
+  userDefinedColumn "access_details" {
+    type              = "json"
+    generate_resolver = true
   }
 }
 
@@ -213,5 +221,357 @@ resource "aws" "lightsail" "alarms" {
   }
   column "monitored_resource_info_resource_type" {
     rename = "monitored_resource_resource_type"
+  }
+}
+
+
+resource "aws" "lightsail" "certificates" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Certificate"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  column "renewal_summary_renewal_status" {
+    rename = "renewal_summary_status"
+  }
+
+  column "renewal_summary_renewal_status_reason" {
+    rename = "renewal_summary_reason"
+  }
+
+  relation "aws" "lightsail" "domain_validation_records" {
+    column "resource_record" {
+      skip_prefix = true
+    }
+  }
+
+  relation "aws" "lightsail" "renewal_summary_domain_validation_records" {
+    column "resource_record" {
+      skip_prefix = true
+    }
+  }
+}
+
+resource "aws" "lightsail" "static_ips" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.StaticIp"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+
+  column "region_name" {
+    skip = true
+  }
+}
+
+
+
+
+resource "aws" "lightsail" "database_snapshots" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabaseSnapshot"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+  column "location" {
+    skip_prefix = true
+  }
+  column "region_name" {
+    skip = true
+  }
+}
+
+
+resource "aws" "lightsail" "load_balancers" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancer"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  column "public_ports" {
+    generate_resolver = true
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+
+  column "region_name" {
+    skip = true
+  }
+
+  column "resource_type"{
+    description = "Type of the lightsail resource"
+  }
+
+  user_relation "aws" "lightsail" "tls_certificates" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancerTlsCertificate"
+    column "tags" {
+      type              = "json"
+      generate_resolver = true
+    }
+
+    column "renewal_summary_domain_validation_options" {
+      type = "json"
+    }
+
+    column "location" {
+      skip_prefix = true
+    }
+
+
+    column "domain_validation_records" {
+      type = "json"
+    }
+  }
+}
+
+
+resource "aws" "lightsail" "databases" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabase"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+
+  column "region_name" {
+    skip = true
+  }
+
+  user_relation "aws" "lightsail" "parameters" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabaseParameter"
+
+    column "parameter_name" {
+      rename = "name"
+    }
+
+    column "parameter_value" {
+      rename = "value"
+    }
+  }
+
+  user_relation "aws" "lightsail" "events" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabaseEvent"
+  }
+
+  user_relation "aws" "lightsail" "log_events" {
+    path = "github.com/cloudquery/cq-provider-aws/resources/services/lightsail.LogEventWrapper"
+
+    column "log_event" {
+      skip_prefix = true
+    }
+  }
+}
+
+
+resource "aws" "lightsail" "instance_snapshots" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstanceSnapshot"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+  column "region_name" {
+    skip = true
+  }
+
+  column "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+  relation "aws" "lightsail" "from_attached_disks" {
+    column "tags" {
+      type              = "json"
+      generate_resolver = true
+    }
   }
 }

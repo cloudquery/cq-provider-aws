@@ -1187,6 +1187,9 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 		options.Region = c.Region
 	})
 	if err != nil {
+		if c.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 	if signing.CodeSigningConfig == nil {
@@ -1242,7 +1245,8 @@ func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.Clie
 	if p.Configuration == nil {
 		return nil
 	}
-	svc := meta.(*client.Client).Services().Lambda
+	cl := meta.(*client.Client)
+	svc := cl.Services().Lambda
 	config := lambda.ListFunctionEventInvokeConfigsInput{
 		FunctionName: p.Configuration.FunctionName,
 	}
@@ -1250,6 +1254,9 @@ func fetchLambdaFunctionEventInvokeConfigs(ctx context.Context, meta schema.Clie
 	for {
 		output, err := svc.ListFunctionEventInvokeConfigs(ctx, &config)
 		if err != nil {
+			if cl.IsNotFoundError(err) {
+				return nil
+			}
 			return diag.WrapError(err)
 		}
 		res <- output.FunctionEventInvokeConfigs
@@ -1359,7 +1366,8 @@ func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.Clie
 		return nil
 	}
 
-	svc := meta.(*client.Client).Services().Lambda
+	cl := meta.(*client.Client)
+	svc := cl.Services().Lambda
 	config := lambda.ListProvisionedConcurrencyConfigsInput{
 		FunctionName: p.Configuration.FunctionName,
 	}
@@ -1367,6 +1375,9 @@ func fetchLambdaFunctionConcurrencyConfigs(ctx context.Context, meta schema.Clie
 	for {
 		output, err := svc.ListProvisionedConcurrencyConfigs(ctx, &config)
 		if err != nil {
+			if cl.IsNotFoundError(err) {
+				return nil
+			}
 			return diag.WrapError(err)
 		}
 		res <- output.ProvisionedConcurrencyConfigs
@@ -1383,7 +1394,8 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 		return nil
 	}
 
-	svc := meta.(*client.Client).Services().Lambda
+	cl := meta.(*client.Client)
+	svc := cl.Services().Lambda
 	config := lambda.ListEventSourceMappingsInput{
 		FunctionName: p.Configuration.FunctionName,
 	}
@@ -1391,6 +1403,9 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 	for {
 		output, err := svc.ListEventSourceMappings(ctx, &config)
 		if err != nil {
+			if cl.IsNotFoundError(err) {
+				return nil
+			}
 			return diag.WrapError(err)
 		}
 		res <- output.EventSourceMappings
