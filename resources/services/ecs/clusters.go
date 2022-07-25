@@ -11,6 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/thoas/go-funk"
 )
 
 func Clusters() *schema.Table {
@@ -1305,7 +1306,10 @@ func Clusters() *schema.Table {
 					{
 						Name:        "aws_ecs_cluster_container_instance_health_status_details",
 						Description: "An object representing the result of a container instance health status check.",
-						Resolver:    fetchEcsClusterContainerInstanceHealthStatusDetails,
+						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
+							res <- funk.Get(r.Item.(types.ContainerInstance), "ContainerInstance.HealthStatus.Details", funk.WithAllowZero())
+							return nil
+						},
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
@@ -1812,14 +1816,6 @@ func resolveClusterContainerInstanceAttachmentsDetails(ctx context.Context, meta
 func fetchEcsClusterContainerInstanceAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	instance := parent.Item.(types.ContainerInstance)
 	res <- instance.Attributes
-	return nil
-}
-func fetchEcsClusterContainerInstanceHealthStatusDetails(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.ContainerInstance)
-	if instance.HealthStatus == nil || instance.HealthStatus.Details == nil {
-		return nil
-	}
-	res <- instance.HealthStatus.Details
 	return nil
 }
 func fetchEcsClusterContainerInstanceRegisteredResources(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
