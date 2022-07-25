@@ -19,12 +19,13 @@ type DistributionWrapper struct {
 //go:generate cq-gen --resource distributions --config gen.hcl --output .
 func Distributions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_distributions",
-		Resolver:     fetchLightsailDistributions,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:          "aws_lightsail_distributions",
+		Resolver:      fetchLightsailDistributions,
+		Multiplex:     client.AccountMultiplex,
+		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter:  client.DeleteAccountFilter,
+		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		IgnoreInTests: true,
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -202,7 +203,8 @@ func fetchLightsailDistributions(ctx context.Context, meta schema.ClientMeta, pa
 	svc := c.Services().Lightsail
 	for {
 		response, err := svc.GetDistributions(ctx, &input, func(options *lightsail.Options) {
-			options.Region = c.Region
+			// Set region to default global region
+			options.Region = "us-east-1"
 		})
 		if err != nil {
 			return diag.WrapError(err)
@@ -214,7 +216,8 @@ func fetchLightsailDistributions(ctx context.Context, meta schema.ClientMeta, pa
 				DistributionName: d.Name,
 			}
 			resetResp, err := svc.GetDistributionLatestCacheReset(ctx, &resetInput, func(options *lightsail.Options) {
-				options.Region = c.Region
+				// Set region to default global region
+				options.Region = "us-east-1"
 			})
 			if err != nil && !c.IsNotFoundError(err) {
 				return diag.WrapError(err)
