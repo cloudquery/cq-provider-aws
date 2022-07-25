@@ -9,6 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"golang.org/x/sync/errgroup"
 )
 
 type DistributionWrapper struct {
@@ -210,19 +211,18 @@ func fetchLightsailDistributions(ctx context.Context, meta schema.ClientMeta, pa
 			return diag.WrapError(err)
 		}
 
-		//todo make it async
+		errs, ctx := errgroup.WithContext(ctx)
+		errs.SetLimit(MAX_GOROUTINES)
 		for _, d := range response.Distributions {
-			resetInput := lightsail.GetDistributionLatestCacheResetInput{
-				DistributionName: d.Name,
-			}
-			resetResp, err := svc.GetDistributionLatestCacheReset(ctx, &resetInput, func(options *lightsail.Options) {
-				// Set region to default global region
-				options.Region = "us-east-1"
-			})
-			if err != nil && !c.IsNotFoundError(err) {
-				return diag.WrapError(err)
-			}
-			res <- DistributionWrapper{&d, resetResp}
+			func(d types.LightsailDistribution) {
+				errs.Go(func() error {
+					return fetchCacheReset(ctx, res, c, d)
+				})
+			}(d)
+		}
+		err = errs.Wait()
+		if err != nil {
+			return diag.WrapError(err)
 		}
 		if aws.ToString(response.NextPageToken) == "" {
 			break
@@ -236,4 +236,20 @@ func resolveDistributionsTags(ctx context.Context, meta schema.ClientMeta, resou
 	tags := make(map[string]string)
 	client.TagsIntoMap(r.Tags, tags)
 	return diag.WrapError(resource.Set(c.Name, tags))
+}
+
+func fetchCacheReset(ctx context.Context, res chan<- interface{}, c *client.Client, d types.LightsailDistribution) error {
+	svc := c.Services().Lightsail
+	resetInput := lightsail.GetDistributionLatestCacheResetInput{
+		DistributionName: d.Name,
+	}
+	resetResp, err := svc.GetDistributionLatestCacheReset(ctx, &resetInput, func(options *lightsail.Options) {
+		// Set region to default global region
+		options.Region = "us-east-1"
+	})
+	if err != nil && !c.IsNotFoundError(err) {
+		return diag.WrapError(err)
+	}
+	res <- DistributionWrapper{&d, resetResp}
+	return nil
 }
