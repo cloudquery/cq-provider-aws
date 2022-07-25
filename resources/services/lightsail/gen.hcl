@@ -39,8 +39,10 @@ resource "aws" "lightsail" "instances" {
   }
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   relation "aws" "lightsail" "add_ons" {
@@ -51,12 +53,11 @@ resource "aws" "lightsail" "instances" {
   relation "aws" "lightsail" "hardware_disks" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Disk"
 
+    ignore_columns_in_tests = ["gb_in_use"]
+
     column "tags" {
       type              = "json"
       generate_resolver = true
-    }
-    column "gb_in_use" {
-      ignore_in_tests = true
     }
     column "attachment_state" {
       skip = true
