@@ -176,7 +176,7 @@ func Distributions() *schema.Table {
 				Name:        "tags",
 				Description: "The tag keys and optional values for the resource",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveDistributionsTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "cache_reset_create_time",
@@ -231,12 +231,10 @@ func fetchLightsailDistributions(ctx context.Context, meta schema.ClientMeta, pa
 	}
 	return nil
 }
-func resolveDistributionsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(DistributionWrapper)
-	tags := make(map[string]string)
-	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
-}
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
 
 func fetchCacheReset(ctx context.Context, res chan<- interface{}, c *client.Client, d types.LightsailDistribution) error {
 	svc := c.Services().Lightsail
