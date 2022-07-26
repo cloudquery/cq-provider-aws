@@ -332,6 +332,7 @@ type FsxClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_glue.go . GlueClient
 type GlueClient interface {
 	GetCrawlers(ctx context.Context, params *glue.GetCrawlersInput, optFns ...func(*glue.Options)) (*glue.GetCrawlersOutput, error)
+	GetTags(ctx context.Context, params *glue.GetTagsInput, optFns ...func(*glue.Options)) (*glue.GetTagsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_iam.go . IamClient
