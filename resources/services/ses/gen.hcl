@@ -39,13 +39,6 @@ resource "aws" "ses" "templates" {
     type        = "timestamp"
     description = "The time and date the template was created."
   }
-  column "tags" {
-    type        = "json"
-    description = "The tags associated with the template."
-    resolver "resolveSesTemplateTags" {
-      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
-    }
-  }
 
   userDefinedColumn "arn" {
     type              = "string"

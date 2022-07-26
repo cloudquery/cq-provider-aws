@@ -740,5 +740,4 @@ type ShieldClient interface {
 type SESClient interface {
 	GetEmailTemplate(ctx context.Context, params *sesv2.GetEmailTemplateInput, optFns ...func(*sesv2.Options)) (*sesv2.GetEmailTemplateOutput, error)
 	ListEmailTemplates(ctx context.Context, params *sesv2.ListEmailTemplatesInput, optFns ...func(*sesv2.Options)) (*sesv2.ListEmailTemplatesOutput, error)
-	ListTagsForResource(ctx context.Context, params *sesv2.ListTagsForResourceInput, optFns ...func(*sesv2.Options)) (*sesv2.ListTagsForResourceOutput, error)
 }

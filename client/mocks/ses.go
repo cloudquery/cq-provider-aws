@@ -74,23 +74,3 @@ func (mr *MockSESClientMockRecorder) ListEmailTemplates(arg0, arg1 interface{}, 
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEmailTemplates", reflect.TypeOf((*MockSESClient)(nil).ListEmailTemplates), varargs...)
 }
-
-// ListTagsForResource mocks base method.
-func (m *MockSESClient) ListTagsForResource(arg0 context.Context, arg1 *sesv2.ListTagsForResourceInput, arg2 ...func(*sesv2.Options)) (*sesv2.ListTagsForResourceOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListTagsForResource", varargs...)
-	ret0, _ := ret[0].(*sesv2.ListTagsForResourceOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListTagsForResource indicates an expected call of ListTagsForResource.
-func (mr *MockSESClientMockRecorder) ListTagsForResource(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTagsForResource", reflect.TypeOf((*MockSESClient)(nil).ListTagsForResource), varargs...)
-}

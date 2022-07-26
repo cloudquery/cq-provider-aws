@@ -10,5 +10,4 @@ type Template struct {
 	*types.EmailTemplateContent
 	TemplateName     *string
 	CreatedTimestamp *time.Time
-	Tags             []types.Tag
 }

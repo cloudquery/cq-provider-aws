@@ -12,4 +12,3 @@ Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable em
 |text|text|The email body that will be visible to recipients whose email clients do not display HTML.|
 |name|text|The name of the template.|
 |created_timestamp|timestamp without time zone|The time and date the template was created.|
-|tags|jsonb|The tags associated with the template.|

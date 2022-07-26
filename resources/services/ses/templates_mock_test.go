@@ -3,7 +3,6 @@ package ses
 import (
 	"testing"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -35,13 +34,6 @@ func buildSESTemplates(t *testing.T, ctrl *gomock.Controller) client.Services {
 		&sesv2.GetEmailTemplateOutput{
 			TemplateName:    tplMeta.TemplateName,
 			TemplateContent: tpl,
-		}, nil,
-	)
-	sesClient.EXPECT().ListTagsForResource(gomock.Any(), gomock.Any(), gomock.Any()).Return(
-		&sesv2.ListTagsForResourceOutput{
-			Tags: []types.Tag{
-				{Key: aws.String("k"), Value: aws.String("v")},
-			},
 		}, nil,
 	)
 

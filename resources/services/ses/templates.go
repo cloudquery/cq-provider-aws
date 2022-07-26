@@ -68,12 +68,6 @@ func Templates() *schema.Table {
 				Description: "The time and date the template was created.",
 				Type:        schema.TypeTimestamp,
 			},
-			{
-				Name:        "tags",
-				Description: "The tags associated with the template.",
-				Type:        schema.TypeJSON,
-				Resolver:    client.ResolveTags,
-			},
 		},
 	}
 }
@@ -100,20 +94,10 @@ func fetchSesTemplates(ctx context.Context, meta schema.ClientMeta, parent *sche
 				return diag.WrapError(err)
 			}
 
-			tagsOut, err := svc.ListTagsForResource(ctx,
-				&sesv2.ListTagsForResourceInput{
-					ResourceArn: aws.String(createSesTemplateArn(c, *templateMeta.TemplateName)),
-				},
-			)
-			if err != nil {
-				return diag.WrapError(err)
-			}
-
 			res <- &Template{
 				TemplateName:         getOutput.TemplateName,
 				CreatedTimestamp:     templateMeta.CreatedTimestamp,
 				EmailTemplateContent: getOutput.TemplateContent,
-				Tags:                 tagsOut.Tags,
 			}
 		}
 		if aws.ToString(output.NextToken) == "" {
