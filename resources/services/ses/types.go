@@ -7,7 +7,7 @@ import (
 )
 
 type Template struct {
+	TemplateName *string
 	*types.EmailTemplateContent
-	TemplateName     *string
 	CreatedTimestamp *time.Time
 }

@@ -40,6 +40,12 @@ func Templates() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:        "name",
+				Description: "The name of the template.",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("TemplateName"),
+			},
+			{
 				Name:        "html",
 				Description: "The HTML body of the email.",
 				Type:        schema.TypeString,
@@ -56,12 +62,6 @@ func Templates() *schema.Table {
 				Description: "The email body that will be visible to recipients whose email clients do not display HTML.",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("EmailTemplateContent.Text"),
-			},
-			{
-				Name:        "name",
-				Description: "The name of the template.",
-				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("TemplateName"),
 			},
 			{
 				Name:        "created_timestamp",
@@ -109,13 +109,7 @@ func fetchSesTemplates(ctx context.Context, meta schema.ClientMeta, parent *sche
 	return nil
 }
 func ResolveSesTemplateArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	return diag.WrapError(resource.Set(c.Name, createSesTemplateArn(meta.(*client.Client), *resource.Item.(*Template).TemplateName)))
-}
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func createSesTemplateArn(cl *client.Client, templateName string) string {
-	return cl.ARN(client.SESService, "template", templateName)
+	return client.ResolveARN(client.SESService, func(resource *schema.Resource) ([]string, error) {
+		return []string{"template", *resource.Item.(*Template).TemplateName}, nil
+	})(ctx, meta, resource, c)
 }
