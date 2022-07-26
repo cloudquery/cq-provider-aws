@@ -36,6 +36,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
+	"github.com/aws/aws-sdk-go-v2/service/glue"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
@@ -326,6 +327,11 @@ type EmrClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_fsx.go . FsxClient
 type FsxClient interface {
 	DescribeBackups(ctx context.Context, params *fsx.DescribeBackupsInput, optFns ...func(*fsx.Options)) (*fsx.DescribeBackupsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_glue.go . GlueClient
+type GlueClient interface {
+	GetCrawlers(ctx context.Context, params *glue.GetCrawlersInput, optFns ...func(*glue.Options)) (*glue.GetCrawlersOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_iam.go . IamClient

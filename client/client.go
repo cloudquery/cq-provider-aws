@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/glue"
 	"os"
 	"strings"
 
@@ -149,6 +150,7 @@ type Services struct {
 	ElasticBeanstalk       ElasticbeanstalkClient
 	ElasticSearch          ElasticSearch
 	FSX                    FsxClient
+	Glue                   GlueClient
 	GuardDuty              GuardDutyClient
 	IAM                    IamClient
 	IOT                    IOTClient
@@ -645,6 +647,7 @@ func initServices(region string, c aws.Config) Services {
 		ELBv2:                  elbv2.NewFromConfig(awsCfg),
 		EMR:                    emr.NewFromConfig(awsCfg),
 		FSX:                    fsx.NewFromConfig(awsCfg),
+		Glue:                   glue.NewFromConfig(awsCfg),
 		GuardDuty:              guardduty.NewFromConfig(awsCfg),
 		IAM:                    iam.NewFromConfig(awsCfg),
 		KMS:                    kms.NewFromConfig(awsCfg),
