@@ -67,11 +67,9 @@ resource "aws" "lightsail" "instances" {
     }
   }
 
-  // todo maybe skip original ports column
   user_relation "aws" "lightsail" "port_states" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstancePortState"
   }
-
 
   userDefinedColumn "access_details" {
     type              = "json"
