@@ -385,7 +385,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_task_attachments",
 						Description: "An object representing a container instance or task attachment.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Task), "Attachments", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Attachments", funk.WithAllowZero())
 							return nil
 						},
 						Columns: []schema.Column{
@@ -422,7 +422,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_task_containers",
 						Description: "A Docker container that's part of a task.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Task), "Containers", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Containers", funk.WithAllowZero())
 							return nil
 						},
 
@@ -716,7 +716,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_deployments",
 						Description: "The details of an Amazon ECS service deployment",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Service), "Deployments", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Deployments", funk.WithAllowZero())
 							return nil
 						},
 						Columns: []schema.Column{
@@ -829,7 +829,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_events",
 						Description: "The details for an event that's associated with a service.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Service), "Events", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Events", funk.WithAllowZero())
 							return nil
 						},
 						Columns: []schema.Column{
@@ -860,7 +860,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_load_balancers",
 						Description: "The load balancer configuration to use with a service or task set",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Service), "LoadBalancers", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "LoadBalancers", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
@@ -898,7 +898,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_service_registries",
 						Description: "The details for the service registry",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Service), "ServiceRegistries", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "ServiceRegistries", funk.WithAllowZero())
 							return nil
 						},
 
@@ -936,7 +936,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_service_task_sets",
 						Description: "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.Service), "TaskSets", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "TaskSets", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
@@ -1089,7 +1089,7 @@ func Clusters() *schema.Table {
 								Name:        "aws_ecs_cluster_service_task_set_load_balancers",
 								Description: "The load balancer configuration to use with a service or task set",
 								Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-									res <- funk.Get(r.Item.(types.TaskSet), "LoadBalancers", funk.WithAllowZero())
+									res <- funk.Get(r.Item, "LoadBalancers", funk.WithAllowZero())
 									return nil
 								},
 								IgnoreInTests: true,
@@ -1126,7 +1126,7 @@ func Clusters() *schema.Table {
 								Name:        "aws_ecs_cluster_service_task_set_service_registries",
 								Description: "The details for the service registry",
 								Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-									res <- funk.Get(r.Item.(types.TaskSet), "ServiceRegistries", funk.WithAllowZero())
+									res <- funk.Get(r.Item, "ServiceRegistries", funk.WithAllowZero())
 									return nil
 								},
 								IgnoreInTests: true,
@@ -1267,7 +1267,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_attachments",
 						Description: "An object representing a container instance or task attachment.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.ContainerInstance), "Attachments", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Attachments", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
@@ -1305,7 +1305,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_attributes",
 						Description: "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.ContainerInstance), "Attributes", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "Attributes", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
@@ -1342,7 +1342,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_health_status_details",
 						Description: "An object representing the result of a container instance health status check.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.ContainerInstance), "HealthStatus.Details", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "HealthStatus.Details", funk.WithAllowZero())
 							return nil
 						},
 						Columns: []schema.Column{
@@ -1378,7 +1378,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_registered_resources",
 						Description: "Describes the resources available for a container instance.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.ContainerInstance), "RegisteredResources", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "RegisteredResources", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
@@ -1425,7 +1425,7 @@ func Clusters() *schema.Table {
 						Name:        "aws_ecs_cluster_container_instance_remaining_resources",
 						Description: "Describes the resources available for a container instance.",
 						Resolver: func(ctx context.Context, c schema.ClientMeta, r *schema.Resource, res chan<- interface{}) error {
-							res <- funk.Get(r.Item.(types.ContainerInstance), "RemainingResources", funk.WithAllowZero())
+							res <- funk.Get(r.Item, "RemainingResources", funk.WithAllowZero())
 							return nil
 						},
 						IgnoreInTests: true,
