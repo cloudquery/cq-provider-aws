@@ -6,11 +6,3 @@ variable "prefix" {
     error_message = "The prefix should be exactly two characters."
   }
 }
-
-
-variable "tags" {
-  type = map
-  default = {
-    Environment = "cq-provider-aws"
-  }
-}
