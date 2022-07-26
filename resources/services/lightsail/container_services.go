@@ -219,7 +219,7 @@ func ContainerServices() *schema.Table {
 				Name:        "tags",
 				Description: "The tag keys and optional values for the resource",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveContainerServicesTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "url",
@@ -328,12 +328,6 @@ func fetchLightsailContainerServices(ctx context.Context, meta schema.ClientMeta
 	}
 	res <- response.ContainerServices
 	return nil
-}
-func resolveContainerServicesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ContainerService)
-	tags := make(map[string]string)
-	client.TagsIntoMap(r.Tags, tags)
-	return diag.WrapError(resource.Set(c.Name, tags))
 }
 func fetchLightsailContainerServiceDeployments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.ContainerService)

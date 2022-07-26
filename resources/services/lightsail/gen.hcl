@@ -588,6 +588,12 @@ resource "aws" "lightsail" "container_services" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
   }
 
+  ignore_columns_in_tests = [
+    "next_deployment_containers", "next_deployment_created_at", "next_deployment_public_endpoint_container_name",
+    "next_deployment_public_endpoint_container_port", "next_deployment_public_endpoint_health_check",
+    "next_deployment_version", "public_domain_names", "state_detail_message", "images"
+  ]
+
   options {
     primary_keys = [
       "arn"
@@ -619,13 +625,16 @@ resource "aws" "lightsail" "container_services" {
   column "location" {
     skip_prefix = true
   }
+
   column "region_name" {
     skip = true
   }
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   user_relation "aws" "lightsail" "deployments" {
@@ -638,6 +647,6 @@ resource "aws" "lightsail" "container_services" {
 
 
   user_relation "aws" "lightsail" "images" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.ContainerImage"
+    path           = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.ContainerImage"
   }
 }
