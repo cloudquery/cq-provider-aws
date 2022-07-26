@@ -446,14 +446,6 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-const MaxGoroutines = 10
-
-type LogEventWrapper struct {
-	types.LogEvent
-	// An object describing the result of your get relational database log streams request.
-	LogStreamName string
-}
-
 func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Client, database, stream string, startTime, endTime time.Time) error {
 	svc := c.Services().Lightsail
 	input := lightsail.GetRelationalDatabaseLogEventsInput{

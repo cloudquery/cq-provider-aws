@@ -231,11 +231,6 @@ func fetchLightsailDistributions(ctx context.Context, meta schema.ClientMeta, pa
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-type DistributionWrapper struct {
-	*types.LightsailDistribution
-	*lightsail.GetDistributionLatestCacheResetOutput
-}
-
 func fetchCacheReset(ctx context.Context, res chan<- interface{}, c *client.Client, d types.LightsailDistribution) error {
 	svc := c.Services().Lightsail
 	resetInput := lightsail.GetDistributionLatestCacheResetInput{
