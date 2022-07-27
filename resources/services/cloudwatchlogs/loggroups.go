@@ -16,7 +16,7 @@ func Loggroups() *schema.Table {
 		Name:         "aws_cloudwatchlogs_loggroups",
 		Description:  "Represents a log group.",
 		Resolver:     fetchCloudwatchlogsLoggroups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("cloudwatchlogs"),
+		Multiplex:    client.ServiceAccountRegionMultiplexer("logs"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
