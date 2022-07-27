@@ -11,7 +11,7 @@ resource "aws_glue_ml_transform" "aws_glue_ml_transform" {
     transform_type = "FIND_MATCHES"
 
     find_matches_parameters {
-      primary_key_column_name = "my_column_1"
+      primary_key_column_name = "my_string"
     }
   }
 

@@ -15,7 +15,7 @@ resource "aws_iam_role" "crawler_role" {
         "Sid" : "",
         "Effect" : "Allow",
         "Principal" : {
-          "Service" : "sagemaker.amazonaws.com"
+          "Service" : "glue.amazonaws.com"
         },
         "Action" : "sts:AssumeRole"
       }

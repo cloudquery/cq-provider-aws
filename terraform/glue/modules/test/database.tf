@@ -22,6 +22,19 @@ resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
     "parquet.compression" = "SNAPPY"
   }
 
+  partition_keys {
+    name = "year"
+    type = "string"
+  }
+  partition_keys {
+    name = "month"
+    type = "string"
+  }
+  partition_keys {
+    name = "day"
+    type = "string"
+  }
+
   storage_descriptor {
     location      = "s3://${aws_s3_bucket.aws_s3_bucket.bucket}/event-streams/my-stream"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
@@ -34,6 +47,21 @@ resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
       parameters = {
         "serialization.format" = 1
       }
+    }
+
+    columns {
+      name = "year"
+      type = "string"
+    }
+
+    columns {
+      name = "month"
+      type = "string"
+    }
+
+    columns {
+      name = "day"
+      type = "string"
     }
 
     columns {
@@ -78,6 +106,6 @@ resource "aws_glue_partition_index" "aws_glue_partition_index" {
 
   partition_index {
     index_name = "${var.prefix}-glue-partitition"
-    keys       = ["my_column_1", "my_column_2"]
+    partition_values = ["2020", "12", "11"]
   }
 }
