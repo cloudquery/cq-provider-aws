@@ -25,17 +25,6 @@ resource "aws_iam_role" "crawler_role" {
 
 
 
-resource "aws_glue_connection" "aws_glue_connection" {
-  connection_properties = {
-    JDBC_CONNECTION_URL = "jdbc:mysql://example.com/exampledatabase"
-    PASSWORD            = "examplepassword"
-    USERNAME            = "exampleusername"
-  }
-
-  name = "example"
-}
-
-
 resource "aws_glue_crawler" "aws_glue_crawler" {
   database_name = aws_glue_catalog_database.aws_glue_catalog_database.name
   name          = "${var.prefix}-crawler"
