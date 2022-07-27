@@ -97,7 +97,7 @@ resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
 resource "aws_glue_partition" "aws_glue_partition" {
   database_name    = aws_glue_catalog_database.aws_glue_catalog_database.name
   table_name       = aws_glue_catalog_table.aws_glue_catalog_table.name
-  partition_values = ["some-value"]
+  partition_values = ["2020", "10", "01"]
 }
 
 resource "aws_glue_partition_index" "aws_glue_partition_index" {
@@ -105,7 +105,7 @@ resource "aws_glue_partition_index" "aws_glue_partition_index" {
   table_name    = aws_glue_catalog_table.aws_glue_catalog_table.name
 
   partition_index {
-    index_name = "${var.prefix}-glue-partitition"
+    index_name = "${var.prefix}-index"
     keys       = ["year", "month", "day"]
   }
 }
