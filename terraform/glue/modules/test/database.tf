@@ -106,6 +106,6 @@ resource "aws_glue_partition_index" "aws_glue_partition_index" {
 
   partition_index {
     index_name = "${var.prefix}-glue-partitition"
-    partition_values = ["2020", "12", "11"]
+    keys       = ["year", "month", "day"]
   }
 }
