@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -72,57 +71,57 @@ func CloudwatchlogsLogGroups() *schema.Table {
 				Type:        schema.TypeBigInt,
 			},
 		},
-		Relations: []*schema.Table{
-			{
-				Name:          "aws_cloudwatchlogs_log_group_streams",
-				Description:   "The Log Streams connected to a particular Log Group, each of which is a sequence of log events from a single emitter of logs",
-				Resolver:      fetchCloudwatchlogsLogStreams,
-				IgnoreInTests: true,
-				Columns: []schema.Column{
-					{
-						Name:        "log_group_cq_id",
-						Description: "Unique CloudQuery ID of aws_cloudwatchlogs_log_groups table (FK)",
-						Type:        schema.TypeUUID,
-						Resolver:    schema.ParentIdResolver,
-					},
-					{
-						Name:        "arn",
-						Description: "The ARN (Amazon Resource Name) for the stream.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "creation_time",
-						Description: "The creation time of the log group, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
-						Type:        schema.TypeBigInt,
-					},
-					{
-						Name:        "first_event_timestamp",
-						Description: "The time of the first event, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
-						Type:        schema.TypeBigInt,
-					},
-					{
-						Name:        "last_event_timestamp",
-						Description: "The time of the most recent log event in the log stream in CloudWatch Logs. This number is expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC. ",
-						Type:        schema.TypeBigInt,
-					},
-					{
-						Name:        "last_ingestion_time",
-						Description: "The ingestion time, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
-						Type:        schema.TypeBigInt,
-					},
-					{
-						Name:        "log_stream_name",
-						Description: "The name of the CloudWatch metric.",
-						Type:        schema.TypeString,
-					},
-					{
-						Name:        "stored_bytes",
-						Description: "The number of bytes stored.",
-						Type:        schema.TypeBigInt,
-					},
-				},
-			},
-		},
+		// Relations: []*schema.Table{
+		// 	{
+		// 		Name:          "aws_cloudwatchlogs_log_group_streams",
+		// 		Description:   "The Log Streams connected to a particular Log Group, each of which is a sequence of log events from a single emitter of logs",
+		// 		Resolver:      fetchCloudwatchlogsLogStreams,
+		// 		IgnoreInTests: true,
+		// 		Columns: []schema.Column{
+		// 			{
+		// 				Name:        "log_group_cq_id",
+		// 				Description: "Unique CloudQuery ID of aws_cloudwatchlogs_log_groups table (FK)",
+		// 				Type:        schema.TypeUUID,
+		// 				Resolver:    schema.ParentIdResolver,
+		// 			},
+		// 			{
+		// 				Name:        "arn",
+		// 				Description: "The ARN (Amazon Resource Name) for the stream.",
+		// 				Type:        schema.TypeString,
+		// 			},
+		// 			{
+		// 				Name:        "creation_time",
+		// 				Description: "The creation time of the log group, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
+		// 				Type:        schema.TypeBigInt,
+		// 			},
+		// 			{
+		// 				Name:        "first_event_timestamp",
+		// 				Description: "The time of the first event, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
+		// 				Type:        schema.TypeBigInt,
+		// 			},
+		// 			{
+		// 				Name:        "last_event_timestamp",
+		// 				Description: "The time of the most recent log event in the log stream in CloudWatch Logs. This number is expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC. ",
+		// 				Type:        schema.TypeBigInt,
+		// 			},
+		// 			{
+		// 				Name:        "last_ingestion_time",
+		// 				Description: "The ingestion time, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.",
+		// 				Type:        schema.TypeBigInt,
+		// 			},
+		// 			{
+		// 				Name:        "log_stream_name",
+		// 				Description: "The name of the CloudWatch metric.",
+		// 				Type:        schema.TypeString,
+		// 			},
+		// 			{
+		// 				Name:        "stored_bytes",
+		// 				Description: "The number of bytes stored.",
+		// 				Type:        schema.TypeBigInt,
+		// 			},
+		// 		},
+		// 	},
+		// },
 	}
 }
 
@@ -149,27 +148,27 @@ func fetchCloudwatchlogsLogGroups(ctx context.Context, meta schema.ClientMeta, p
 	return nil
 }
 
-func fetchCloudwatchlogsLogStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.LogGroup)
-	config := cloudwatchlogs.DescribeLogStreamsInput{
-		LogGroupName: r.LogGroupName,
-	}
+// func fetchCloudwatchlogsLogStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+// 	r := parent.Item.(types.LogGroup)
+// 	config := cloudwatchlogs.DescribeLogStreamsInput{
+// 		LogGroupName: r.LogGroupName,
+// 	}
 
-	c := meta.(*client.Client)
-	svc := c.Services().CloudwatchLogs
+// 	c := meta.(*client.Client)
+// 	svc := c.Services().CloudwatchLogs
 
-	for {
-		response, err := svc.DescribeLogStreams(ctx, &config, func(options *cloudwatchlogs.Options) {
-			options.Region = c.Region
-		})
-		if err != nil {
-			return diag.WrapError(err)
-		}
-		res <- response.LogStreams
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		config.NextToken = response.NextToken
-	}
-	return nil
-}
+// 	for {
+// 		response, err := svc.DescribeLogStreams(ctx, &config, func(options *cloudwatchlogs.Options) {
+// 			options.Region = c.Region
+// 		})
+// 		if err != nil {
+// 			return diag.WrapError(err)
+// 		}
+// 		res <- response.LogStreams
+// 		if aws.ToString(response.NextToken) == "" {
+// 			break
+// 		}
+// 		config.NextToken = response.NextToken
+// 	}
+// 	return nil
+// }
