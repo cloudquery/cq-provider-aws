@@ -748,7 +748,10 @@ type SESClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/glue.go . GlueClient
 type GlueClient interface {
+	GetSchema(ctx context.Context, params *glue.GetSchemaInput, optFns ...func(*glue.Options)) (*glue.GetSchemaOutput, error)
 	GetTags(ctx context.Context, params *glue.GetTagsInput, optFns ...func(*glue.Options)) (*glue.GetTagsOutput, error)
 	GetWorkflow(ctx context.Context, params *glue.GetWorkflowInput, optFns ...func(*glue.Options)) (*glue.GetWorkflowOutput, error)
+	ListRegistries(ctx context.Context, params *glue.ListRegistriesInput, optFns ...func(*glue.Options)) (*glue.ListRegistriesOutput, error)
+	ListSchemas(ctx context.Context, params *glue.ListSchemasInput, optFns ...func(*glue.Options)) (*glue.ListSchemasOutput, error)
 	ListWorkflows(ctx context.Context, params *glue.ListWorkflowsInput, optFns ...func(*glue.Options)) (*glue.ListWorkflowsOutput, error)
 }
