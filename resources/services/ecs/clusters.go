@@ -1305,9 +1305,7 @@ func Clusters() *schema.Table {
 					{
 						Name:        "aws_ecs_cluster_container_instance_health_status_details",
 						Description: "An object representing the result of a container instance health status check.",
-
-						Resolver: schema.PathTableResolver("HealthStatus.Details"),
-
+						Resolver:    schema.PathTableResolver("HealthStatus.Details"),
 						Columns: []schema.Column{
 							{
 								Name:        "cluster_container_instance_cq_id",
