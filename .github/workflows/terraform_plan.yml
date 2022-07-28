@@ -144,7 +144,7 @@ jobs:
 
       - name: Run Infracost
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
-        run: infracost breakdown --config-file=/tmp/infracost.yml --format=json --out-file=/tmp/infracost.json --log-level=debug
+        run: infracost breakdown --log-level=debug --config-file=/tmp/infracost.yml --format=json --out-file=/tmp/infracost.json
 
       - name: Post the comment
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
