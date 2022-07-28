@@ -141,11 +141,10 @@ jobs:
         uses: infracost/actions/setup@v2
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
-          version: 0.10.1
 
       - name: Run Infracost
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
-        run: infracost breakdown --config-file=/tmp/infracost.yml --format=json --out-file=/tmp/infracost.json
+        run: infracost breakdown --config-file=/tmp/infracost.yml --format=json --out-file=/tmp/infracost.json --log-level=debug
 
       - name: Post the comment
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
