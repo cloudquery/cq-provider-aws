@@ -153,7 +153,6 @@ func fetchCloudwatchlogsLoggroups(ctx context.Context, meta schema.ClientMeta, p
 	return nil
 }
 func fetchCloudwatchlogsLogstreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-
 	c := meta.(*client.Client)
 	svc := c.Services().CloudwatchLogs
 	logGroup := parent.Item.(types.LogGroup)
