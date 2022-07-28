@@ -912,11 +912,9 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_service_task_sets",
-						Description: "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
-
-						Resolver: schema.PathTableResolver("TaskSets"),
-
+						Name:          "aws_ecs_cluster_service_task_sets",
+						Description:   "Information about a set of Amazon ECS tasks in either an CodeDeploy or an EXTERNAL deployment",
+						Resolver:      schema.PathTableResolver("TaskSets"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1098,11 +1096,9 @@ func Clusters() *schema.Table {
 								},
 							},
 							{
-								Name:        "aws_ecs_cluster_service_task_set_service_registries",
-								Description: "The details for the service registry",
-
-								Resolver: schema.PathTableResolver("ServiceRegistries"),
-
+								Name:          "aws_ecs_cluster_service_task_set_service_registries",
+								Description:   "The details for the service registry",
+								Resolver:      schema.PathTableResolver("ServiceRegistries"),
 								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
@@ -1238,11 +1234,9 @@ func Clusters() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:        "aws_ecs_cluster_container_instance_attachments",
-						Description: "An object representing a container instance or task attachment.",
-
-						Resolver: schema.PathTableResolver("Attachments"),
-
+						Name:          "aws_ecs_cluster_container_instance_attachments",
+						Description:   "An object representing a container instance or task attachment.",
+						Resolver:      schema.PathTableResolver("Attachments"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1275,11 +1269,9 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_container_instance_attributes",
-						Description: "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
-
-						Resolver: schema.PathTableResolver("Attributes"),
-
+						Name:          "aws_ecs_cluster_container_instance_attributes",
+						Description:   "An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources",
+						Resolver:      schema.PathTableResolver("Attributes"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -1346,11 +1338,9 @@ func Clusters() *schema.Table {
 						},
 					},
 					{
-						Name:        "aws_ecs_cluster_container_instance_registered_resources",
-						Description: "Describes the resources available for a container instance.",
-
-						Resolver: schema.PathTableResolver("RegisteredResources"),
-
+						Name:          "aws_ecs_cluster_container_instance_registered_resources",
+						Description:   "Describes the resources available for a container instance.",
+						Resolver:      schema.PathTableResolver("RegisteredResources"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
