@@ -36,6 +36,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/emr"
 	"github.com/cloudquery/cq-provider-aws/resources/services/fsx"
+	"github.com/cloudquery/cq-provider-aws/resources/services/glue"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iam"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
@@ -135,6 +136,7 @@ func Provider() *provider.Provider {
 			"ec2.images":                              ec2.Ec2Images(),
 			"ec2.instance_statuses":                   ec2.Ec2InstanceStatuses(),
 			"ec2.instances":                           ec2.Ec2Instances(),
+			"ec2.instance_types":                      ec2.InstanceTypes(),
 			"ec2.internet_gateways":                   ec2.Ec2InternetGateways(),
 			"ec2.network_interfaces":                  ec2.NetworkInterfaces(),
 			"ec2.nat_gateways":                        ec2.Ec2NatGateways(),
@@ -165,6 +167,7 @@ func Provider() *provider.Provider {
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
 			"fsx.backups":                             fsx.FsxBackups(),
+			"glue.workflows":                          glue.Workflows(),
 			"guardduty.detectors":                     guardduty.GuarddutyDetectors(),
 			"iam.accounts":                            iam.IamAccounts(),
 			"iam.groups":                              iam.IamGroups(),
@@ -192,9 +195,11 @@ func Provider() *provider.Provider {
 			"lightsail.alarms":                        lightsail.Alarms(),
 			"lightsail.buckets":                       lightsail.Buckets(),
 			"lightsail.certificates":                  lightsail.Certificates(),
+			"lightsail.container_services":            lightsail.ContainerServices(),
 			"lightsail.database_snapshots":            lightsail.DatabaseSnapshots(),
 			"lightsail.databases":                     lightsail.Databases(),
 			"lightsail.disks":                         lightsail.Disks(),
+			"lightsail.distributions":                 lightsail.Distributions(),
 			"lightsail.instances":                     lightsail.Instances(),
 			"lightsail.instance_snapshots":            lightsail.InstanceSnapshots(),
 			"lightsail.load_balancers":                lightsail.LoadBalancers(),
