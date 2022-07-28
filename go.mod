@@ -1,6 +1,6 @@
 module github.com/cloudquery/cq-provider-aws
 
-go 1.17
+go 1.18
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.16.7
@@ -68,7 +68,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/cloudquery/cq-gen v0.0.6
-	github.com/cloudquery/cq-provider-sdk v0.14.4
+	github.com/cloudquery/cq-provider-sdk v0.14.5
 	github.com/cloudquery/faker/v3 v3.7.7
 	github.com/gocarina/gocsv v0.0.0-20220712153207-8b2118da4570
 	github.com/golang/mock v1.6.0
@@ -78,7 +78,7 @@ require (
 	github.com/spf13/cast v1.5.0
 	github.com/stretchr/testify v1.8.0
 	github.com/thoas/go-funk v0.9.2
-	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 )
 
 require (
@@ -106,6 +106,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.15 // indirect
 	github.com/aws/aws-sdk-go-v2/service/athena v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/backup v1.16.3
+	github.com/aws/aws-sdk-go-v2/service/glue v1.28.1
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.8 // indirect
