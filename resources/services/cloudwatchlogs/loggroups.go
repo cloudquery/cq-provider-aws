@@ -44,9 +44,10 @@ func Loggroups() *schema.Table {
 				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "kms_key_id",
-				Description: "The Amazon Resource Name (ARN) of the CMK to use when encrypting log data.",
-				Type:        schema.TypeString,
+				Name:          "kms_key_id",
+				Description:   "The Amazon Resource Name (ARN) of the CMK to use when encrypting log data.",
+				Type:          schema.TypeString,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "log_group_name",
@@ -59,9 +60,10 @@ func Loggroups() *schema.Table {
 				Type:        schema.TypeBigInt,
 			},
 			{
-				Name:        "retention_in_days",
-				Description: "The number of days to retain the log events in the specified log group",
-				Type:        schema.TypeBigInt,
+				Name:          "retention_in_days",
+				Description:   "The number of days to retain the log events in the specified log group",
+				Type:          schema.TypeBigInt,
+				IgnoreInTests: true,
 			},
 			{
 				Name:        "stored_bytes",
