@@ -18,6 +18,7 @@ resource "aws" "cloudwatchlogs" "loggroups" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
     }
   }
+
   userDefinedColumn "region" {
     type        = "string"
     description = "The AWS Region of the resource."
