@@ -28,5 +28,5 @@ func buildCloudwatchLogsLogGroupsMock(t *testing.T, ctrl *gomock.Controller) cli
 }
 
 func TestCloudwatchlogsLogGroups(t *testing.T) {
-	client.AwsMockTestHelper(t, CloudwatchlogsLogGroups(), buildCloudwatchLogsLogGroupsMock, client.TestOptions{})
+	client.AwsMockTestHelper(t, LogGroups(), buildCloudwatchLogsLogGroupsMock, client.TestOptions{})
 }
