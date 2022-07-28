@@ -8,7 +8,7 @@ resource "aws" "cloudwatchlogs" "loggroups" {
   }
   multiplex "AwsAccountRegion" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
-    params = ["cloudwatchlogs"]
+    params = ["logs"]
   }
 
   userDefinedColumn "account_id" {
@@ -25,6 +25,7 @@ resource "aws" "cloudwatchlogs" "loggroups" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
   }
+  ignore_columns_in_tests = ["kms_key_id","retention_in_days"]
 
   options {
     primary_keys = ["arn"]
