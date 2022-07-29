@@ -26,16 +26,16 @@ resource "aws" "cloudwatchlogs" "log_groups" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
   }
+
+  userDefinedColumn "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
   ignore_columns_in_tests = ["kms_key_id","retention_in_days"]
 
   options {
     primary_keys = ["arn"]
   }
 
-  column "tags" {
-    type = "json"
-    resolver "resolveTags" {
-      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
-    }
-  }
 }

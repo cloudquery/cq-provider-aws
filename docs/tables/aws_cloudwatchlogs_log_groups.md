@@ -6,6 +6,7 @@ Represents a log group.
 | ------------- | ------------- | -----  |
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|tags|jsonb||
 |arn|text|The Amazon Resource Name (ARN) of the log group.|
 |creation_time|bigint|The creation time of the log group, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.|
 |kms_key_id|text|The Amazon Resource Name (ARN) of the CMK to use when encrypting log data.|
