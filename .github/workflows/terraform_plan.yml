@@ -150,6 +150,7 @@ jobs:
           /tmp/infracost configure set api_key ${{ secrets.INFRACOST_API_KEY }}
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
+
       - name: Run Infracost
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
         run: /tmp/infracost breakdown --config-file=/tmp/infracost.yml --format=json --out-file=/tmp/infracost.json
