@@ -1,4 +1,5 @@
 resource "aws" "kinesis" "streams" {
+
   path = "github.com/aws/aws-sdk-go-v2/service/kinesis/types.StreamDescriptionSummary"
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -8,7 +9,7 @@ resource "aws" "kinesis" "streams" {
   }
   multiplex "AwsAccountRegion" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
-    params = ["logs"]
+    params = ["kinesis"]
   }
 
   userDefinedColumn "account_id" {
@@ -26,9 +27,24 @@ resource "aws" "kinesis" "streams" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
   }
-  ignore_columns_in_tests = ["kms_key_id","retention_in_days"]
+  ignore_columns_in_tests = ["kms_key_id", "retention_in_days"]
 
-//   options {
-//     primary_keys = ["StreamARN"]
-//   }
+  options {
+    primary_keys = ["arn"]
+  }
+
+  userDefinedColumn "arn" {
+    type = "string"
+    resolver "resolveStreamArn" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+      path_resolver = true
+      // TODO: require manual changing from ARN -> StreamARN for the path resolver as its not supported by cq-gen yet
+      params = ["StreamARN"]
+    }
+  }
+
+  userDefinedColumn "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
 }

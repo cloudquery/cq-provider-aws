@@ -3,7 +3,10 @@ package kinesis
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -12,9 +15,10 @@ func Streams() *schema.Table {
 		Name:         "aws_kinesis_streams",
 		Description:  "Represents the output for DescribeStreamSummary",
 		Resolver:     fetchKinesisStreams,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("logs"),
+		Multiplex:    client.ServiceAccountRegionMultiplexer("kinesis"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -27,6 +31,16 @@ func Streams() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "arn",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("StreamARN"),
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: ResolveKinesisStreamTags,
 			},
 			{
 				Name:        "open_shard_count",
@@ -85,7 +99,7 @@ func Streams() *schema.Table {
 			{
 				Name:        "aws_kinesis_stream_enhanced_monitoring",
 				Description: "Represents enhanced metrics types.",
-				Resolver:    fetchKinesisStreamEnhancedMonitorings,
+				Resolver:    schema.PathTableResolver("EnhancedMonitoring"),
 				Columns: []schema.Column{
 					{
 						Name:        "stream_cq_id",
@@ -109,9 +123,9 @@ func Streams() *schema.Table {
 // ====================================================================================================================
 
 func fetchKinesisStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listKinesisStreams, streamDetail))
 }
-func fetchKinesisStreamEnhancedMonitorings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func ResolveKinesisStreamTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	panic("not implemented")
 }
 
@@ -119,6 +133,38 @@ func fetchKinesisStreamEnhancedMonitorings(ctx context.Context, meta schema.Clie
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-func fetchKinesisStreamShards(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+func listKinesisStreams(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Kinesis
+	input := kinesis.ListStreamsInput{}
+	for {
+		response, err := svc.ListStreams(ctx, &input)
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, item := range response.StreamNames {
+			detailChan <- item
+		}
+		if !aws.ToBool(response.HasMoreStreams) {
+			break
+		}
+		input.ExclusiveStartStreamName = aws.String(response.StreamNames[len(response.StreamNames)-1])
+	}
+	return nil
+}
+func streamDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
+	c := meta.(*client.Client)
+	streamName := listInfo.(string)
+	svc := c.Services().Kinesis
+	streamSummary, err := svc.DescribeStreamSummary(ctx, &kinesis.DescribeStreamSummaryInput{
+		StreamName: aws.String(streamName),
+	})
+	if err != nil {
+		if c.IsNotFoundError(err) {
+			return
+		}
+		errorChan <- diag.WrapError(err)
+		return
+	}
+	resultsChan <- streamSummary.StreamDescriptionSummary
 }
