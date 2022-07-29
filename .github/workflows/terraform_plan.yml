@@ -2,6 +2,7 @@
 name: terraform_plan
 on:
   workflow_dispatch:
+  push:
   pull_request_target:
     branches:
       - main
