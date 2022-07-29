@@ -85,6 +85,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/lorenzosaino/go-sysctl v0.3.1 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
