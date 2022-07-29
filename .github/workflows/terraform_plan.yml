@@ -22,18 +22,17 @@ jobs:
       - name: Skip if not member and event is pull_request_target
         if: github.event_name != 'pull_request_target' || steps.is_organization_member.outputs.result == 'false'
         run: |
-            echo "user is not part of org. Please run 'cd terraform/YOUR_SERVICE/local && terraform init && terraform apply"
-            echo "and paste the output in the PR"
+          echo "user is not part of org. Please run 'cd terraform/YOUR_SERVICE/local && terraform init && terraform apply"
+          echo "and paste the output in the PR"
 
   terrafrom_plan:
-
     needs: is_organization_member
     if: github.event_name != 'pull_request_target' || needs.is_organization_member.outputs.status == 'true'
     permissions:
-        id-token: write # This required for OIDC
-        contents: read    # This is required for actions/checkout@v2
-        issues: write
-        pull-requests: write
+      id-token: write # This required for OIDC
+      contents: read    # This is required for actions/checkout@v2
+      issues: write
+      pull-requests: write
     name: Terrafrom Plan
     runs-on: ubuntu-latest
     steps:
@@ -126,7 +125,7 @@ jobs:
             </details>
             
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
-              
+            
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -136,11 +135,11 @@ jobs:
 
       # Install the Infracost CLI, see https://github.com/infracost/actions/tree/master/setup
       # for other inputs such as version, and pricing-api-endpoint (for self-hosted users).
-#          - name: Setup Infracost
-#        if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
-#        # uses: infracost/actions/setup@v2
-#        run: |
-#          curl -o /tmp/infracost https://infracost-public-dumps.s3.amazonaws.com/builds/1923/infracost-linux-amd64
+      #          - name: Setup Infracost
+      #        if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
+      #        # uses: infracost/actions/setup@v2
+      #        run: |
+      #          curl -o /tmp/infracost https://infracost-public-dumps.s3.amazonaws.com/builds/1923/infracost-linux-amd64
       - name: Setup Infracost
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request_target'
         # uses: infracost/actions/setup@v2
