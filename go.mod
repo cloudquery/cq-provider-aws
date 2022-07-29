@@ -41,6 +41,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/guardduty v1.14.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.8
 	github.com/aws/aws-sdk-go-v2/service/iot v1.25.4
+	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/kms v1.17.4
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.3
 	github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.2
@@ -85,7 +86,6 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.9 // indirect
-	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/lorenzosaino/go-sysctl v0.3.1 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
