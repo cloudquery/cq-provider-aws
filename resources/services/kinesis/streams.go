@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/kinesis"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -126,7 +127,25 @@ func fetchKinesisStreams(ctx context.Context, meta schema.ClientMeta, parent *sc
 	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listKinesisStreams, streamDetail))
 }
 func ResolveKinesisStreamTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	panic("not implemented")
+	cl := meta.(*client.Client)
+	svc := cl.Services().Kinesis
+	summary := resource.Item.(*types.StreamDescriptionSummary)
+	input := kinesis.ListTagsForStreamInput{
+		StreamName: summary.StreamName,
+	}
+	var tags []types.Tag
+	for {
+		output, err := svc.ListTagsForStream(ctx, &input)
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		tags = append(tags, output.Tags...)
+		if !aws.ToBool(output.HasMoreTags) {
+			break
+		}
+		input.ExclusiveStartTagKey = aws.String(*output.Tags[len(output.Tags)-1].Key)
+	}
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(tags)))
 }
 
 // ====================================================================================================================
