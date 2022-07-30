@@ -78,7 +78,6 @@ import (
 	"github.com/aws/smithy-go"
 	"github.com/aws/smithy-go/logging"
 	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
-	"github.com/hashicorp/go-hclog"
 	"github.com/rs/zerolog"
 )
 
@@ -89,7 +88,7 @@ type Client struct {
 	maxRetries      int
 	maxBackoff      int
 	ServicesManager ServicesManager
-	logger          hclog.Logger
+	logger          zerolog.Logger
 	// this is set by table clientList
 	AccountID            string
 	GlobalRegion         string
@@ -108,7 +107,7 @@ type S3Manager struct {
 }
 
 type AwsLogger struct {
-	l hclog.Logger
+	l zerolog.Logger
 }
 
 type AssumeRoleAPIClient interface {
@@ -210,11 +209,6 @@ var errUnknownRegion = func(region string) error {
 	return fmt.Errorf("unknown region: %q", region)
 }
 
-var (
-	_ schema.ClientMeta       = (*Client)(nil)
-	_ schema.ClientIdentifier = (*Client)(nil)
-)
-
 func (s *ServicesManager) ServicesByPartitionAccountAndRegion(partition, accountId, region string) *Services {
 	if region == "" {
 		region = defaultRegion
@@ -259,7 +253,7 @@ func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, o
 	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
 }
 
-func NewAwsClient(logger hclog.Logger) Client {
+func NewAwsClient(logger zerolog.Logger) Client {
 	return Client{
 		ServicesManager: ServicesManager{
 			services: ServicesPartitionAccountRegionMap{},
@@ -277,14 +271,14 @@ func (s ServicesPartitionAccountRegionMap) Accounts() []string {
 	}
 	return accounts
 }
-func (c *Client) Logger() hclog.Logger {
-	return &awsLogger{c.logger, c.ServicesManager.services.Accounts()}
+func (c *Client) Logger() *zerolog.Logger {
+	return &c.logger
 }
 
 // Identify the given client
 func (c *Client) Identify() string {
 	return strings.TrimRight(strings.Join([]string{
-		obfuscateAccountId(c.AccountID),
+		c.AccountID,
 		c.Region,
 		c.AutoscalingNamespace,
 		string(c.WAFScope),
@@ -321,7 +315,7 @@ func (c *Client) withPartitionAccountIDAndRegion(partition, accountID, region st
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
-		logger:               c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region),
+		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Logger(),
 		AccountID:            accountID,
 		Region:               region,
 		AutoscalingNamespace: c.AutoscalingNamespace,
@@ -330,13 +324,14 @@ func (c *Client) withPartitionAccountIDAndRegion(partition, accountID, region st
 }
 
 func (c *Client) withPartitionAccountIDRegionAndNamespace(partition, accountID, region, namespace string) *Client {
+	c.Logger().With()
 	return &Client{
 		Partition:            partition,
 		logLevel:             c.logLevel,
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
-		logger:               c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region, "AutoscalingNamespace", namespace),
+		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Str("AutoscalingNamespace", namespace).Logger(),
 		AccountID:            accountID,
 		Region:               region,
 		AutoscalingNamespace: namespace,
@@ -351,7 +346,7 @@ func (c *Client) withPartitionAccountIDRegionAndScope(partition, accountID, regi
 		maxRetries:           c.maxRetries,
 		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
-		logger:               c.logger.With("account_id", obfuscateAccountId(accountID), "Region", region, "Scope", scope),
+		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Interface("scope", scope).Logger(),
 		AccountID:            accountID,
 		Region:               region,
 		AutoscalingNamespace: c.AutoscalingNamespace,
@@ -403,12 +398,12 @@ func getAccountId(ctx context.Context, awsCfg aws.Config) (*sts.GetCallerIdentit
 	return svc.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{})
 }
 
-func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Config, account Account, stsClient AssumeRoleAPIClient) (aws.Config, error) {
+func configureAwsClient(ctx context.Context, logger zerolog.Logger, awsConfig *Config, account Account, stsClient AssumeRoleAPIClient) (aws.Config, error) {
 	var err error
 	var awsCfg aws.Config
 	configFns := []func(*config.LoadOptions) error{
 		config.WithDefaultRegion(defaultRegion),
-		config.WithRetryer(newRetryer(logger, awsConfig.MaxRetries, awsConfig.MaxBackoff)),
+		config.WithRetryer(newRetryer(awsConfig.MaxRetries, awsConfig.MaxBackoff)),
 	}
 
 	if account.DefaultRegion != "" {
@@ -423,7 +418,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
 
 	if err != nil {
-		logger.Error("error loading default config", "err", err)
+		logger.Error().Err(err).Msg("error loading default config")
 		return awsCfg, err
 	}
 
@@ -449,20 +444,20 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 
 	if awsConfig.AWSDebug {
 		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
-		awsCfg.Logger = AwsLogger{logger.With("accountName", account.AccountName)}
+		awsCfg.Logger = AwsLogger{logger.With().Str("accountName", account.AccountName).Logger()}
 	}
 
 	// Test out retrieving credentials
 	if _, err := awsCfg.Credentials.Retrieve(ctx); err != nil {
-		logger.Error("error retrieving credentials", "err", err)
+		logger.Error().Err(err).Msg("error retrieving credentials")
 
 		var ae smithy.APIError
 		if errors.As(err, &ae) {
 			if strings.Contains(ae.ErrorCode(), "InvalidClientTokenId") {
-				logger.Warn("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file.")
+				logger.Warn().Msg("The credentials being used to assume role are invalid. Please check that your credentials are valid in the partition you are using. If you are using a partition other than the AWS commercial region, be sure set the default_region attribute in the cloudquery.yml file.")
 			}
 		}
-		logger.Warn("Couldn't find any credentials in environment variables or configuration files.")
+		logger.Warn().Msg("Couldn't find any credentials in environment variables or configuration files.")
 		return awsCfg, nil
 	}
 
@@ -492,7 +487,7 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 	}
 
 	for _, account := range awsConfig.Accounts {
-		logger.Debug("user defined account", "account", account)
+		logger.Debug().Str("account", account.AccountName).Msg("user defined account")
 
 		if account.AccountName == "" {
 			account.AccountName = account.ID
@@ -508,13 +503,13 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 		}
 
 		if isAllRegions(localRegions) {
-			logger.Info("All regions specified in `cloudquery.yml`. Assuming all regions")
+			logger.Info().Msg("All regions specified in `cloudquery.yml`. Assuming all regions")
 		}
 
 		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, adminAccountSts)
 		if err != nil {
 			if account.source == "org" {
-				logger.Warn("unable to assume role in account")
+				logger.Warn().Msg("unable to assume role in account")
 				principal := "unknown principal"
 				// Identify the principal making the request and use it to construct the error message. Any errors can be ignored as they are only for improving the user experience.
 				awsAdminCfg, _ := configureAwsClient(ctx, logger, awsConfig, *awsConfig.Organization.AdminAccount, nil)
@@ -522,13 +517,13 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 				if accountErr == nil {
 					principal = *output.Arn
 				}
-				logger.Warn(fmt.Sprintf("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN), "type", "access")
+				logger.Warn().Msg(fmt.Sprintf("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN))
 				continue
 			}
 			var ae smithy.APIError
 			if errors.As(err, &ae) {
 				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
-					logger.Warn(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()).Error(), "type", "access")
+					logger.Warn().Msg(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()).Error())
 					continue
 				}
 			}
@@ -550,19 +545,19 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 				}
 			})
 		if err != nil {
-			logger.Warn(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err).Error(), "type", "access")
+			logger.Warn().Msg(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err).Error())
 			continue
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
-			logger.Warn(fmt.Sprintf("no enabled regions provided in config for account %s", account.AccountName), "type", "access")
+			logger.Warn().Str("type", "access").Msg(fmt.Sprintf("no enabled regions provided in config for account %s", account.AccountName))
 			continue
 		}
 		awsCfg.Region = account.Regions[0]
 		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			logger.Warn("failed to get caller identity. AWS Error: %w", err)
+			logger.Warn().Err(err).Msg("failed to get caller identity. AWS Error:")
 			continue
 		}
 		iamArn, err := arn.Parse(*output.Arn)
@@ -676,9 +671,9 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 
 func (a AwsLogger) Logf(classification logging.Classification, format string, v ...interface{}) {
 	if classification == logging.Warn {
-		a.l.Warn(fmt.Sprintfå(format, v...))
+		a.l.Warn().Msg(fmt.Sprintf(format, v...))
 	} else {
-		a.l.Debug(fmt.Sprintf(format, v...))
+		a.l.Debug().Msg(fmt.Sprintf(format, v...))
 	}
 }
 

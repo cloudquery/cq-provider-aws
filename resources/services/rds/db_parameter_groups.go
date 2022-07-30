@@ -172,7 +172,7 @@ func fetchRdsDbParameterGroupDbParameters(ctx context.Context, meta schema.Clien
 		})
 		if err != nil {
 			if client.IsAWSError(err, "DBParameterGroupNotFound") {
-				cl.Logger().Debug("received DBParameterGroupNotFound on DescribeDBParameters", "region", cl.Region, "err", err)
+				cl.Logger().Debug().Str("region", cl.Region).Err(err).Msg("received DBParameterGroupNotFound on DescribeDBParameters")
 				return nil
 			}
 			return helpers.WrapError(err)

@@ -509,7 +509,7 @@ func fetchS3Buckets(ctx context.Context, meta schema.ClientMeta, _ *schema.Resou
 	done := make(chan struct{})
 	go func() {
 		for err = range errs {
-			meta.Logger().Error("Error fetching buckets", "error", err.Error())
+			meta.Logger().Error().Err(err).Msg("Error fetching buckets")
 		}
 		close(done)
 	}()
@@ -538,7 +538,7 @@ func fetchS3BucketsWorker(ctx context.Context, meta schema.ClientMeta, buckets <
 
 func resolveS3BucketsAttributes(ctx context.Context, meta schema.ClientMeta, resource *WrappedBucket) error {
 	log := meta.Logger()
-	log.Debug("fetching bucket attributes", "bucket", aws.ToString(resource.Name))
+	log.Debug().Str("bucket", aws.ToString(resource.Name)).Msg("fetching bucket attributes")
 	c := meta.(*client.Client)
 	mgr := c.Services().S3Manager
 
@@ -724,7 +724,7 @@ func resolveBucketLogging(ctx context.Context, meta schema.ClientMeta, resource 
 	})
 	if err != nil {
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketLogging", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketLogging")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -750,7 +750,7 @@ func resolveBucketPolicy(ctx context.Context, meta schema.ClientMeta, resource *
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketPolicy", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketPolicy")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -770,7 +770,7 @@ func resolveBucketVersioning(ctx context.Context, meta schema.ClientMeta, resour
 	})
 	if err != nil {
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketVersioning", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketVersioning")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -792,7 +792,7 @@ func resolveBucketPublicAccessBlock(ctx context.Context, meta schema.ClientMeta,
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetPublicAccessBlock", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetPublicAccessBlock")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -817,7 +817,7 @@ func resolveBucketReplication(ctx context.Context, meta schema.ClientMeta, resou
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketReplication", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketReplication")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -842,7 +842,7 @@ func resolveBucketTagging(ctx context.Context, meta schema.ClientMeta, resource 
 			return nil
 		}
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketTagging", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketTagging")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -879,7 +879,7 @@ func resolveBucketOwnershipControls(ctx context.Context, meta schema.ClientMeta,
 		}
 
 		if client.IgnoreAccessDeniedServiceDisabled(err) {
-			meta.Logger().Warn("received access denied on GetBucketOwnershipControls", "bucket", resource.Name, "err", err)
+			meta.Logger().Warn().Str("bucket", aws.ToString(resource.Name)).Err(err).Msg("received access denied on GetBucketOwnershipControls")
 			return nil
 		}
 

@@ -32,7 +32,7 @@ max_backoff: 60
 	// }
 
 	providertest.TestResource(t, providertest.ResourceTestCase{
-		Provider: &source.SourcePlugin{
+		Plugin: &source.SourcePlugin{
 			Name:    "aws_mock_test_provider",
 			Version: "development",
 			Configure: func(logger zerolog.Logger, i interface{}) (schema.ClientMeta, error) {
@@ -41,8 +41,8 @@ max_backoff: 60
 				c.Partition = "aws"
 				return &c, nil
 			},
-			ResourceMap: map[string]*schema.Table{
-				"test_resource": table,
+			Tables: []*schema.Table{
+				table,
 			},
 			Config: func() interface{} {
 				return &Config{}

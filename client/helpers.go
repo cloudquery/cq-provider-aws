@@ -231,13 +231,6 @@ func IgnoreNotAvailableRegion(err error) bool {
 	return false
 }
 
-func accountObfusactor(aa []string, msg string) string {
-	for _, a := range aa {
-		msg = strings.ReplaceAll(msg, a, obfuscateAccountId(a))
-	}
-	return msg
-}
-
 // makeARN creates an ARN using supplied service name, partition, account id, region name and resource id parts.
 // Resource id parts are concatenated using forward slash (/).
 // See https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html for more information.
@@ -300,7 +293,7 @@ func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resou
 // IsNotFoundError checks if api error should be ignored
 func (c *Client) IsNotFoundError(err error) bool {
 	if isNotFoundError(err) {
-		c.logger.Warn("API returned \"NotFound\" error ignoring it...", "error", err)
+		c.logger.Warn().Err(err).Msg("API returned \"NotFound\" error ignoring it...")
 		return true
 	}
 	return false
@@ -323,7 +316,7 @@ func isNotFoundError(err error) bool {
 // IsAccessDeniedError checks if api error should be classified as a permissions issue
 func (c *Client) IsAccessDeniedError(err error) bool {
 	if isAccessDeniedError(err) {
-		c.logger.Warn("API returned an Access Denied error, ignoring it and continuing...", "error", err)
+		c.logger.Warn().Err(err).Msg("API returned an Access Denied error, ignoring it and continuing...")
 		return true
 	}
 	return false
@@ -424,7 +417,6 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 }
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {
-
 	errorChan := make(chan error)
 	detailChan := make(chan interface{})
 	// Channel that will communicate with goroutine that is aggregating the errors
@@ -432,7 +424,7 @@ func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan
 	go func() {
 		defer close(done)
 		for detailError := range errorChan {
-			meta.Logger().Error(detailError.Error())
+			meta.Logger().Error().Msg(detailError.Error())
 		}
 	}()
 	sem := semaphore.NewWeighted(int64(MAX_GOROUTINES))
