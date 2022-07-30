@@ -10,7 +10,7 @@ import (
 	"github.com/aws/smithy-go/middleware"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/helpers"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
 )
 
 //go:generate cq-gen --resource analyzers --config gen.hcl --output .

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/helpers"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
 )
 
 //go:generate cq-gen --resource autoscaling_scheduled_actions --config ./resources/services/autoscaling/gen.hcl --output .

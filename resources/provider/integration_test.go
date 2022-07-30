@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
+	providertest "github.com/cloudquery/cq-provider-sdk/plugin/source/testing"
 )
 
 func TestIntegration(t *testing.T) {

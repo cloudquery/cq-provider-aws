@@ -59,19 +59,18 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
-	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
 )
 
 var (
 	Version = "Development"
 )
 
-func Provider() *provider.Provider {
-	return &provider.Provider{
-		Name:      "aws",
-		Version:   Version,
-		Configure: client.Configure,
+func Provider() *source.SourcePlugin {
+	return &source.SourcePlugin{
+		Name:    "aws",
+		Version: Version,
 		// ErrorClassifier: client.ErrorClassifier,
 		ResourceMap: map[string]*schema.Table{
 			"accessanalyzer.analyzers":                accessanalyzer.Analyzers(),
@@ -250,7 +249,7 @@ func Provider() *provider.Provider {
 			"xray.sampling_rules":                     xray.SamplingRules(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
-		Config: func() provider.Config {
+		Config: func() interface{} {
 			return &client.Config{}
 		},
 	}

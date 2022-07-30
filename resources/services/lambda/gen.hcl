@@ -41,7 +41,7 @@ resource "aws" "lambda" "functions" {
   }
 
   postResourceResolver "resolvePolicyCodeSigningConfig" {
-    path     = "github.com/cloudquery/cq-provider-sdk/provider/schema.RowResolver"
+    path     = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.RowResolver"
     generate = true
   }
 
@@ -137,7 +137,7 @@ resource "aws" "lambda" "functions" {
     column "url_config_last_modified_time" {
       type = "timestamp"
       resolver "dateResolver" {
-        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.DateResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.DateResolver"
         params = ["UrlConfig.LastModifiedTime"]
       }
     }
@@ -145,7 +145,7 @@ resource "aws" "lambda" "functions" {
     column "url_config_creation_time" {
       type = "timestamp"
       resolver "dateResolver" {
-        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.DateResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.DateResolver"
         params = ["UrlConfig.CreationTime"]
       }
     }
@@ -165,7 +165,7 @@ resource "aws" "lambda" "functions" {
       description = "The Amazon Resource Name (ARN) of the lambda function"
       resolver "resolveArn" {
         //argument arn
-        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.ParentResourceFieldResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.ParentResourceFieldResolver"
         params = ["arn"]
       }
     }
@@ -205,7 +205,7 @@ resource "aws" "lambda" "functions" {
       description = "The Amazon Resource Name (ARN) of the lambda function"
       resolver "resolveArn" {
         //argument arn
-        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.ParentResourceFieldResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.ParentResourceFieldResolver"
         params = ["arn"]
       }
     }
@@ -233,7 +233,7 @@ resource "aws" "lambda" "functions" {
       description = "The Amazon Resource Name (ARN) of the lambda function"
       resolver "resolveArn" {
         //argument arn
-        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.ParentResourceFieldResolver"
+        path   = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.ParentResourceFieldResolver"
         params = ["arn"]
       }
     }

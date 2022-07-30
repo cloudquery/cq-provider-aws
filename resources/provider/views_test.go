@@ -1,16 +1,12 @@
 package provider
 
-import (
-	_ "embed"
-	"testing"
+// import (
+// // _ "embed"
+// )
 
-	"github.com/cloudquery/cq-provider-aws/views"
-	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
-)
-
-func TestViews(t *testing.T) {
-	providertest.HelperTestView(t, providertest.ViewTestCase{
-		Provider: Provider(),
-		SQLView:  views.ResourcesView,
-	})
-}
+// func TestViews(t *testing.T) {
+// 	providertest.HelperTestView(t, providertest.ViewTestCase{
+// 		Provider: Provider(),
+// 		SQLView:  views.ResourcesView,
+// 	})
+// }

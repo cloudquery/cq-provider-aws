@@ -1,14 +1,14 @@
 package client
 
 import (
+	"os"
 	"testing"
 
-	"github.com/cloudquery/cq-provider-sdk/logging"
-	"github.com/cloudquery/cq-provider-sdk/provider"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	providertest "github.com/cloudquery/cq-provider-sdk/provider/testing"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
+	providertest "github.com/cloudquery/cq-provider-sdk/plugin/source/testing"
 	"github.com/golang/mock/gomock"
-	"github.com/hashicorp/go-hclog"
+	"github.com/rs/zerolog"
 )
 
 type TestOptions struct{}
@@ -32,13 +32,11 @@ max_backoff: 60
 	// }
 
 	providertest.TestResource(t, providertest.ResourceTestCase{
-		Provider: &provider.Provider{
+		Provider: &source.SourcePlugin{
 			Name:    "aws_mock_test_provider",
 			Version: "development",
-			Configure: func(logger hclog.Logger, i interface{}) (schema.ClientMeta, error) {
-				c := NewAwsClient(logging.New(&hclog.LoggerOptions{
-					Level: hclog.Warn,
-				}))
+			Configure: func(logger zerolog.Logger, i interface{}) (schema.ClientMeta, error) {
+				c := NewAwsClient(zerolog.New(os.Stderr))
 				c.ServicesManager.InitServicesForPartitionAccountAndRegion("aws", "testAccount", "us-east-1", builder(t, ctrl))
 				c.Partition = "aws"
 				return &c, nil
@@ -46,7 +44,7 @@ max_backoff: 60
 			ResourceMap: map[string]*schema.Table{
 				"test_resource": table,
 			},
-			Config: func() provider.Config {
+			Config: func() interface{} {
 				return &Config{}
 			},
 		},

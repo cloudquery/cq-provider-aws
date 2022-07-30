@@ -77,8 +77,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/smithy-go"
 	"github.com/aws/smithy-go/logging"
-	"github.com/cloudquery/cq-provider-sdk/provider/schema"
+	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
 	"github.com/hashicorp/go-hclog"
+	"github.com/rs/zerolog"
 )
 
 type Client struct {
@@ -468,7 +469,7 @@ func configureAwsClient(ctx context.Context, logger hclog.Logger, awsConfig *Con
 	return awsCfg, err
 }
 
-func Configure(logger hclog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
+func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
 	ctx := context.Background()
 	awsConfig := providerConfig.(*Config)
 	client := NewAwsClient(logger)
@@ -675,17 +676,10 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 
 func (a AwsLogger) Logf(classification logging.Classification, format string, v ...interface{}) {
 	if classification == logging.Warn {
-		a.l.Warn(fmt.Sprintf(format, v...))
+		a.l.Warn(fmt.Sprintfå(format, v...))
 	} else {
 		a.l.Debug(fmt.Sprintf(format, v...))
 	}
-}
-
-func obfuscateAccountId(accountId string) string {
-	if len(accountId) <= 4 {
-		return accountId
-	}
-	return accountId[:4] + "xxxxxxxx"
 }
 
 // checkEnvVariables checks which aws environment variables are set
