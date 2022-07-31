@@ -1,7 +1,6 @@
 package client
 
 import (
-	"os"
 	"testing"
 
 	"github.com/cloudquery/cq-provider-sdk/plugin/source"
@@ -19,24 +18,25 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	ctrl := gomock.NewController(t)
 
 	cfg := `
-regions: ["us-east-1"]
-accounts:
+max_goroutines: 100
+configuration:
+  regions: ["us-east-1"]
+  accounts:
   - id: testAccount
     role_arn: ""
-aws_debug: false
-max_retries: 3
-max_backoff: 60
+  aws_debug: false
+  max_retries: 3
+  max_backoff: 60
+tables:
+  - "*"
 `
-	// accounts := []Account{
-	// 	{ID: "testAccount"},
-	// }
 
 	providertest.TestResource(t, providertest.ResourceTestCase{
 		Plugin: &source.SourcePlugin{
 			Name:    "aws_mock_test_provider",
 			Version: "development",
 			Configure: func(logger zerolog.Logger, i interface{}) (schema.ClientMeta, error) {
-				c := NewAwsClient(zerolog.New(os.Stderr))
+				c := NewAwsClient(logger)
 				c.ServicesManager.InitServicesForPartitionAccountAndRegion("aws", "testAccount", "us-east-1", builder(t, ctrl))
 				c.Partition = "aws"
 				return &c, nil

@@ -489,7 +489,7 @@ func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Clien
 		if err != nil {
 			return helpers.WrapError(err)
 		}
-		res <- response.ResourceLogEvents
+		// res <- response.ResourceLogEvents
 		for _, e := range response.ResourceLogEvents {
 			res <- LogEventWrapper{e, stream}
 		}
