@@ -140,7 +140,7 @@ func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema
 				options.Region = c.Region
 			})
 			if err != nil {
-				meta.Logger().Warn(fmt.Sprintf("failed to describe stream %v", err))
+				meta.Logger().Warn().Msg(fmt.Sprintf("failed to describe stream %v", err))
 				continue
 			}
 			res <- stream.StreamInfo

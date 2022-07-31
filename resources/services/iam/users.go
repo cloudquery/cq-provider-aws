@@ -356,7 +356,7 @@ func fetchIamUsers(ctx context.Context, meta schema.ClientMeta, _ *schema.Resour
 		for i, u := range output.Users {
 			ru := report.GetUser(aws.ToString(u.Arn))
 			if ru == nil {
-				meta.Logger().Warn("failed to find user in credential report", "arn", u.Arn)
+				meta.Logger().Warn().Str("arn", aws.ToString(u.Arn)).Msg("failed to find user in credential report")
 				ru = &reportUser{}
 			}
 			wUsers[i] = wrappedUser{
@@ -667,13 +667,13 @@ func getCredentialReport(ctx context.Context, meta schema.ClientMeta) (reportUse
 				if serviceError.ErrorCode() != "LimitExceeded" {
 					return nil, helpers.WrapError(err)
 				}
-				if err := helpers.Sleep(ctx, 5*time.Second); err != nil {
+				if err := client.SleepContext(ctx, 5*time.Second); err != nil {
 					return nil, helpers.WrapError(err)
 				}
 			}
 		case "ReportInProgress":
-			meta.Logger().Debug("Waiting for credential report to be generated", "resource", "iam.users")
-			if err := helpers.Sleep(ctx, 5*time.Second); err != nil {
+			meta.Logger().Debug().Str("resource", "iam.users").Msg("Waiting for credential report to be generated")
+			if err := client.SleepContext(ctx, 5*time.Second); err != nil {
 				return nil, helpers.WrapError(err)
 			}
 		default:

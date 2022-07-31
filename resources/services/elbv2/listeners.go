@@ -415,7 +415,7 @@ func fetchElbv2ListenerCertificates(ctx context.Context, meta schema.ClientMeta,
 		})
 		if err != nil {
 			if client.IsErrorRegex(err, "ValidationError", notSupportedGatewayLB) {
-				c.Logger().Debug("ELBv2: DescribeListenerCertificates not supported for Gateway Load Balancers")
+				c.Logger().Debug().Msg("ELBv2: DescribeListenerCertificates not supported for Gateway Load Balancers")
 				return nil
 			}
 			return helpers.WrapError(err)

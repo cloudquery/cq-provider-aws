@@ -156,7 +156,7 @@ func resolveEc2ebsSnapshotCreateVolumePermissions(ctx context.Context, meta sche
 
 	if err != nil {
 		if client.IsAWSError(err, "InvalidSnapshot.NotFound") {
-			meta.Logger().Debug("Failed extracting snapshot volume permissions", "SnapshotId", r.SnapshotId, "error", err)
+			meta.Logger().Debug().Str("SnapshotId", aws.ToString(r.SnapshotId)).Err(err).Msg("Failed extracting snapshot volume permissions")
 			return nil
 		}
 		return helpers.WrapError(err)

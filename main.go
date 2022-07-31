@@ -7,7 +7,7 @@ import (
 
 func main() {
 	serve.Serve(&serve.Options{
-		Name:     "aws",
-		Provider: provider.Provider(),
+		Name:   "aws",
+		Plugin: provider.Provider(),
 	})
 }

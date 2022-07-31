@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/smithy-go"
@@ -414,6 +415,15 @@ func TagsToMap(tagSlice interface{}) map[string]string {
 	ret := make(map[string]string, slc.Len())
 	TagsIntoMap(tagSlice, ret)
 	return ret
+}
+
+func SleepContext(ctx context.Context, delay time.Duration) error {
+	select {
+	case <-ctx.Done():
+		return fmt.Errorf("context cancelled")
+	case <-time.After(delay):
+	}
+	return nil
 }
 
 func ListAndDetailResolver(ctx context.Context, meta schema.ClientMeta, res chan<- interface{}, list ListResolverFunc, details DetailResolverFunc) error {

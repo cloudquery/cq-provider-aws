@@ -476,7 +476,7 @@ func fetchElasticbeanstalkConfigurationOptions(ctx context.Context, meta schema.
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
 		if client.IsInvalidParameterValueError(err) {
-			meta.Logger().Debug("Failed extracting configuration options for environment. It might be terminated", "environment", p.EnvironmentName, "application", p.ApplicationName)
+			meta.Logger().Debug().Str("environment", aws.ToString(p.EnvironmentName)).Str("application", aws.ToString(p.ApplicationName)).Msg("Failed extracting configuration options for environment. It might be terminated")
 			return nil
 		}
 		return helpers.WrapError(err)
@@ -507,7 +507,7 @@ func fetchElasticbeanstalkConfigurationSettings(ctx context.Context, meta schema
 		// It takes a few minutes for an environment to be terminated
 		// This ensures we don't error while trying to fetch related resources for a terminated environment
 		if client.IsInvalidParameterValueError(err) {
-			meta.Logger().Debug("Failed extracting configuration settings for environment. It might be terminated", "environment", p.EnvironmentName, "application", p.ApplicationName)
+			meta.Logger().Debug().Str("environment", aws.ToString(p.EnvironmentName)).Str("application", aws.ToString(p.ApplicationName)).Msg("Failed extracting configuration settings for environment. It might be terminated")
 			return nil
 		}
 		return helpers.WrapError(err)

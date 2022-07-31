@@ -1110,7 +1110,7 @@ func fetchLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *s
 
 			if err != nil {
 				if c.IsNotFoundError(err) || c.IsAccessDeniedError(err) {
-					meta.Logger().Warn("Function not found or access denied", "function", f.FunctionName, "error", err.Error())
+					meta.Logger().Warn().Str("function", aws.ToString(f.FunctionName)).Err(err).Msg("Function not found or access denied")
 					res <- &lambda.GetFunctionOutput{
 						Configuration: &f,
 					}
