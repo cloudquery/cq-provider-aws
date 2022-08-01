@@ -1,5 +1,11 @@
-resource "aws" "kinesis" "streams" {
 
+
+
+description_modifier "remove_read_only" {
+  words = ["  This member is required."]
+}
+
+resource "aws" "kinesis" "streams" {
   path = "github.com/aws/aws-sdk-go-v2/service/kinesis/types.StreamDescriptionSummary"
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
@@ -39,7 +45,7 @@ resource "aws" "kinesis" "streams" {
       path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
       path_resolver = true
       // TODO: require manual changing from ARN -> StreamARN for the path resolver as its not supported by cq-gen yet
-      params = ["StreamARN"]
+      params = ["stream_arn"]
     }
   }
 
@@ -48,8 +54,6 @@ resource "aws" "kinesis" "streams" {
     generate_resolver = true
   }
 }
-
-
 
 resource "aws" "kinesis" "firehoses" {
 

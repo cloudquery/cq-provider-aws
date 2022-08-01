@@ -45,28 +45,28 @@ func Streams() *schema.Table {
 			},
 			{
 				Name:        "open_shard_count",
-				Description: "The number of open shards in the stream.  This member is required.",
+				Description: "The number of open shards in the stream",
 				Type:        schema.TypeBigInt,
 			},
 			{
 				Name:        "retention_period_hours",
-				Description: "The current retention period, in hours.  This member is required.",
+				Description: "The current retention period, in hours",
 				Type:        schema.TypeBigInt,
 			},
 			{
 				Name:        "stream_arn",
-				Description: "The Amazon Resource Name (ARN) for the stream being described.  This member is required.",
+				Description: "The Amazon Resource Name (ARN) for the stream being described",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("StreamARN"),
 			},
 			{
 				Name:        "stream_creation_timestamp",
-				Description: "The approximate time that the stream was created.  This member is required.",
+				Description: "The approximate time that the stream was created",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "stream_name",
-				Description: "The name of the stream being described.  This member is required.",
+				Description: "The name of the stream being described",
 				Type:        schema.TypeString,
 			},
 			{
@@ -76,7 +76,7 @@ func Streams() *schema.Table {
 			},
 			{
 				Name:        "consumer_count",
-				Description: "The number of enhanced fan-out consumers registered with the stream.",
+				Description: "The number of enhanced fan-out consumers registered with the stream",
 				Type:        schema.TypeBigInt,
 			},
 			{
@@ -91,7 +91,7 @@ func Streams() *schema.Table {
 			},
 			{
 				Name:        "stream_mode_details_stream_mode",
-				Description: "Specifies the capacity mode to which you want to set your data stream. Currently, in Kinesis Data Streams, you can choose between an on-demand capacity mode and a provisioned capacity mode for your data streams.  This member is required.",
+				Description: "Specifies the capacity mode to which you want to set your data stream Currently, in Kinesis Data Streams, you can choose between an on-demand capacity mode and a provisioned capacity mode for your data streams",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("StreamModeDetails.StreamMode"),
 			},
@@ -99,7 +99,7 @@ func Streams() *schema.Table {
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_kinesis_stream_enhanced_monitoring",
-				Description: "Represents enhanced metrics types.",
+				Description: "Represents enhanced metrics types",
 				Resolver:    schema.PathTableResolver("EnhancedMonitoring"),
 				Columns: []schema.Column{
 					{
