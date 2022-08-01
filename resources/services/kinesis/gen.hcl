@@ -48,3 +48,182 @@ resource "aws" "kinesis" "streams" {
     generate_resolver = true
   }
 }
+
+
+
+resource "aws" "kinesis" "firehoses" {
+
+  path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.DeliveryStreamDescription"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["firehose"]
+  }
+
+  userDefinedColumn "account_id" {
+    description = "The AWS Account ID of the resource."
+    type        = "string"
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  options {
+    primary_keys = ["arn"]
+  }
+
+
+  userDefinedColumn "tags" {
+    type              = "json"
+    generate_resolver = true
+  }
+
+
+  column "destinations" {
+    skip = true
+  }
+
+  column "has_more_destinations" {
+    skip = true
+  }
+
+  column "delivery_stream_encryption_configuration"{
+    skip_prefix = true
+  }
+  column "delivery_stream_encryption_configuration_failure_description_details" {
+    skip = false
+  }
+  column "delivery_stream_encryption_configuration_failure_description_type" {
+    skip = false
+  }
+  column "source_kinesis_stream_source_description_delivery_start_timestamp" {
+    skip = true
+  }
+
+  user_relation "aws" "kinesis" "open_search_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.AmazonopensearchserviceDestinationDescription"
+    column "s3_destination_description_encryption_configuration_kms_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_encryption_configuration_no_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
+      skip = true
+    }
+  }
+  user_relation "aws" "kinesis" "elasticsearch_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ElasticsearchDestinationDescription"
+    column "s3_destination_description_encryption_configuration_kms_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_encryption_configuration_no_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
+      skip = true
+    }
+    column "output_format_configuration_serializer_orc_ser_de_bloom_filter_false_positive_probability" {
+      skip = true
+    }
+  }
+
+  user_relation "aws" "kinesis" "extended_s3_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ExtendedS3DestinationDescription"
+    column "data_format_conversion_configuration" {
+      skip_prefix = true
+    }
+    column "input_format_configuration" {
+      skip_prefix = true
+    }
+
+    column "deserializer_open_x_json_ser_de_convert_dots_in_json_keys_to_underscores" {
+      skip = true
+    }
+    column "dynamic_partitioning_configuration_retry_options_duration_in_seconds" {
+      skip = true
+    }
+
+    column "output_format_configuration" {
+      skip_prefix = true
+    }
+    column "s3_backup_description" {
+      skip_prefix = true
+    }
+
+
+  }
+  user_relation "aws" "kinesis" "s3_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.S3DestinationDescription"
+    column "data_format_conversion_configuration" {
+      skip_prefix = true
+    }
+
+    column "input_format_configuration" {
+      skip_prefix = true
+    }
+    column "deserializer_open_x_json_ser_de_convert_dots_in_json_keys_to_underscores" {
+      skip = true
+    }
+    column "dynamic_partitioning_configuration_retry_options_duration_in_seconds" {
+      skip = true
+    }
+    column "output_format_configuration" {
+      skip_prefix = true
+    }
+    column "s3_backup_description" {
+      skip_prefix = true
+    }
+  }
+
+  user_relation "aws" "kinesis" "http_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.HttpEndpointDestinationDescription"
+    column "s3_destination_description" {
+      skip_prefix = true
+    }
+  }
+  user_relation "aws" "kinesis" "http_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.HttpEndpointDestinationDescription"
+  }
+  user_relation "aws" "kinesis" "redshift_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.RedshiftDestinationDescription"
+    column "encryption_configuration" {
+      skip_prefix = true
+    }
+    column "encryption_configuration_kms_encryption" {
+      skip_prefix = true
+    }
+    column "s3_destination_description" {
+      skip_prefix = true
+    }
+    column "s3_backup_description" {
+      skip_prefix = true
+    }
+  }
+  user_relation "aws" "kinesis" "splunk_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.SplunkDestinationDescription"
+    column "s3_destination_description" {
+      skip_prefix = true
+    }
+
+  }
+}

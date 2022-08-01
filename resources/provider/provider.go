@@ -190,6 +190,7 @@ func Provider() *provider.Provider {
 			"iot.things":                              iot.IotThings(),
 			"iot.topic_rules":                         iot.IotTopicRules(),
 			"kinesis.data_streams":                    kinesis.Streams(),
+			"kinesis.firehoses":                       kinesis.Firehoses(),
 			"kms.keys":                                kms.Keys(),
 			"lambda.functions":                        lambda.Functions(),
 			"lambda.layers":                           lambda.LambdaLayers(),
