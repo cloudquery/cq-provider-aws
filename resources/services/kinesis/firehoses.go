@@ -10,7 +10,7 @@ import (
 func Firehoses() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_kinesis_firehoses",
-		Description:  "Contains information about a delivery stream.",
+		Description:  "Contains information about a delivery stream",
 		Resolver:     fetchKinesisFirehoses,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("firehose"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -32,7 +32,7 @@ func Firehoses() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: ResolveKinesisFirehoseTags,
+				Resolver: resolveKinesisFirehoseTags,
 			},
 			{
 				Name:        "delivery_stream_arn",
@@ -42,7 +42,7 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "delivery_stream_name",
-				Description: "The name of the delivery stream.  This member is required.",
+				Description: "The name of the delivery stream",
 				Type:        schema.TypeString,
 			},
 			{
@@ -56,29 +56,24 @@ func Firehoses() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "has_more_destinations",
-				Description: "Indicates whether there are more destinations available to list.  This member is required.",
-				Type:        schema.TypeBool,
-			},
-			{
 				Name:        "version_id",
-				Description: "Each time the destination is updated for a delivery stream, the version ID is changed, and the current version ID is required when updating the destination. This is so that the service knows it is applying the changes to the correct version of the delivery stream.  This member is required.",
+				Description: "Each time the destination is updated for a delivery stream, the version ID is changed, and the current version ID is required when updating the destination This is so that the service knows it is applying the changes to the correct version of the delivery stream",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "create_timestamp",
-				Description: "The date and time that the delivery stream was created.",
+				Description: "The date and time that the delivery stream was created",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "failure_description_details",
-				Description: "A message providing details about the error that caused the failure.  This member is required.",
+				Description: "A message providing details about the error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DeliveryStreamEncryptionConfiguration.FailureDescription.Details"),
 			},
 			{
 				Name:        "failure_description_type",
-				Description: "The type of error that caused the failure.  This member is required.",
+				Description: "The type of error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DeliveryStreamEncryptionConfiguration.FailureDescription.Type"),
 			},
@@ -102,19 +97,19 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "failure_description_details",
-				Description: "A message providing details about the error that caused the failure.  This member is required.",
+				Description: "A message providing details about the error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("FailureDescription.Details"),
 			},
 			{
 				Name:        "failure_description_type",
-				Description: "The type of error that caused the failure.  This member is required.",
+				Description: "The type of error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("FailureDescription.Type"),
 			},
 			{
 				Name:        "last_update_timestamp",
-				Description: "The date and time that the delivery stream was last updated.",
+				Description: "The date and time that the delivery stream was last updated",
 				Type:        schema.TypeTimestamp,
 			},
 			{
@@ -133,7 +128,7 @@ func Firehoses() *schema.Table {
 		Relations: []*schema.Table{
 			{
 				Name:     "aws_kinesis_firehose_open_search_destination",
-				Resolver: fetchKinesisFirehoseOpenSearchDestinations,
+				Resolver: schema.PathTableResolver("Destinations.AmazonopensearchserviceDestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -153,7 +148,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -188,7 +183,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -238,7 +233,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "s3_destination_description_cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -278,7 +273,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "vpc_configuration_description_vpc_id",
-						Description: "The ID of the Amazon ES destination's VPC.  This member is required.",
+						Description: "The ID of the Amazon ES destination's VPC",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
 					},
@@ -286,8 +281,8 @@ func Firehoses() *schema.Table {
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_open_search_destination_cq_id",
@@ -297,15 +292,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_open_search_destination_processing_configuration_processor_cq_id",
@@ -315,12 +310,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -331,8 +326,8 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "aws_kinesis_firehose_elasticsearch_destination",
-				Description: "The destination description in Amazon ES.",
-				Resolver:    fetchKinesisFirehoseElasticsearchDestinations,
+				Description: "The destination description in Amazon ES",
+				Resolver:    schema.PathTableResolver("Destinations.ElasticsearchDestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -354,7 +349,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -383,7 +378,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "index_name",
-						Description: "The Elasticsearch index name.",
+						Description: "The Elasticsearch index name",
 						Type:        schema.TypeString,
 					},
 					{
@@ -393,7 +388,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -411,7 +406,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "s3_backup_mode",
-						Description: "The Amazon S3 backup mode.",
+						Description: "The Amazon S3 backup mode",
 						Type:        schema.TypeString,
 					},
 					{
@@ -446,7 +441,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "s3_destination_description_cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -487,7 +482,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "vpc_configuration_description_vpc_id",
-						Description: "The ID of the Amazon ES destination's VPC.  This member is required.",
+						Description: "The ID of the Amazon ES destination's VPC",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
 					},
@@ -495,8 +490,8 @@ func Firehoses() *schema.Table {
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseElasticsearchDestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_elasticsearch_destination_cq_id",
@@ -506,15 +501,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseElasticsearchDestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_elasticsearch_destination_processing_configuration_processor_cq_id",
@@ -524,12 +519,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -540,8 +535,8 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "aws_kinesis_firehose_extended_s3_destination",
-				Description: "Describes a destination in Amazon S3.",
-				Resolver:    fetchKinesisFirehoseExtendedS3Destinations,
+				Description: "Describes a destination in Amazon S3",
+				Resolver:    schema.PathTableResolver("Destinations.ExtendedS3DestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -580,7 +575,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "encryption_configuration_no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -592,7 +587,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -622,7 +617,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "deserializer_open_x_json_ser_de_case_insensitive",
-						Description: "When set to true, which is the default, Kinesis Data Firehose converts JSON keys to lowercase before deserializing them.",
+						Description: "When set to true, which is the default, Kinesis Data Firehose converts JSON keys to lowercase before deserializing them",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.InputFormatConfiguration.Deserializer.OpenXJsonSerDe.CaseInsensitive"),
 					},
@@ -706,7 +701,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "serializer_parquet_ser_de_enable_dictionary_compression",
-						Description: "Indicates whether to enable dictionary compression.",
+						Description: "Indicates whether to enable dictionary compression",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.OutputFormatConfiguration.Serializer.ParquetSerDe.EnableDictionaryCompression"),
 					},
@@ -742,7 +737,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "schema_configuration_region",
-						Description: "If you don't specify an AWS Region, the default is the current Region.",
+						Description: "If you don't specify an AWS Region, the default is the current Region",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.SchemaConfiguration.Region"),
 					},
@@ -766,7 +761,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "dynamic_partitioning_configuration_enabled",
-						Description: "Specifies that the dynamic partitioning is enabled for this Kinesis Data Firehose delivery stream.",
+						Description: "Specifies that the dynamic partitioning is enabled for this Kinesis Data Firehose delivery stream",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("DynamicPartitioningConfiguration.Enabled"),
 					},
@@ -782,7 +777,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -818,7 +813,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "encryption_configuration_no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3BackupDescription.EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -830,7 +825,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3BackupDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -860,15 +855,15 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "s3_backup_mode",
-						Description: "The Amazon S3 backup mode.",
+						Description: "The Amazon S3 backup mode",
 						Type:        schema.TypeString,
 					},
 				},
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_extended_s3_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_extended_s3_destination_cq_id",
@@ -878,15 +873,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_extended_s3_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_extended_s3_destination_processing_configuration_processor_cq_id",
@@ -896,12 +891,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -912,8 +907,8 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "aws_kinesis_firehose_http_destination",
-				Description: "Describes the HTTP endpoint destination.",
-				Resolver:    fetchKinesisFirehoseHttpDestinations,
+				Description: "Describes the HTTP endpoint destination",
+				Resolver:    schema.PathTableResolver("Destinations.HttpEndpointDestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -935,7 +930,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -953,19 +948,19 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "endpoint_configuration_name",
-						Description: "The name of the HTTP endpoint selected as the destination.",
+						Description: "The name of the HTTP endpoint selected as the destination",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("EndpointConfiguration.Name"),
 					},
 					{
 						Name:        "endpoint_configuration_url",
-						Description: "The URL of the HTTP endpoint selected as the destination.",
+						Description: "The URL of the HTTP endpoint selected as the destination",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("EndpointConfiguration.Url"),
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -983,7 +978,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "role_arn",
-						Description: "Kinesis Data Firehose uses this IAM role for all the permissions that the delivery stream needs.",
+						Description: "Kinesis Data Firehose uses this IAM role for all the permissions that the delivery stream needs",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("RoleARN"),
 					},
@@ -1024,7 +1019,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "encryption_configuration_no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -1036,7 +1031,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1068,8 +1063,8 @@ func Firehoses() *schema.Table {
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_http_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseHttpDestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_http_destination_cq_id",
@@ -1079,15 +1074,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_http_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseHttpDestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_http_destination_processing_configuration_processor_cq_id",
@@ -1097,12 +1092,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -1111,8 +1106,8 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "aws_kinesis_firehose_http_destination_request_configuration_common_attributes",
-						Description: "Describes the metadata that's delivered to the specified HTTP endpoint destination.",
-						Resolver:    fetchKinesisFirehoseHttpDestinationRequestConfigurationCommonAttributes,
+						Description: "Describes the metadata that's delivered to the specified HTTP endpoint destination",
+						Resolver:    schema.PathTableResolver("RequestConfiguration.CommonAttributes"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_http_destination_cq_id",
@@ -1122,12 +1117,12 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "attribute_name",
-								Description: "The name of the HTTP endpoint common attribute.  This member is required.",
+								Description: "The name of the HTTP endpoint common attribute",
 								Type:        schema.TypeString,
 							},
 							{
 								Name:        "attribute_value",
-								Description: "The value of the HTTP endpoint common attribute.  This member is required.",
+								Description: "The value of the HTTP endpoint common attribute",
 								Type:        schema.TypeString,
 							},
 						},
@@ -1136,8 +1131,8 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "aws_kinesis_firehose_redshift_destination",
-				Description: "Describes a destination in Amazon Redshift.",
-				Resolver:    fetchKinesisFirehoseRedshiftDestinations,
+				Description: "Describes a destination in Amazon Redshift",
+				Resolver:    schema.PathTableResolver("Destinations.RedshiftDestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -1147,7 +1142,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cluster_j_db_c_url",
-						Description: "The database connection string.  This member is required.",
+						Description: "The database connection string",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("ClusterJDBCURL"),
 					},
@@ -1165,7 +1160,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "copy_command_data_table_columns",
-						Description: "A comma-separated list of column names.",
+						Description: "A comma-separated list of column names",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("CopyCommand.DataTableColumns"),
 					},
@@ -1207,7 +1202,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -1219,7 +1214,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1249,12 +1244,12 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "username",
-						Description: "The name of the user.  This member is required.",
+						Description: "The name of the user",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1272,7 +1267,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -1314,7 +1309,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3BackupDescription.EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -1326,7 +1321,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3BackupDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1356,15 +1351,15 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "s3_backup_mode",
-						Description: "The Amazon S3 backup mode.",
+						Description: "The Amazon S3 backup mode",
 						Type:        schema.TypeString,
 					},
 				},
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_redshift_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseRedshiftDestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_redshift_destination_cq_id",
@@ -1374,15 +1369,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_redshift_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseRedshiftDestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_redshift_destination_processing_configuration_processor_cq_id",
@@ -1392,12 +1387,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -1408,8 +1403,8 @@ func Firehoses() *schema.Table {
 			},
 			{
 				Name:        "aws_kinesis_firehose_splunk_destination",
-				Description: "Describes a destination in Splunk.",
-				Resolver:    fetchKinesisFirehoseSplunkDestinations,
+				Description: "Describes a destination in Splunk",
+				Resolver:    schema.PathTableResolver("Destinations.SplunkDestinationDescription"),
 				Columns: []schema.Column{
 					{
 						Name:        "firehose_cq_id",
@@ -1419,7 +1414,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1436,29 +1431,29 @@ func Firehoses() *schema.Table {
 						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
 					},
 					{
-						Name:        "h_e_ca_cknowledgment_timeout_in_seconds",
+						Name:        "h_e_c_acknowledgment_timeout_in_seconds",
 						Description: "The amount of time that Kinesis Data Firehose waits to receive an acknowledgment from Splunk after it sends it data",
 						Type:        schema.TypeBigInt,
 						Resolver:    schema.PathResolver("HECAcknowledgmentTimeoutInSeconds"),
 					},
 					{
 						Name:        "h_e_c_endpoint",
-						Description: "The HTTP Event Collector (HEC) endpoint to which Kinesis Data Firehose sends your data.",
+						Description: "The HTTP Event Collector (HEC) endpoint to which Kinesis Data Firehose sends your data",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "h_e_c_endpoint_type",
-						Description: "This type can be either \"Raw\" or \"Event.\"",
+						Description: "This type can be either \"Raw\" or \"Event\"",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "h_e_c_token",
-						Description: "A GUID you obtain from your Splunk cluster when you create a new HEC endpoint.",
+						Description: "A GUID you obtain from your Splunk cluster when you create a new HEC endpoint",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "processing_configuration_enabled",
-						Description: "Enables or disables data processing.",
+						Description: "Enables or disables data processing",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
@@ -1505,7 +1500,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "encryption_configuration_no_encryption_config",
-						Description: "Specifically override existing encryption information to ensure that no encryption is used.",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
 					},
@@ -1517,7 +1512,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",
-						Description: "Enables or disables CloudWatch logging.",
+						Description: "Enables or disables CloudWatch logging",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
 					},
@@ -1549,8 +1544,8 @@ func Firehoses() *schema.Table {
 				Relations: []*schema.Table{
 					{
 						Name:        "aws_kinesis_firehose_splunk_destination_processing_configuration_processors",
-						Description: "Describes a data processor.",
-						Resolver:    fetchKinesisFirehoseSplunkDestinationProcessingConfigurationProcessors,
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
 						Columns: []schema.Column{
 							{
 								Name:        "firehose_splunk_destination_cq_id",
@@ -1560,15 +1555,15 @@ func Firehoses() *schema.Table {
 							},
 							{
 								Name:        "type",
-								Description: "The type of processor.  This member is required.",
+								Description: "The type of processor",
 								Type:        schema.TypeString,
 							},
 						},
 						Relations: []*schema.Table{
 							{
 								Name:        "aws_kinesis_firehose_splunk_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter.",
-								Resolver:    fetchKinesisFirehoseSplunkDestinationProcessingConfigurationProcessorParameters,
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
 								Columns: []schema.Column{
 									{
 										Name:        "firehose_splunk_destination_processing_configuration_processor_cq_id",
@@ -1578,12 +1573,12 @@ func Firehoses() *schema.Table {
 									},
 									{
 										Name:        "parameter_name",
-										Description: "The name of the parameter.  This member is required.",
+										Description: "The name of the parameter",
 										Type:        schema.TypeString,
 									},
 									{
 										Name:        "parameter_value",
-										Description: "The parameter value.  This member is required.",
+										Description: "The parameter value",
 										Type:        schema.TypeString,
 									},
 								},
@@ -1603,74 +1598,6 @@ func Firehoses() *schema.Table {
 func fetchKinesisFirehoses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	panic("not implemented")
 }
-func ResolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseOpenSearchDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseElasticsearchDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseElasticsearchDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseElasticsearchDestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseExtendedS3Destinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseHttpDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseHttpDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseHttpDestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseHttpDestinationRequestConfigurationCommonAttributes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseRedshiftDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseRedshiftDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseRedshiftDestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseSplunkDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseSplunkDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseSplunkDestinationProcessingConfigurationProcessorParameters(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
-}
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
 func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	panic("not implemented")
-}
-func fetchKinesisFirehoseDestinations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	panic("not implemented")
 }
