@@ -35,6 +35,12 @@ func Firehoses() *schema.Table {
 				Resolver: resolveKinesisFirehoseTags,
 			},
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) of the delivery stream",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("DeliveryStreamARN"),
+			},
+			{
 				Name:        "delivery_stream_arn",
 				Description: "The Amazon Resource Name (ARN) of the delivery stream",
 				Type:        schema.TypeString,
@@ -66,7 +72,7 @@ func Firehoses() *schema.Table {
 				Type:        schema.TypeTimestamp,
 			},
 			{
-				Name:        "failure_description_details",
+				Name:        "encryption_failure_description_details",
 				Description: "A message providing details about the error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DeliveryStreamEncryptionConfiguration.FailureDescription.Details"),
