@@ -101,21 +101,47 @@ resource "aws" "kinesis" "firehoses" {
     skip = true
   }
 
-  column "delivery_stream_encryption_configuration"{
-    skip_prefix = true
+  userDefinedColumn "arn" {
+    type        = "string"
+    description = "The Amazon Resource Name (ARN) of the delivery stream"
+
+    resolver "resolveStreamArn" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+      path_resolver = true
+      params        = ["DeliveryStreamARN"]
+    }
   }
+
+  column "delivery_stream_encryption_configuration" {
+    // skip_prefix = true
+    rename = "encryption_config"
+  }
+
+  column "delivery_stream_encryption_configuration" {
+    // skip_prefix = true
+    rename = "encryption_config"
+  }
+
   column "delivery_stream_encryption_configuration_failure_description_details" {
     skip = false
   }
   column "delivery_stream_encryption_configuration_failure_description_type" {
     skip = false
   }
-  column "source_kinesis_stream_source_description_delivery_start_timestamp" {
-    skip = true
+  column "source" {
+    rename = "source"
   }
-
+  column "source_kinesis_stream_source_description" {
+    rename = "_kinesis_stream"
+    // skip_prefix = true
+  }
   user_relation "aws" "kinesis" "open_search_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.AmazonopensearchserviceDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.AmazonopensearchserviceDestinationDescription"]
+    }
     column "s3_destination_description_encryption_configuration_kms_encryption_config" {
       skip = true
     }
@@ -131,6 +157,11 @@ resource "aws" "kinesis" "firehoses" {
   }
   user_relation "aws" "kinesis" "elasticsearch_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ElasticsearchDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.ElasticsearchDestinationDescription"]
+    }
     column "s3_destination_description_encryption_configuration_kms_encryption_config" {
       skip = true
     }
@@ -150,6 +181,11 @@ resource "aws" "kinesis" "firehoses" {
 
   user_relation "aws" "kinesis" "extended_s3_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ExtendedS3DestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.ExtendedS3DestinationDescription"]
+    }
     column "data_format_conversion_configuration" {
       skip_prefix = true
     }
@@ -172,41 +208,27 @@ resource "aws" "kinesis" "firehoses" {
     }
 
 
-  }
-  user_relation "aws" "kinesis" "s3_destination" {
-    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.S3DestinationDescription"
-    column "data_format_conversion_configuration" {
-      skip_prefix = true
-    }
-
-    column "input_format_configuration" {
-      skip_prefix = true
-    }
-    column "deserializer_open_x_json_ser_de_convert_dots_in_json_keys_to_underscores" {
-      skip = true
-    }
-    column "dynamic_partitioning_configuration_retry_options_duration_in_seconds" {
-      skip = true
-    }
-    column "output_format_configuration" {
-      skip_prefix = true
-    }
-    column "s3_backup_description" {
-      skip_prefix = true
-    }
   }
 
   user_relation "aws" "kinesis" "http_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.HttpEndpointDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.HttpEndpointDestinationDescription"]
+    }
     column "s3_destination_description" {
       skip_prefix = true
     }
   }
-  user_relation "aws" "kinesis" "http_destination" {
-    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.HttpEndpointDestinationDescription"
-  }
+  
   user_relation "aws" "kinesis" "redshift_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.RedshiftDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.RedshiftDestinationDescription"]
+    }
     column "encryption_configuration" {
       skip_prefix = true
     }
@@ -222,6 +244,11 @@ resource "aws" "kinesis" "firehoses" {
   }
   user_relation "aws" "kinesis" "splunk_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.SplunkDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.SplunkDestinationDescription"]
+    }
     column "s3_destination_description" {
       skip_prefix = true
     }
