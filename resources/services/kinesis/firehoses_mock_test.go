@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/firehose"
+	"github.com/aws/aws-sdk-go-v2/service/firehose/types"
 	"github.com/bxcodec/faker"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-aws/client/mocks"
@@ -19,6 +20,8 @@ func buildKinesisFirehoses(t *testing.T, ctrl *gomock.Controller) client.Service
 	if err != nil {
 		t.Fatal(err)
 	}
+	streams.HasMoreDeliveryStreams = aws.Bool(false)
+	streams.DeliveryStreamNames = []string{"test-stream"}
 	f.EXPECT().ListDeliveryStreams(gomock.Any(), gomock.Any(), gomock.Any()).Return(&streams, nil)
 
 	stream := firehose.DescribeDeliveryStreamOutput{}
@@ -27,6 +30,7 @@ func buildKinesisFirehoses(t *testing.T, ctrl *gomock.Controller) client.Service
 	if err != nil {
 		t.Fatal(err)
 	}
+	stream.DeliveryStreamDescription.Destinations = []types.DestinationDescription{stream.DeliveryStreamDescription.Destinations[0]}
 
 	f.EXPECT().DescribeDeliveryStream(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).Return(&stream, nil)
 
