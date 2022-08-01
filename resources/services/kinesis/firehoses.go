@@ -3,7 +3,11 @@ package kinesis
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/firehose"
+	"github.com/aws/aws-sdk-go-v2/service/firehose/types"
 	"github.com/cloudquery/cq-provider-aws/client"
+	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
@@ -138,6 +142,204 @@ func Firehoses() *schema.Table {
 			},
 		},
 		Relations: []*schema.Table{
+			{
+				Name:     "aws_kinesis_firehose_open_search_destination",
+				Resolver: schema.PathTableResolver("Destinations.AmazonopensearchserviceDestinationDescription"),
+				Columns: []schema.Column{
+					{
+						Name:        "firehose_cq_id",
+						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:     "buffering_hints_interval_in_seconds",
+						Type:     schema.TypeBigInt,
+						Resolver: schema.PathResolver("BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:     "buffering_hints_size_in_mb_s",
+						Type:     schema.TypeBigInt,
+						Resolver: schema.PathResolver("BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name: "cluster_endpoint",
+						Type: schema.TypeString,
+					},
+					{
+						Name:     "domain_arn",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("DomainARN"),
+					},
+					{
+						Name: "index_name",
+						Type: schema.TypeString,
+					},
+					{
+						Name: "index_rotation_period",
+						Type: schema.TypeString,
+					},
+					{
+						Name:        "processing_configuration_enabled",
+						Description: "Enables or disables data processing",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
+					},
+					{
+						Name:     "retry_options_duration_in_seconds",
+						Type:     schema.TypeBigInt,
+						Resolver: schema.PathResolver("RetryOptions.DurationInSeconds"),
+					},
+					{
+						Name:     "role_arn",
+						Type:     schema.TypeString,
+						Resolver: schema.PathResolver("RoleARN"),
+					},
+					{
+						Name: "s3_backup_mode",
+						Type: schema.TypeString,
+					},
+					{
+						Name:        "s3_destination_description_bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BucketARN"),
+					},
+					{
+						Name:        "s3_destination_description_buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "s3_destination_description_buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "s3_destination_description_compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CompressionFormat"),
+					},
+					{
+						Name:        "s3_destination_description_role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.RoleARN"),
+					},
+					{
+						Name:        "s3_destination_description_cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "s3_destination_description_error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "s3_destination_description_prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
+					},
+					{
+						Name: "type_name",
+						Type: schema.TypeString,
+					},
+					{
+						Name:        "vpc_configuration_description_role_arn",
+						Description: "The ARN of the IAM role that the delivery stream uses to create endpoints in the destination VPC",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.RoleARN"),
+					},
+					{
+						Name:        "vpc_configuration_description_security_group_ids",
+						Description: "The IDs of the security groups that Kinesis Data Firehose uses when it creates ENIs in the VPC of the Amazon ES destination",
+						Type:        schema.TypeStringArray,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.SecurityGroupIds"),
+					},
+					{
+						Name:        "vpc_configuration_description_subnet_ids",
+						Description: "The IDs of the subnets that Kinesis Data Firehose uses to create ENIs in the VPC of the Amazon ES destination",
+						Type:        schema.TypeStringArray,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.SubnetIds"),
+					},
+					{
+						Name:        "vpc_configuration_description_vpc_id",
+						Description: "The ID of the Amazon ES destination's VPC",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
+					},
+				},
+				Relations: []*schema.Table{
+					{
+						Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processors",
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
+						Columns: []schema.Column{
+							{
+								Name:        "firehose_open_search_destination_cq_id",
+								Description: "Unique CloudQuery ID of aws_kinesis_firehose_open_search_destination table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "type",
+								Description: "The type of processor",
+								Type:        schema.TypeString,
+							},
+						},
+						Relations: []*schema.Table{
+							{
+								Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processor_parameters",
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
+								Columns: []schema.Column{
+									{
+										Name:        "firehose_open_search_destination_processing_configuration_processor_cq_id",
+										Description: "Unique CloudQuery ID of aws_kinesis_firehose_open_search_destination_processing_configuration_processors table (FK)",
+										Type:        schema.TypeUUID,
+										Resolver:    schema.ParentIdResolver,
+									},
+									{
+										Name:        "parameter_name",
+										Description: "The name of the parameter",
+										Type:        schema.TypeString,
+									},
+									{
+										Name:        "parameter_value",
+										Description: "The parameter value",
+										Type:        schema.TypeString,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			{
 				Name:        "aws_kinesis_firehose_extended_s3_destination",
 				Description: "Describes a destination in Amazon S3",
@@ -519,8 +721,66 @@ func Firehoses() *schema.Table {
 // ====================================================================================================================
 
 func fetchKinesisFirehoses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	panic("not implemented")
+	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDeliveryStreams, deliveryStreamDetail))
 }
 func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	panic("not implemented")
+	cl := meta.(*client.Client)
+	svc := cl.Services().Firehose
+	summary := resource.Item.(*types.DeliveryStreamDescription)
+	input := firehose.ListTagsForDeliveryStreamInput{
+		DeliveryStreamName: summary.DeliveryStreamName,
+	}
+	var tags []types.Tag
+	for {
+		output, err := svc.ListTagsForDeliveryStream(ctx, &input)
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		tags = append(tags, output.Tags...)
+		if !aws.ToBool(output.HasMoreTags) {
+			break
+		}
+		input.ExclusiveStartTagKey = aws.String(*output.Tags[len(output.Tags)-1].Key)
+	}
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(tags)))
+}
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
+func listDeliveryStreams(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Firehose
+	input := firehose.ListDeliveryStreamsInput{}
+	for {
+		response, err := svc.ListDeliveryStreams(ctx, &input)
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, item := range response.DeliveryStreamNames {
+			detailChan <- item
+		}
+		if !aws.ToBool(response.HasMoreDeliveryStreams) {
+			break
+		}
+		input.ExclusiveStartDeliveryStreamName = aws.String(response.DeliveryStreamNames[len(response.DeliveryStreamNames)-1])
+	}
+	return nil
+}
+func deliveryStreamDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
+	c := meta.(*client.Client)
+	streamName := listInfo.(string)
+	svc := c.Services().Firehose
+	streamSummary, err := svc.DescribeDeliveryStream(ctx, &firehose.DescribeDeliveryStreamInput{
+		DeliveryStreamName: aws.String(streamName),
+	})
+	if err != nil {
+		if c.IsNotFoundError(err) {
+			return
+		}
+		errorChan <- diag.WrapError(err)
+		return
+	}
+	resultsChan <- streamSummary.DeliveryStreamDescription
 }

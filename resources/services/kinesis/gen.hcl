@@ -135,26 +135,26 @@ resource "aws" "kinesis" "firehoses" {
     rename = "_kinesis_stream"
     // skip_prefix = true
   }
-  // user_relation "aws" "kinesis" "open_search_destination" {
-  //   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.AmazonopensearchserviceDestinationDescription"
-  //   resolver "resolveTable" {
-  //     path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
-  //     path_resolver = true
-  //     params        = ["Destinations.AmazonopensearchserviceDestinationDescription"]
-  //   }
-  //   column "s3_destination_description_encryption_configuration_kms_encryption_config" {
-  //     skip = true
-  //   }
-  //   column "s3_destination_description_encryption_configuration_no_encryption_config" {
-  //     skip = true
-  //   }
-  //   column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
-  //     skip = true
-  //   }
-  //   column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
-  //     skip = true
-  //   }
-  // }
+  user_relation "aws" "kinesis" "open_search_destination" {
+    path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.AmazonopensearchserviceDestinationDescription"
+    resolver "resolveTable" {
+      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
+      path_resolver = true
+      params        = ["Destinations.AmazonopensearchserviceDestinationDescription"]
+    }
+    column "s3_destination_description_encryption_configuration_kms_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_encryption_configuration_no_encryption_config" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
+      skip = true
+    }
+    column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
+      skip = true
+    }
+  }
   // user_relation "aws" "kinesis" "elasticsearch_destination" {
   //   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ElasticsearchDestinationDescription"
   //   resolver "resolveTable" {
