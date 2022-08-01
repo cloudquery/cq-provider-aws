@@ -1,6 +1,6 @@
 
 # Table: aws_kinesis_stream_enhanced_monitoring
-Represents enhanced metrics types.
+Represents enhanced metrics types
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
