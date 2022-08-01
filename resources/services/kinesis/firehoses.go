@@ -78,7 +78,7 @@ func Firehoses() *schema.Table {
 				Resolver:    schema.PathResolver("DeliveryStreamEncryptionConfiguration.FailureDescription.Details"),
 			},
 			{
-				Name:        "failure_description_type",
+				Name:        "encryption_failure_description_type",
 				Description: "The type of error that caused the failure",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("DeliveryStreamEncryptionConfiguration.FailureDescription.Type"),
