@@ -35,6 +35,46 @@ func (m *MockGlueClient) EXPECT() *MockGlueClientMockRecorder {
 	return m.recorder
 }
 
+// GetMLTaskRuns mocks base method.
+func (m *MockGlueClient) GetMLTaskRuns(arg0 context.Context, arg1 *glue.GetMLTaskRunsInput, arg2 ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetMLTaskRuns", varargs...)
+	ret0, _ := ret[0].(*glue.GetMLTaskRunsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMLTaskRuns indicates an expected call of GetMLTaskRuns.
+func (mr *MockGlueClientMockRecorder) GetMLTaskRuns(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMLTaskRuns", reflect.TypeOf((*MockGlueClient)(nil).GetMLTaskRuns), varargs...)
+}
+
+// GetMLTransforms mocks base method.
+func (m *MockGlueClient) GetMLTransforms(arg0 context.Context, arg1 *glue.GetMLTransformsInput, arg2 ...func(*glue.Options)) (*glue.GetMLTransformsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetMLTransforms", varargs...)
+	ret0, _ := ret[0].(*glue.GetMLTransformsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMLTransforms indicates an expected call of GetMLTransforms.
+func (mr *MockGlueClientMockRecorder) GetMLTransforms(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMLTransforms", reflect.TypeOf((*MockGlueClient)(nil).GetMLTransforms), varargs...)
+}
+
 // GetTags mocks base method.
 func (m *MockGlueClient) GetTags(arg0 context.Context, arg1 *glue.GetTagsInput, arg2 ...func(*glue.Options)) (*glue.GetTagsOutput, error) {
 	m.ctrl.T.Helper()
