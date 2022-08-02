@@ -48,6 +48,10 @@ resource "aws" "glue" "crawlers" {
     type              = "json"
     generate_resolver = true
   }
+
+  column "recrawl_policy_recrawl_behavior" {
+    rename = "recrawl_behavior"
+  }
 }
 
 

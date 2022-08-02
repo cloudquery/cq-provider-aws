@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource crawlers --config gen.hcl --output .
+//go:generate cq-gen --resource crawlers --config crawlers.hcl --output .
 func Crawlers() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_glue_crawlers",
@@ -145,7 +145,7 @@ func Crawlers() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "recrawl_policy_recrawl_behavior",
+				Name:        "recrawl_behavior",
 				Description: "Specifies whether to crawl the entire dataset again or to crawl only folders that were added since the last crawler run",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("RecrawlPolicy.RecrawlBehavior"),
@@ -199,7 +199,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_catalog_targets",
 				Description: "Specifies an Glue Data Catalog target",
-				Resolver:    fetchGlueCrawlerTargetsCatalogTargets,
+				Resolver:    schema.PathTableResolver("Targets.CatalogTargets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -227,7 +227,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_delta_targets",
 				Description: "Specifies a Delta data store to crawl one or more Delta tables",
-				Resolver:    fetchGlueCrawlerTargetsDeltaTargets,
+				Resolver:    schema.PathTableResolver("Targets.DeltaTargets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -255,7 +255,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_dynamo_db_targets",
 				Description: "Specifies an Amazon DynamoDB table to crawl",
-				Resolver:    fetchGlueCrawlerTargetsDynamoDbTargets,
+				Resolver:    schema.PathTableResolver("Targets.DynamoDBTargets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -283,7 +283,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_jdbc_targets",
 				Description: "Specifies a JDBC data store to crawl",
-				Resolver:    fetchGlueCrawlerTargetsJdbcTargets,
+				Resolver:    schema.PathTableResolver("Targets.JdbcTargets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -311,7 +311,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_mongo_db_targets",
 				Description: "Specifies an Amazon DocumentDB or MongoDB data store to crawl",
-				Resolver:    fetchGlueCrawlerTargetsMongoDbTargets,
+				Resolver:    schema.PathTableResolver("Targets.MongoDBTargets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -339,7 +339,7 @@ func Crawlers() *schema.Table {
 			{
 				Name:        "aws_glue_crawler_targets_s3_targets",
 				Description: "Specifies a data store in Amazon Simple Storage Service (Amazon S3)",
-				Resolver:    fetchGlueCrawlerTargetsS3Targets,
+				Resolver:    schema.PathTableResolver("Targets.S3Targets"),
 				Columns: []schema.Column{
 					{
 						Name:        "crawler_cq_id",
@@ -409,14 +409,14 @@ func fetchGlueCrawlers(ctx context.Context, meta schema.ClientMeta, parent *sche
 }
 func resolveGlueCrawlerArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
-	r := resource.Item.(types.Crawler)
-	return diag.WrapError(resource.Set(c.Name, cl.ARN("glue", *r.Name)))
+	arn := aws.String(crawlerARN(cl, aws.ToString(resource.Item.(types.Crawler).Name)))
+	return diag.WrapError(resource.Set(c.Name, arn))
 }
 func resolveGlueCrawlerTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Glue
 	input := glue.GetTagsInput{
-		ResourceArn: aws.String(cl.ARN("glue", resource.Get("arn").(string))),
+		ResourceArn: aws.String(crawlerARN(cl, aws.ToString(resource.Item.(types.Crawler).Name))),
 	}
 
 	response, err := svc.GetTags(ctx, &input, func(options *glue.Options) {
@@ -427,51 +427,7 @@ func resolveGlueCrawlerTags(ctx context.Context, meta schema.ClientMeta, resourc
 	}
 	return diag.WrapError(resource.Set(c.Name, response.Tags))
 }
-func fetchGlueCrawlerTargetsCatalogTargets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.CatalogTargets
-	return nil
-}
-func fetchGlueCrawlerTargetsDeltaTargets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.DeltaTargets
-	return nil
-}
-func fetchGlueCrawlerTargetsDynamoDbTargets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.DynamoDBTargets
-	return nil
-}
-func fetchGlueCrawlerTargetsJdbcTargets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.JdbcTargets
-	return nil
-}
-func fetchGlueCrawlerTargetsMongoDbTargets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.MongoDBTargets
-	return nil
-}
-func fetchGlueCrawlerTargetsS3Targets(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Crawler)
-	if r.Targets == nil {
-		return nil
-	}
-	res <- r.Targets.S3Targets
-	return nil
+
+func crawlerARN(cl *client.Client, name string) string {
+	return cl.ARN(client.GlueService, "crawler", name)
 }
