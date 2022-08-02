@@ -11,6 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+//go:generate cq-gen --resource=log_groups --config gen.hcl --output .
 func LogGroups() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_cloudwatchlogs_log_groups",
@@ -34,9 +35,10 @@ func LogGroups() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
-				Name:     "tags",
-				Type:     schema.TypeJSON,
-				Resolver: ResolveCloudwatchlogsLogGroupTags,
+				Name:        "tags",
+				Description: "The tags for the log group.",
+				Type:        schema.TypeJSON,
+				Resolver:    ResolveCloudwatchlogsLogGroupTags,
 			},
 			{
 				Name:        "arn",
@@ -102,7 +104,6 @@ func fetchCloudwatchlogsLogGroups(ctx context.Context, meta schema.ClientMeta, p
 	}
 	return nil
 }
-
 func ResolveCloudwatchlogsLogGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	lg := resource.Item.(types.LogGroup)
 	cl := meta.(*client.Client)

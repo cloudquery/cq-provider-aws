@@ -30,6 +30,7 @@ resource "aws" "cloudwatchlogs" "log_groups" {
   userDefinedColumn "tags" {
     type              = "json"
     generate_resolver = true
+    description       = "The tags for the log group."
   }
 
   ignore_columns_in_tests = ["kms_key_id","retention_in_days"]
