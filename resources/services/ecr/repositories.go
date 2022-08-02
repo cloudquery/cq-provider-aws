@@ -234,7 +234,6 @@ func resolveEcrRepositoryTags(ctx context.Context, meta schema.ClientMeta, resou
 		return diag.WrapError(err)
 	}
 	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(output.Tags)))
-
 }
 
 func fetchEcrRepositoryImages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
