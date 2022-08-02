@@ -2,6 +2,7 @@ package kinesis
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/firehose"
@@ -151,6 +152,12 @@ func Firehoses() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors,
 					},
 					{
 						Name:     "buffering_hints_interval_in_seconds",
@@ -318,51 +325,6 @@ func Firehoses() *schema.Table {
 						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
 					},
 				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processors",
-						Description: "Describes a data processor",
-						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
-						Columns: []schema.Column{
-							{
-								Name:        "firehose_open_search_destination_cq_id",
-								Description: "Unique CloudQuery ID of aws_kinesis_firehose_open_search_destination table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "type",
-								Description: "The type of processor",
-								Type:        schema.TypeString,
-							},
-						},
-						Relations: []*schema.Table{
-							{
-								Name:        "aws_kinesis_firehose_open_search_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter",
-								Resolver:    schema.PathTableResolver("Parameters"),
-								Columns: []schema.Column{
-									{
-										Name:        "firehose_open_search_destination_processing_configuration_processor_cq_id",
-										Description: "Unique CloudQuery ID of aws_kinesis_firehose_open_search_destination_processing_configuration_processors table (FK)",
-										Type:        schema.TypeUUID,
-										Resolver:    schema.ParentIdResolver,
-									},
-									{
-										Name:        "parameter_name",
-										Description: "The name of the parameter",
-										Type:        schema.TypeString,
-									},
-									{
-										Name:        "parameter_value",
-										Description: "The parameter value",
-										Type:        schema.TypeString,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 			{
 				Name:        "aws_kinesis_firehose_extended_s3_destination",
@@ -374,6 +336,12 @@ func Firehoses() *schema.Table {
 						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    resolveKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors,
 					},
 					{
 						Name:        "bucket_arn",
@@ -690,51 +658,6 @@ func Firehoses() *schema.Table {
 						Type:        schema.TypeString,
 					},
 				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_kinesis_firehose_extended_s3_destination_processing_configuration_processors",
-						Description: "Describes a data processor",
-						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
-						Columns: []schema.Column{
-							{
-								Name:        "firehose_extended_s3_destination_cq_id",
-								Description: "Unique CloudQuery ID of aws_kinesis_firehose_extended_s3_destination table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "type",
-								Description: "The type of processor",
-								Type:        schema.TypeString,
-							},
-						},
-						Relations: []*schema.Table{
-							{
-								Name:        "aws_kinesis_firehose_extended_s3_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter",
-								Resolver:    schema.PathTableResolver("Parameters"),
-								Columns: []schema.Column{
-									{
-										Name:        "firehose_extended_s3_destination_processing_configuration_processor_cq_id",
-										Description: "Unique CloudQuery ID of aws_kinesis_firehose_extended_s3_destination_processing_configuration_processors table (FK)",
-										Type:        schema.TypeUUID,
-										Resolver:    schema.ParentIdResolver,
-									},
-									{
-										Name:        "parameter_name",
-										Description: "The name of the parameter",
-										Type:        schema.TypeString,
-									},
-									{
-										Name:        "parameter_value",
-										Description: "The parameter value",
-										Type:        schema.TypeString,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 		},
 	}
@@ -767,6 +690,23 @@ func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, res
 		input.ExclusiveStartTagKey = aws.String(*output.Tags[len(output.Tags)-1].Key)
 	}
 	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(tags)))
+}
+func resolveKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(*types.AmazonopensearchserviceDestinationDescription)
+	out, err := json.Marshal(r.ProcessingConfiguration.Processors)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, out))
+
+}
+func resolveKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(*types.ExtendedS3DestinationDescription)
+	out, err := json.Marshal(r.ProcessingConfiguration.Processors)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, out))
 }
 
 // ====================================================================================================================

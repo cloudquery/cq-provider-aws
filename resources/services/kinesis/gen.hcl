@@ -135,6 +135,7 @@ resource "aws" "kinesis" "firehoses" {
     rename = "_kinesis_stream"
     // skip_prefix = true
   }
+
   user_relation "aws" "kinesis" "open_search_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.AmazonopensearchserviceDestinationDescription"
     resolver "resolveTable" {
@@ -142,30 +143,29 @@ resource "aws" "kinesis" "firehoses" {
       path_resolver = true
       params        = ["Destinations.AmazonopensearchserviceDestinationDescription"]
     }
-    column "s3_destination_description"{
+    column "s3_destination_description" {
       rename = "s3_destination"
     }
-       column "s3_destination_encryption_configuration" {
-        skip_prefix = true
-      }
+    column "s3_destination_encryption_configuration" {
+      skip_prefix = true
+    }
 
-       column "s3_destination_cloud_watch_logging_options_" {
-        skip_prefix = true
-      }
+    column "s3_destination_cloud_watch_logging_options_" {
+      skip_prefix = true
+    }
 
-    // column "s3_destination_description_encryption_configuration_kms_encryption_config" {
-    //   skip = true
-    // }
-    // column "s3_destination_description_encryption_configuration_no_encryption_config" {
-    //   skip = true
-    // }
-    // column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
-    //   skip = true
-    // }
-    // column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
-    //   skip = true
-    // }
+    column "processing_configuration_processors" {
+      skip = true
+    }
+    userDefinedColumn "processing_configuration_processors" {
+      type        = "json"
+      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      generate_resolver = true
+    }
+
+
   }
+
   // user_relation "aws" "kinesis" "elasticsearch_destination" {
   //   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.ElasticsearchDestinationDescription"
   //   resolver "resolveTable" {
@@ -173,21 +173,10 @@ resource "aws" "kinesis" "firehoses" {
   //     path_resolver = true
   //     params        = ["Destinations.ElasticsearchDestinationDescription"]
   //   }
-  //   column "s3_destination_description_encryption_configuration_kms_encryption_config" {
-  //     skip = true
+  //   column "s3_destination_description" {
+  //     skip_prefix = true
   //   }
-  //   column "s3_destination_description_encryption_configuration_no_encryption_config" {
-  //     skip = true
-  //   }
-  //   column "s3_destination_description_cloud_watch_logging_options_log_group_name" {
-  //     skip = true
-  //   }
-  //   column "s3_destination_description_cloud_watch_logging_options_log_stream_name" {
-  //     skip = true
-  //   }
-  //   column "output_format_configuration_serializer_orc_ser_de_bloom_filter_false_positive_probability" {
-  //     skip = true
-  //   }
+
   // }
 
   user_relation "aws" "kinesis" "extended_s3_destination" {
@@ -218,13 +207,19 @@ resource "aws" "kinesis" "firehoses" {
       rename = "s3_backup"
     }
 
-   column "s3_backup_encryption_configuration" {
+    column "s3_backup_encryption_configuration" {
       skip_prefix = true
     }
-    
-    // column "s3_backup_description_encryption_configuration_kms_encryption_config" {
-    //   member_trusted_principal = ""
-    // }
+
+    column "processing_configuration_processors" {
+      skip = true
+    }
+    userDefinedColumn "processing_configuration_processors" {
+      type        = "json"
+      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      generate_resolver = true
+    }
+
 
   }
 
@@ -238,8 +233,17 @@ resource "aws" "kinesis" "firehoses" {
   //   column "s3_destination_description" {
   //     skip_prefix = true
   //   }
+  //       column "processing_configuration_processors" {
+  //     skip = true
+  //   }
+  //   userDefinedColumn "processing_configuration_processors" {
+  //     type        = "json"
+  //     description = "The Amazon Resource Name (ARN) of the delivery stream"
+  //     generate_resolver = true
+  //   }
+
   // }
-  
+
   // user_relation "aws" "kinesis" "redshift_destination" {
   //   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.RedshiftDestinationDescription"
   //   resolver "resolveTable" {
@@ -259,7 +263,17 @@ resource "aws" "kinesis" "firehoses" {
   //   column "s3_backup_description" {
   //     skip_prefix = true
   //   }
+  //       column "processing_configuration_processors" {
+  //     skip = true
+  //   }
+  //   userDefinedColumn "processing_configuration_processors" {
+  //     type        = "json"
+  //     description = "The Amazon Resource Name (ARN) of the delivery stream"
+  //     generate_resolver = true
+  //   }
+
   // }
+
   // user_relation "aws" "kinesis" "splunk_destination" {
   //   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.SplunkDestinationDescription"
   //   resolver "resolveTable" {
@@ -269,6 +283,14 @@ resource "aws" "kinesis" "firehoses" {
   //   }
   //   column "s3_destination_description" {
   //     skip_prefix = true
+  //   }
+  //   column "processing_configuration_processors" {
+  //     skip = true
+  //   }
+  //   userDefinedColumn "processing_configuration_processors" {
+  //     type        = "json"
+  //     description = "The Amazon Resource Name (ARN) of the delivery stream"
+  //     generate_resolver = true
   //   }
 
   // }
