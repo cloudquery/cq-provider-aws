@@ -225,11 +225,9 @@ func triggerARN(cl *client.Client, name string) string {
 func listTriggers(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Glue
-	input := glue.ListTriggersInput{}
+	input := glue.ListTriggersInput{MaxResults: aws.Int32(200)}
 	for {
-		response, err := svc.ListTriggers(ctx, &input, func(options *glue.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListTriggers(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -249,8 +247,6 @@ func triggerDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan
 	svc := c.Services().Glue
 	dc, err := svc.GetTrigger(ctx, &glue.GetTriggerInput{
 		Name: &name,
-	}, func(options *glue.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		if c.IsNotFoundError(err) {
