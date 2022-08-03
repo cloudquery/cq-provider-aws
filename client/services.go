@@ -764,6 +764,7 @@ type GlueClient interface {
 	GetMLTaskRuns(ctx context.Context, params *glue.GetMLTaskRunsInput, optFns ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error)
 	GetDataCatalogEncryptionSettings(ctx context.Context, params *glue.GetDataCatalogEncryptionSettingsInput, optFns ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error)
 	GetDevEndpoints(ctx context.Context, params *glue.GetDevEndpointsInput, optFns ...func(*glue.Options)) (*glue.GetDevEndpointsOutput, error)
+	GetSecurityConfigurations(ctx context.Context, params *glue.GetSecurityConfigurationsInput, optFns ...func(*glue.Options)) (*glue.GetSecurityConfigurationsOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/kinesis.go . KinesisClient
