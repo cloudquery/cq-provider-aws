@@ -35,24 +35,164 @@ func (m *MockGlueClient) EXPECT() *MockGlueClientMockRecorder {
 	return m.recorder
 }
 
-// GetCrawlers mocks base method.
-func (m *MockGlueClient) GetCrawlers(arg0 context.Context, arg1 *glue.GetCrawlersInput, arg2 ...func(*glue.Options)) (*glue.GetCrawlersOutput, error) {
+// GetDataCatalogEncryptionSettings mocks base method.
+func (m *MockGlueClient) GetDataCatalogEncryptionSettings(arg0 context.Context, arg1 *glue.GetDataCatalogEncryptionSettingsInput, arg2 ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "GetCrawlers", varargs...)
-	ret0, _ := ret[0].(*glue.GetCrawlersOutput)
+	ret := m.ctrl.Call(m, "GetDataCatalogEncryptionSettings", varargs...)
+	ret0, _ := ret[0].(*glue.GetDataCatalogEncryptionSettingsOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetCrawlers indicates an expected call of GetCrawlers.
-func (mr *MockGlueClientMockRecorder) GetCrawlers(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// GetDataCatalogEncryptionSettings indicates an expected call of GetDataCatalogEncryptionSettings.
+func (mr *MockGlueClientMockRecorder) GetDataCatalogEncryptionSettings(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCrawlers", reflect.TypeOf((*MockGlueClient)(nil).GetCrawlers), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataCatalogEncryptionSettings", reflect.TypeOf((*MockGlueClient)(nil).GetDataCatalogEncryptionSettings), varargs...)
+}
+
+// GetDatabases mocks base method.
+func (m *MockGlueClient) GetDatabases(arg0 context.Context, arg1 *glue.GetDatabasesInput, arg2 ...func(*glue.Options)) (*glue.GetDatabasesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetDatabases", varargs...)
+	ret0, _ := ret[0].(*glue.GetDatabasesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDatabases indicates an expected call of GetDatabases.
+func (mr *MockGlueClientMockRecorder) GetDatabases(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDatabases", reflect.TypeOf((*MockGlueClient)(nil).GetDatabases), varargs...)
+}
+
+// GetDevEndpoints mocks base method.
+func (m *MockGlueClient) GetDevEndpoints(arg0 context.Context, arg1 *glue.GetDevEndpointsInput, arg2 ...func(*glue.Options)) (*glue.GetDevEndpointsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetDevEndpoints", varargs...)
+	ret0, _ := ret[0].(*glue.GetDevEndpointsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDevEndpoints indicates an expected call of GetDevEndpoints.
+func (mr *MockGlueClientMockRecorder) GetDevEndpoints(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDevEndpoints", reflect.TypeOf((*MockGlueClient)(nil).GetDevEndpoints), varargs...)
+}
+
+// GetJobRuns mocks base method.
+func (m *MockGlueClient) GetJobRuns(arg0 context.Context, arg1 *glue.GetJobRunsInput, arg2 ...func(*glue.Options)) (*glue.GetJobRunsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetJobRuns", varargs...)
+	ret0, _ := ret[0].(*glue.GetJobRunsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetJobRuns indicates an expected call of GetJobRuns.
+func (mr *MockGlueClientMockRecorder) GetJobRuns(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetJobRuns", reflect.TypeOf((*MockGlueClient)(nil).GetJobRuns), varargs...)
+}
+
+// GetJobs mocks base method.
+func (m *MockGlueClient) GetJobs(arg0 context.Context, arg1 *glue.GetJobsInput, arg2 ...func(*glue.Options)) (*glue.GetJobsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetJobs", varargs...)
+	ret0, _ := ret[0].(*glue.GetJobsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetJobs indicates an expected call of GetJobs.
+func (mr *MockGlueClientMockRecorder) GetJobs(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetJobs", reflect.TypeOf((*MockGlueClient)(nil).GetJobs), varargs...)
+}
+
+// GetMLTaskRuns mocks base method.
+func (m *MockGlueClient) GetMLTaskRuns(arg0 context.Context, arg1 *glue.GetMLTaskRunsInput, arg2 ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetMLTaskRuns", varargs...)
+	ret0, _ := ret[0].(*glue.GetMLTaskRunsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMLTaskRuns indicates an expected call of GetMLTaskRuns.
+func (mr *MockGlueClientMockRecorder) GetMLTaskRuns(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMLTaskRuns", reflect.TypeOf((*MockGlueClient)(nil).GetMLTaskRuns), varargs...)
+}
+
+// GetMLTransforms mocks base method.
+func (m *MockGlueClient) GetMLTransforms(arg0 context.Context, arg1 *glue.GetMLTransformsInput, arg2 ...func(*glue.Options)) (*glue.GetMLTransformsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetMLTransforms", varargs...)
+	ret0, _ := ret[0].(*glue.GetMLTransformsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMLTransforms indicates an expected call of GetMLTransforms.
+func (mr *MockGlueClientMockRecorder) GetMLTransforms(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMLTransforms", reflect.TypeOf((*MockGlueClient)(nil).GetMLTransforms), varargs...)
+}
+
+// GetTables mocks base method.
+func (m *MockGlueClient) GetTables(arg0 context.Context, arg1 *glue.GetTablesInput, arg2 ...func(*glue.Options)) (*glue.GetTablesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetTables", varargs...)
+	ret0, _ := ret[0].(*glue.GetTablesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTables indicates an expected call of GetTables.
+func (mr *MockGlueClientMockRecorder) GetTables(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTables", reflect.TypeOf((*MockGlueClient)(nil).GetTables), varargs...)
 }
 
 // GetTags mocks base method.
@@ -75,6 +215,26 @@ func (mr *MockGlueClientMockRecorder) GetTags(arg0, arg1 interface{}, arg2 ...in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTags", reflect.TypeOf((*MockGlueClient)(nil).GetTags), varargs...)
 }
 
+// GetTrigger mocks base method.
+func (m *MockGlueClient) GetTrigger(arg0 context.Context, arg1 *glue.GetTriggerInput, arg2 ...func(*glue.Options)) (*glue.GetTriggerOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetTrigger", varargs...)
+	ret0, _ := ret[0].(*glue.GetTriggerOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTrigger indicates an expected call of GetTrigger.
+func (mr *MockGlueClientMockRecorder) GetTrigger(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrigger", reflect.TypeOf((*MockGlueClient)(nil).GetTrigger), varargs...)
+}
+
 // GetWorkflow mocks base method.
 func (m *MockGlueClient) GetWorkflow(arg0 context.Context, arg1 *glue.GetWorkflowInput, arg2 ...func(*glue.Options)) (*glue.GetWorkflowOutput, error) {
 	m.ctrl.T.Helper()
@@ -93,6 +253,26 @@ func (mr *MockGlueClientMockRecorder) GetWorkflow(arg0, arg1 interface{}, arg2 .
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkflow", reflect.TypeOf((*MockGlueClient)(nil).GetWorkflow), varargs...)
+}
+
+// ListTriggers mocks base method.
+func (m *MockGlueClient) ListTriggers(arg0 context.Context, arg1 *glue.ListTriggersInput, arg2 ...func(*glue.Options)) (*glue.ListTriggersOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListTriggers", varargs...)
+	ret0, _ := ret[0].(*glue.ListTriggersOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListTriggers indicates an expected call of ListTriggers.
+func (mr *MockGlueClientMockRecorder) ListTriggers(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTriggers", reflect.TypeOf((*MockGlueClient)(nil).ListTriggers), varargs...)
 }
 
 // ListWorkflows mocks base method.
