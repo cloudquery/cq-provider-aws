@@ -156,6 +156,61 @@ func Registries() *schema.Table {
 						Type:        schema.TypeString,
 					},
 				},
+				Relations: []*schema.Table{
+					{
+						Name:     "aws_glue_registry_schema_versions",
+						Resolver: fetchGlueRegistrySchemaVersions,
+						Columns: []schema.Column{
+							{
+								Name:        "registry_schema_cq_id",
+								Description: "Unique CloudQuery ID of aws_glue_registry_schemas table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:     "metadata",
+								Type:     schema.TypeJSON,
+								Resolver: resolveGlueRegistrySchemaVersionMetadata,
+							},
+							{
+								Name:        "created_time",
+								Description: "The date and time the schema version was created.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "data_format",
+								Description: "The data format of the schema definition",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "schema_arn",
+								Description: "The Amazon Resource Name (ARN) of the schema.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "schema_definition",
+								Description: "The schema definition for the schema ID.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "id",
+								Description: "The SchemaVersionId of the schema version.",
+								Type:        schema.TypeString,
+								Resolver:    schema.PathResolver("SchemaVersionId"),
+							},
+							{
+								Name:        "status",
+								Description: "The status of the schema version.",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "version_number",
+								Description: "The version number of the schema.",
+								Type:        schema.TypeBigInt,
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -241,4 +296,76 @@ func resolveGlueRegistrySchemaTags(ctx context.Context, meta schema.ClientMeta, 
 		return diag.WrapError(err)
 	}
 	return diag.WrapError(resource.Set(c.Name, result.Tags))
+}
+func fetchGlueRegistrySchemaVersions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	cl := meta.(*client.Client)
+	s := parent.Item.(*glue.GetSchemaOutput)
+	svc := cl.Services().Glue
+	schemaId := types.SchemaId{
+		SchemaArn: s.SchemaArn,
+	}
+	input := glue.ListSchemaVersionsInput{
+		SchemaId:   &schemaId,
+		MaxResults: aws.Int32(100),
+	}
+	for {
+		result, err := svc.ListSchemaVersions(ctx, &input)
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, item := range result.Schemas {
+			s, err := svc.GetSchemaVersion(ctx, &glue.GetSchemaVersionInput{
+				SchemaId:        &schemaId,
+				SchemaVersionId: item.SchemaVersionId,
+				SchemaVersionNumber: &types.SchemaVersionNumber{
+					VersionNumber: item.VersionNumber,
+				}})
+			if err != nil {
+				if cl.IsNotFoundError(err) {
+					continue
+				}
+				return diag.WrapError(err)
+			}
+			res <- s
+		}
+		if aws.ToString(result.NextToken) == "" {
+			break
+		}
+		input.NextToken = result.NextToken
+	}
+	return nil
+}
+func resolveGlueRegistrySchemaVersionMetadata(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	svc := cl.Services().Glue
+	s := resource.Item.(*glue.GetSchemaVersionOutput)
+	input := &glue.QuerySchemaVersionMetadataInput{
+		SchemaId: &types.SchemaId{
+			SchemaArn: s.SchemaArn,
+		},
+		SchemaVersionId: s.SchemaVersionId,
+		SchemaVersionNumber: &types.SchemaVersionNumber{
+			VersionNumber: s.VersionNumber,
+		},
+	}
+	metadata := make(map[string]types.MetadataInfo)
+	for {
+		result, err := svc.QuerySchemaVersionMetadata(ctx, input)
+		if err != nil {
+			if cl.IsNotFoundError(err) {
+				return nil
+			}
+			return diag.WrapError(err)
+		}
+
+		for k, v := range result.MetadataInfoMap {
+			metadata[k] = v
+		}
+
+		if aws.ToString(result.NextToken) == "" {
+			break
+		}
+		input.NextToken = result.NextToken
+	}
+	return diag.WrapError(resource.Set(c.Name, metadata))
 }

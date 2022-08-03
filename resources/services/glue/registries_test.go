@@ -60,6 +60,29 @@ func buildRegistriesMock(t *testing.T, ctrl *gomock.Controller) client.Services 
 		nil,
 	)
 
+	var lsv glue.ListSchemaVersionsOutput
+	require.NoError(t, faker.FakeData(&lsv))
+	lsv.NextToken = nil
+	m.EXPECT().ListSchemaVersions(
+		gomock.Any(),
+		gomock.Any(),
+	).Return(&lsv, nil)
+
+	var sv glue.GetSchemaVersionOutput
+	require.NoError(t, faker.FakeData(&sv))
+	m.EXPECT().GetSchemaVersion(
+		gomock.Any(),
+		gomock.Any(),
+	).Return(&sv, nil)
+
+	var sm glue.QuerySchemaVersionMetadataOutput
+	require.NoError(t, faker.FakeData(&sm))
+	sm.NextToken = nil
+	m.EXPECT().QuerySchemaVersionMetadata(
+		gomock.Any(),
+		gomock.Any(),
+	).Return(&sm, nil)
+
 	return client.Services{
 		Glue: m,
 	}

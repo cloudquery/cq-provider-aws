@@ -36,19 +36,31 @@ resource "aws" "glue" "registries" {
   }
 
   userDefinedColumn "tags" {
-    type = "json"
-    description = "Resource tags."
+    type              = "json"
+    description       = "Resource tags."
     generate_resolver = true
   }
   user_relation "aws" "glue" "schemas" {
     path = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaOutput"
     userDefinedColumn "tags" {
-      type = "json"
-      description = "Resource tags."
+      type              = "json"
+      description       = "Resource tags."
       generate_resolver = true
     }
     column "schema_arn" {
       rename = "arn"
+    }
+
+    user_relation "aws" "glue" "versions" {
+      path = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaVersionOutput"
+      userDefinedColumn "metadata" {
+        type              = "json"
+        generate_resolver = true
+      }
+
+      column "schema_version_id" {
+        rename = "id"
+      }
     }
   }
 }
