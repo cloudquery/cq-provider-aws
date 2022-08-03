@@ -2,6 +2,10 @@ service          = "aws"
 output_directory = "."
 add_generate     = true
 
+description_modifier "remove_read_only" {
+  words = ["  This member is required."]
+}
+
 resource "aws" "glue" "triggers" {
   path = "github.com/aws/aws-sdk-go-v2/service/glue/types.Trigger"
   ignoreError "IgnoreAccessDenied" {

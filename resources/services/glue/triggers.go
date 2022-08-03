@@ -15,7 +15,7 @@ import (
 func Triggers() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_glue_triggers",
-		Description:  "Information about a specific trigger.",
+		Description:  "Information about a specific trigger",
 		Resolver:     fetchGlueTriggers,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("glue"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -48,31 +48,29 @@ func Triggers() *schema.Table {
 			},
 			{
 				Name:        "description",
-				Description: "A description of this trigger.",
+				Description: "A description of this trigger",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "event_batching_condition_size",
-				Description: "Number of events that must be received from Amazon EventBridge before EventBridge event trigger fires.  This member is required.",
+				Description: "Number of events that must be received from Amazon EventBridge before EventBridge event trigger fires",
 				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("EventBatchingCondition.BatchSize"),
 			},
 			{
-				Name:          "event_batching_condition_window",
-				Description:   "Window of time in seconds after which EventBridge event trigger fires",
-				Type:          schema.TypeBigInt,
-				Resolver:      schema.PathResolver("EventBatchingCondition.BatchWindow"),
-				IgnoreInTests: true,
+				Name:        "event_batching_condition_window",
+				Description: "Window of time in seconds after which EventBridge event trigger fires",
+				Type:        schema.TypeBigInt,
+				Resolver:    schema.PathResolver("EventBatchingCondition.BatchWindow"),
 			},
 			{
-				Name:          "id",
-				Description:   "Reserved for future use.",
-				Type:          schema.TypeString,
-				IgnoreInTests: true,
+				Name:        "id",
+				Description: "Reserved for future use",
+				Type:        schema.TypeString,
 			},
 			{
 				Name:        "name",
-				Description: "The name of the trigger.",
+				Description: "The name of the trigger",
 				Type:        schema.TypeString,
 			},
 			{
@@ -82,33 +80,31 @@ func Triggers() *schema.Table {
 				Resolver:    schema.PathResolver("Predicate.Logical"),
 			},
 			{
-				Name:          "schedule",
-				Description:   "A cron expression used to specify the schedule (see Time-Based Schedules for Jobs and Crawlers (https://docs.aws.amazon.com/glue/latest/dg/monitor-data-warehouse-schedule.html). For example, to run something every day at 12:15 UTC, you would specify: cron(15 12 * * ? *).",
-				Type:          schema.TypeString,
-				IgnoreInTests: true,
+				Name:        "schedule",
+				Description: "A cron expression used to specify the schedule (see Time-Based Schedules for Jobs and Crawlers (https://docsawsamazoncom/glue/latest/dg/monitor-data-warehouse-schedulehtml) For example, to run something every day at 12:15 UTC, you would specify: cron(15 12 * * ? *)",
+				Type:        schema.TypeString,
 			},
 			{
 				Name:        "state",
-				Description: "The current state of the trigger.",
+				Description: "The current state of the trigger",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "type",
-				Description: "The type of trigger that this is.",
+				Description: "The type of trigger that this is",
 				Type:        schema.TypeString,
 			},
 			{
-				Name:          "workflow_name",
-				Description:   "The name of the workflow associated with the trigger.",
-				Type:          schema.TypeString,
-				IgnoreInTests: true,
+				Name:        "workflow_name",
+				Description: "The name of the workflow associated with the trigger",
+				Type:        schema.TypeString,
 			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:        "aws_glue_trigger_actions",
-				Description: "Defines an action to be initiated by a trigger.",
-				Resolver:    fetchGlueTriggerActions,
+				Description: "Defines an action to be initiated by a trigger",
+				Resolver:    schema.PathTableResolver("Actions"),
 				Columns: []schema.Column{
 					{
 						Name:        "trigger_cq_id",
@@ -117,47 +113,42 @@ func Triggers() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
-						Name:          "arguments",
-						Description:   "The job arguments used when this trigger fires",
-						Type:          schema.TypeJSON,
-						IgnoreInTests: true,
+						Name:        "arguments",
+						Description: "The job arguments used when this trigger fires",
+						Type:        schema.TypeJSON,
 					},
 					{
-						Name:          "crawler_name",
-						Description:   "The name of the crawler to be used with this action.",
-						Type:          schema.TypeString,
-						IgnoreInTests: true,
-					},
-					{
-						Name:        "job_name",
-						Description: "The name of a job to be run.",
+						Name:        "crawler_name",
+						Description: "The name of the crawler to be used with this action",
 						Type:        schema.TypeString,
 					},
 					{
-						Name:          "notify_delay_after",
-						Description:   "After a job run starts, the number of minutes to wait before sending a job run delay notification.",
-						Type:          schema.TypeBigInt,
-						Resolver:      schema.PathResolver("NotificationProperty.NotifyDelayAfter"),
-						IgnoreInTests: true,
+						Name:        "job_name",
+						Description: "The name of a job to be run",
+						Type:        schema.TypeString,
 					},
 					{
-						Name:          "security_configuration",
-						Description:   "The name of the SecurityConfiguration structure to be used with this action.",
-						Type:          schema.TypeString,
-						IgnoreInTests: true,
+						Name:        "notify_delay_after",
+						Description: "After a job run starts, the number of minutes to wait before sending a job run delay notification",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("NotificationProperty.NotifyDelayAfter"),
 					},
 					{
-						Name:          "timeout",
-						Description:   "The JobRun timeout in minutes",
-						Type:          schema.TypeBigInt,
-						IgnoreInTests: true,
+						Name:        "security_configuration",
+						Description: "The name of the SecurityConfiguration structure to be used with this action",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "timeout",
+						Description: "The JobRun timeout in minutes",
+						Type:        schema.TypeBigInt,
 					},
 				},
 			},
 			{
 				Name:          "aws_glue_trigger_predicate_conditions",
-				Description:   "Defines a condition under which a trigger fires.",
-				Resolver:      fetchGlueTriggerPredicateConditions,
+				Description:   "Defines a condition under which a trigger fires",
+				Resolver:      schema.PathTableResolver("Predicate.Conditions"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -168,22 +159,22 @@ func Triggers() *schema.Table {
 					},
 					{
 						Name:        "crawl_state",
-						Description: "The state of the crawler to which this condition applies.",
+						Description: "The state of the crawler to which this condition applies",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "crawler_name",
-						Description: "The name of the crawler to which this condition applies.",
+						Description: "The name of the crawler to which this condition applies",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "job_name",
-						Description: "The name of the job whose JobRuns this condition applies to, and on which this trigger waits.",
+						Description: "The name of the job whose JobRuns this condition applies to, and on which this trigger waits",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "logical_operator",
-						Description: "A logical operator.",
+						Description: "A logical operator",
 						Type:        schema.TypeString,
 					},
 					{
@@ -202,32 +193,7 @@ func Triggers() *schema.Table {
 // ====================================================================================================================
 
 func fetchGlueTriggers(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	cl := meta.(*client.Client)
-	svc := cl.Services().Glue
-	input := glue.ListTriggersInput{MaxResults: aws.Int32(200)}
-	for {
-		result, err := svc.ListTriggers(ctx, &input)
-		if err != nil {
-			return diag.WrapError(err)
-		}
-		for _, name := range result.TriggerNames {
-			tr, err := svc.GetTrigger(ctx, &glue.GetTriggerInput{Name: aws.String(name)})
-			if err != nil {
-				if cl.IsNotFoundError(err) {
-					continue
-				}
-				return diag.WrapError(err)
-			}
-			if tr.Trigger != nil {
-				res <- *tr.Trigger
-			}
-		}
-		if aws.ToString(result.NextToken) == "" {
-			break
-		}
-		input.NextToken = result.NextToken
-	}
-	return nil
+	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listTriggers, triggerDetail))
 }
 func resolveGlueTriggerArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
@@ -248,18 +214,6 @@ func resolveGlueTriggerTags(ctx context.Context, meta schema.ClientMeta, resourc
 	}
 	return diag.WrapError(resource.Set(c.Name, result.Tags))
 }
-func fetchGlueTriggerActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	tr := parent.Item.(types.Trigger)
-	res <- tr.Actions
-	return nil
-}
-func fetchGlueTriggerPredicateConditions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	tr := parent.Item.(types.Trigger)
-	if tr.Predicate != nil {
-		res <- tr.Predicate.Conditions
-	}
-	return nil
-}
 
 // ====================================================================================================================
 //                                                  User Defined Helpers
@@ -267,4 +221,43 @@ func fetchGlueTriggerPredicateConditions(ctx context.Context, meta schema.Client
 
 func triggerARN(cl *client.Client, name string) string {
 	return cl.ARN(client.GlueService, "trigger", name)
+}
+func listTriggers(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Glue
+	input := glue.ListTriggersInput{}
+	for {
+		response, err := svc.ListTriggers(ctx, &input, func(options *glue.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, item := range response.TriggerNames {
+			detailChan <- item
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return nil
+}
+func triggerDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
+	c := meta.(*client.Client)
+	name := listInfo.(string)
+	svc := c.Services().Glue
+	dc, err := svc.GetTrigger(ctx, &glue.GetTriggerInput{
+		Name: &name,
+	}, func(options *glue.Options) {
+		options.Region = c.Region
+	})
+	if err != nil {
+		if c.IsNotFoundError(err) {
+			return
+		}
+		errorChan <- diag.WrapError(err)
+		return
+	}
+	resultsChan <- *dc.Trigger
 }
