@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"time"
 
@@ -80,5 +81,32 @@ func ResolveTimestampField(path string, rfcs ...string) func(_ context.Context, 
 		default:
 			return diag.WrapError(r.Set(c.Name, nil))
 		}
+	}
+}
+
+func SliceJsonResolver(path, keyPath, valuePath string) schema.ColumnResolver {
+	return func(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+		j := make(map[string]interface{})
+		field := funk.Get(r.Item, path, funk.WithAllowZero())
+		s := reflect.ValueOf(field)
+		if s.IsNil() {
+			return nil
+		}
+		if reflect.TypeOf(field).Kind() != reflect.Slice {
+			return diag.WrapError(fmt.Errorf("field: %s is not a slice", path))
+		}
+		for i := 0; i < s.Len(); i++ {
+			key := funk.Get(s.Index(i).Interface(), keyPath, funk.WithAllowZero())
+			value := funk.Get(s.Index(i).Interface(), valuePath, funk.WithAllowZero())
+			k := reflect.ValueOf(key)
+			if k.Kind() == reflect.Ptr {
+				k = k.Elem()
+			}
+			if k.Kind() != reflect.String {
+				return diag.WrapError(fmt.Errorf("key field: %s is not a string", path))
+			}
+			j[k.String()] = value
+		}
+		return r.Set(c.Name, j)
 	}
 }

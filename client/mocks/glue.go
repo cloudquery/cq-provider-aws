@@ -95,6 +95,46 @@ func (mr *MockGlueClientMockRecorder) GetJobs(arg0, arg1 interface{}, arg2 ...in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetJobs", reflect.TypeOf((*MockGlueClient)(nil).GetJobs), varargs...)
 }
 
+// GetPartitionIndexes mocks base method.
+func (m *MockGlueClient) GetPartitionIndexes(arg0 context.Context, arg1 *glue.GetPartitionIndexesInput, arg2 ...func(*glue.Options)) (*glue.GetPartitionIndexesOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetPartitionIndexes", varargs...)
+	ret0, _ := ret[0].(*glue.GetPartitionIndexesOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPartitionIndexes indicates an expected call of GetPartitionIndexes.
+func (mr *MockGlueClientMockRecorder) GetPartitionIndexes(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPartitionIndexes", reflect.TypeOf((*MockGlueClient)(nil).GetPartitionIndexes), varargs...)
+}
+
+// GetPartitions mocks base method.
+func (m *MockGlueClient) GetPartitions(arg0 context.Context, arg1 *glue.GetPartitionsInput, arg2 ...func(*glue.Options)) (*glue.GetPartitionsOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetPartitions", varargs...)
+	ret0, _ := ret[0].(*glue.GetPartitionsOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPartitions indicates an expected call of GetPartitions.
+func (mr *MockGlueClientMockRecorder) GetPartitions(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPartitions", reflect.TypeOf((*MockGlueClient)(nil).GetPartitions), varargs...)
+}
+
 // GetTables mocks base method.
 func (m *MockGlueClient) GetTables(arg0 context.Context, arg1 *glue.GetTablesInput, arg2 ...func(*glue.Options)) (*glue.GetTablesOutput, error) {
 	m.ctrl.T.Helper()
