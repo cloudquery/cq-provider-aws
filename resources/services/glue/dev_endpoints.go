@@ -159,7 +159,7 @@ func DevEndpoints() *schema.Table {
 			},
 			{
 				Name:        "worker_type",
-				Description: "The type of predefined worker that is allocated to the development endpoint Accepts a value of Standard, G1X, or G2X  * For the Standard worker type, each worker provides 4 vCPU, 16 GB of memory and a 50GB disk, and 2 executors per worker  * For the G1X worker type, each worker maps to 1 DPU (4 vCPU, 16 GB of memory, 64 GB disk), and provides 1 executor per worker",
+				Description: "The type of predefined worker that is allocated to the development endpoint Accepts a value of Standard, G1X, or G2X",
 				Type:        schema.TypeString,
 			},
 			{

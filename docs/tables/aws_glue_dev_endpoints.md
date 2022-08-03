@@ -30,6 +30,6 @@ A development endpoint where a developer can remotely debug extract, transform, 
 |status|text|The current status of this DevEndpoint|
 |subnet_id|text|The subnet ID for this DevEndpoint|
 |vpc_id|text|The ID of the virtual private cloud (VPC) used by this DevEndpoint|
-|worker_type|text|The type of predefined worker that is allocated to the development endpoint Accepts a value of Standard, G1X, or G2X  * For the Standard worker type, each worker provides 4 vCPU, 16 GB of memory and a 50GB disk, and 2 executors per worker  * For the G1X worker type, each worker maps to 1 DPU (4 vCPU, 16 GB of memory, 64 GB disk), and provides 1 executor per worker|
+|worker_type|text|The type of predefined worker that is allocated to the development endpoint Accepts a value of Standard, G1X, or G2X|
 |yarn_endpoint_address|text|The YARN endpoint address used by this DevEndpoint|
 |zeppelin_remote_spark_interpreter_port|bigint|The Apache Zeppelin port for the remote Apache Spark interpreter|

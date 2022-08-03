@@ -46,6 +46,9 @@ resource "aws" "glue" "dev_endpoints" {
     rename = "name"
   }
 
+  column "worker_type" {
+    description = "The type of predefined worker that is allocated to the development endpoint Accepts a value of Standard, G1X, or G2X"
+  }
 
   userDefinedColumn "tags" {
     type = "json"
