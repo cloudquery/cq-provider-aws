@@ -169,6 +169,7 @@ type CloudtrailClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatch.go . CloudwatchClient
 type CloudwatchClient interface {
 	DescribeAlarms(ctx context.Context, params *cloudwatch.DescribeAlarmsInput, optFns ...func(*cloudwatch.Options)) (*cloudwatch.DescribeAlarmsOutput, error)
+	ListTagsForResource(ctx context.Context, params *cloudwatch.ListTagsForResourceInput, optFns ...func(*cloudwatch.Options)) (*cloudwatch.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatchlogs.go . CloudwatchLogsClient
@@ -281,6 +282,7 @@ type Ec2Client interface {
 type EcrClient interface {
 	DescribeRepositories(ctx context.Context, params *ecr.DescribeRepositoriesInput, optFns ...func(*ecr.Options)) (*ecr.DescribeRepositoriesOutput, error)
 	DescribeImages(ctx context.Context, params *ecr.DescribeImagesInput, optFns ...func(*ecr.Options)) (*ecr.DescribeImagesOutput, error)
+	ListTagsForResource(ctx context.Context, params *ecr.ListTagsForResourceInput, optFns ...func(*ecr.Options)) (*ecr.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_efs.go . EfsClient
@@ -752,6 +754,13 @@ type GlueClient interface {
 	GetTags(ctx context.Context, params *glue.GetTagsInput, optFns ...func(*glue.Options)) (*glue.GetTagsOutput, error)
 	GetWorkflow(ctx context.Context, params *glue.GetWorkflowInput, optFns ...func(*glue.Options)) (*glue.GetWorkflowOutput, error)
 	ListWorkflows(ctx context.Context, params *glue.ListWorkflowsInput, optFns ...func(*glue.Options)) (*glue.ListWorkflowsOutput, error)
+	GetJobs(ctx context.Context, params *glue.GetJobsInput, optFns ...func(*glue.Options)) (*glue.GetJobsOutput, error)
+	GetJobRuns(ctx context.Context, params *glue.GetJobRunsInput, optFns ...func(*glue.Options)) (*glue.GetJobRunsOutput, error)
+	GetDatabases(ctx context.Context, params *glue.GetDatabasesInput, optFns ...func(*glue.Options)) (*glue.GetDatabasesOutput, error)
+	GetTables(ctx context.Context, params *glue.GetTablesInput, optFns ...func(*glue.Options)) (*glue.GetTablesOutput, error)
+	GetMLTransforms(ctx context.Context, params *glue.GetMLTransformsInput, optFns ...func(*glue.Options)) (*glue.GetMLTransformsOutput, error)
+	GetMLTaskRuns(ctx context.Context, params *glue.GetMLTaskRunsInput, optFns ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error)
+	GetDataCatalogEncryptionSettings(ctx context.Context, params *glue.GetDataCatalogEncryptionSettingsInput, optFns ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error)
 	GetDevEndpoints(ctx context.Context, params *glue.GetDevEndpointsInput, optFns ...func(*glue.Options)) (*glue.GetDevEndpointsOutput, error)
 }
 
