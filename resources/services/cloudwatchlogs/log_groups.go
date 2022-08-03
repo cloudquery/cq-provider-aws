@@ -11,7 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource=log_groups --config gen.hcl --output .
+//go:generate cq-gen --resource log_groups --config gen.hcl --output .
 func LogGroups() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_cloudwatchlogs_log_groups",

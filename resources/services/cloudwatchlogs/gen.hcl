@@ -1,3 +1,7 @@
+service          = "aws"
+output_directory = "."
+add_generate     = true
+
 resource "aws" "cloudwatchlogs" "log_groups" {
   path = "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types.LogGroup"
   ignoreError "IgnoreAccessDenied" {

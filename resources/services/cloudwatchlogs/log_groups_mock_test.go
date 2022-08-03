@@ -22,6 +22,15 @@ func buildCloudwatchLogsLogGroupsMock(t *testing.T, ctrl *gomock.Controller) cli
 		&cloudwatchlogs.DescribeLogGroupsOutput{
 			LogGroups: []types.LogGroup{l},
 		}, nil)
+
+	tags := &cloudwatchlogs.ListTagsLogGroupOutput{}
+	err = faker.FakeData(tags)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	m.EXPECT().ListTagsLogGroup(gomock.Any(), gomock.Any(), gomock.Any()).Return(tags, nil)
+
 	return client.Services{
 		CloudwatchLogs: m,
 	}
