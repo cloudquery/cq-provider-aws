@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.13.4](https://github.com/cloudquery/cq-provider-aws/compare/v0.13.3...v0.13.4) (2022-08-02)
+
+
+### Features
+
+* Add Kinesis Data Stream support ([#1348](https://github.com/cloudquery/cq-provider-aws/issues/1348)) ([767bfab](https://github.com/cloudquery/cq-provider-aws/commit/767bfaba0d382d6971023bdd13535d0a6cd95ec6))
+* Add Tags for ECR Repo ([#1369](https://github.com/cloudquery/cq-provider-aws/issues/1369)) ([3b31598](https://github.com/cloudquery/cq-provider-aws/commit/3b31598782e450b04c31a95938b2df9906828adf))
+* Added glue databases and tables ([#1345](https://github.com/cloudquery/cq-provider-aws/issues/1345)) ([0284a37](https://github.com/cloudquery/cq-provider-aws/commit/0284a37e7ebafbdcf15140a1ccdedde09f0bb13b))
+* Added glue jobs ([#1352](https://github.com/cloudquery/cq-provider-aws/issues/1352)) ([562a6b3](https://github.com/cloudquery/cq-provider-aws/commit/562a6b334ee077f5fab76cdd3321ea7ddfec3f91))
+* Column Resolvers    ([#1301](https://github.com/cloudquery/cq-provider-aws/issues/1301)) ([9b2dbed](https://github.com/cloudquery/cq-provider-aws/commit/9b2dbed888f44b4430c66051ce9e30d9ecea7673))
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-gen to v0.0.7 ([#1362](https://github.com/cloudquery/cq-provider-aws/issues/1362)) ([3060854](https://github.com/cloudquery/cq-provider-aws/commit/3060854773cca20f7b18980b02193bb15273649e))
+* **deps:** Update module github.com/hashicorp/go-hclog to v1.2.2 ([#1350](https://github.com/cloudquery/cq-provider-aws/issues/1350)) ([82ec301](https://github.com/cloudquery/cq-provider-aws/commit/82ec301d9eed9fe00812d7e8d0d89b3ff753faaa))
+* Update endpoints ([#1347](https://github.com/cloudquery/cq-provider-aws/issues/1347)) ([3191f3e](https://github.com/cloudquery/cq-provider-aws/commit/3191f3e08f2c1142e5a79a76ec6e5b0a0da9f30c))
+
+## [0.13.3](https://github.com/cloudquery/cq-provider-aws/compare/v0.13.2...v0.13.3) (2022-07-28)
+
+
+### Features
+
+* Add Glue Workflows resource ([#1310](https://github.com/cloudquery/cq-provider-aws/issues/1310)) ([bd45348](https://github.com/cloudquery/cq-provider-aws/commit/bd453484478bc86cac4ca27c1d9938a0730bfe6a))
+
+
+### Bug Fixes
+
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.14.5 ([#1315](https://github.com/cloudquery/cq-provider-aws/issues/1315)) ([dcd3f17](https://github.com/cloudquery/cq-provider-aws/commit/dcd3f1757d91f22c758700504288df36c013d8c2))
+* **deps:** Update module github.com/cloudquery/cq-provider-sdk to v0.14.6 ([#1332](https://github.com/cloudquery/cq-provider-aws/issues/1332)) ([cdb9d0a](https://github.com/cloudquery/cq-provider-aws/commit/cdb9d0ae049f050a2952acace7076820a268ca33))
+* Properly Handle Error in data_catalogs ([#1326](https://github.com/cloudquery/cq-provider-aws/issues/1326)) ([26a8339](https://github.com/cloudquery/cq-provider-aws/commit/26a83395ed007ed8a888aea45b6037b25e0af38f))
+* Update endpoints ([#1335](https://github.com/cloudquery/cq-provider-aws/issues/1335)) ([b493edc](https://github.com/cloudquery/cq-provider-aws/commit/b493edc6ebcf1dfb2ad5a48582cf1a4964f6bc97))
+
 ## [0.13.2](https://github.com/cloudquery/cq-provider-aws/compare/v0.13.1...v0.13.2) (2022-07-27)
 
 
