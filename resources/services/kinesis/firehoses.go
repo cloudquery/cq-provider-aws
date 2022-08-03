@@ -698,7 +698,6 @@ func resolveKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessor
 		return diag.WrapError(err)
 	}
 	return diag.WrapError(resource.Set(c.Name, out))
-
 }
 func resolveKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(*types.ExtendedS3DestinationDescription)
