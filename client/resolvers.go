@@ -84,6 +84,7 @@ func ResolveTimestampField(path string, rfcs ...string) func(_ context.Context, 
 	}
 }
 
+// SliceJsonResolver resolves slice of objects into a map[string]interface{}
 func SliceJsonResolver(path, keyPath, valuePath string) schema.ColumnResolver {
 	return func(_ context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
 		j := make(map[string]interface{})
