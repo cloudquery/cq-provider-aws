@@ -315,11 +315,8 @@ func fetchGlueRegistrySchemaVersions(ctx context.Context, meta schema.ClientMeta
 		}
 		for _, item := range result.Schemas {
 			s, err := svc.GetSchemaVersion(ctx, &glue.GetSchemaVersionInput{
-				SchemaId:        &schemaId,
 				SchemaVersionId: item.SchemaVersionId,
-				SchemaVersionNumber: &types.SchemaVersionNumber{
-					VersionNumber: item.VersionNumber,
-				}})
+			})
 			if err != nil {
 				if cl.IsNotFoundError(err) {
 					continue
@@ -340,13 +337,7 @@ func resolveGlueRegistrySchemaVersionMetadata(ctx context.Context, meta schema.C
 	svc := cl.Services().Glue
 	s := resource.Item.(*glue.GetSchemaVersionOutput)
 	input := &glue.QuerySchemaVersionMetadataInput{
-		SchemaId: &types.SchemaId{
-			SchemaArn: s.SchemaArn,
-		},
 		SchemaVersionId: s.SchemaVersionId,
-		SchemaVersionNumber: &types.SchemaVersionNumber{
-			VersionNumber: s.VersionNumber,
-		},
 	}
 	metadata := make(map[string]types.MetadataInfo)
 	for {
