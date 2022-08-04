@@ -62,3 +62,90 @@ func TestResolveTags(t *testing.T) {
 		assert.Equal(t, tc.ExpectedTags, r.Get(ta.Columns[0].Name))
 	}
 }
+
+type (
+	SliceJsonStruct struct {
+		Value  []types1.Tag
+		Nested *SliceJsonStruct
+	}
+)
+
+func TestResolveSliceJson(t *testing.T) {
+	cases := []struct {
+		InputItem    interface{}
+		ExpectedData map[string]interface{}
+		path         string
+		keyPath      string
+		valuePath    string
+	}{
+		{
+			InputItem: types1.ListWebhookItem{ // non-ptr
+				Tags: []types1.Tag{
+					{
+						Key:   aws.String("k1"),
+						Value: aws.String("v1"),
+					},
+				},
+			},
+			ExpectedData: map[string]interface{}{"k1": aws.String("v1")},
+			path:         "Tags",
+			keyPath:      "Key",
+			valuePath:    "Value",
+		},
+		{
+			InputItem: &types2.EventSubscription{ // ptr
+				Tags: []types2.Tag{
+					{
+						Key:   aws.String("k2"),
+						Value: aws.String("v2"),
+					},
+				},
+			},
+			ExpectedData: map[string]interface{}{"k2": aws.String("v2")},
+			path:         "Tags",
+			keyPath:      "Key",
+			valuePath:    "Value",
+		},
+		{
+			InputItem: SliceJsonStruct{Nested: &SliceJsonStruct{
+				Nested: &SliceJsonStruct{
+					Value: []types1.Tag{{
+						Key:   aws.String("k1"),
+						Value: aws.String("v1"),
+					}, {
+						Key:   aws.String("k2"),
+						Value: aws.String("v2"),
+					}},
+				},
+			}},
+			ExpectedData: map[string]interface{}{"k1": aws.String("v1"), "k2": aws.String("v2")},
+			path:         "Nested.Nested.Value",
+			keyPath:      "Key",
+			valuePath:    "Value",
+		},
+		{
+			InputItem: types1.ListWebhookItem{ // non-ptr, nil
+				Tags: nil,
+			},
+			ExpectedData: nil,
+			path:         "Tags",
+			keyPath:      "Key",
+			valuePath:    "Value",
+		},
+	}
+
+	for _, tc := range cases {
+		ta := &schema.Table{
+			Columns: []schema.Column{
+				{
+					Name: "tags",
+					Type: schema.TypeJSON,
+				},
+			},
+		}
+		r := schema.NewResourceData(schema.PostgresDialect{}, ta, nil, tc.InputItem, nil, time.Now())
+		err := SliceJsonResolver(tc.path, tc.keyPath, tc.valuePath)(context.Background(), nil, r, ta.Columns[0])
+		assert.NoError(t, err)
+		assert.Equal(t, tc.ExpectedData, r.Get(ta.Columns[0].Name))
+	}
+}
