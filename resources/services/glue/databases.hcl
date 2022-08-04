@@ -64,6 +64,26 @@ resource "aws" "glue" "databases" {
       type = "json"
     }
 
+    column "parameters" {
+      skip = true
+    }
+
+    userDefinedColumn "parameters" {
+      type = "json"
+      resolver "resolverSliceToJson" {
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+        params = ["Parameters"]
+      }
+    }
+
+    userDefinedColumn "storage_parameters" {
+      type = "json"
+      resolver "resolverSliceToJson" {
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+        params = ["StorageDescriptor.Parameters"]
+      }
+    }
+
     user_relation "aws" "glue" "partitions" {
       path = "github.com/aws/aws-sdk-go-v2/service/glue/types.Partition"
       ignoreError "IgnoreAccessDenied" {
@@ -110,6 +130,27 @@ resource "aws" "glue" "databases" {
       column "serde_info" {
         type = "json"
       }
+
+      column "parameters" {
+        skip = true
+      }
+
+      userDefinedColumn "parameters" {
+        type = "json"
+        resolver "resolverSliceToJson" {
+          path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+          params = ["Parameters"]
+        }
+      }
+
+      userDefinedColumn "storage_parameters" {
+        type = "json"
+        resolver "resolverSliceToJson" {
+          path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+          params = ["StorageDescriptor.Parameters"]
+        }
+      }
+
     }
 
     user_relation "aws" "glue" "indexes" {

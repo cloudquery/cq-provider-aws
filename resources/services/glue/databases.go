@@ -101,6 +101,16 @@ func Databases() *schema.Table {
 						Resolver:    schema.ParentIdResolver,
 					},
 					{
+						Name:     "parameters",
+						Type:     schema.TypeJSON,
+						Resolver: schema.PathResolver("Parameters"),
+					},
+					{
+						Name:     "storage_parameters",
+						Type:     schema.TypeJSON,
+						Resolver: schema.PathResolver("StorageDescriptor.Parameters"),
+					},
+					{
 						Name:        "name",
 						Description: "The table name",
 						Type:        schema.TypeString,
@@ -151,11 +161,6 @@ func Databases() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
-						Name:        "parameters",
-						Description: "These key-value pairs define properties associated with the table",
-						Type:        schema.TypeJSON,
-					},
-					{
 						Name:        "retention",
 						Description: "The retention time for this table",
 						Type:        schema.TypeBigInt,
@@ -201,12 +206,6 @@ func Databases() *schema.Table {
 						Description: "The output format: SequenceFileOutputFormat (binary), or IgnoreKeyTextOutputFormat, or a custom format",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("StorageDescriptor.OutputFormat"),
-					},
-					{
-						Name:        "parameters",
-						Description: "The user-supplied properties in key-value form",
-						Type:        schema.TypeJSON,
-						Resolver:    schema.PathResolver("StorageDescriptor.Parameters"),
 					},
 					{
 						Name:        "schema_reference_schema_id",
@@ -388,6 +387,16 @@ func Databases() *schema.Table {
 								Resolver:    client.ResolveAWSRegion,
 							},
 							{
+								Name:     "parameters",
+								Type:     schema.TypeJSON,
+								Resolver: schema.PathResolver("Parameters"),
+							},
+							{
+								Name:     "storage_parameters",
+								Type:     schema.TypeJSON,
+								Resolver: schema.PathResolver("StorageDescriptor.Parameters"),
+							},
+							{
 								Name:        "catalog_id",
 								Description: "The ID of the Data Catalog in which the partition resides",
 								Type:        schema.TypeString,
@@ -411,11 +420,6 @@ func Databases() *schema.Table {
 								Name:        "last_analyzed_time",
 								Description: "The last time at which column statistics were computed for this partition",
 								Type:        schema.TypeTimestamp,
-							},
-							{
-								Name:        "parameters",
-								Description: "These key-value pairs define partition parameters",
-								Type:        schema.TypeJSON,
 							},
 							{
 								Name:        "additional_locations",
@@ -458,12 +462,6 @@ func Databases() *schema.Table {
 								Description: "The output format: SequenceFileOutputFormat (binary), or IgnoreKeyTextOutputFormat, or a custom format",
 								Type:        schema.TypeString,
 								Resolver:    schema.PathResolver("StorageDescriptor.OutputFormat"),
-							},
-							{
-								Name:        "parameters",
-								Description: "The user-supplied properties in key-value form",
-								Type:        schema.TypeJSON,
-								Resolver:    schema.PathResolver("StorageDescriptor.Parameters"),
 							},
 							{
 								Name:        "schema_reference_schema_id",

@@ -12,7 +12,6 @@ Represents a slice of table data
 |database_name|text|The name of the catalog database in which to create the partition|
 |last_access_time|timestamp without time zone|The last time at which the partition was accessed|
 |last_analyzed_time|timestamp without time zone|The last time at which column statistics were computed for this partition|
-|parameters|jsonb|These key-value pairs define partition parameters|
 |additional_locations|text[]|A list of locations that point to the path where a Delta table is located|
 |bucket_columns|text[]|A list of reducer grouping columns, clustering columns, and bucketing columns in the table|
 |compressed|boolean|True if the data in the table is compressed, or False if not|
@@ -20,15 +19,10 @@ Represents a slice of table data
 |location|text|The physical location of the table|
 |number_of_buckets|bigint|Must be specified if the table contains any dimension columns|
 |output_format|text|The output format: SequenceFileOutputFormat (binary), or IgnoreKeyTextOutputFormat, or a custom format|
-|parameters|jsonb|The user-supplied properties in key-value form|
-|schema_reference_schema_id_registry_name|text|The name of the schema registry that contains the schema|
-|schema_reference_schema_id_schema_arn|text|The Amazon Resource Name (ARN) of the schema|
-|schema_reference_schema_id_schema_name|text|The name of the schema|
+|schema_reference_schema_id|jsonb|A structure that contains schema identity fields|
 |schema_reference_schema_version_id|text|The unique ID assigned to a version of the schema|
 |schema_reference_schema_version_number|bigint|The version number of the schema|
-|serde_info_name|text|Name of the SerDe|
-|serde_info_parameters|jsonb|These key-value pairs define initialization parameters for the SerDe|
-|serde_info_serialization_library|text|Usually the class that implements the SerDe|
+|serde_info|jsonb|The serialization/deserialization (SerDe) information|
 |skewed_info|jsonb|The information about values that appear frequently in a column (skewed values)|
 |sort_columns|jsonb|A list specifying the sort order of each bucket in the table|
 |stored_as_sub_directories|boolean|True if the table data is stored in subdirectories, or False if not|
