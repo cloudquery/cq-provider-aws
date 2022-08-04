@@ -12,6 +12,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type SliceJsonStruct struct {
+	Value  []types1.Tag
+	Nested *SliceJsonStruct
+}
+
 func TestResolveTags(t *testing.T) {
 	cases := []struct {
 		InputItem    interface{}
@@ -62,13 +67,6 @@ func TestResolveTags(t *testing.T) {
 		assert.Equal(t, tc.ExpectedTags, r.Get(ta.Columns[0].Name))
 	}
 }
-
-type (
-	SliceJsonStruct struct {
-		Value  []types1.Tag
-		Nested *SliceJsonStruct
-	}
-)
 
 func TestResolveSliceJson(t *testing.T) {
 	cases := []struct {
