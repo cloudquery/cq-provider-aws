@@ -244,7 +244,6 @@ func fetchEc2SecurityGroups(ctx context.Context, meta schema.ClientMeta, parent 
 		config.NextToken = output.NextToken
 	}
 	return nil
-
 }
 
 func fetchEc2SecurityGroupIpPermissions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
