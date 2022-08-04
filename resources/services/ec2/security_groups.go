@@ -144,7 +144,7 @@ func Ec2SecurityGroups() *schema.Table {
 					{
 						Name:          "aws_ec2_security_group_ip_permission_prefix_list_ids",
 						Description:   "Describes a prefix list ID.",
-						Resolver:      fetchEc2SecurityGroupIpPermissionPrefixListIds,
+						Resolver:      schema.PathTableResolver("PrefixListIds"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -168,7 +168,7 @@ func Ec2SecurityGroups() *schema.Table {
 					{
 						Name:        "aws_ec2_security_group_ip_permission_user_id_group_pairs",
 						Description: "Describes a security group and AWS account ID pair.",
-						Resolver:    fetchEc2SecurityGroupIpPermissionUserIdGroupPairs,
+						Resolver:    schema.PathTableResolver("UserIdGroupPairs"),
 						Columns: []schema.Column{
 							{
 								Name:        "security_group_ip_permission_cq_id",
@@ -283,15 +283,5 @@ func fetchEc2SecurityGroupIpPermissionIpRanges(ctx context.Context, meta schema.
 		ipRanges = append(ipRanges, customIpRange{aws.ToString(ip.CidrIpv6), aws.ToString(ip.Description), "ipv6"})
 	}
 	res <- ipRanges
-	return nil
-}
-func fetchEc2SecurityGroupIpPermissionPrefixListIds(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission := parent.Item.(ipPermission)
-	res <- securityGroupIpPermission.PrefixListIds
-	return nil
-}
-func fetchEc2SecurityGroupIpPermissionUserIdGroupPairs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	securityGroupIpPermission := parent.Item.(ipPermission)
-	res <- securityGroupIpPermission.UserIdGroupPairs
 	return nil
 }
