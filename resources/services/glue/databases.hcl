@@ -45,6 +45,22 @@ resource "aws" "glue" "databases" {
     path = "github.com/aws/aws-sdk-go-v2/service/glue/types.Table"
 
     column "storage_descriptor" {
+      skip_prefix = true
+    }
+
+    column "skewed_info" {
+      type = "json"
+    }
+
+    column "sort_columns" {
+      type = "json"
+    }
+
+    column "schema_reference_schema_id" {
+      type = "json"
+    }
+
+    column "serde_info" {
       type = "json"
     }
 
@@ -75,11 +91,23 @@ resource "aws" "glue" "databases" {
         }
       }
 
-      column "storage_descriptor_skewed_info" {
+      column "storage_descriptor" {
+        skip_prefix = true
+      }
+
+      column "skewed_info" {
         type = "json"
       }
 
-      column "storage_descriptor_sort_columns" {
+      column "sort_columns" {
+        type = "json"
+      }
+
+      column "schema_reference_schema_id" {
+        type = "json"
+      }
+
+      column "serde_info" {
         type = "json"
       }
     }
