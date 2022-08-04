@@ -232,16 +232,21 @@ resource "aws" "kinesis" "firehoses" {
       path_resolver = true
       params        = ["Destinations.RedshiftDestinationDescription"]
     }
-    column "encryption_configuration" {
+    column "s3_destination_encryption_configuration" {
       skip_prefix = true
     }
-    column "encryption_configuration_kms_encryption" {
-      skip_prefix = true
-    }
+    //s3_backup_encryption_configuration_kms_encryption_config_aws_kms_key_arn
+    // column "s3_destination_encryption_configuration_kms_encryption" {
+    //   skip_prefix = true
+    // }
     column "s3_destination_description" {
-      skip_prefix = true
+      rename = "s3_destination"
     }
     column "s3_backup_description" {
+      rename = "s3_backup"
+    }
+
+    column "s3_backup_encryption_configuration" {
       skip_prefix = true
     }
     column "processing_configuration_processors" {
@@ -264,8 +269,12 @@ resource "aws" "kinesis" "firehoses" {
       params        = ["Destinations.SplunkDestinationDescription"]
     }
     column "s3_destination_description" {
+      rename = "s3_destination"
+    }
+        column "s3_destination_encryption_configuration" {
       skip_prefix = true
     }
+
     column "processing_configuration_processors" {
       skip = true
     }
