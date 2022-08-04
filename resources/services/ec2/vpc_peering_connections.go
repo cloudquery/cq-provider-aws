@@ -111,7 +111,7 @@ func Ec2VpcPeeringConnections() *schema.Table {
 				Name:        "requester_cidr_block_set",
 				Description: "Information about the IPv4 CIDR blocks for the VPC.",
 				Type:        schema.TypeStringArray,
-				Resolver:    schema.PathResolver("RequesterVpcInfo.CidrBlockSet.CidrBlockSet"),
+				Resolver:    schema.PathResolver("RequesterVpcInfo.CidrBlockSet.CidrBlock"),
 			},
 			{
 				Name:        "requester_ipv6_cidr_block_set",
