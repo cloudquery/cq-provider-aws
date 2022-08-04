@@ -74,8 +74,9 @@ func Registries() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_glue_registry_schemas",
-				Resolver: fetchGlueRegistrySchemas,
+				Name:        "aws_glue_registry_schemas",
+				Description: "An object that contains minimal details for a schema",
+				Resolver:    fetchGlueRegistrySchemas,
 				Columns: []schema.Column{
 					{
 						Name:        "registry_cq_id",
@@ -158,8 +159,9 @@ func Registries() *schema.Table {
 				},
 				Relations: []*schema.Table{
 					{
-						Name:     "aws_glue_registry_schema_versions",
-						Resolver: fetchGlueRegistrySchemaVersions,
+						Name:        "aws_glue_registry_schema_versions",
+						Description: "An object containing the details about a schema version",
+						Resolver:    fetchGlueRegistrySchemaVersions,
 						Columns: []schema.Column{
 							{
 								Name:        "registry_schema_cq_id",

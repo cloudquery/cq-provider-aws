@@ -1,6 +1,6 @@
 
 # Table: aws_glue_registry_schema_versions
-
+An object containing the details about a schema version
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |

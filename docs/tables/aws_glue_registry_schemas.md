@@ -1,6 +1,6 @@
 
 # Table: aws_glue_registry_schemas
-
+An object that contains minimal details for a schema
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |

@@ -41,7 +41,8 @@ resource "aws" "glue" "registries" {
     generate_resolver = true
   }
   user_relation "aws" "glue" "schemas" {
-    path = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaOutput"
+    path        = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaOutput"
+    description = "An object that contains minimal details for a schema"
     userDefinedColumn "tags" {
       type              = "json"
       description       = "Resource tags."
@@ -52,7 +53,8 @@ resource "aws" "glue" "registries" {
     }
 
     user_relation "aws" "glue" "versions" {
-      path = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaVersionOutput"
+      path        = "github.com/aws/aws-sdk-go-v2/service/glue.GetSchemaVersionOutput"
+      description = "An object containing the details about a schema version"
       userDefinedColumn "metadata" {
         type              = "json"
         generate_resolver = true
