@@ -1,3 +1,7 @@
+service          = "aws"
+output_directory = "."
+add_generate     = true
+
 description_modifier "remove_read_only" {
   words = ["  This member is required."]
 }
