@@ -5,6 +5,8 @@ Represents a collection of related data organized in columns and rows
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |database_cq_id|uuid|Unique CloudQuery ID of aws_glue_databases table (FK)|
+|parameters|jsonb||
+|storage_parameters|jsonb||
 |name|text|The table name|
 |catalog_id|text|The ID of the Data Catalog in which the table resides|
 |create_time|timestamp without time zone|The time when the table definition was created in the Data Catalog|

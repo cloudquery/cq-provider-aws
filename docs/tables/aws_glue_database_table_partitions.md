@@ -7,6 +7,8 @@ Represents a slice of table data
 |database_table_cq_id|uuid|Unique CloudQuery ID of aws_glue_database_tables table (FK)|
 |account_id|text|The AWS Account ID of the resource.|
 |region|text|The AWS Region of the resource.|
+|parameters|jsonb||
+|storage_parameters|jsonb||
 |catalog_id|text|The ID of the Data Catalog in which the partition resides|
 |creation_time|timestamp without time zone|The time at which the partition was created|
 |database_name|text|The name of the catalog database in which to create the partition|
