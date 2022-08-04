@@ -35,6 +35,26 @@ func (m *MockGlueClient) EXPECT() *MockGlueClientMockRecorder {
 	return m.recorder
 }
 
+// GetCrawlers mocks base method.
+func (m *MockGlueClient) GetCrawlers(arg0 context.Context, arg1 *glue.GetCrawlersInput, arg2 ...func(*glue.Options)) (*glue.GetCrawlersOutput, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetCrawlers", varargs...)
+	ret0, _ := ret[0].(*glue.GetCrawlersOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCrawlers indicates an expected call of GetCrawlers.
+func (mr *MockGlueClientMockRecorder) GetCrawlers(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCrawlers", reflect.TypeOf((*MockGlueClient)(nil).GetCrawlers), varargs...)
+}
+
 // GetDataCatalogEncryptionSettings mocks base method.
 func (m *MockGlueClient) GetDataCatalogEncryptionSettings(arg0 context.Context, arg1 *glue.GetDataCatalogEncryptionSettingsInput, arg2 ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error) {
 	m.ctrl.T.Helper()
@@ -175,44 +195,24 @@ func (mr *MockGlueClientMockRecorder) GetMLTransforms(arg0, arg1 interface{}, ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMLTransforms", reflect.TypeOf((*MockGlueClient)(nil).GetMLTransforms), varargs...)
 }
 
-// GetSchema mocks base method.
-func (m *MockGlueClient) GetSchema(arg0 context.Context, arg1 *glue.GetSchemaInput, arg2 ...func(*glue.Options)) (*glue.GetSchemaOutput, error) {
+// GetSecurityConfigurations mocks base method.
+func (m *MockGlueClient) GetSecurityConfigurations(arg0 context.Context, arg1 *glue.GetSecurityConfigurationsInput, arg2 ...func(*glue.Options)) (*glue.GetSecurityConfigurationsOutput, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "GetSchema", varargs...)
-	ret0, _ := ret[0].(*glue.GetSchemaOutput)
+	ret := m.ctrl.Call(m, "GetSecurityConfigurations", varargs...)
+	ret0, _ := ret[0].(*glue.GetSecurityConfigurationsOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetSchema indicates an expected call of GetSchema.
-func (mr *MockGlueClientMockRecorder) GetSchema(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// GetSecurityConfigurations indicates an expected call of GetSecurityConfigurations.
+func (mr *MockGlueClientMockRecorder) GetSecurityConfigurations(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSchema", reflect.TypeOf((*MockGlueClient)(nil).GetSchema), varargs...)
-}
-
-// GetSchemaVersion mocks base method.
-func (m *MockGlueClient) GetSchemaVersion(arg0 context.Context, arg1 *glue.GetSchemaVersionInput, arg2 ...func(*glue.Options)) (*glue.GetSchemaVersionOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetSchemaVersion", varargs...)
-	ret0, _ := ret[0].(*glue.GetSchemaVersionOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetSchemaVersion indicates an expected call of GetSchemaVersion.
-func (mr *MockGlueClientMockRecorder) GetSchemaVersion(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSchemaVersion", reflect.TypeOf((*MockGlueClient)(nil).GetSchemaVersion), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSecurityConfigurations", reflect.TypeOf((*MockGlueClient)(nil).GetSecurityConfigurations), varargs...)
 }
 
 // GetTables mocks base method.
@@ -295,66 +295,6 @@ func (mr *MockGlueClientMockRecorder) GetWorkflow(arg0, arg1 interface{}, arg2 .
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkflow", reflect.TypeOf((*MockGlueClient)(nil).GetWorkflow), varargs...)
 }
 
-// ListRegistries mocks base method.
-func (m *MockGlueClient) ListRegistries(arg0 context.Context, arg1 *glue.ListRegistriesInput, arg2 ...func(*glue.Options)) (*glue.ListRegistriesOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListRegistries", varargs...)
-	ret0, _ := ret[0].(*glue.ListRegistriesOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListRegistries indicates an expected call of ListRegistries.
-func (mr *MockGlueClientMockRecorder) ListRegistries(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRegistries", reflect.TypeOf((*MockGlueClient)(nil).ListRegistries), varargs...)
-}
-
-// ListSchemaVersions mocks base method.
-func (m *MockGlueClient) ListSchemaVersions(arg0 context.Context, arg1 *glue.ListSchemaVersionsInput, arg2 ...func(*glue.Options)) (*glue.ListSchemaVersionsOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListSchemaVersions", varargs...)
-	ret0, _ := ret[0].(*glue.ListSchemaVersionsOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListSchemaVersions indicates an expected call of ListSchemaVersions.
-func (mr *MockGlueClientMockRecorder) ListSchemaVersions(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSchemaVersions", reflect.TypeOf((*MockGlueClient)(nil).ListSchemaVersions), varargs...)
-}
-
-// ListSchemas mocks base method.
-func (m *MockGlueClient) ListSchemas(arg0 context.Context, arg1 *glue.ListSchemasInput, arg2 ...func(*glue.Options)) (*glue.ListSchemasOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListSchemas", varargs...)
-	ret0, _ := ret[0].(*glue.ListSchemasOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListSchemas indicates an expected call of ListSchemas.
-func (mr *MockGlueClientMockRecorder) ListSchemas(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSchemas", reflect.TypeOf((*MockGlueClient)(nil).ListSchemas), varargs...)
-}
-
 // ListTriggers mocks base method.
 func (m *MockGlueClient) ListTriggers(arg0 context.Context, arg1 *glue.ListTriggersInput, arg2 ...func(*glue.Options)) (*glue.ListTriggersOutput, error) {
 	m.ctrl.T.Helper()
@@ -393,24 +333,4 @@ func (mr *MockGlueClientMockRecorder) ListWorkflows(arg0, arg1 interface{}, arg2
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListWorkflows", reflect.TypeOf((*MockGlueClient)(nil).ListWorkflows), varargs...)
-}
-
-// QuerySchemaVersionMetadata mocks base method.
-func (m *MockGlueClient) QuerySchemaVersionMetadata(arg0 context.Context, arg1 *glue.QuerySchemaVersionMetadataInput, arg2 ...func(*glue.Options)) (*glue.QuerySchemaVersionMetadataOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "QuerySchemaVersionMetadata", varargs...)
-	ret0, _ := ret[0].(*glue.QuerySchemaVersionMetadataOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// QuerySchemaVersionMetadata indicates an expected call of QuerySchemaVersionMetadata.
-func (mr *MockGlueClientMockRecorder) QuerySchemaVersionMetadata(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QuerySchemaVersionMetadata", reflect.TypeOf((*MockGlueClient)(nil).QuerySchemaVersionMetadata), varargs...)
 }
