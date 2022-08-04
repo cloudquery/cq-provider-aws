@@ -106,27 +106,17 @@ resource "aws" "kinesis" "firehoses" {
     description = "The Amazon Resource Name (ARN) of the delivery stream"
 
     resolver "resolveStreamArn" {
-      path          = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
-      params        = ["DeliveryStreamARN"]
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+      params = ["DeliveryStreamARN"]
     }
   }
 
   column "delivery_stream_encryption_configuration" {
-    // skip_prefix = true
     rename = "encryption_config"
   }
 
-  column "delivery_stream_encryption_configuration" {
-    // skip_prefix = true
-    rename = "encryption_config"
-  }
 
-  column "delivery_stream_encryption_configuration_failure_description_details" {
-    skip = false
-  }
-  column "delivery_stream_encryption_configuration_failure_description_type" {
-    skip = false
-  }
+
   column "source" {
     rename = "source"
   }
@@ -179,6 +169,11 @@ resource "aws" "kinesis" "firehoses" {
     column "s3_destination_description" {
       skip_prefix = true
     }
+
+    column "processing_configuration_processors" {
+      skip = true
+    }
+
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
       description = "The Amazon Resource Name (ARN) of the delivery stream"
@@ -205,10 +200,11 @@ resource "aws" "kinesis" "firehoses" {
     }
 
     column "deserializer_open_x_json_ser_de_convert_dots_in_json_keys_to_underscores" {
-      skip = true
+      rename = "deserializer_open_x_json_ser_de_convert_dots_to_underscores"
     }
-    column "dynamic_partitioning_configuration_retry_options_duration_in_seconds" {
-      skip = true
+
+    column "dynamic_partitioning_configuration" {
+      rename = "dynamic_partitioning"
     }
 
     column "output_format_configuration" {

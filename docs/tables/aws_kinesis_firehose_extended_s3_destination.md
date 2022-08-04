@@ -20,6 +20,7 @@ Describes a destination in Amazon S3
 |deserializer_hive_json_ser_de_timestamp_formats|text[]|Indicates how you want Kinesis Data Firehose to parse the date and timestamps that may be present in your input data JSON|
 |deserializer_open_x_json_ser_de_case_insensitive|boolean|When set to true, which is the default, Kinesis Data Firehose converts JSON keys to lowercase before deserializing them|
 |deserializer_open_x_json_ser_de_column_to_json_key_mappings|jsonb|Maps column names to JSON keys that aren't identical to the column names|
+|deserializer_open_x_json_ser_de_convert_dots_to_underscores|boolean|When set to true, specifies that the names of the keys include dots and that you want Kinesis Data Firehose to replace them with underscores|
 |serializer_orc_ser_de_block_size_bytes|bigint|The Hadoop Distributed File System (HDFS) block size|
 |serializer_orc_ser_de_bloom_filter_columns|text[]|The column names for which you want Kinesis Data Firehose to create bloom filters|
 |serializer_orc_ser_de_bloom_filter_false_positive_probability|float|The Bloom filter false positive probability (FPP)|
@@ -42,7 +43,8 @@ Describes a destination in Amazon S3
 |schema_configuration_role_arn|text|The role that Kinesis Data Firehose can use to access AWS Glue|
 |schema_configuration_table_name|text|Specifies the AWS Glue table that contains the column information that constitutes your data schema|
 |schema_configuration_version_id|text|Specifies the table version for the output data schema|
-|dynamic_partitioning_configuration_enabled|boolean|Specifies that the dynamic partitioning is enabled for this Kinesis Data Firehose delivery stream|
+|dynamic_partitioning_enabled|boolean|Specifies that the dynamic partitioning is enabled for this Kinesis Data Firehose delivery stream|
+|dynamic_partitioning_retry_options_duration_in_seconds|bigint|The period of time during which Kinesis Data Firehose retries to deliver data to the specified Amazon S3 prefix|
 |error_output_prefix|text|A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3|
 |prefix|text|The "YYYY/MM/DD/HH" time format prefix is automatically used for delivered Amazon S3 files|
 |processing_configuration_enabled|boolean|Enables or disables data processing|

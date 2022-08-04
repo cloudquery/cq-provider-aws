@@ -518,51 +518,6 @@ func Firehoses() *schema.Table {
 						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
 					},
 				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processors",
-						Description: "Describes a data processor",
-						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
-						Columns: []schema.Column{
-							{
-								Name:        "firehose_elasticsearch_destination_cq_id",
-								Description: "Unique CloudQuery ID of aws_kinesis_firehose_elasticsearch_destination table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "type",
-								Description: "The type of processor",
-								Type:        schema.TypeString,
-							},
-						},
-						Relations: []*schema.Table{
-							{
-								Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processor_parameters",
-								Description: "Describes the processor parameter",
-								Resolver:    schema.PathTableResolver("Parameters"),
-								Columns: []schema.Column{
-									{
-										Name:        "firehose_elasticsearch_destination_processing_configuration_processor_cq_id",
-										Description: "Unique CloudQuery ID of aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processors table (FK)",
-										Type:        schema.TypeUUID,
-										Resolver:    schema.ParentIdResolver,
-									},
-									{
-										Name:        "parameter_name",
-										Description: "The name of the parameter",
-										Type:        schema.TypeString,
-									},
-									{
-										Name:        "parameter_value",
-										Description: "The parameter value",
-										Type:        schema.TypeString,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 			{
 				Name:        "aws_kinesis_firehose_extended_s3_destination",
@@ -663,6 +618,12 @@ func Firehoses() *schema.Table {
 						Description: "Maps column names to JSON keys that aren't identical to the column names",
 						Type:        schema.TypeJSON,
 						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.InputFormatConfiguration.Deserializer.OpenXJsonSerDe.ColumnToJsonKeyMappings"),
+					},
+					{
+						Name:        "deserializer_open_x_json_ser_de_convert_dots_to_underscores",
+						Description: "When set to true, specifies that the names of the keys include dots and that you want Kinesis Data Firehose to replace them with underscores",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.InputFormatConfiguration.Deserializer.OpenXJsonSerDe.ConvertDotsInJsonKeysToUnderscores"),
 					},
 					{
 						Name:        "serializer_orc_ser_de_block_size_bytes",
@@ -797,10 +758,16 @@ func Firehoses() *schema.Table {
 						Resolver:    schema.PathResolver("DataFormatConversionConfiguration.SchemaConfiguration.VersionId"),
 					},
 					{
-						Name:        "dynamic_partitioning_configuration_enabled",
+						Name:        "dynamic_partitioning_enabled",
 						Description: "Specifies that the dynamic partitioning is enabled for this Kinesis Data Firehose delivery stream",
 						Type:        schema.TypeBool,
 						Resolver:    schema.PathResolver("DynamicPartitioningConfiguration.Enabled"),
+					},
+					{
+						Name:        "dynamic_partitioning_retry_options_duration_in_seconds",
+						Description: "The period of time during which Kinesis Data Firehose retries to deliver data to the specified Amazon S3 prefix",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("DynamicPartitioningConfiguration.RetryOptions.DurationInSeconds"),
 					},
 					{
 						Name:        "error_output_prefix",
