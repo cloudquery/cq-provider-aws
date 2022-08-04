@@ -2,7 +2,6 @@ package kinesis
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/firehose"
@@ -157,7 +156,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "The Amazon Resource Name (ARN) of the delivery stream",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:     "buffering_hints_interval_in_seconds",
@@ -327,6 +326,245 @@ func Firehoses() *schema.Table {
 				},
 			},
 			{
+				Name:        "aws_kinesis_firehose_elasticsearch_destination",
+				Description: "The destination description in Amazon ES",
+				Resolver:    schema.PathTableResolver("Destinations.ElasticsearchDestinationDescription"),
+				Columns: []schema.Column{
+					{
+						Name:        "firehose_cq_id",
+						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "cluster_endpoint",
+						Description: "The endpoint to use when communicating with the cluster",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "domain_arn",
+						Description: "The ARN of the Amazon ES domain",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("DomainARN"),
+					},
+					{
+						Name:        "index_name",
+						Description: "The Elasticsearch index name",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "index_rotation_period",
+						Description: "The Elasticsearch index rotation period",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "processing_configuration_enabled",
+						Description: "Enables or disables data processing",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
+					},
+					{
+						Name:        "retry_options_duration_in_seconds",
+						Description: "After an initial failure to deliver to Amazon ES, the total amount of time during which Kinesis Data Firehose retries delivery (including the first attempt)",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("RetryOptions.DurationInSeconds"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("RoleARN"),
+					},
+					{
+						Name:        "s3_backup_mode",
+						Description: "The Amazon S3 backup mode",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BucketARN"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CompressionFormat"),
+					},
+					{
+						Name:        "encryption_configuration_kms_encryption_config_aws_kms_key_arn",
+						Description: "The Amazon Resource Name (ARN) of the encryption key",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN"),
+					},
+					{
+						Name:        "encryption_configuration_no_encryption_config",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.RoleARN"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
+					},
+					{
+						Name:        "type_name",
+						Description: "The Elasticsearch type name",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "vpc_configuration_description_role_arn",
+						Description: "The ARN of the IAM role that the delivery stream uses to create endpoints in the destination VPC",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.RoleARN"),
+					},
+					{
+						Name:        "vpc_configuration_description_security_group_ids",
+						Description: "The IDs of the security groups that Kinesis Data Firehose uses when it creates ENIs in the VPC of the Amazon ES destination",
+						Type:        schema.TypeStringArray,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.SecurityGroupIds"),
+					},
+					{
+						Name:        "vpc_configuration_description_subnet_ids",
+						Description: "The IDs of the subnets that Kinesis Data Firehose uses to create ENIs in the VPC of the Amazon ES destination",
+						Type:        schema.TypeStringArray,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.SubnetIds"),
+					},
+					{
+						Name:        "vpc_configuration_description_vpc_id",
+						Description: "The ID of the Amazon ES destination's VPC",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("VpcConfigurationDescription.VpcId"),
+					},
+				},
+				Relations: []*schema.Table{
+					{
+						Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processors",
+						Description: "Describes a data processor",
+						Resolver:    schema.PathTableResolver("ProcessingConfiguration.Processors"),
+						Columns: []schema.Column{
+							{
+								Name:        "firehose_elasticsearch_destination_cq_id",
+								Description: "Unique CloudQuery ID of aws_kinesis_firehose_elasticsearch_destination table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "type",
+								Description: "The type of processor",
+								Type:        schema.TypeString,
+							},
+						},
+						Relations: []*schema.Table{
+							{
+								Name:        "aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processor_parameters",
+								Description: "Describes the processor parameter",
+								Resolver:    schema.PathTableResolver("Parameters"),
+								Columns: []schema.Column{
+									{
+										Name:        "firehose_elasticsearch_destination_processing_configuration_processor_cq_id",
+										Description: "Unique CloudQuery ID of aws_kinesis_firehose_elasticsearch_destination_processing_configuration_processors table (FK)",
+										Type:        schema.TypeUUID,
+										Resolver:    schema.ParentIdResolver,
+									},
+									{
+										Name:        "parameter_name",
+										Description: "The name of the parameter",
+										Type:        schema.TypeString,
+									},
+									{
+										Name:        "parameter_value",
+										Description: "The parameter value",
+										Type:        schema.TypeString,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			{
 				Name:        "aws_kinesis_firehose_extended_s3_destination",
 				Description: "Describes a destination in Amazon S3",
 				Resolver:    schema.PathTableResolver("Destinations.ExtendedS3DestinationDescription"),
@@ -341,7 +579,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "The Amazon Resource Name (ARN) of the delivery stream",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "bucket_arn",
@@ -659,6 +897,573 @@ func Firehoses() *schema.Table {
 					},
 				},
 			},
+			{
+				Name:        "aws_kinesis_firehose_http_destination",
+				Description: "Describes the HTTP endpoint destination",
+				Resolver:    schema.PathTableResolver("Destinations.HttpEndpointDestinationDescription"),
+				Columns: []schema.Column{
+					{
+						Name:        "firehose_cq_id",
+						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "endpoint_configuration_name",
+						Description: "The name of the HTTP endpoint selected as the destination",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("EndpointConfiguration.Name"),
+					},
+					{
+						Name:        "endpoint_configuration_url",
+						Description: "The URL of the HTTP endpoint selected as the destination",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("EndpointConfiguration.Url"),
+					},
+					{
+						Name:        "processing_configuration_enabled",
+						Description: "Enables or disables data processing",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
+					},
+					{
+						Name:        "request_configuration_content_encoding",
+						Description: "Kinesis Data Firehose uses the content encoding to compress the body of a request before sending the request to the destination",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("RequestConfiguration.ContentEncoding"),
+					},
+					{
+						Name:        "retry_options_duration_in_seconds",
+						Description: "The total amount of time that Kinesis Data Firehose spends on retries",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("RetryOptions.DurationInSeconds"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "Kinesis Data Firehose uses this IAM role for all the permissions that the delivery stream needs",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("RoleARN"),
+					},
+					{
+						Name:        "s3_backup_mode",
+						Description: "Describes the S3 bucket backup options for the data that Kinesis Firehose delivers to the HTTP endpoint destination",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BucketARN"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CompressionFormat"),
+					},
+					{
+						Name:        "encryption_configuration_kms_encryption_config_aws_kms_key_arn",
+						Description: "The Amazon Resource Name (ARN) of the encryption key",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN"),
+					},
+					{
+						Name:        "encryption_configuration_no_encryption_config",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.RoleARN"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
+					},
+				},
+				Relations: []*schema.Table{
+					{
+						Name:        "aws_kinesis_firehose_http_destination_request_configuration_common_attributes",
+						Description: "Describes the metadata that's delivered to the specified HTTP endpoint destination",
+						Resolver:    schema.PathTableResolver("RequestConfiguration.CommonAttributes"),
+						Columns: []schema.Column{
+							{
+								Name:        "firehose_http_destination_cq_id",
+								Description: "Unique CloudQuery ID of aws_kinesis_firehose_http_destination table (FK)",
+								Type:        schema.TypeUUID,
+								Resolver:    schema.ParentIdResolver,
+							},
+							{
+								Name:        "attribute_name",
+								Description: "The name of the HTTP endpoint common attribute",
+								Type:        schema.TypeString,
+							},
+							{
+								Name:        "attribute_value",
+								Description: "The value of the HTTP endpoint common attribute",
+								Type:        schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+			{
+				Name:        "aws_kinesis_firehose_redshift_destination",
+				Description: "Describes a destination in Amazon Redshift",
+				Resolver:    schema.PathTableResolver("Destinations.RedshiftDestinationDescription"),
+				Columns: []schema.Column{
+					{
+						Name:        "firehose_cq_id",
+						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+					},
+					{
+						Name:        "cluster_j_db_c_url",
+						Description: "The database connection string",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("ClusterJDBCURL"),
+					},
+					{
+						Name:        "copy_command_data_table_name",
+						Description: "The name of the target table",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CopyCommand.DataTableName"),
+					},
+					{
+						Name:        "copy_command_copy_options",
+						Description: "Optional parameters to use with the Amazon Redshift COPY command",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CopyCommand.CopyOptions"),
+					},
+					{
+						Name:        "copy_command_data_table_columns",
+						Description: "A comma-separated list of column names",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CopyCommand.DataTableColumns"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("RoleARN"),
+					},
+					{
+						Name:        "bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BucketARN"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CompressionFormat"),
+					},
+					{
+						Name:        "kms_encryption_config_aws_kms_key_arn",
+						Description: "The Amazon Resource Name (ARN) of the encryption key",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN"),
+					},
+					{
+						Name:        "no_encryption_config",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.RoleARN"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
+					},
+					{
+						Name:        "username",
+						Description: "The name of the user",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "processing_configuration_enabled",
+						Description: "Enables or disables data processing",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
+					},
+					{
+						Name:        "retry_options_duration_in_seconds",
+						Description: "The length of time during which Kinesis Data Firehose retries delivery after a failure, starting from the initial request and including the first attempt",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("RetryOptions.DurationInSeconds"),
+					},
+					{
+						Name:        "bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.BucketARN"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3BackupDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3BackupDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.CompressionFormat"),
+					},
+					{
+						Name:        "kms_encryption_config_aws_kms_key_arn",
+						Description: "The Amazon Resource Name (ARN) of the encryption key",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN"),
+					},
+					{
+						Name:        "no_encryption_config",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.EncryptionConfiguration.NoEncryptionConfig"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.RoleARN"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3BackupDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3BackupDescription.Prefix"),
+					},
+					{
+						Name:        "s3_backup_mode",
+						Description: "The Amazon S3 backup mode",
+						Type:        schema.TypeString,
+					},
+				},
+			},
+			{
+				Name:        "aws_kinesis_firehose_splunk_destination",
+				Description: "Describes a destination in Splunk",
+				Resolver:    schema.PathTableResolver("Destinations.SplunkDestinationDescription"),
+				Columns: []schema.Column{
+					{
+						Name:        "firehose_cq_id",
+						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "processing_configuration_processors",
+						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Type:        schema.TypeJSON,
+						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "h_e_ca_cknowledgment_timeout_in_seconds",
+						Description: "The amount of time that Kinesis Data Firehose waits to receive an acknowledgment from Splunk after it sends it data",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("HECAcknowledgmentTimeoutInSeconds"),
+					},
+					{
+						Name:        "h_e_c_endpoint",
+						Description: "The HTTP Event Collector (HEC) endpoint to which Kinesis Data Firehose sends your data",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "h_e_c_endpoint_type",
+						Description: "This type can be either \"Raw\" or \"Event\"",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "h_e_c_token",
+						Description: "A GUID you obtain from your Splunk cluster when you create a new HEC endpoint",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "processing_configuration_enabled",
+						Description: "Enables or disables data processing",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
+					},
+					{
+						Name:        "retry_options_duration_in_seconds",
+						Description: "The total amount of time that Kinesis Data Firehose spends on retries",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("RetryOptions.DurationInSeconds"),
+					},
+					{
+						Name:        "s3_backup_mode",
+						Description: "Defines how documents should be delivered to Amazon S3",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "bucket_arn",
+						Description: "The ARN of the S3 bucket",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BucketARN"),
+					},
+					{
+						Name:        "buffering_hints_interval_in_seconds",
+						Description: "Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.IntervalInSeconds"),
+					},
+					{
+						Name:        "buffering_hints_size_in_mb_s",
+						Description: "Buffer incoming data to the specified size, in MiBs, before delivering it to the destination",
+						Type:        schema.TypeBigInt,
+						Resolver:    schema.PathResolver("S3DestinationDescription.BufferingHints.SizeInMBs"),
+					},
+					{
+						Name:        "compression_format",
+						Description: "The compression format",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CompressionFormat"),
+					},
+					{
+						Name:        "encryption_configuration_kms_encryption_config_aws_kms_key_arn",
+						Description: "The Amazon Resource Name (ARN) of the encryption key",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN"),
+					},
+					{
+						Name:        "encryption_configuration_no_encryption_config",
+						Description: "Specifically override existing encryption information to ensure that no encryption is used",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.EncryptionConfiguration.NoEncryptionConfig"),
+					},
+					{
+						Name:        "role_arn",
+						Description: "The Amazon Resource Name (ARN) of the AWS credentials",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.RoleARN"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_enabled",
+						Description: "Enables or disables CloudWatch logging",
+						Type:        schema.TypeBool,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.Enabled"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_group_name",
+						Description: "The CloudWatch group name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogGroupName"),
+					},
+					{
+						Name:        "cloud_watch_logging_options_log_stream_name",
+						Description: "The CloudWatch log stream name for logging",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.CloudWatchLoggingOptions.LogStreamName"),
+					},
+					{
+						Name:        "error_output_prefix",
+						Description: "A prefix that Kinesis Data Firehose evaluates and adds to failed records before writing them to S3",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.ErrorOutputPrefix"),
+					},
+					{
+						Name:        "prefix",
+						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
+						Type:        schema.TypeString,
+						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
+					},
+				},
+			},
 		},
 	}
 }
@@ -690,22 +1495,6 @@ func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, res
 		input.ExclusiveStartTagKey = aws.String(*output.Tags[len(output.Tags)-1].Key)
 	}
 	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(tags)))
-}
-func resolveKinesisFirehoseOpenSearchDestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(*types.AmazonopensearchserviceDestinationDescription)
-	out, err := json.Marshal(r.ProcessingConfiguration.Processors)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, out))
-}
-func resolveKinesisFirehoseExtendedS3DestinationProcessingConfigurationProcessors(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(*types.ExtendedS3DestinationDescription)
-	out, err := json.Marshal(r.ProcessingConfiguration.Processors)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, out))
 }
 
 // ====================================================================================================================
