@@ -19,7 +19,7 @@ func SecurityConfigurations() *schema.Table {
 		Multiplex:    client.ServiceAccountRegionMultiplexer("glue"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
 		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "name"}},
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

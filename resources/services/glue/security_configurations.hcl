@@ -20,7 +20,7 @@ resource "aws" "glue" "security_configurations" {
     params = ["glue"]
   }
   options {
-    primary_keys = ["account_id", "name"]
+    primary_keys = ["account_id", "region", "name"]
   }
   userDefinedColumn "account_id" {
     description = "The AWS Account ID of the resource."
