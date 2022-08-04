@@ -11,6 +11,7 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+//go:generate cq-gen --resource firehoses --config gen.hcl --output .
 func Firehoses() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_kinesis_firehoses",
