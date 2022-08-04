@@ -4,7 +4,7 @@ import (
 	"math/rand"
 
 	wafv2types "github.com/aws/aws-sdk-go-v2/service/wafv2/types"
-	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
+	"github.com/cloudquery/cq-provider-sdk/schema"
 )
 
 var AllNamespaces = []string{ // this is only used in applicationautoscaling

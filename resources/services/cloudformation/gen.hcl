@@ -40,7 +40,7 @@ resource "aws" "cloudformation" "stacks" {
   userDefinedColumn "arn" {
     type = "string"
     resolver "resolveStackArn" {
-      path = "github.com/cloudquery/cq-provider-sdk/plugin/source/schema.PathResolver"
+      path = "github.com/cloudquery/cq-provider-sdk/schema.PathResolver"
       path_resolver = true
       // TODO: require manual changing from ARN -> StackId for the path resolver as its not supported by cq-gen yet
       params = ["StackId"]

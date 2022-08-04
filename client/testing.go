@@ -3,9 +3,9 @@ package client
 import (
 	"testing"
 
-	"github.com/cloudquery/cq-provider-sdk/plugin/source"
-	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
-	providertest "github.com/cloudquery/cq-provider-sdk/plugin/source/testing"
+	"github.com/cloudquery/cq-provider-sdk/plugins"
+	"github.com/cloudquery/cq-provider-sdk/schema"
+	providertest "github.com/cloudquery/cq-provider-sdk/testing"
 	"github.com/golang/mock/gomock"
 	"github.com/rs/zerolog"
 )
@@ -32,7 +32,7 @@ tables:
 `
 
 	providertest.TestResource(t, providertest.ResourceTestCase{
-		Plugin: &source.SourcePlugin{
+		Plugin: &plugins.SourcePlugin{
 			Name:    "aws_mock_test_provider",
 			Version: "development",
 			Configure: func(logger zerolog.Logger, i interface{}) (schema.ClientMeta, error) {

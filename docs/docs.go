@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/cloudquery/cq-provider-aws/resources/provider"
-	"github.com/cloudquery/cq-provider-sdk/plugin/source/docs"
+	"github.com/cloudquery/cq-provider-sdk/docs"
 )
 
 func main() {

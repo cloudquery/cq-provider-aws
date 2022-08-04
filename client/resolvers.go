@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/cloudquery/cq-provider-sdk/helpers"
-	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
+	"github.com/cloudquery/cq-provider-sdk/schema"
 	"github.com/thoas/go-funk"
 )
 

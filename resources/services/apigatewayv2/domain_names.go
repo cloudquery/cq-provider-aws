@@ -9,7 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	apigatewayv2fix "github.com/cloudquery/cq-provider-aws/resources/forks/apigatewayv2"
 	"github.com/cloudquery/cq-provider-sdk/helpers"
-	"github.com/cloudquery/cq-provider-sdk/plugin/source/schema"
+	"github.com/cloudquery/cq-provider-sdk/schema"
 )
 
 const domainNamesIDPart = "domainnames"
