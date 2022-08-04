@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"reflect"
 	"time"
 
@@ -29,6 +30,15 @@ func ResolveWAFScope(_ context.Context, meta schema.ClientMeta, r *schema.Resour
 	return diag.WrapError(r.Set(c.Name, meta.(*Client).WAFScope))
 }
 
+func ResolvePathJson(path string) func(_ context.Context, _ schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+	return func(_ context.Context, _ schema.ClientMeta, r *schema.Resource, c schema.Column) error {
+		jsonItem, err := json.Marshal(funk.Get(r.Item, path, funk.WithAllowZero()))
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		return r.Set(c.Name, jsonItem)
+	}
+}
 func ResolveTags(ctx context.Context, meta schema.ClientMeta, r *schema.Resource, c schema.Column) error {
 	return ResolveTagField("Tags")(ctx, meta, r, c)
 }
