@@ -193,7 +193,7 @@ func Pipelines() *schema.Table {
 								Name:        "input_artifacts",
 								Description: "The name or ID of the artifact consumed by the action, such as a test or build artifact.",
 								Type:        schema.TypeStringArray,
-								Resolver:    schema.PathResolver("InputArtifacts"),
+								Resolver:    schema.PathResolver("InputArtifacts.Name"),
 							},
 							{
 								Name:          "namespace",
@@ -205,7 +205,7 @@ func Pipelines() *schema.Table {
 								Name:        "output_artifacts",
 								Description: "The name or ID of the result of the action declaration, such as a test or build artifact.",
 								Type:        schema.TypeStringArray,
-								Resolver:    schema.PathResolver("OutputArtifacts"),
+								Resolver:    schema.PathResolver("OutputArtifacts.Name"),
 							},
 							{
 								Name:          "region",
