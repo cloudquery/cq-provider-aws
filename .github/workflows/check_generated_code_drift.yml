@@ -1,5 +1,5 @@
 # DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
-name: check_generated_code
+name: check_generated_code_drift
 on:
   push:
     branches:
@@ -14,7 +14,7 @@ on:
       - 'resources/services/**/*'
 jobs:
   lint_doc:
-    name: Check Generated Code
+    name: Check Generated Code for Drift
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
