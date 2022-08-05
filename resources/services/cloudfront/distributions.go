@@ -374,7 +374,7 @@ func CloudfrontDistributions() *schema.Table {
 			{
 				Name:          "aws_cloudfront_distribution_default_cache_behavior_functions",
 				Description:   "A complex type that contains a Lambda function association.",
-				Resolver:      fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions,
+				Resolver:      schema.PathTableResolver("DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -837,29 +837,7 @@ func resolveCloudfrontDistributionsAliasIcpRecordals(ctx context.Context, meta s
 	}
 	return diag.WrapError(resource.Set(c.Name, j))
 }
-func fetchCloudfrontDistributionDefaultCacheBehaviorLambdaFunctions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.Distribution)
-	if r.DistributionConfig == nil {
-		return nil
-	}
-	if r.DistributionConfig.DefaultCacheBehavior == nil {
-		return nil
-	}
-	if r.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations == nil {
-		return nil
-	}
 
-	res <- r.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items
-	return nil
-}
-func fetchCloudfrontDistributionOrigins(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	distribution := parent.Item.(types.Distribution)
-	if distribution.DistributionConfig.Origins == nil {
-		return nil
-	}
-	res <- distribution.DistributionConfig.Origins.Items
-	return nil
-}
 func resolveCloudfrontDistributionOriginsCustomHeaders(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Origin)
 	if r.CustomHeaders == nil {
