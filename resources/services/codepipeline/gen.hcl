@@ -9,7 +9,7 @@ description_modifier "remove_read_only" {
 resource "aws" "codepipeline" "pipelines" {
   path = "github.com/aws/aws-sdk-go-v2/service/codepipeline.GetPipelineOutput"
   ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
