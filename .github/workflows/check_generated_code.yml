@@ -8,7 +8,8 @@ on:
   pull_request:
     branches:
       - main
-
+  paths:
+    - 'resources/services/**/*'
 jobs:
   lint_doc:
     name: Check Generated Code
@@ -51,7 +52,7 @@ jobs:
         run: |
           for d in ./resources/services/*/ ; do
             # check whether directory changed in this branch
-            if git diff --quiet HEAD refs/remotes/origin/main -- $d; then
+            if git diff --quiet -- $d; then
               echo "no changes in $d";
               continue;
             fi
