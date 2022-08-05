@@ -2,6 +2,10 @@ service          = "aws"
 output_directory = "."
 add_generate     = true
 
+description_modifier "remove_read_only" {
+  words = ["  This member is required."]
+}
+
 resource "aws" "codepipeline" "pipelines" {
   path = "github.com/aws/aws-sdk-go-v2/service/codepipeline.GetPipelineOutput"
   ignoreError "IgnoreAccessDenied" {
@@ -14,7 +18,6 @@ resource "aws" "codepipeline" "pipelines" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
     params = ["codepipeline"]
   }
-
 
   options {
     primary_keys = ["arn"]
@@ -53,13 +56,23 @@ resource "aws" "codepipeline" "pipelines" {
   }
 
   relation "aws" "codepipeline" "stages" {
+    ignore_columns_in_tests = ["blockers"]
+
+    resolver "fetchCodepipelinePipelineStages" {
+      generate = true
+    }
 
     column "blockers" {
       type              = "JSON"
+      resolver "pathResolver" {
+        path = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+        params = ["Blockers"]
+      }
     }
 
     relation "aws" "codepipeline" "actions" {
       path = "github.com/aws/aws-sdk-go-v2/service/codepipeline/types.ActionDeclaration"
+      ignore_columns_in_tests = ["namespace", "region", "role_arn"]
 
       column "action_type_id" {
         skip_prefix = true
@@ -67,12 +80,18 @@ resource "aws" "codepipeline" "pipelines" {
 
       column "input_artifacts" {
         type              = "stringarray"
-        generate_resolver = true
+        resolver "pathResolver" {
+          path = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+          params = ["InputArtifacts.Name"]
+        }
       }
 
       column "output_artifacts" {
         type              = "stringarray"
-        generate_resolver = true
+        resolver "pathResolver" {
+          path = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+          params = ["OutputArtifacts.Name"]
+        }
       }
     }
 
