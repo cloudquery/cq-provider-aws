@@ -1,4 +1,3 @@
-//check-for-changes
 service          = "aws"
 output_directory = "."
 add_generate     = true
