@@ -160,7 +160,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "groups",
 				Description: "The tags assigned to the egress-only internet gateway.",
 				Type:        schema.TypeJSON,
-				Resolver:    client.ResolvePathJson("Groups"),
+				Resolver:    schema.PathResolver("Groups"),
 			},
 			{
 				Name:        "interface_type",
@@ -360,4 +360,3 @@ func fetchEc2NetworkInterfaces(ctx context.Context, meta schema.ClientMeta, pare
 	}
 	return nil
 }
-

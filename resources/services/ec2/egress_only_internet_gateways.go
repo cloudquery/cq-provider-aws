@@ -46,7 +46,7 @@ func EgressOnlyInternetGateways() *schema.Table {
 				Name:        "attachments",
 				Description: "Information about the attachment of the egress-only internet gateway.",
 				Type:        schema.TypeJSON,
-				Resolver:    client.ResolvePathJson("Attachments"),
+				Resolver:    schema.PathResolver("Attachments"),
 			},
 			{
 				Name:        "id",

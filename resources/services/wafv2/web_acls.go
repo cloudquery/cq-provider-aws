@@ -63,7 +63,7 @@ func Wafv2WebAcls() *schema.Table {
 				Name:        "default_action",
 				Description: "The action to perform if none of the Rules contained in the WebACL match.  ",
 				Type:        schema.TypeJSON,
-				Resolver:    client.ResolvePathJson("DefaultAction"),
+				Resolver:    schema.PathResolver("DefaultAction"),
 			},
 			{
 				Name:        "id",
@@ -152,7 +152,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "statement",
 						Description: "The AWS WAF processing statement for the rule, for example ByteMatchStatement or SizeConstraintStatement.  ",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("Statement"),
+						Resolver:    schema.PathResolver("Statement"),
 					},
 					{
 						Name:        "visibility_config_cloud_watch_metrics_enabled",
@@ -176,13 +176,13 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "action",
 						Description: "The action that AWS WAF should take on a web request when it matches the rule statement",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("Action"),
+						Resolver:    schema.PathResolver("Action"),
 					},
 					{
 						Name:        "override_action",
 						Description: "The override action to apply to the rules in a rule group",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("OverrideAction"),
+						Resolver:    schema.PathResolver("OverrideAction"),
 					},
 					{
 						Name:        "labels",
@@ -208,7 +208,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "statement",
 						Description: "The processing guidance for an AWS Firewall Manager rule",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("FirewallManagerStatement"),
+						Resolver:    schema.PathResolver("FirewallManagerStatement"),
 					},
 					{
 						Name:        "name",
@@ -219,7 +219,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "override_action",
 						Description: "The override action to apply to the rules in a rule group",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("OverrideAction"),
+						Resolver:    schema.PathResolver("OverrideAction"),
 					},
 					{
 						Name:        "priority",
@@ -262,7 +262,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "statement",
 						Description: "The processing guidance for an AWS Firewall Manager rule",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("FirewallManagerStatement"),
+						Resolver:    schema.PathResolver("FirewallManagerStatement"),
 					},
 					{
 						Name:        "name",
@@ -273,7 +273,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "override_action",
 						Description: "The override action to apply to the rules in a rule group",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("OverrideAction"),
+						Resolver:    schema.PathResolver("OverrideAction"),
 					},
 					{
 						Name:        "priority",
@@ -325,7 +325,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "logging_filter",
 						Description: "Filtering that specifies which web requests are kept in the logs and which are dropped. You can filter on the rule action and on the web request labels that were applied by matching rules during web ACL evaluation.",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("LoggingFilter"),
+						Resolver:    schema.PathResolver("LoggingFilter"),
 					},
 					{
 						Name:        "managed_by_firewall_manager",
@@ -336,7 +336,7 @@ func Wafv2WebAcls() *schema.Table {
 						Name:        "redacted_fields",
 						Description: "The parts of the request that you want redacted from the logs. For example, if you redact the cookie field, the cookie field in the firehose will be xxx. You can specify only the following fields for redaction: UriPath, QueryString, SingleHeader, Method, and JsonBody.",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("RedactedFields"),
+						Resolver:    schema.PathResolver("RedactedFields"),
 					},
 				},
 			},
