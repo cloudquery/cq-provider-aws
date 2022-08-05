@@ -14,13 +14,13 @@ import (
 
 func Plans() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_backup_plans",
-		Description:  "Contains metadata about a backup plan.",
-		Resolver:     fetchBackupPlans,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_backup_plans",
+		Description: "Contains metadata about a backup plan.",
+		Resolver:    fetchBackupPlans,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("backup"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

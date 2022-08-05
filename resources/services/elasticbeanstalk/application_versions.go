@@ -13,13 +13,13 @@ import (
 //go:generate cq-gen --resource application_versions --config gen.hcl --output .
 func ApplicationVersions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_elasticbeanstalk_application_versions",
-		Description:  "Describes the properties of an application version.",
-		Resolver:     fetchElasticbeanstalkApplicationVersions,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_elasticbeanstalk_application_versions",
+		Description: "Describes the properties of an application version.",
+		Resolver:    fetchElasticbeanstalkApplicationVersions,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

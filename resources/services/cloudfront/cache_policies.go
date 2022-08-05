@@ -13,13 +13,13 @@ import (
 
 func CloudfrontCachePolicies() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_cloudfront_cache_policies",
-		Description:  "Contains a cache policy.",
-		Resolver:     fetchCloudfrontCachePolicies,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_cloudfront_cache_policies",
+		Description: "Contains a cache policy.",
+		Resolver:    fetchCloudfrontCachePolicies,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

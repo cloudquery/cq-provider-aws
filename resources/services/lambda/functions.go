@@ -21,12 +21,12 @@ type AliasWrapper struct {
 //go:generate cq-gen --resource functions --config gen.hcl --output .
 func Functions() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_lambda_functions",
-		Description:          "AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers, creating workload-aware cluster scaling logic, maintaining event integrations, or managing runtimes",
-		Resolver:             fetchLambdaFunctions,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("lambda"),
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		Name:        "aws_lambda_functions",
+		Description: "AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers, creating workload-aware cluster scaling logic, maintaining event integrations, or managing runtimes",
+		Resolver:    fetchLambdaFunctions,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lambda"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		PostResourceResolver: resolvePolicyCodeSigningConfig,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{

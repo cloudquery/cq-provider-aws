@@ -13,11 +13,11 @@ import (
 
 func DaxClusters() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_dax_clusters",
-		Description:   "Information about a DAX cluster.",
-		Resolver:      fetchDaxClusters,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("dax"),
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_dax_clusters",
+		Description: "Information about a DAX cluster.",
+		Resolver:    fetchDaxClusters,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("dax"),
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

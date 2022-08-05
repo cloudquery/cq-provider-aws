@@ -19,13 +19,13 @@ const (
 
 func Apigatewayv2Apis() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_apigatewayv2_apis",
-		Description:  "Represents an API.",
-		Resolver:     fetchApigatewayv2Apis,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_apigatewayv2_apis",
+		Description: "Represents an API.",
+		Resolver:    fetchApigatewayv2Apis,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

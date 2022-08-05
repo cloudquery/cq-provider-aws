@@ -19,12 +19,12 @@ type ConformancePackComplianceWrapper struct {
 
 func ConfigConformancePack() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_config_conformance_packs",
-		Description:   "Returns details of a conformance pack.",
-		Resolver:      fetchConfigConformancePacks,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("config"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_config_conformance_packs",
+		Description: "Returns details of a conformance pack.",
+		Resolver:    fetchConfigConformancePacks,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("config"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{
@@ -85,12 +85,12 @@ func ConfigConformancePack() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:         "aws_config_conformance_pack_rule_compliances",
-				Description:  "Compliance information of one or more AWS Config rules within a conformance pack",
-				Resolver:     fetchConfigConformancePackRuleCompliances,
-				Multiplex:    client.ServiceAccountRegionMultiplexer("config"),
-				IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-				DeleteFilter: client.DeleteAccountRegionFilter,
+				Name:        "aws_config_conformance_pack_rule_compliances",
+				Description: "Compliance information of one or more AWS Config rules within a conformance pack",
+				Resolver:    fetchConfigConformancePackRuleCompliances,
+				Multiplex:   client.ServiceAccountRegionMultiplexer("config"),
+				IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 				Columns: []schema.Column{
 					{
 						Name:        "conformance_pack_cq_id",

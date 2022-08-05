@@ -12,12 +12,12 @@ import (
 
 func DirectconnectConnections() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_directconnect_connections",
-		Description:   "Information about a Direct Connect Connection",
-		Resolver:      fetchDirectconnectConnections,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_directconnect_connections",
+		Description: "Information about a Direct Connect Connection",
+		Resolver:    fetchDirectconnectConnections,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("directconnect"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

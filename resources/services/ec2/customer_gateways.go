@@ -12,12 +12,12 @@ import (
 
 func Ec2CustomerGateways() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_ec2_customer_gateways",
-		Description:   "Describes a customer gateway.",
-		Resolver:      fetchEc2CustomerGateways,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_ec2_customer_gateways",
+		Description: "Describes a customer gateway.",
+		Resolver:    fetchEc2CustomerGateways,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

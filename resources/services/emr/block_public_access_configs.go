@@ -12,12 +12,12 @@ import (
 
 func EmrBlockPublicAccessConfigs() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_emr_block_public_access_configs",
-		Resolver:     fetchEmrBlockPublicAccessConfigs,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
+		Name:        "aws_emr_block_public_access_configs",
+		Resolver:    fetchEmrBlockPublicAccessConfigs,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

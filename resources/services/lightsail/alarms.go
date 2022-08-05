@@ -13,12 +13,12 @@ import (
 //go:generate cq-gen --resource alarms --config gen.hcl --output .
 func Alarms() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_lightsail_alarms",
-		Description:   "Describes an alarm",
-		Resolver:      fetchLightsailAlarms,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_lightsail_alarms",
+		Description: "Describes an alarm",
+		Resolver:    fetchLightsailAlarms,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true, // it can't be included into e2e test, because there is no way to deploy it using terraform
 		Columns: []schema.Column{

@@ -15,13 +15,13 @@ import (
 //go:generate cq-gen --resource network_interfaces --config gen.hcl --output .
 func NetworkInterfaces() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_network_interfaces",
-		Description:  "Describes a network interface.",
-		Resolver:     fetchEc2NetworkInterfaces,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_ec2_network_interfaces",
+		Description: "Describes a network interface.",
+		Resolver:    fetchEc2NetworkInterfaces,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

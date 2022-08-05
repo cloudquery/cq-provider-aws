@@ -52,11 +52,11 @@ const rootName = "<root_account>"
 
 func IamUsers() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_iam_users",
-		Resolver:             fetchIamUsers,
-		Multiplex:            client.AccountMultiplex,
-		IgnoreError:          client.IgnoreCommonErrors,
-		DeleteFilter:         client.DeleteAccountFilter,
+		Name:        "aws_iam_users",
+		Resolver:    fetchIamUsers,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		PostResourceResolver: postIamUserResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{

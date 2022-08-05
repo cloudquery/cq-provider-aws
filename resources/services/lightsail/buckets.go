@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen --resource buckets --config gen.hcl --output .
 func Buckets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_buckets",
-		Description:  "Describes an Amazon Lightsail bucket",
-		Resolver:     fetchLightsailBuckets,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_lightsail_buckets",
+		Description: "Describes an Amazon Lightsail bucket",
+		Resolver:    fetchLightsailBuckets,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

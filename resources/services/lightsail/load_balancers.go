@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen --resource load_balancers --config gen.hcl --output .
 func LoadBalancers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_load_balancers",
-		Description:  "Describes a load balancer",
-		Resolver:     fetchLightsailLoadBalancers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_lightsail_load_balancers",
+		Description: "Describes a load balancer",
+		Resolver:    fetchLightsailLoadBalancers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

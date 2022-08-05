@@ -36,13 +36,13 @@ const fetchS3BucketsPoolSize = 10
 
 func Buckets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_s3_buckets",
-		Description:  "An Amazon S3 bucket is a public cloud storage resource available in Amazon Web Services' (AWS) Simple Storage Service (S3)",
-		Resolver:     fetchS3Buckets,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "name"}},
+		Name:        "aws_s3_buckets",
+		Description: "An Amazon S3 bucket is a public cloud storage resource available in Amazon Web Services' (AWS) Simple Storage Service (S3)",
+		Resolver:    fetchS3Buckets,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "name"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

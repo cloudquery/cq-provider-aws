@@ -13,13 +13,13 @@ import (
 
 func IotThingGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iot_thing_groups",
-		Description:  "Groups allow you to manage several things at once by categorizing them into groups",
-		Resolver:     fetchIotThingGroups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iot_thing_groups",
+		Description: "Groups allow you to manage several things at once by categorizing them into groups",
+		Resolver:    fetchIotThingGroups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

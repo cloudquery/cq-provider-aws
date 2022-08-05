@@ -13,13 +13,13 @@ import (
 
 func RdsEventSubscriptions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_rds_event_subscriptions",
-		Description:  "Contains the results of a successful invocation of the DescribeEventSubscriptions action.",
-		Resolver:     fetchRdsEventSubscriptions,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("rds"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_rds_event_subscriptions",
+		Description: "Contains the results of a successful invocation of the DescribeEventSubscriptions action.",
+		Resolver:    fetchRdsEventSubscriptions,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("rds"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

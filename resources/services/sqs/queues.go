@@ -42,13 +42,13 @@ type sqsQueue struct {
 
 func SQSQueues() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_sqs_queues",
-		Description:  "Simple Queue Service",
-		Resolver:     fetchSQSQueues,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("sqs"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_sqs_queues",
+		Description: "Simple Queue Service",
+		Resolver:    fetchSQSQueues,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("sqs"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

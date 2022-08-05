@@ -13,13 +13,13 @@ import (
 
 func CloudfrontDistributions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_cloudfront_distributions",
-		Description:  "A summary of the information about a CloudFront distribution.",
-		Resolver:     fetchCloudfrontDistributions,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_cloudfront_distributions",
+		Description: "A summary of the information about a CloudFront distribution.",
+		Resolver:    fetchCloudfrontDistributions,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

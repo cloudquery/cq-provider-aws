@@ -14,13 +14,13 @@ import (
 
 func IamRoles() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_roles",
-		Description:  "An IAM role is an IAM identity that you can create in your account that has specific permissions.",
-		Resolver:     fetchIamRoles,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_iam_roles",
+		Description: "An IAM role is an IAM identity that you can create in your account that has specific permissions.",
+		Resolver:    fetchIamRoles,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

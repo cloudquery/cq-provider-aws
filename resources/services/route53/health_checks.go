@@ -18,12 +18,12 @@ type Route53HealthCheckWrapper struct {
 
 func Route53HealthChecks() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_route53_health_checks",
-		Description:   "A complex type that contains information about one health check that is associated with the current AWS account.",
-		Resolver:      fetchRoute53HealthChecks,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_route53_health_checks",
+		Description: "A complex type that contains information about one health check that is associated with the current AWS account.",
+		Resolver:    fetchRoute53HealthChecks,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

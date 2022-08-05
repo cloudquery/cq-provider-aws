@@ -13,12 +13,12 @@ import (
 
 func AwsRegions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_regions",
-		Description:  "Describes a Region.",
-		Resolver:     fetchRegions,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
+		Name:        "aws_regions",
+		Description: "Describes a Region.",
+		Resolver:    fetchRegions,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

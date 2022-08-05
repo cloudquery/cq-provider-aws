@@ -13,12 +13,12 @@ import (
 
 func ApigatewayAPIKeys() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_apigateway_api_keys",
-		Description:   "A resource that can be distributed to callers for executing Method resources that require an API key.",
-		Resolver:      fetchApigatewayApiKeys,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_apigateway_api_keys",
+		Description: "A resource that can be distributed to callers for executing Method resources that require an API key.",
+		Resolver:    fetchApigatewayApiKeys,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

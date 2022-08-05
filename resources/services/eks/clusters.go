@@ -12,13 +12,13 @@ import (
 
 func EksClusters() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_eks_clusters",
-		Description:  "An object representing an Amazon EKS cluster.",
-		Resolver:     fetchEksClusters,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("eks"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_eks_clusters",
+		Description: "An object representing an Amazon EKS cluster.",
+		Resolver:    fetchEksClusters,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("eks"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

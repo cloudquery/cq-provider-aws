@@ -15,13 +15,13 @@ import (
 //go:generate cq-gen -config=ipsets.hcl -domain=wafv2 -resource=ipsets
 func Ipsets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_wafv2_ipsets",
-		Description:  "Contains one or more IP addresses or blocks of IP addresses specified in Classless Inter-Domain Routing (CIDR) notation",
-		Resolver:     fetchWafv2Ipsets,
-		Multiplex:    client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionScopeFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_wafv2_ipsets",
+		Description: "Contains one or more IP addresses or blocks of IP addresses specified in Classless Inter-Domain Routing (CIDR) notation",
+		Resolver:    fetchWafv2Ipsets,
+		Multiplex:   client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

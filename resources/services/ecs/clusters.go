@@ -15,13 +15,13 @@ import (
 
 func Clusters() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ecs_clusters",
-		Description:  "A regional grouping of one or more container instances where you can run task requests",
-		Resolver:     fetchEcsClusters,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ecs"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_ecs_clusters",
+		Description: "A regional grouping of one or more container instances where you can run task requests",
+		Resolver:    fetchEcsClusters,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ecs"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

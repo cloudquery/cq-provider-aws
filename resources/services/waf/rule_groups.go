@@ -13,13 +13,13 @@ import (
 
 func WafRuleGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_waf_rule_groups",
-		Description:  "This is AWS WAF Classic documentation",
-		Resolver:     fetchWafRuleGroups,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_waf_rule_groups",
+		Description: "This is AWS WAF Classic documentation",
+		Resolver:    fetchWafRuleGroups,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

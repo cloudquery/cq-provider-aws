@@ -16,12 +16,12 @@ import (
 //go:generate cq-gen --resource attacks --config gen.hcl --output .
 func Attacks() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_shield_attacks",
-		Description:   "The details of a DDoS attack",
-		Resolver:      fetchShieldAttacks,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_shield_attacks",
+		Description: "The details of a DDoS attack",
+		Resolver:    fetchShieldAttacks,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

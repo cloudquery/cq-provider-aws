@@ -18,12 +18,12 @@ import (
 
 func Vaults() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_backup_vaults",
-		Description:          "Contains metadata about a backup vault.",
-		Resolver:             fetchBackupVaults,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		Name:        "aws_backup_vaults",
+		Description: "Contains metadata about a backup vault.",
+		Resolver:    fetchBackupVaults,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("backup"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		PostResourceResolver: resolveVaultNotifications,
 		Columns: []schema.Column{

@@ -12,12 +12,12 @@ import (
 //go:generate cq-gen --resource global_settings --config gen.hcl --output .
 func GlobalSettings() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_backup_global_settings",
-		Resolver:     fetchBackupGlobalSettings,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
+		Name:        "aws_backup_global_settings",
+		Resolver:    fetchBackupGlobalSettings,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("backup"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

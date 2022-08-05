@@ -24,12 +24,12 @@ var groupNameRegex = regexp.MustCompile("arn:[a-zA-Z0-9-]+:logs:[a-z0-9-]+:[0-9]
 
 func CloudtrailTrails() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_cloudtrail_trails",
-		Description:          "The settings for a trail.",
-		Resolver:             fetchCloudtrailTrails,
-		Multiplex:            client.AccountMultiplex,
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountFilter,
+		Name:        "aws_cloudtrail_trails",
+		Description: "The settings for a trail.",
+		Resolver:    fetchCloudtrailTrails,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		PostResourceResolver: postCloudtrailTrailResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		IgnoreInTests:        true,

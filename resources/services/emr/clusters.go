@@ -14,12 +14,12 @@ import (
 
 func EmrClusters() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_emr_clusters",
-		Description:   "The detailed description of the cluster.",
-		Resolver:      fetchEmrClusters,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_emr_clusters",
+		Description: "The detailed description of the cluster.",
+		Resolver:    fetchEmrClusters,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticmapreduce"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

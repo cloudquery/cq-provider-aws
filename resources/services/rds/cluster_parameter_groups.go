@@ -13,13 +13,13 @@ import (
 
 func RdsClusterParameterGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_rds_cluster_parameter_groups",
-		Description:  "Contains the details of an Amazon RDS DB cluster parameter group",
-		Resolver:     fetchRdsClusterParameterGroups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("rds"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_rds_cluster_parameter_groups",
+		Description: "Contains the details of an Amazon RDS DB cluster parameter group",
+		Resolver:    fetchRdsClusterParameterGroups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("rds"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

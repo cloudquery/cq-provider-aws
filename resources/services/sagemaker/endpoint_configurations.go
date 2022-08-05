@@ -12,12 +12,12 @@ import (
 
 func SagemakerEndpointConfigurations() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_sagemaker_endpoint_configurations",
-		Description:   "Provides summary information for an endpoint configuration.",
-		Resolver:      fetchSagemakerEndpointConfigurations,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_sagemaker_endpoint_configurations",
+		Description: "Provides summary information for an endpoint configuration.",
+		Resolver:    fetchSagemakerEndpointConfigurations,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("api.sagemaker"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

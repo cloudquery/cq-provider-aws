@@ -14,12 +14,12 @@ import (
 //go:generate cq-gen --resource protections --config gen.hcl --output .
 func Protections() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_shield_protections",
-		Description:   "An object that represents a resource that is under DDoS protection.",
-		Resolver:      fetchShieldProtections,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_shield_protections",
+		Description: "An object that represents a resource that is under DDoS protection.",
+		Resolver:    fetchShieldProtections,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

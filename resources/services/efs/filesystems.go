@@ -13,12 +13,12 @@ import (
 
 func EfsFilesystems() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_efs_filesystems",
-		Description:   "A description of the file system.",
-		Resolver:      fetchEfsFilesystems,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_efs_filesystems",
+		Description: "A description of the file system.",
+		Resolver:    fetchEfsFilesystems,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticfilesystem"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

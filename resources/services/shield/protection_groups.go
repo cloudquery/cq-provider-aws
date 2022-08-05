@@ -14,12 +14,12 @@ import (
 //go:generate cq-gen --resource protection_groups --config gen.hcl --output .
 func ProtectionGroups() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_shield_protection_groups",
-		Description:   "A grouping of protected resources that you and Shield Advanced can monitor as a collective",
-		Resolver:      fetchShieldProtectionGroups,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_shield_protection_groups",
+		Description: "A grouping of protected resources that you and Shield Advanced can monitor as a collective",
+		Resolver:    fetchShieldProtectionGroups,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

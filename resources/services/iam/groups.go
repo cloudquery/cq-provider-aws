@@ -13,12 +13,12 @@ import (
 
 func IamGroups() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_groups",
-		Description:   "Contains information about an IAM group entity.",
-		Resolver:      fetchIamGroups,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_iam_groups",
+		Description: "Contains information about an IAM group entity.",
+		Resolver:    fetchIamGroups,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

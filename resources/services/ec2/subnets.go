@@ -13,13 +13,13 @@ import (
 
 func Ec2Subnets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_subnets",
-		Description:  "Describes a subnet.",
-		Resolver:     fetchEc2Subnets,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_ec2_subnets",
+		Description: "Describes a subnet.",
+		Resolver:    fetchEc2Subnets,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

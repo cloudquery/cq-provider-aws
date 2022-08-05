@@ -13,13 +13,13 @@ import (
 
 func Apigatewayv2VpcLinks() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_apigatewayv2_vpc_links",
-		Description:  "Represents a VPC link.",
-		Resolver:     fetchApigatewayv2VpcLinks,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_apigatewayv2_vpc_links",
+		Description: "Represents a VPC link.",
+		Resolver:    fetchApigatewayv2VpcLinks,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

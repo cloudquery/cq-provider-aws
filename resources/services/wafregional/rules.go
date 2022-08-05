@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen -config=rules.hcl -domain=wafregional -resource=rules
 func Rules() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_wafregional_rules",
-		Description:  "This is AWS WAF Classic documentation",
-		Resolver:     fetchWafregionalRules,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("waf-regional"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
+		Name:        "aws_wafregional_rules",
+		Description: "This is AWS WAF Classic documentation",
+		Resolver:    fetchWafregionalRules,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

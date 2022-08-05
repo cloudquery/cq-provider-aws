@@ -13,11 +13,11 @@ import (
 
 func Route53ReusableDelegationSets() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_route53_reusable_delegation_sets",
-		Resolver:      fetchRoute53DelegationSets,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_route53_reusable_delegation_sets",
+		Resolver:    fetchRoute53DelegationSets,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

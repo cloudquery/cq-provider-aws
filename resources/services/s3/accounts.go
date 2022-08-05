@@ -19,13 +19,13 @@ type S3AccountConfig struct {
 
 func Accounts() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_s3_account_config",
-		Description:  "Account configurations for S3",
-		Resolver:     fetchS3AccountConfig,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
+		Name:        "aws_s3_account_config",
+		Description: "Account configurations for S3",
+		Resolver:    fetchS3AccountConfig,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",

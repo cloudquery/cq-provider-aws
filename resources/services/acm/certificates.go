@@ -14,12 +14,12 @@ import (
 
 func AcmCertificates() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_acm_certificates",
-		Description:   "Contains metadata about an ACM certificate",
-		Resolver:      fetchAcmCertificates,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("acm"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_acm_certificates",
+		Description: "Contains metadata about an ACM certificate",
+		Resolver:    fetchAcmCertificates,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("acm"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

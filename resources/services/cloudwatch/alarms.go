@@ -13,12 +13,12 @@ import (
 
 func CloudwatchAlarms() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_cloudwatch_alarms",
-		Description:   "The details about a metric alarm.",
-		Resolver:      fetchCloudwatchAlarms,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("logs"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_cloudwatch_alarms",
+		Description: "The details about a metric alarm.",
+		Resolver:    fetchCloudwatchAlarms,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("logs"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

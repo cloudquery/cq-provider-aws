@@ -19,13 +19,13 @@ type WrappedSageMakerNotebookInstance struct {
 
 func SagemakerNotebookInstances() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_sagemaker_notebook_instances",
-		Description:  "Provides summary information for an Amazon SageMaker notebook instance.",
-		Resolver:     fetchSagemakerNotebookInstances,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_sagemaker_notebook_instances",
+		Description: "Provides summary information for an Amazon SageMaker notebook instance.",
+		Resolver:    fetchSagemakerNotebookInstances,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("api.sagemaker"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

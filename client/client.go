@@ -4,91 +4,29 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
-	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
-	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
-	"github.com/aws/aws-sdk-go-v2/service/acm"
-	"github.com/aws/aws-sdk-go-v2/service/apigateway"
-	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
-	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
-	"github.com/aws/aws-sdk-go-v2/service/athena"
-	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
-	"github.com/aws/aws-sdk-go-v2/service/backup"
-	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
-	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
-	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
-	"github.com/aws/aws-sdk-go-v2/service/codebuild"
-	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
-	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
-	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
-	"github.com/aws/aws-sdk-go-v2/service/configservice"
-	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
-	"github.com/aws/aws-sdk-go-v2/service/dax"
-	"github.com/aws/aws-sdk-go-v2/service/directconnect"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"github.com/aws/aws-sdk-go-v2/service/ecr"
-	"github.com/aws/aws-sdk-go-v2/service/ecs"
-	"github.com/aws/aws-sdk-go-v2/service/efs"
-	"github.com/aws/aws-sdk-go-v2/service/eks"
-	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
-	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
-	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
-	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
-	"github.com/aws/aws-sdk-go-v2/service/emr"
-	"github.com/aws/aws-sdk-go-v2/service/fsx"
-	"github.com/aws/aws-sdk-go-v2/service/guardduty"
-	"github.com/aws/aws-sdk-go-v2/service/iam"
-	"github.com/aws/aws-sdk-go-v2/service/iot"
-	"github.com/aws/aws-sdk-go-v2/service/kms"
-	"github.com/aws/aws-sdk-go-v2/service/lambda"
-	"github.com/aws/aws-sdk-go-v2/service/lightsail"
-	"github.com/aws/aws-sdk-go-v2/service/mq"
-	"github.com/aws/aws-sdk-go-v2/service/organizations"
-	"github.com/aws/aws-sdk-go-v2/service/qldb"
-	"github.com/aws/aws-sdk-go-v2/service/rds"
-	"github.com/aws/aws-sdk-go-v2/service/redshift"
-	"github.com/aws/aws-sdk-go-v2/service/route53"
-	"github.com/aws/aws-sdk-go-v2/service/route53domains"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/s3control"
-	"github.com/aws/aws-sdk-go-v2/service/sagemaker"
-	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
-	"github.com/aws/aws-sdk-go-v2/service/sesv2"
-	"github.com/aws/aws-sdk-go-v2/service/shield"
-	"github.com/aws/aws-sdk-go-v2/service/sns"
-	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
-	"github.com/aws/aws-sdk-go-v2/service/waf"
-	"github.com/aws/aws-sdk-go-v2/service/wafregional"
-	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	wafv2types "github.com/aws/aws-sdk-go-v2/service/wafv2/types"
-	"github.com/aws/aws-sdk-go-v2/service/workspaces"
-	"github.com/aws/aws-sdk-go-v2/service/xray"
 	"github.com/aws/smithy-go"
-	"github.com/aws/smithy-go/logging"
-	"github.com/cloudquery/cq-provider-sdk/schema"
+	"github.com/cloudquery/cq-provider-sdk/plugins"
+	"github.com/cloudquery/cq-provider-sdk/spec"
 	"github.com/rs/zerolog"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 type Client struct {
+	plugins.SourcePlugin
 	// Those are already normalized values after configure and this is why we don't want to hold
 	// config directly.
-	logLevel        *string
-	maxRetries      int
-	maxBackoff      int
 	ServicesManager ServicesManager
-	logger          zerolog.Logger
 	// this is set by table clientList
 	AccountID            string
 	GlobalRegion         string
@@ -98,84 +36,8 @@ type Client struct {
 	Partition            string
 }
 
-// S3Manager This is needed because https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager
-// has different structure then all other services (i.e no service but just a function) and we need
-// the ability to mock it.
-// Also we need to use s3 manager to be able to query the bucket-region https://github.com/aws/aws-sdk-go-v2/pull/1027#issuecomment-759818990
-type S3Manager struct {
-	s3Client *s3.Client
-}
-
-type AwsLogger struct {
-	l zerolog.Logger
-}
-
 type AssumeRoleAPIClient interface {
 	AssumeRole(ctx context.Context, params *sts.AssumeRoleInput, optFns ...func(*sts.Options)) (*sts.AssumeRoleOutput, error)
-}
-
-type Services struct {
-	ACM                    ACMClient
-	Analyzer               AnalyzerClient
-	Apigateway             ApigatewayClient
-	Apigatewayv2           Apigatewayv2Client
-	ApplicationAutoscaling ApplicationAutoscalingClient
-	Athena                 AthenaClient
-	Autoscaling            AutoscalingClient
-	Backup                 BackupClient
-	Cloudformation         CloudFormationClient
-	Cloudfront             CloudfrontClient
-	Cloudtrail             CloudtrailClient
-	Cloudwatch             CloudwatchClient
-	CloudwatchLogs         CloudwatchLogsClient
-	Codebuild              CodebuildClient
-	CodePipeline           CodePipelineClient
-	CognitoIdentityPools   CognitoIdentityPoolsClient
-	CognitoUserPools       CognitoUserPoolsClient
-	ConfigService          ConfigServiceClient
-	DAX                    DAXClient
-	DMS                    DatabasemigrationserviceClient
-	Directconnect          DirectconnectClient
-	DynamoDB               DynamoDBClient
-	EC2                    Ec2Client
-	ECR                    EcrClient
-	ECS                    EcsClient
-	EFS                    EfsClient
-	ELBv1                  ElbV1Client
-	ELBv2                  ElbV2Client
-	EMR                    EmrClient
-	Eks                    EksClient
-	ElasticBeanstalk       ElasticbeanstalkClient
-	ElasticSearch          ElasticSearch
-	FSX                    FsxClient
-	GuardDuty              GuardDutyClient
-	IAM                    IamClient
-	IOT                    IOTClient
-	KMS                    KmsClient
-	Lambda                 LambdaClient
-	Lightsail              LightsailClient
-	MQ                     MQClient
-	Organizations          OrganizationsClient
-	QLDB                   QLDBClient
-	RDS                    RdsClient
-	Redshift               RedshiftClient
-	Route53                Route53Client
-	Route53Domains         Route53DomainsClient
-	S3                     S3Client
-	S3Control              S3ControlClient
-	S3Manager              S3ManagerClient
-	SES                    SESClient
-	Shield                 ShieldClient
-	SNS                    SnsClient
-	SQS                    SQSClient
-	SSM                    SSMClient
-	SageMaker              SageMakerClient
-	SecretsManager         SecretsManagerClient
-	Waf                    WafClient
-	WafV2                  WafV2Client
-	WafRegional            WafRegionalClient
-	Workspaces             WorkspacesClient
-	Xray                   XrayClient
 }
 
 type ServicesPartitionAccountRegionMap map[string]map[string]map[string]*Services
@@ -187,22 +49,10 @@ type ServicesManager struct {
 }
 
 const (
-	defaultRegion              = "us-east-1"
-	awsFailedToConfigureErrMsg = "failed to retrieve credentials for account %s. AWS Error: %w, detected aws env variables: %s"
-	awsOrgsFailedToFindMembers = "failed to list Org member accounts. Make sure that your credentials have the proper permissions"
-	defaultVar                 = "default"
-	cloudfrontScopeRegion      = defaultRegion
+	defaultRegion         = "us-east-1"
+	defaultVar            = "default"
+	cloudfrontScopeRegion = defaultRegion
 )
-
-var envVarsToCheck = []string{
-	"AWS_PROFILE",
-	"AWS_ACCESS_KEY_ID",
-	"AWS_SECRET_ACCESS_KEY",
-	"AWS_CONFIG_FILE",
-	"AWS_ROLE_ARN",
-	"AWS_SESSION_TOKEN",
-	"AWS_SHARED_CREDENTIALS_FILE",
-}
 
 var errInvalidRegion = fmt.Errorf("region wildcard \"*\" is only supported as first argument")
 var errUnknownRegion = func(region string) error {
@@ -243,16 +93,6 @@ func (s *ServicesManager) InitServicesForPartitionAccountAndScope(partition, acc
 	s.wafScopeServices[partition][accountId] = &services
 }
 
-func newS3ManagerFromConfig(cfg aws.Config) S3Manager {
-	return S3Manager{
-		s3Client: s3.NewFromConfig(cfg),
-	}
-}
-
-func (s3Manager S3Manager) GetBucketRegion(ctx context.Context, bucket string, optFns ...func(*s3.Options)) (string, error) {
-	return manager.GetBucketRegion(ctx, s3Manager.s3Client, bucket, optFns...)
-}
-
 func NewAwsClient(logger zerolog.Logger) Client {
 	return Client{
 		ServicesManager: ServicesManager{
@@ -270,19 +110,6 @@ func (s ServicesPartitionAccountRegionMap) Accounts() []string {
 		}
 	}
 	return accounts
-}
-func (c *Client) Logger() *zerolog.Logger {
-	return &c.logger
-}
-
-// Identify the given client
-func (c *Client) Identify() string {
-	return strings.TrimRight(strings.Join([]string{
-		c.AccountID,
-		c.Region,
-		c.AutoscalingNamespace,
-		string(c.WAFScope),
-	}, ":"), ":")
 }
 
 func (c *Client) Services() *Services {
@@ -311,9 +138,6 @@ func (c *Client) PartitionGlobalARN(service AWSService, idParts ...string) strin
 func (c *Client) withPartitionAccountIDAndRegion(partition, accountID, region string) *Client {
 	return &Client{
 		Partition:            partition,
-		logLevel:             c.logLevel,
-		maxRetries:           c.maxRetries,
-		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
 		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Logger(),
 		AccountID:            accountID,
@@ -327,9 +151,6 @@ func (c *Client) withPartitionAccountIDRegionAndNamespace(partition, accountID, 
 	c.Logger().With()
 	return &Client{
 		Partition:            partition,
-		logLevel:             c.logLevel,
-		maxRetries:           c.maxRetries,
-		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
 		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Str("AutoscalingNamespace", namespace).Logger(),
 		AccountID:            accountID,
@@ -342,9 +163,6 @@ func (c *Client) withPartitionAccountIDRegionAndNamespace(partition, accountID, 
 func (c *Client) withPartitionAccountIDRegionAndScope(partition, accountID, region string, scope wafv2types.Scope) *Client {
 	return &Client{
 		Partition:            partition,
-		logLevel:             c.logLevel,
-		maxRetries:           c.maxRetries,
-		maxBackoff:           c.maxBackoff,
 		ServicesManager:      c.ServicesManager,
 		logger:               c.logger.With().Str("account_id", accountID).Str("region", region).Interface("scope", scope).Logger(),
 		AccountID:            accountID,
@@ -418,7 +236,6 @@ func configureAwsClient(ctx context.Context, logger zerolog.Logger, awsConfig *C
 	awsCfg, err = config.LoadDefaultConfig(ctx, configFns...)
 
 	if err != nil {
-		logger.Error().Err(err).Msg("error loading default config")
 		return awsCfg, err
 	}
 
@@ -444,7 +261,7 @@ func configureAwsClient(ctx context.Context, logger zerolog.Logger, awsConfig *C
 
 	if awsConfig.AWSDebug {
 		awsCfg.ClientLogMode = aws.LogRequest | aws.LogResponse | aws.LogRetries
-		awsCfg.Logger = AwsLogger{logger.With().Str("accountName", account.AccountName).Logger()}
+		awsCfg.Logger = awsLoggerAdapter{logger.With().Str("accountName", account.AccountName).Logger()}
 	}
 
 	// Test out retrieving credentials
@@ -464,38 +281,29 @@ func configureAwsClient(ctx context.Context, logger zerolog.Logger, awsConfig *C
 	return awsCfg, err
 }
 
-func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.ClientMeta, error) {
-	ctx := context.Background()
-	awsConfig := providerConfig.(*Config)
-	client := NewAwsClient(logger)
-	client.GlobalRegion = awsConfig.GlobalRegion
+func (c *Client) Configure(ctx context.Context, spec spec.SourceSpec) (*gojsonschema.Result, error) {
+	var awsSpec Config
+	if err := spec.Spec.Decode(&awsSpec); err != nil {
+		return nil, fmt.Errorf("error decoding spec: %w", err)
+	}
+	// awsConfig := providerConfig.(*Config)
 	var adminAccountSts AssumeRoleAPIClient
-	if awsConfig.Organization != nil && len(awsConfig.Accounts) > 0 {
+	if awsSpec.Organization != nil && len(awsSpec.Accounts) > 0 {
 		return nil, fmt.Errorf("specifying accounts via both the Accounts and Org properties is not supported. If you want to do both, you should use multiple provider blocks")
 	}
-	if awsConfig.Organization != nil {
-		var err error
-		awsConfig.Accounts, adminAccountSts, err = loadOrgAccounts(ctx, logger, awsConfig)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if len(awsConfig.Accounts) == 0 {
-		awsConfig.Accounts = append(awsConfig.Accounts, Account{
-			ID: defaultVar,
+
+	if len(awsSpec.Accounts) == 0 {
+		awsSpec.Accounts = append(awsSpec.Accounts, Account{
+			AccountName: defaultVar,
 		})
 	}
 
-	for _, account := range awsConfig.Accounts {
-		logger.Debug().Str("account", account.AccountName).Msg("user defined account")
-
-		if account.AccountName == "" {
-			account.AccountName = account.ID
-		}
+	for _, account := range awsSpec.Accounts {
+		c.Logger().Debug().Str("account", account.AccountName).Msg("user defined account")
 
 		localRegions := account.Regions
 		if len(localRegions) == 0 {
-			localRegions = awsConfig.Regions
+			localRegions = awsSpec.Regions
 		}
 
 		if err := verifyRegions(localRegions); err != nil {
@@ -503,27 +311,15 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 		}
 
 		if isAllRegions(localRegions) {
-			logger.Info().Msg("All regions specified in `cloudquery.yml`. Assuming all regions")
+			c.Logger().Info().Msg("All regions specified in spec. Assuming all regions")
 		}
 
 		awsCfg, err := configureAwsClient(ctx, logger, awsConfig, account, adminAccountSts)
 		if err != nil {
-			if account.source == "org" {
-				logger.Warn().Msg("unable to assume role in account")
-				principal := "unknown principal"
-				// Identify the principal making the request and use it to construct the error message. Any errors can be ignored as they are only for improving the user experience.
-				awsAdminCfg, _ := configureAwsClient(ctx, logger, awsConfig, *awsConfig.Organization.AdminAccount, nil)
-				output, accountErr := getAccountId(ctx, awsAdminCfg)
-				if accountErr == nil {
-					principal = *output.Arn
-				}
-				logger.Warn().Msg(fmt.Sprintf("ensure that %s has access to be able perform `sts:AssumeRole` on %s ", principal, account.RoleARN))
-				continue
-			}
 			var ae smithy.APIError
 			if errors.As(err, &ae) {
 				if strings.Contains(ae.ErrorCode(), "AccessDenied") {
-					logger.Warn().Msg(fmt.Errorf(awsFailedToConfigureErrMsg, account.AccountName, err, checkEnvVariables()).Error())
+					c.Logger().Error().Err(err).Msg("Access denied to account. Ensure that the account has access to be able perform `sts:AssumeRole` on the role")
 					continue
 				}
 			}
@@ -545,19 +341,19 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 				}
 			})
 		if err != nil {
-			logger.Warn().Msg(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err).Error())
+			c.Logger().Warn().Msg(fmt.Errorf("failed to find disabled regions for account %s. AWS Error: %w", account.AccountName, err).Error())
 			continue
 		}
 		account.Regions = filterDisabledRegions(localRegions, res.Regions)
 
 		if len(account.Regions) == 0 {
-			logger.Warn().Str("type", "access").Msg(fmt.Sprintf("no enabled regions provided in config for account %s", account.AccountName))
+			c.Logger().Warn().Str("type", "access").Msg(fmt.Sprintf("no enabled regions provided in config for account %s", account.AccountName))
 			continue
 		}
 		awsCfg.Region = account.Regions[0]
 		output, err := getAccountId(ctx, awsCfg)
 		if err != nil {
-			logger.Warn().Err(err).Msg("failed to get caller identity. AWS Error:")
+			c.Logger().Warn().Err(err).Msg("failed to get caller identity. AWS Error:")
 			continue
 		}
 		iamArn, err := arn.Parse(*output.Arn)
@@ -566,82 +362,14 @@ func Configure(logger zerolog.Logger, providerConfig interface{}) (schema.Client
 		}
 
 		for _, region := range account.Regions {
-			client.ServicesManager.InitServicesForPartitionAccountAndRegion(iamArn.Partition, *output.Account, region, initServices(region, awsCfg))
+			c.ServicesManager.InitServicesForPartitionAccountAndRegion(iamArn.Partition, *output.Account, region, initServices(region, awsCfg))
 		}
-		client.ServicesManager.InitServicesForPartitionAccountAndScope(iamArn.Partition, *output.Account, initServices(cloudfrontScopeRegion, awsCfg))
+		c.ServicesManager.InitServicesForPartitionAccountAndScope(iamArn.Partition, *output.Account, initServices(cloudfrontScopeRegion, awsCfg))
 	}
-	if len(client.ServicesManager.services) == 0 {
+	if len(c.ServicesManager.services) == 0 {
 		return nil, fmt.Errorf("no accounts instantiated")
 	}
-	return &client, nil
-}
-
-func initServices(region string, c aws.Config) Services {
-	awsCfg := c.Copy()
-	awsCfg.Region = region
-	return Services{
-		ACM:                    acm.NewFromConfig(awsCfg),
-		Analyzer:               accessanalyzer.NewFromConfig(awsCfg),
-		Apigateway:             apigateway.NewFromConfig(awsCfg),
-		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
-		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
-		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
-		Athena:                 athena.NewFromConfig(awsCfg),
-		Backup:                 backup.NewFromConfig(awsCfg),
-		Cloudfront:             cloudfront.NewFromConfig(awsCfg),
-		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),
-		Cloudwatch:             cloudwatch.NewFromConfig(awsCfg),
-		CloudwatchLogs:         cloudwatchlogs.NewFromConfig(awsCfg),
-		Cloudformation:         cloudformation.NewFromConfig(awsCfg),
-		CognitoIdentityPools:   cognitoidentity.NewFromConfig(awsCfg),
-		CognitoUserPools:       cognitoidentityprovider.NewFromConfig(awsCfg),
-		Codebuild:              codebuild.NewFromConfig(awsCfg),
-		CodePipeline:           codepipeline.NewFromConfig(awsCfg),
-		ConfigService:          configservice.NewFromConfig(awsCfg),
-		DAX:                    dax.NewFromConfig(awsCfg),
-		Directconnect:          directconnect.NewFromConfig(awsCfg),
-		DMS:                    databasemigrationservice.NewFromConfig(awsCfg),
-		DynamoDB:               dynamodb.NewFromConfig(awsCfg),
-		EC2:                    ec2.NewFromConfig(awsCfg),
-		ECR:                    ecr.NewFromConfig(awsCfg),
-		ECS:                    ecs.NewFromConfig(awsCfg),
-		EFS:                    efs.NewFromConfig(awsCfg),
-		Eks:                    eks.NewFromConfig(awsCfg),
-		ElasticBeanstalk:       elasticbeanstalk.NewFromConfig(awsCfg),
-		ElasticSearch:          elasticsearchservice.NewFromConfig(awsCfg),
-		ELBv1:                  elbv1.NewFromConfig(awsCfg),
-		ELBv2:                  elbv2.NewFromConfig(awsCfg),
-		EMR:                    emr.NewFromConfig(awsCfg),
-		FSX:                    fsx.NewFromConfig(awsCfg),
-		GuardDuty:              guardduty.NewFromConfig(awsCfg),
-		IAM:                    iam.NewFromConfig(awsCfg),
-		KMS:                    kms.NewFromConfig(awsCfg),
-		Lambda:                 lambda.NewFromConfig(awsCfg),
-		Lightsail:              lightsail.NewFromConfig(awsCfg),
-		MQ:                     mq.NewFromConfig(awsCfg),
-		Organizations:          organizations.NewFromConfig(awsCfg),
-		QLDB:                   qldb.NewFromConfig(awsCfg),
-		RDS:                    rds.NewFromConfig(awsCfg),
-		Redshift:               redshift.NewFromConfig(awsCfg),
-		Route53:                route53.NewFromConfig(awsCfg),
-		Route53Domains:         route53domains.NewFromConfig(awsCfg),
-		S3:                     s3.NewFromConfig(awsCfg),
-		S3Control:              s3control.NewFromConfig(awsCfg),
-		S3Manager:              newS3ManagerFromConfig(awsCfg),
-		SageMaker:              sagemaker.NewFromConfig(awsCfg),
-		SecretsManager:         secretsmanager.NewFromConfig(awsCfg),
-		SES:                    sesv2.NewFromConfig(awsCfg),
-		Shield:                 shield.NewFromConfig(awsCfg),
-		SNS:                    sns.NewFromConfig(awsCfg),
-		SSM:                    ssm.NewFromConfig(awsCfg),
-		SQS:                    sqs.NewFromConfig(awsCfg),
-		Waf:                    waf.NewFromConfig(awsCfg),
-		WafV2:                  wafv2.NewFromConfig(awsCfg),
-		WafRegional:            wafregional.NewFromConfig(awsCfg),
-		Workspaces:             workspaces.NewFromConfig(awsCfg),
-		IOT:                    iot.NewFromConfig(awsCfg),
-		Xray:                   xray.NewFromConfig(awsCfg),
-	}
+	return nil, nil
 }
 
 func filterDisabledRegions(regions []string, enabledRegions []types.Region) []string {
@@ -667,23 +395,4 @@ func filterDisabledRegions(regions []string, enabledRegions []types.Region) []st
 		}
 	}
 	return filteredRegions
-}
-
-func (a AwsLogger) Logf(classification logging.Classification, format string, v ...interface{}) {
-	if classification == logging.Warn {
-		a.l.Warn().Msg(fmt.Sprintf(format, v...))
-	} else {
-		a.l.Debug().Msg(fmt.Sprintf(format, v...))
-	}
-}
-
-// checkEnvVariables checks which aws environment variables are set
-func checkEnvVariables() string {
-	var result []string
-	for _, v := range envVarsToCheck {
-		if _, present := os.LookupEnv(v); present {
-			result = append(result, v)
-		}
-	}
-	return strings.Join(result, ",")
 }

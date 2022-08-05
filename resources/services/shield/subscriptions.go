@@ -13,12 +13,12 @@ import (
 //go:generate cq-gen --resource subscriptions --config gen.hcl --output .
 func Subscriptions() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_shield_subscriptions",
-		Description:   "Information about the Shield Advanced subscription for an account",
-		Resolver:      fetchShieldSubscriptions,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_shield_subscriptions",
+		Description: "Information about the Shield Advanced subscription for an account",
+		Resolver:    fetchShieldSubscriptions,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

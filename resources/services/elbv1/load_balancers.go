@@ -19,12 +19,12 @@ type ELBv1LoadBalancerWrapper struct {
 
 func Elbv1LoadBalancers() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_elbv1_load_balancers",
-		Description:   "Information about a load balancer.",
-		Resolver:      fetchElbv1LoadBalancers,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_elbv1_load_balancers",
+		Description: "Information about a load balancer.",
+		Resolver:    fetchElbv1LoadBalancers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "name"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

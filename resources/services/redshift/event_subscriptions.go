@@ -14,13 +14,13 @@ import (
 
 func EventSubscriptions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_redshift_event_subscriptions",
-		Description:  "Describes event subscriptions.",
-		Resolver:     fetchRedshiftEventSubscriptions,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("redshift"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_redshift_event_subscriptions",
+		Description: "Describes event subscriptions.",
+		Resolver:    fetchRedshiftEventSubscriptions,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("redshift"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "arn",

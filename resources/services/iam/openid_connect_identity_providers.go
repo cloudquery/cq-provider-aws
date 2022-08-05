@@ -16,12 +16,12 @@ type IamOpenIdIdentityProviderWrapper struct {
 
 func IamOpenidConnectIdentityProviders() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_openid_connect_identity_providers",
-		Description:   "IAM OIDC identity providers are entities in IAM that describe an external identity provider (IdP) service that supports the OpenID Connect (OIDC) standard, such as Google or Salesforce.",
-		Resolver:      fetchIamOpenidConnectIdentityProviders,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_iam_openid_connect_identity_providers",
+		Description: "IAM OIDC identity providers are entities in IAM that describe an external identity provider (IdP) service that supports the OpenID Connect (OIDC) standard, such as Google or Salesforce.",
+		Resolver:    fetchIamOpenidConnectIdentityProviders,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

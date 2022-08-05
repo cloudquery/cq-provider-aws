@@ -15,12 +15,12 @@ import (
 
 func Wafv2ManagedRuleGroups() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_wafv2_managed_rule_groups",
-		Description:          "High-level information about a managed rule group, returned by ListAvailableManagedRuleGroups",
-		Resolver:             fetchWafv2ManagedRuleGroups,
-		Multiplex:            client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
-		IgnoreError:          client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:         client.DeleteAccountRegionScopeFilter,
+		Name:        "aws_wafv2_managed_rule_groups",
+		Description: "High-level information about a managed rule group, returned by ListAvailableManagedRuleGroups",
+		Resolver:    fetchWafv2ManagedRuleGroups,
+		Multiplex:   client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		PostResourceResolver: resolveDescribeManagedRuleGroup,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "scope", "vendor_name", "name"}},
 		Columns: []schema.Column{

@@ -16,12 +16,12 @@ const domainNamesIDPart = "domainnames"
 
 func Apigatewayv2DomainNames() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_apigatewayv2_domain_names",
-		Description:   "Represents a domain name.",
-		Resolver:      fetchApigatewayv2DomainNames,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_apigatewayv2_domain_names",
+		Description: "Represents a domain name.",
+		Resolver:    fetchApigatewayv2DomainNames,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "domain_name"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

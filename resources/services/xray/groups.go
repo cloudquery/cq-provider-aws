@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen --resource groups --config gen.hcl --output .
 func Groups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_xray_groups",
-		Description:  "Details for a group.",
-		Resolver:     fetchXrayGroups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("xray"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_xray_groups",
+		Description: "Details for a group.",
+		Resolver:    fetchXrayGroups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("xray"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

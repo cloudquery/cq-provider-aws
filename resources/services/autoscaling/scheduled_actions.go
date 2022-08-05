@@ -13,13 +13,13 @@ import (
 //go:generate cq-gen --resource autoscaling_scheduled_actions --config ./resources/services/autoscaling/gen.hcl --output .
 func AutoscalingScheduledActions() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_autoscaling_scheduled_actions",
-		Description:  "Describes a scheduled scaling action.",
-		Resolver:     fetchAutoscalingScheduledActions,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("autoscaling"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_autoscaling_scheduled_actions",
+		Description: "Describes a scheduled scaling action.",
+		Resolver:    fetchAutoscalingScheduledActions,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("autoscaling"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

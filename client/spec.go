@@ -1,7 +1,6 @@
 package client
 
 type Account struct {
-	ID              string   `yaml:"id"`
 	AccountName     string   `yaml:"account_name,omitempty"`
 	LocalProfile    string   `yaml:"local_profile,omitempty"`
 	RoleARN         string   `yaml:"role_arn,omitempty"`
@@ -25,7 +24,7 @@ type AwsOrg struct {
 type Config struct {
 	Regions      []string  `yaml:"regions,omitempty"`
 	Accounts     []Account `yaml:"accounts"`
-	Organization *AwsOrg   `yaml:"org"`
+	Organization *AwsOrg   `yaml:"organization"`
 	AWSDebug     bool      `yaml:"aws_debug,omitempty"`
 	MaxRetries   int       `yaml:"max_retries,omitempty" default:"10"`
 	MaxBackoff   int       `yaml:"max_backoff,omitempty" default:"30"`

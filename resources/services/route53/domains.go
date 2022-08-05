@@ -14,12 +14,12 @@ import (
 
 func Route53Domains() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_route53_domains",
-		Description:   "The domain names registered with Amazon Route 53.",
-		Resolver:      fetchRoute53Domains,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_route53_domains",
+		Description: "The domain names registered with Amazon Route 53.",
+		Resolver:    fetchRoute53Domains,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "domain_name"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

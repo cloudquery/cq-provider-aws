@@ -12,13 +12,13 @@ import (
 
 func IotPolicies() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iot_policies",
-		Description:  "The output from the GetPolicy operation.",
-		Resolver:     fetchIotPolicies,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iot_policies",
+		Description: "The output from the GetPolicy operation.",
+		Resolver:    fetchIotPolicies,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

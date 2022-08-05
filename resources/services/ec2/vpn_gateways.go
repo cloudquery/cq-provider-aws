@@ -12,11 +12,11 @@ import (
 
 func Ec2VpnGateways() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_ec2_vpn_gateways",
-		Resolver:      fetchEc2VpnGateways,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_ec2_vpn_gateways",
+		Resolver:    fetchEc2VpnGateways,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

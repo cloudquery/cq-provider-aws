@@ -12,12 +12,12 @@ import (
 
 func IamServerCertificates() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_server_certificates",
-		Description:   "Contains information about a server certificate without its certificate body, certificate chain, and private key.",
-		Resolver:      fetchIamServerCertificates,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_iam_server_certificates",
+		Description: "Contains information about a server certificate without its certificate body, certificate chain, and private key.",
+		Resolver:    fetchIamServerCertificates,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

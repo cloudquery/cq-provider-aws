@@ -15,12 +15,12 @@ const usagePlanIDPart = "/usageplans"
 
 func ApigatewayUsagePlans() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_apigateway_usage_plans",
-		Description:   "Represents a usage plan than can specify who can assess associated API stages with specified request limits and quotas.",
-		Resolver:      fetchApigatewayUsagePlans,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("apigateway"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_apigateway_usage_plans",
+		Description: "Represents a usage plan than can specify who can assess associated API stages with specified request limits and quotas.",
+		Resolver:    fetchApigatewayUsagePlans,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("apigateway"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

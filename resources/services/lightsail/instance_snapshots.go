@@ -14,12 +14,12 @@ import (
 //go:generate cq-gen --resource instance_snapshots --config gen.hcl --output .
 func InstanceSnapshots() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_lightsail_instance_snapshots",
-		Description:   "Describes an instance snapshot",
-		Resolver:      fetchLightsailInstanceSnapshots,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_lightsail_instance_snapshots",
+		Description: "Describes an instance snapshot",
+		Resolver:    fetchLightsailInstanceSnapshots,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		IgnoreInTests: true, // can't be deployed using terraform.
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{

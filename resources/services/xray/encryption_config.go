@@ -12,13 +12,13 @@ import (
 //go:generate cq-gen --resource encryption_config --config gen.hcl --output .
 func EncryptionConfigs() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_xray_encryption_config",
-		Description:  "A configuration document that specifies encryption configuration settings.",
-		Resolver:     fetchXrayEncryptionConfigs,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("xray"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
+		Name:        "aws_xray_encryption_config",
+		Description: "A configuration document that specifies encryption configuration settings.",
+		Resolver:    fetchXrayEncryptionConfigs,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("xray"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

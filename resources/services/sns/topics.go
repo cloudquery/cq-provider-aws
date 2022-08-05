@@ -14,12 +14,12 @@ import (
 
 func SnsTopics() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_sns_topics",
-		Description:          "AWS SNS topic",
-		Resolver:             fetchSnsTopics,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("sns"),
-		IgnoreError:          client.IgnoreCommonErrors,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		Name:        "aws_sns_topics",
+		Description: "AWS SNS topic",
+		Resolver:    fetchSnsTopics,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("sns"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		PostResourceResolver: resolveTopicAttributes,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{

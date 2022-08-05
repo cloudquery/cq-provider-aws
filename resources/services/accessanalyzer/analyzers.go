@@ -16,13 +16,12 @@ import (
 //go:generate cq-gen --resource analyzers --config gen.hcl --output .
 func Analyzers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_access_analyzer_analyzers",
-		Description:  "Contains information about the analyzer",
-		Resolver:     fetchAccessAnalyzerAnalyzers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("access-analyzer"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_access_analyzer_analyzers",
+		Description: "Contains information about the analyzer",
+		Resolver:    fetchAccessAnalyzerAnalyzers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("access-analyzer"),
+		IgnoreError: client.IgnoreCommonErrors,
+		Options:     schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

@@ -12,13 +12,13 @@ import (
 
 func RdsCertificates() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_rds_certificates",
-		Description:  "A CA certificate for an AWS account.",
-		Resolver:     fetchRdsCertificates,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("rds"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
+		Name:        "aws_rds_certificates",
+		Description: "A CA certificate for an AWS account.",
+		Resolver:    fetchRdsCertificates,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("rds"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",

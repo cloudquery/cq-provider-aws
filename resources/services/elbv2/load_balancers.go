@@ -32,13 +32,13 @@ type lbAttributes struct {
 
 func Elbv2LoadBalancers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_elbv2_load_balancers",
-		Description:  "Information about a load balancer.",
-		Resolver:     fetchElbv2LoadBalancers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_elbv2_load_balancers",
+		Description: "Information about a load balancer.",
+		Resolver:    fetchElbv2LoadBalancers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

@@ -15,13 +15,13 @@ import (
 //go:generate cq-gen -config=keys.hcl -domain=kms -resource=keys
 func Keys() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_kms_keys",
-		Description:  "Contains metadata about a KMS key",
-		Resolver:     fetchKmsKeys,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("kms"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_kms_keys",
+		Description: "Contains metadata about a KMS key",
+		Resolver:    fetchKmsKeys,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("kms"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

@@ -12,12 +12,12 @@ import (
 
 func DirectconnectLags() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_directconnect_lags",
-		Description:   "Information about Direct Connect Link Aggregation Group (LAG)",
-		Resolver:      fetchDirectconnectLags,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("directconnect"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_directconnect_lags",
+		Description: "Information about Direct Connect Link Aggregation Group (LAG)",
+		Resolver:    fetchDirectconnectLags,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("directconnect"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

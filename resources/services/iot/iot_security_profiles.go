@@ -14,12 +14,12 @@ import (
 
 func IotSecurityProfiles() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iot_security_profiles",
-		Resolver:     fetchIotSecurityProfiles,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iot_security_profiles",
+		Resolver:    fetchIotSecurityProfiles,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

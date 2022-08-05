@@ -17,12 +17,12 @@ type DmsReplicationInstanceWrapper struct {
 
 func DmsReplicationInstances() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_dms_replication_instances",
-		Description:   "Provides information that defines a replication instance.",
-		Resolver:      fetchDmsReplicationInstances,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("dms"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_dms_replication_instances",
+		Description: "Provides information that defines a replication instance.",
+		Resolver:    fetchDmsReplicationInstances,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("dms"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

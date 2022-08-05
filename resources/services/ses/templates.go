@@ -13,13 +13,13 @@ import (
 //go:generate cq-gen --resource templates --config gen.hcl --output .
 func Templates() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ses_templates",
-		Description:  "Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers to send mail from within any application.",
-		Resolver:     fetchSesTemplates,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("email"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_ses_templates",
+		Description: "Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers to send mail from within any application.",
+		Resolver:    fetchSesTemplates,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("email"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "arn",

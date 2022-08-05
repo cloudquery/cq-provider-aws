@@ -13,13 +13,13 @@ import (
 
 func Ec2Vpcs() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_vpcs",
-		Description:  "Describes a VPC.",
-		Resolver:     fetchEc2Vpcs,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_ec2_vpcs",
+		Description: "Describes a VPC.",
+		Resolver:    fetchEc2Vpcs,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

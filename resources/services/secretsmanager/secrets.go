@@ -20,12 +20,12 @@ type WrappedSecret struct {
 
 func SecretsmanagerSecrets() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_secretsmanager_secrets",
-		Description:   "A structure that contains the details about a secret",
-		Resolver:      fetchSecretsmanagerSecrets,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("secretsmanager"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_secretsmanager_secrets",
+		Description: "A structure that contains the details about a secret",
+		Resolver:    fetchSecretsmanagerSecrets,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("secretsmanager"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

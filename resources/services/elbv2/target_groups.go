@@ -13,12 +13,12 @@ import (
 
 func Elbv2TargetGroups() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_elbv2_target_groups",
-		Description:   "Information about a target group.",
-		Resolver:      fetchElbv2TargetGroups,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_elbv2_target_groups",
+		Description: "Information about a target group.",
+		Resolver:    fetchElbv2TargetGroups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticloadbalancing"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

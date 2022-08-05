@@ -14,12 +14,12 @@ import (
 
 func CodebuildProjects() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_codebuild_projects",
-		Description:   "Information about a build project.",
-		Resolver:      fetchCodebuildProjects,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("codebuild"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_codebuild_projects",
+		Description: "Information about a build project.",
+		Resolver:    fetchCodebuildProjects,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("codebuild"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

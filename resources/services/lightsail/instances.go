@@ -15,13 +15,13 @@ import (
 //go:generate cq-gen --resource instances --config gen.hcl --output .
 func Instances() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_instances",
-		Description:  "Describes an instance (a virtual private server)",
-		Resolver:     fetchLightsailInstances,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_lightsail_instances",
+		Description: "Describes an instance (a virtual private server)",
+		Resolver:    fetchLightsailInstances,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

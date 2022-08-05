@@ -15,13 +15,13 @@ import (
 //go:generate cq-gen --resource workspaces --config gen.hcl --output .
 func Workspaces() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_workspaces_workspaces",
-		Description:  "Describes a WorkSpace.",
-		Resolver:     fetchWorkspacesWorkspaces,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("workspaces"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
+		Name:        "aws_workspaces_workspaces",
+		Description: "Describes a WorkSpace.",
+		Resolver:    fetchWorkspacesWorkspaces,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("workspaces"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

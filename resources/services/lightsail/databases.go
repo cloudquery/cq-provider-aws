@@ -24,13 +24,13 @@ type LogEventWrapper struct {
 //go:generate cq-gen --resource databases --config gen.hcl --output .
 func Databases() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_databases",
-		Description:  "Describes a database",
-		Resolver:     fetchLightsailDatabases,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_lightsail_databases",
+		Description: "Describes a database",
+		Resolver:    fetchLightsailDatabases,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

@@ -11,12 +11,12 @@ import (
 
 func ElasticbeanstalkApplications() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_elasticbeanstalk_applications",
-		Description:   "Describes the properties of an application.",
-		Resolver:      fetchElasticbeanstalkApplications,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_elasticbeanstalk_applications",
+		Description: "Describes the properties of an application.",
+		Resolver:    fetchElasticbeanstalkApplications,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("elasticbeanstalk"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn", "date_created"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

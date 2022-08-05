@@ -14,13 +14,13 @@ import (
 
 func IotTopicRules() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iot_topic_rules",
-		Description:  "The output from the GetTopicRule operation.",
-		Resolver:     fetchIotTopicRules,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iot_topic_rules",
+		Description: "The output from the GetTopicRule operation.",
+		Resolver:    fetchIotTopicRules,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

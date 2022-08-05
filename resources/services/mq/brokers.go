@@ -18,12 +18,12 @@ import (
 //go:generate cq-gen --resource brokers --config gen.hcl --output .
 func Brokers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_mq_brokers",
-		Resolver:     fetchMqBrokers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("mq"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_mq_brokers",
+		Resolver:    fetchMqBrokers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("mq"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

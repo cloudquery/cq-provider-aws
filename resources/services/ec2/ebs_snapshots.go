@@ -14,12 +14,12 @@ import (
 
 func Ec2EbsSnapshots() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_ec2_ebs_snapshots",
-		Description:   "Describes a snapshot.",
-		Resolver:      fetchEc2EbsSnapshots,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_ec2_ebs_snapshots",
+		Description: "Describes a snapshot.",
+		Resolver:    fetchEc2EbsSnapshots,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "snapshot_id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen --resource webhooks --config gen.hcl --output .
 func Webhooks() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_codepipeline_webhooks",
-		Description:  "The detail returned for each webhook after listing webhooks, such as the webhook URL, the webhook name, and the webhook ARN.",
-		Resolver:     fetchCodepipelineWebhooks,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("codepipeline"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_codepipeline_webhooks",
+		Description: "The detail returned for each webhook after listing webhooks, such as the webhook URL, the webhook name, and the webhook ARN.",
+		Resolver:    fetchCodepipelineWebhooks,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("codepipeline"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

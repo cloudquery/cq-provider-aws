@@ -18,12 +18,12 @@ type WrappedSageMakerModel struct {
 
 func SagemakerModels() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_sagemaker_models",
-		Description:   "Provides summary information about a model.",
-		Resolver:      fetchSagemakerModels,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("api.sagemaker"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_sagemaker_models",
+		Description: "Provides summary information about a model.",
+		Resolver:    fetchSagemakerModels,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("api.sagemaker"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

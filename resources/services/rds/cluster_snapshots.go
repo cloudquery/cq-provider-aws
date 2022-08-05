@@ -14,12 +14,12 @@ import (
 
 func RdsClusterSnapshots() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_rds_cluster_snapshots",
-		Description:   "Contains the details for an Amazon RDS DB cluster snapshot This data type is used as a response element in the DescribeDBClusterSnapshots action.",
-		Resolver:      fetchRdsClusterSnapshots,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("rds"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_rds_cluster_snapshots",
+		Description: "Contains the details for an Amazon RDS DB cluster snapshot This data type is used as a response element in the DescribeDBClusterSnapshots action.",
+		Resolver:    fetchRdsClusterSnapshots,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("rds"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

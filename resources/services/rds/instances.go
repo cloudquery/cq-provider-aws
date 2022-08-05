@@ -14,12 +14,12 @@ import (
 
 func RdsInstances() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_rds_instances",
-		Description:   "Contains the details of an Amazon RDS DB instance",
-		Resolver:      fetchRdsInstances,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("rds"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_rds_instances",
+		Description: "Contains the details of an Amazon RDS DB instance",
+		Resolver:    fetchRdsInstances,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("rds"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

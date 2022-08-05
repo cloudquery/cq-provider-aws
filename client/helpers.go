@@ -294,7 +294,7 @@ func ResolveARNGlobal(service AWSService, resourceID func(resource *schema.Resou
 // IsNotFoundError checks if api error should be ignored
 func (c *Client) IsNotFoundError(err error) bool {
 	if isNotFoundError(err) {
-		c.logger.Warn().Err(err).Msg("API returned \"NotFound\" error ignoring it...")
+		c.Logger().Warn().Err(err).Msg("API returned \"NotFound\" error ignoring it...")
 		return true
 	}
 	return false
@@ -317,7 +317,7 @@ func isNotFoundError(err error) bool {
 // IsAccessDeniedError checks if api error should be classified as a permissions issue
 func (c *Client) IsAccessDeniedError(err error) bool {
 	if isAccessDeniedError(err) {
-		c.logger.Warn().Err(err).Msg("API returned an Access Denied error, ignoring it and continuing...")
+		c.Logger().Warn().Err(err).Msg("API returned an Access Denied error, ignoring it and continuing...")
 		return true
 	}
 	return false

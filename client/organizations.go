@@ -69,7 +69,6 @@ func loadAccounts(ctx context.Context, awsConfig *Config, accountsApi Organizati
 		}
 
 		accounts = append(accounts, Account{
-			ID:              *account.Id,
 			RoleARN:         roleArn.String(),
 			RoleSessionName: awsConfig.Organization.ChildAccountRoleSessionName,
 			ExternalID:      awsConfig.Organization.ChildAccountExternalID,

@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen -config=web_acls.hcl -domain=wafregional -resource=web_acls
 func WebAcls() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_wafregional_web_acls",
-		Description:  "This is AWS WAF Classic documentation",
-		Resolver:     fetchWafregionalWebAcls,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("waf-regional"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
+		Name:        "aws_wafregional_web_acls",
+		Description: "This is AWS WAF Classic documentation",
+		Resolver:    fetchWafregionalWebAcls,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

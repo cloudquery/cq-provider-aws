@@ -21,11 +21,11 @@ type simplifiedGlobalSecondaryIndex struct {
 
 func DynamodbTables() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_dynamodb_tables",
-		Description:   "Information about a DynamoDB table.",
-		Resolver:      fetchDynamodbTables,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("dynamodb"),
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_dynamodb_tables",
+		Description: "Information about a DynamoDB table.",
+		Resolver:    fetchDynamodbTables,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("dynamodb"),
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

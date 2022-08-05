@@ -13,12 +13,12 @@ import (
 //go:generate cq-gen --resource ledgers --config gen.hcl --output .
 func Ledgers() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_qldb_ledgers",
-		Resolver:     fetchQldbLedgers,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("qldb"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_qldb_ledgers",
+		Resolver:    fetchQldbLedgers,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("qldb"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

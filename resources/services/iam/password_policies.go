@@ -17,13 +17,13 @@ type PasswordPolicy struct {
 
 func IamPasswordPolicies() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_password_policies",
-		Description:  "Contains information about the account password policy.",
-		Resolver:     fetchIamPasswordPolicies,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
+		Name:        "aws_iam_password_policies",
+		Description: "Contains information about the account password policy.",
+		Resolver:    fetchIamPasswordPolicies,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

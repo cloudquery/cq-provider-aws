@@ -12,13 +12,13 @@ import (
 
 func ElasticsearchDomains() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_elasticsearch_domains",
-		Description:  "The current status of an Elasticsearch domain.",
-		Resolver:     fetchElasticsearchDomains,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("es"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
+		Name:        "aws_elasticsearch_domains",
+		Description: "The current status of an Elasticsearch domain.",
+		Resolver:    fetchElasticsearchDomains,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("es"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

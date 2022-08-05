@@ -14,12 +14,12 @@ import (
 
 func SsmDocuments() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_ssm_documents",
-		Description:          "Describes a Amazon Web Services Systems Manager document (SSM document).",
-		Resolver:             fetchSsmDocuments,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("ssm"),
-		IgnoreError:          client.IgnoreCommonErrors,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
+		Name:        "aws_ssm_documents",
+		Description: "Describes a Amazon Web Services Systems Manager document (SSM document).",
+		Resolver:    fetchSsmDocuments,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ssm"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		PostResourceResolver: ssmDocumentPostResolver,
 		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{

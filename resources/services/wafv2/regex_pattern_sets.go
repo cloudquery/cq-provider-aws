@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen -config=regex_pattern_sets.hcl -domain=wafv2 -resource=regex_pattern_sets
 func RegexPatternSets() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_wafv2_regex_pattern_sets",
-		Description:  "Contains one or more regular expressions",
-		Resolver:     fetchWafv2RegexPatternSets,
-		Multiplex:    client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionScopeFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_wafv2_regex_pattern_sets",
+		Description: "Contains one or more regular expressions",
+		Resolver:    fetchWafv2RegexPatternSets,
+		Multiplex:   client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

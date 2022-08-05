@@ -13,13 +13,13 @@ import (
 
 func FsxBackups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_fsx_backups",
-		Description:  "A backup of an Amazon FSx file system.",
-		Resolver:     fetchFsxBackups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("fsx"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_fsx_backups",
+		Description: "A backup of an Amazon FSx file system.",
+		Resolver:    fetchFsxBackups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("fsx"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

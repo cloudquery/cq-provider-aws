@@ -14,12 +14,12 @@ import (
 //go:generate cq-gen --resource hosts --config gen.hcl --output .
 func Hosts() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_ec2_hosts",
-		Description:   "Describes the properties of the Dedicated Host.",
-		Resolver:      fetchEc2Hosts,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_ec2_hosts",
+		Description: "Describes the properties of the Dedicated Host.",
+		Resolver:    fetchEc2Hosts,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		IgnoreInTests: true,
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{

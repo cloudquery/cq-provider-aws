@@ -13,13 +13,13 @@ import (
 //go:generate cq-gen --resource static_ips --config gen.hcl --output .
 func StaticIps() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_lightsail_static_ips",
-		Description:  "Describes a static IP",
-		Resolver:     fetchLightsailStaticIps,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_lightsail_static_ips",
+		Description: "Describes a static IP",
+		Resolver:    fetchLightsailStaticIps,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("lightsail"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

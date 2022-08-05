@@ -20,13 +20,13 @@ type WebACLWrapper struct {
 
 func Wafv2WebAcls() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_wafv2_web_acls",
-		Description:  "A Web ACL defines a collection of rules to use to inspect and control web requests",
-		Resolver:     fetchWafv2WebAcls,
-		Multiplex:    client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionScopeFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_wafv2_web_acls",
+		Description: "A Web ACL defines a collection of rules to use to inspect and control web requests",
+		Resolver:    fetchWafv2WebAcls,
+		Multiplex:   client.ServiceAccountRegionScopeMultiplexer("waf-regional"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",

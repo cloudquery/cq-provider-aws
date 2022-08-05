@@ -14,12 +14,12 @@ import (
 
 func IotStreams() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iot_streams",
-		Description:   "Information about a stream.",
-		Resolver:      fetchIotStreams,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_iot_streams",
+		Description: "Information about a stream.",
+		Resolver:    fetchIotStreams,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

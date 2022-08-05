@@ -13,12 +13,12 @@ import (
 
 func IamVirtualMfaDevices() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_iam_virtual_mfa_devices",
-		Description:   "Contains information about a virtual MFA device.",
-		Resolver:      fetchIamVirtualMfaDevices,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_iam_virtual_mfa_devices",
+		Description: "Contains information about a virtual MFA device.",
+		Resolver:    fetchIamVirtualMfaDevices,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"serial_number"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

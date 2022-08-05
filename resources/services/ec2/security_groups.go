@@ -18,13 +18,13 @@ type ipPermission struct {
 
 func Ec2SecurityGroups() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_security_groups",
-		Description:  "Describes a security group .",
-		Resolver:     fetchEc2SecurityGroups,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_ec2_security_groups",
+		Description: "Describes a security group .",
+		Resolver:    fetchEc2SecurityGroups,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

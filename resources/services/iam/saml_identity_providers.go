@@ -16,13 +16,13 @@ type IamSamlIdentityProviderWrapper struct {
 
 func IamSamlIdentityProviders() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iam_saml_identity_providers",
-		Description:  "SAML provider resource objects defined in IAM for the AWS account.",
-		Resolver:     fetchIamSamlIdentityProviders,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iam_saml_identity_providers",
+		Description: "SAML provider resource objects defined in IAM for the AWS account.",
+		Resolver:    fetchIamSamlIdentityProviders,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

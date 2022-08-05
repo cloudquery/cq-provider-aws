@@ -13,13 +13,13 @@ import (
 
 func IotThingTypes() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_iot_thing_types",
-		Description:  "The definition of the thing type, including thing type name and description.",
-		Resolver:     fetchIotThingTypes,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("iot"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_iot_thing_types",
+		Description: "The definition of the thing type, including thing type name and description.",
+		Resolver:    fetchIotThingTypes,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("iot"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

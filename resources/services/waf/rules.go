@@ -13,13 +13,13 @@ import (
 
 func WafRules() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_waf_rules",
-		Description:  "This is AWS WAF Classic documentation",
-		Resolver:     fetchWafRules,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_waf_rules",
+		Description: "This is AWS WAF Classic documentation",
+		Resolver:    fetchWafRules,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",

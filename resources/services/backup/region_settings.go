@@ -12,12 +12,12 @@ import (
 //go:generate cq-gen --resource region_settings --config gen.hcl --output .
 func RegionSettings() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_backup_region_settings",
-		Resolver:     fetchBackupRegionSettings,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("backup"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
+		Name:        "aws_backup_region_settings",
+		Resolver:    fetchBackupRegionSettings,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("backup"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

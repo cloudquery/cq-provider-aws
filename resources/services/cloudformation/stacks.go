@@ -19,13 +19,13 @@ var (
 //go:generate cq-gen --resource stacks --config gen.hcl --output .
 func Stacks() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_cloudformation_stacks",
-		Description:  "The Stack data type.",
-		Resolver:     fetchCloudformationStacks,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("cloudformation"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
+		Name:        "aws_cloudformation_stacks",
+		Description: "The Stack data type.",
+		Resolver:    fetchCloudformationStacks,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("cloudformation"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

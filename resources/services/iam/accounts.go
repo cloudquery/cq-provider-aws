@@ -43,12 +43,12 @@ type account struct {
 
 func IamAccounts() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_accounts",
-		Description:   "Information about IAM entity usage and IAM quotas in the AWS account.",
-		Resolver:      fetchAccountSummary,
-		Multiplex:     client.AccountMultiplex,
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountFilter,
+		Name:        "aws_accounts",
+		Description: "Information about IAM entity usage and IAM quotas in the AWS account.",
+		Resolver:    fetchAccountSummary,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

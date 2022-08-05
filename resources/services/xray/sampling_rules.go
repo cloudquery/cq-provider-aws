@@ -14,13 +14,13 @@ import (
 //go:generate cq-gen --resource sampling_rules --config gen.hcl --output .
 func SamplingRules() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_xray_sampling_rules",
-		Description:  "A SamplingRule.",
-		Resolver:     fetchXraySamplingRules,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("xray"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_xray_sampling_rules",
+		Description: "A SamplingRule.",
+		Resolver:    fetchXraySamplingRules,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("xray"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

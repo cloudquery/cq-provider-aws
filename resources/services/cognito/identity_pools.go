@@ -12,12 +12,12 @@ import (
 
 func CognitoIdentityPools() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_cognito_identity_pools",
-		Description:   "An object representing an Amazon Cognito identity pool.",
-		Resolver:      fetchCognitoIdentityPools,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("cognito-identity"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
+		Name:        "aws_cognito_identity_pools",
+		Description: "An object representing an Amazon Cognito identity pool.",
+		Resolver:    fetchCognitoIdentityPools,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("cognito-identity"),
+		IgnoreError: client.IgnoreAccessDeniedServiceDisabled,
+
 		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		IgnoreInTests: true,
 		Columns: []schema.Column{

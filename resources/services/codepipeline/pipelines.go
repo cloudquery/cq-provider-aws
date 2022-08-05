@@ -20,13 +20,13 @@ type StageWrapper struct {
 //go:generate cq-gen --resource pipelines --config gen.hcl --output .
 func Pipelines() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_codepipeline_pipelines",
-		Description:  "Represents the output of a GetPipeline action.",
-		Resolver:     fetchCodepipelinePipelines,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("codepipeline"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:        "aws_codepipeline_pipelines",
+		Description: "Represents the output of a GetPipeline action.",
+		Resolver:    fetchCodepipelinePipelines,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("codepipeline"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

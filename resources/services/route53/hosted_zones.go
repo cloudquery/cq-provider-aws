@@ -22,13 +22,13 @@ type Route53HostedZoneWrapper struct {
 
 func Route53HostedZones() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_route53_hosted_zones",
-		Description:  "A complex type that contains general information about the hosted zone.",
-		Resolver:     fetchRoute53HostedZones,
-		Multiplex:    client.AccountMultiplex,
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
+		Name:        "aws_route53_hosted_zones",
+		Description: "A complex type that contains general information about the hosted zone.",
+		Resolver:    fetchRoute53HostedZones,
+		Multiplex:   client.AccountMultiplex,
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",

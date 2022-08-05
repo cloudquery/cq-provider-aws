@@ -16,13 +16,13 @@ type ec2RegionalConfig struct {
 
 func Ec2RegionalConfig() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_ec2_regional_config",
-		Description:  "Ec2 Regional Config defines common default configuration for ec2 service",
-		Resolver:     fetchEc2RegionalConfig,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
-		IgnoreError:  client.IgnoreCommonErrors,
-		DeleteFilter: client.DeleteAccountRegionFilter,
-		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
+		Name:        "aws_ec2_regional_config",
+		Description: "Ec2 Regional Config defines common default configuration for ec2 service",
+		Resolver:    fetchEc2RegionalConfig,
+		Multiplex:   client.ServiceAccountRegionMultiplexer("ec2"),
+		IgnoreError: client.IgnoreCommonErrors,
+
+		Options: schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "region"}},
 		Columns: []schema.Column{
 			{
 				Name:     "account_id",
