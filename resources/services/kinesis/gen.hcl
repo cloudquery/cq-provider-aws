@@ -224,6 +224,14 @@ resource "aws" "kinesis" "firehoses" {
         params = ["ProcessingConfiguration.Processors"]
       }
     }
+    column "request_configuration_common_attributes" {
+      // skip = true
+      type              = "json"
+      resolver "pathResolver" {
+        path = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+        params = ["RequestConfiguration.CommonAttributes"]
+      }
+    }
   }
   user_relation "aws" "kinesis" "redshift_destination" {
     path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.RedshiftDestinationDescription"
