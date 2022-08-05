@@ -26,6 +26,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ^1.18
+      - name: Install tools
+        if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
+        run: |
+          make install-tools
       - uses: actions/cache@v3
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         with:
