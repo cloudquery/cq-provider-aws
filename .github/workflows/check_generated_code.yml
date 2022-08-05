@@ -5,11 +5,13 @@ on:
     branches:
       - main
       - check-cq-gen
+    paths:
+      - 'resources/services/**/*'
   pull_request:
     branches:
       - main
-  paths:
-    - 'resources/services/**/*'
+    paths:
+      - 'resources/services/**/*'
 jobs:
   lint_doc:
     name: Check Generated Code
