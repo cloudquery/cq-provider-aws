@@ -23,7 +23,7 @@ jobs:
         with:
           filters: |
             src:
-              - '!(terraform/**/*|scripts/**/*)'
+              - 'resources/services/**/*'
       - name: Set up Go 1.x
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         uses: actions/setup-go@v3
@@ -54,7 +54,7 @@ jobs:
         run: |
           for d in ./resources/services/*/ ; do
             # check whether directory changed in this branch
-            if git diff --quiet HEAD..origin/main -- $d; then
+            if git diff --quiet -- $d; then
               echo "no changes in $d";
               continue;
             fi
