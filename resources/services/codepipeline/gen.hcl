@@ -56,7 +56,6 @@ resource "aws" "codepipeline" "pipelines" {
 
     column "blockers" {
       type              = "JSON"
-      generate_resolver = true
     }
 
     relation "aws" "codepipeline" "actions" {
