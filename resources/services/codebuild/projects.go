@@ -2,7 +2,6 @@ package codebuild
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild"
@@ -398,7 +397,7 @@ func CodebuildProjects() *schema.Table {
 				Name:        "tags",
 				Description: "A list of tag key and value pairs associated with this build project",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveCodebuildProjectsTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "timeout_in_minutes",
@@ -439,7 +438,7 @@ func CodebuildProjects() *schema.Table {
 				Name:        "webhook_filter_groups",
 				Description: "An array of arrays of WebhookFilter objects used to determine which webhooks are triggered",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveCodebuildProjectsWebhookFilterGroups,
+				Resolver:    schema.PathResolver("Webhook.FilterGroups"),
 			},
 			{
 				Name:        "webhook_last_modified_secret",
@@ -470,7 +469,7 @@ func CodebuildProjects() *schema.Table {
 			{
 				Name:          "aws_codebuild_project_environment_variables",
 				Description:   "Information about an environment variable for a build project or a build.",
-				Resolver:      fetchCodebuildProjectEnvironmentVariables,
+				Resolver:      schema.PathTableResolver("Environment.EnvironmentVariables"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -499,7 +498,7 @@ func CodebuildProjects() *schema.Table {
 			{
 				Name:          "aws_codebuild_project_file_system_locations",
 				Description:   "Information about a file system created by Amazon Elastic File System (EFS)",
-				Resolver:      fetchCodebuildProjectFileSystemLocations,
+				Resolver:      schema.PathTableResolver("FileSystemLocations"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -538,7 +537,7 @@ func CodebuildProjects() *schema.Table {
 			{
 				Name:          "aws_codebuild_project_secondary_artifacts",
 				Description:   "Information about the build output artifacts for the build project.",
-				Resolver:      fetchCodebuildProjectSecondaryArtifacts,
+				Resolver:      schema.PathTableResolver("SecondaryArtifacts"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -602,7 +601,7 @@ func CodebuildProjects() *schema.Table {
 			{
 				Name:          "aws_codebuild_project_secondary_sources",
 				Description:   "Information about the build input source code for the build project.",
-				Resolver:      fetchCodebuildProjectSecondarySources,
+				Resolver:      schema.PathTableResolver("SecondarySources"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -722,46 +721,4 @@ func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta s
 		j[*v.SourceIdentifier] = *v.SourceVersion
 	}
 	return diag.WrapError(resource.Set(c.Name, j))
-}
-func resolveCodebuildProjectsTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Item.(types.Project)
-	j := map[string]interface{}{}
-	for _, v := range p.Tags {
-		j[*v.Key] = *v.Value
-	}
-	return diag.WrapError(resource.Set(c.Name, j))
-}
-func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Item.(types.Project)
-	if p.Webhook == nil {
-		return nil
-	}
-	data, err := json.Marshal(p.Webhook.FilterGroups)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, data))
-}
-func fetchCodebuildProjectEnvironmentVariables(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.Project)
-	if p.Environment == nil {
-		return nil
-	}
-	res <- p.Environment.EnvironmentVariables
-	return nil
-}
-func fetchCodebuildProjectFileSystemLocations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.Project)
-	res <- p.FileSystemLocations
-	return nil
-}
-func fetchCodebuildProjectSecondaryArtifacts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.Project)
-	res <- p.SecondaryArtifacts
-	return nil
-}
-func fetchCodebuildProjectSecondarySources(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.Project)
-	res <- p.SecondarySources
-	return nil
 }
