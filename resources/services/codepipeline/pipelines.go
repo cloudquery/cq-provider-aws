@@ -2,7 +2,6 @@ package codepipeline
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
@@ -140,7 +139,7 @@ func Pipelines() *schema.Table {
 						Name:          "blockers",
 						Description:   "Reserved for future use.",
 						Type:          schema.TypeJSON,
-						Resolver:      resolvePipelineStagesBlockers,
+						Resolver:      schema.PathResolver("Blockers"),
 						IgnoreInTests: true,
 					},
 				},
@@ -148,7 +147,7 @@ func Pipelines() *schema.Table {
 					{
 						Name:        "aws_codepipeline_pipeline_stage_actions",
 						Description: "Represents information about an action declaration.",
-						Resolver:    fetchCodepipelinePipelineStageActions,
+						Resolver:    schema.PathTableResolver("Actions"),
 						Columns: []schema.Column{
 							{
 								Name:        "pipeline_stage_cq_id",
@@ -194,7 +193,7 @@ func Pipelines() *schema.Table {
 								Name:        "input_artifacts",
 								Description: "The name or ID of the artifact consumed by the action, such as a test or build artifact.",
 								Type:        schema.TypeStringArray,
-								Resolver:    resolvePipelineStageActionsInputArtifacts,
+								Resolver:    schema.PathResolver("InputArtifacts"),
 							},
 							{
 								Name:          "namespace",
@@ -206,7 +205,7 @@ func Pipelines() *schema.Table {
 								Name:        "output_artifacts",
 								Description: "The name or ID of the result of the action declaration, such as a test or build artifact.",
 								Type:        schema.TypeStringArray,
-								Resolver:    resolvePipelineStageActionsOutputArtifacts,
+								Resolver:    schema.PathResolver("OutputArtifacts"),
 							},
 							{
 								Name:          "region",
@@ -293,33 +292,4 @@ func fetchCodepipelinePipelineStages(ctx context.Context, meta schema.ClientMeta
 		}
 	}
 	return nil
-}
-func resolvePipelineStagesBlockers(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(StageWrapper)
-	data, err := json.Marshal(r.Blockers)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, data))
-}
-func fetchCodepipelinePipelineStageActions(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(StageWrapper)
-	res <- r.Actions
-	return nil
-}
-func resolvePipelineStageActionsInputArtifacts(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ActionDeclaration)
-	artifacts := make([]*string, 0)
-	for _, a := range r.InputArtifacts {
-		artifacts = append(artifacts, a.Name)
-	}
-	return diag.WrapError(resource.Set(c.Name, artifacts))
-}
-func resolvePipelineStageActionsOutputArtifacts(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ActionDeclaration)
-	artifacts := make([]*string, 0)
-	for _, a := range r.OutputArtifacts {
-		artifacts = append(artifacts, a.Name)
-	}
-	return diag.WrapError(resource.Set(c.Name, artifacts))
 }
