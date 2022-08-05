@@ -4,10 +4,10 @@ Defines a connection to a data source
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|arn|text|ARN of the resource.|
-|account_id|text|The AWS Account ID of the resource.|
-|region|text|The AWS Region of the resource.|
-|connection_properties|jsonb|These key-value pairs define parameters for the connection:  * HOST - The host URI: either the fully qualified domain name (FQDN) or the IPv4 address of the database host  * PORT - The port number, between 1024 and 65535, of the port on which the database host is listening for database connections  * USER_NAME - The name under which to log in to the database|
+|arn|text|ARN of the resource|
+|account_id|text|The AWS Account ID of the resource|
+|region|text|The AWS Region of the resource|
+|connection_properties|jsonb|Key-value pairs that define parameters for the connection|
 |connection_type|text|The type of the connection|
 |creation_time|timestamp without time zone|The time that this connection definition was created|
 |description|text|The description of the connection|

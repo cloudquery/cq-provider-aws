@@ -21,12 +21,12 @@ resource "aws" "glue" "connections" {
 
   userDefinedColumn "arn" {
     type              = "string"
-    description       = "ARN of the resource."
+    description       = "ARN of the resource"
     generate_resolver = true
   }
 
   userDefinedColumn "account_id" {
-    description = "The AWS Account ID of the resource."
+    description = "The AWS Account ID of the resource"
     type        = "string"
     resolver "resolveAWSAccount" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
@@ -34,10 +34,14 @@ resource "aws" "glue" "connections" {
   }
   userDefinedColumn "region" {
     type        = "string"
-    description = "The AWS Region of the resource."
+    description = "The AWS Region of the resource"
     resolver "resolveAWSRegion" {
       path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
     }
+  }
+
+  column "connection_properties" {
+    description = "Key-value pairs that define parameters for the connection"
   }
 
   options {

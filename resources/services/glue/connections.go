@@ -24,25 +24,25 @@ func Connections() *schema.Table {
 		Columns: []schema.Column{
 			{
 				Name:        "arn",
-				Description: "ARN of the resource.",
+				Description: "ARN of the resource",
 				Type:        schema.TypeString,
 				Resolver:    resolveGlueConnectionArn,
 			},
 			{
 				Name:        "account_id",
-				Description: "The AWS Account ID of the resource.",
+				Description: "The AWS Account ID of the resource",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
 			},
 			{
 				Name:        "region",
-				Description: "The AWS Region of the resource.",
+				Description: "The AWS Region of the resource",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
 				Name:        "connection_properties",
-				Description: "These key-value pairs define parameters for the connection:  * HOST - The host URI: either the fully qualified domain name (FQDN) or the IPv4 address of the database host  * PORT - The port number, between 1024 and 65535, of the port on which the database host is listening for database connections  * USER_NAME - The name under which to log in to the database",
+				Description: "Key-value pairs that define parameters for the connection",
 				Type:        schema.TypeJSON,
 			},
 			{
