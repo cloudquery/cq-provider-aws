@@ -14,6 +14,7 @@ Describes the HTTP endpoint destination
 |endpoint_configuration_name|text|The name of the HTTP endpoint selected as the destination|
 |endpoint_configuration_url|text|The URL of the HTTP endpoint selected as the destination|
 |processing_configuration_enabled|boolean|Enables or disables data processing|
+|request_configuration_common_attributes|jsonb|Describes the metadata sent to the HTTP endpoint destination|
 |request_configuration_content_encoding|text|Kinesis Data Firehose uses the content encoding to compress the body of a request before sending the request to the destination|
 |retry_options_duration_in_seconds|bigint|The total amount of time that Kinesis Data Firehose spends on retries|
 |role_arn|text|Kinesis Data Firehose uses this IAM role for all the permissions that the delivery stream needs|
