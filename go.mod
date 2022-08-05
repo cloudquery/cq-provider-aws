@@ -1,6 +1,6 @@
 module github.com/cloudquery/cq-provider-aws
 
-go 1.17
+go 1.18
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.16.7
@@ -20,7 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.8
 	github.com/aws/aws-sdk-go-v2/service/codepipeline v1.13.8
-	github.com/aws/aws-sdk-go-v2/service/cognitoidentity v1.13.7
+	github.com/aws/aws-sdk-go-v2/service/cognitoidentity v1.13.8
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.17.3
 	github.com/aws/aws-sdk-go-v2/service/configservice v1.21.4
 	github.com/aws/aws-sdk-go-v2/service/databasemigrationservice v1.20.0
@@ -28,9 +28,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/directconnect v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.1
-	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.7
+	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.11
-	github.com/aws/aws-sdk-go-v2/service/efs v1.17.5
+	github.com/aws/aws-sdk-go-v2/service/efs v1.17.6
 	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
 	github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.8
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.14.7
@@ -41,6 +41,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/guardduty v1.14.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.8
 	github.com/aws/aws-sdk-go-v2/service/iot v1.25.4
+	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/kms v1.17.4
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.3
 	github.com/aws/aws-sdk-go-v2/service/lightsail v1.22.2
@@ -67,24 +68,25 @@ require (
 	github.com/aws/smithy-go v1.12.0
 	github.com/basgys/goxml2json v1.1.0
 	github.com/bxcodec/faker v2.0.1+incompatible
-	github.com/cloudquery/cq-gen v0.0.6
-	github.com/cloudquery/cq-provider-sdk v0.14.4
+	github.com/cloudquery/cq-gen v0.0.7
+	github.com/cloudquery/cq-provider-sdk v0.14.6
 	github.com/cloudquery/faker/v3 v3.7.7
 	github.com/gocarina/gocsv v0.0.0-20220712153207-8b2118da4570
 	github.com/golang/mock v1.6.0
 	github.com/google/go-cmp v0.5.8
-	github.com/hashicorp/go-hclog v1.2.1
+	github.com/hashicorp/go-hclog v1.2.2
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/spf13/cast v1.5.0
 	github.com/stretchr/testify v1.8.0
 	github.com/thoas/go-funk v0.9.2
-	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 )
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.9 // indirect
+	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/lorenzosaino/go-sysctl v0.3.1 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
@@ -106,6 +108,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.15 // indirect
 	github.com/aws/aws-sdk-go-v2/service/athena v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/backup v1.16.3
+	github.com/aws/aws-sdk-go-v2/service/glue v1.28.1
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.8 // indirect

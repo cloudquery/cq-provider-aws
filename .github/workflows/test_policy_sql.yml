@@ -1,23 +1,24 @@
-
 # DONT EDIT. This file is synced from https://github.com/cloudquery/.github/.github
-name: Policy Schema Validation Test
-
+name: SQL Policy Validation Test
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
-env: 
+env:
   CGO_ENABLED: 0
   CQ_NO_TELEMETRY: 1
+  PGPASSWORD: pass
 
 jobs:
-  PolicyTest:
+  SQLPolicyTest:
     strategy:
       matrix:
         dbversion: [ "postgres:10" ]
-        go: [ "1.17" ]
+        go: [ "1.18" ]
         platform: [ ubuntu-latest ] # can not run in macOS and widnowsOS
     runs-on: ${{ matrix.platform }}
     services:
@@ -38,11 +39,6 @@ jobs:
     steps:
       - name: Check out code into the policy directory
         uses: actions/checkout@v3
-
-      - name: Download Cloudquery
-        run: |
-          curl -L https://github.com/cloudquery/cloudquery/releases/latest/download/cloudquery_Linux_x86_64 -o cloudquery
-          chmod a+x cloudquery
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v3
@@ -65,19 +61,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.go }}-
 
-      # All bash commands are in a single step so that we can see provider log which runs in the backkground.
-      - name: Run test
+      - name: Prepare for test - Create tables
         run: |
-          set -o xtrace
+          go run ./test/gen-tables.go | psql -h localhost -p 5432 -U postgres -d postgres -w
 
-          go run ./main.go &
-
-          # Wait until .cq_reattach exists
-          bash -c "until test -f .cq_reattach; do echo 123; sleep 1; done"
-
-          export CQ_REATTACH_PROVIDERS=.cq_reattach
-          ./cloudquery provider sync aws --config ./test/policy_cq_config.yml --enable-console-log
-          ./cloudquery policy run aws --config ./test/policy_cq_config.yml --enable-console-log --disable-fetch-check
-
-        env:
-          CQ_PROVIDER_DEBUG: 1
+      - name: Run all policies
+        run: |
+          cd policies && psql -h localhost -p 5432 -U postgres -d postgres -w -f ./policy.sql

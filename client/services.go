@@ -36,9 +36,11 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
+	"github.com/aws/aws-sdk-go-v2/service/glue"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
@@ -167,11 +169,14 @@ type CloudtrailClient interface {
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatch.go . CloudwatchClient
 type CloudwatchClient interface {
 	DescribeAlarms(ctx context.Context, params *cloudwatch.DescribeAlarmsInput, optFns ...func(*cloudwatch.Options)) (*cloudwatch.DescribeAlarmsOutput, error)
+	ListTagsForResource(ctx context.Context, params *cloudwatch.ListTagsForResourceInput, optFns ...func(*cloudwatch.Options)) (*cloudwatch.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudwatchlogs.go . CloudwatchLogsClient
 type CloudwatchLogsClient interface {
 	DescribeMetricFilters(ctx context.Context, params *cloudwatchlogs.DescribeMetricFiltersInput, optFns ...func(*cloudwatchlogs.Options)) (*cloudwatchlogs.DescribeMetricFiltersOutput, error)
+	DescribeLogGroups(ctx context.Context, params *cloudwatchlogs.DescribeLogGroupsInput, optFns ...func(*cloudwatchlogs.Options)) (*cloudwatchlogs.DescribeLogGroupsOutput, error)
+	ListTagsLogGroup(ctx context.Context, params *cloudwatchlogs.ListTagsLogGroupInput, optFns ...func(*cloudwatchlogs.Options)) (*cloudwatchlogs.ListTagsLogGroupOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_cloudformation.go . CloudFormationClient
@@ -279,6 +284,7 @@ type Ec2Client interface {
 type EcrClient interface {
 	DescribeRepositories(ctx context.Context, params *ecr.DescribeRepositoriesInput, optFns ...func(*ecr.Options)) (*ecr.DescribeRepositoriesOutput, error)
 	DescribeImages(ctx context.Context, params *ecr.DescribeImagesInput, optFns ...func(*ecr.Options)) (*ecr.DescribeImagesOutput, error)
+	ListTagsForResource(ctx context.Context, params *ecr.ListTagsForResourceInput, optFns ...func(*ecr.Options)) (*ecr.ListTagsForResourceOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_efs.go . EfsClient
@@ -392,6 +398,11 @@ type LightsailClient interface {
 	GetInstanceSnapshots(ctx context.Context, params *lightsail.GetInstanceSnapshotsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceSnapshotsOutput, error)
 	GetInstancePortStates(ctx context.Context, params *lightsail.GetInstancePortStatesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstancePortStatesOutput, error)
 	GetInstanceAccessDetails(ctx context.Context, params *lightsail.GetInstanceAccessDetailsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetInstanceAccessDetailsOutput, error)
+	GetDistributions(ctx context.Context, params *lightsail.GetDistributionsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDistributionsOutput, error)
+	GetDistributionLatestCacheReset(ctx context.Context, params *lightsail.GetDistributionLatestCacheResetInput, optFns ...func(*lightsail.Options)) (*lightsail.GetDistributionLatestCacheResetOutput, error)
+	GetContainerServices(ctx context.Context, params *lightsail.GetContainerServicesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetContainerServicesOutput, error)
+	GetContainerServiceDeployments(ctx context.Context, params *lightsail.GetContainerServiceDeploymentsInput, optFns ...func(*lightsail.Options)) (*lightsail.GetContainerServiceDeploymentsOutput, error)
+	GetContainerImages(ctx context.Context, params *lightsail.GetContainerImagesInput, optFns ...func(*lightsail.Options)) (*lightsail.GetContainerImagesOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_mq.go . MQClient
@@ -738,4 +749,30 @@ type ShieldClient interface {
 type SESClient interface {
 	GetEmailTemplate(ctx context.Context, params *sesv2.GetEmailTemplateInput, optFns ...func(*sesv2.Options)) (*sesv2.GetEmailTemplateOutput, error)
 	ListEmailTemplates(ctx context.Context, params *sesv2.ListEmailTemplatesInput, optFns ...func(*sesv2.Options)) (*sesv2.ListEmailTemplatesOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/glue.go . GlueClient
+type GlueClient interface {
+	GetTags(ctx context.Context, params *glue.GetTagsInput, optFns ...func(*glue.Options)) (*glue.GetTagsOutput, error)
+	GetTrigger(ctx context.Context, params *glue.GetTriggerInput, optFns ...func(*glue.Options)) (*glue.GetTriggerOutput, error)
+	GetWorkflow(ctx context.Context, params *glue.GetWorkflowInput, optFns ...func(*glue.Options)) (*glue.GetWorkflowOutput, error)
+	ListTriggers(ctx context.Context, params *glue.ListTriggersInput, optFns ...func(*glue.Options)) (*glue.ListTriggersOutput, error)
+	ListWorkflows(ctx context.Context, params *glue.ListWorkflowsInput, optFns ...func(*glue.Options)) (*glue.ListWorkflowsOutput, error)
+	GetJobs(ctx context.Context, params *glue.GetJobsInput, optFns ...func(*glue.Options)) (*glue.GetJobsOutput, error)
+	GetJobRuns(ctx context.Context, params *glue.GetJobRunsInput, optFns ...func(*glue.Options)) (*glue.GetJobRunsOutput, error)
+	GetDatabases(ctx context.Context, params *glue.GetDatabasesInput, optFns ...func(*glue.Options)) (*glue.GetDatabasesOutput, error)
+	GetTables(ctx context.Context, params *glue.GetTablesInput, optFns ...func(*glue.Options)) (*glue.GetTablesOutput, error)
+	GetMLTransforms(ctx context.Context, params *glue.GetMLTransformsInput, optFns ...func(*glue.Options)) (*glue.GetMLTransformsOutput, error)
+	GetMLTaskRuns(ctx context.Context, params *glue.GetMLTaskRunsInput, optFns ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error)
+	GetDataCatalogEncryptionSettings(ctx context.Context, params *glue.GetDataCatalogEncryptionSettingsInput, optFns ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error)
+	GetDevEndpoints(ctx context.Context, params *glue.GetDevEndpointsInput, optFns ...func(*glue.Options)) (*glue.GetDevEndpointsOutput, error)
+	GetCrawlers(ctx context.Context, params *glue.GetCrawlersInput, optFns ...func(*glue.Options)) (*glue.GetCrawlersOutput, error)
+	GetSecurityConfigurations(ctx context.Context, params *glue.GetSecurityConfigurationsInput, optFns ...func(*glue.Options)) (*glue.GetSecurityConfigurationsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/kinesis.go . KinesisClient
+type KinesisClient interface {
+	DescribeStreamSummary(ctx context.Context, params *kinesis.DescribeStreamSummaryInput, optFns ...func(*kinesis.Options)) (*kinesis.DescribeStreamSummaryOutput, error)
+	ListStreams(ctx context.Context, params *kinesis.ListStreamsInput, optFns ...func(*kinesis.Options)) (*kinesis.ListStreamsOutput, error)
+	ListTagsForStream(ctx context.Context, params *kinesis.ListTagsForStreamInput, optFns ...func(*kinesis.Options)) (*kinesis.ListTagsForStreamOutput, error)
 }

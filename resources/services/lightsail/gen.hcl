@@ -39,8 +39,10 @@ resource "aws" "lightsail" "instances" {
   }
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   relation "aws" "lightsail" "add_ons" {
@@ -51,12 +53,13 @@ resource "aws" "lightsail" "instances" {
   relation "aws" "lightsail" "hardware_disks" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Disk"
 
+    ignore_columns_in_tests = ["gb_in_use"]
+
     column "tags" {
-      type              = "json"
-      generate_resolver = true
-    }
-    column "gb_in_use" {
-      ignore_in_tests = true
+      type = "json"
+      resolver "resolveTags" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+      }
     }
     column "attachment_state" {
       skip = true
@@ -67,11 +70,9 @@ resource "aws" "lightsail" "instances" {
     }
   }
 
-  // todo maybe skip original ports column
   user_relation "aws" "lightsail" "port_states" {
     path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.InstancePortState"
   }
-
 
   userDefinedColumn "access_details" {
     type              = "json"
@@ -97,6 +98,15 @@ resource "aws" "lightsail" "buckets" {
       "arn"
     ]
   }
+
+  ignore_columns_in_tests = [
+    "access_log_config_enabled",
+    "access_log_config_destination",
+    "access_log_config_prefix",
+    "resources_receiving_access",
+    "state_message",
+  ]
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -114,8 +124,10 @@ resource "aws" "lightsail" "buckets" {
 
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   column "resources_receiving_access" {
@@ -123,7 +135,8 @@ resource "aws" "lightsail" "buckets" {
   }
 
   user_relation "aws" "lightsail" "access_keys" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.AccessKey"
+    path            = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.AccessKey"
+    ignore_in_tests = true
   }
 }
 
@@ -146,6 +159,9 @@ resource "aws" "lightsail" "disks" {
       "arn"
     ]
   }
+
+  ignore_columns_in_tests = ["gb_in_use"]
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -162,23 +178,33 @@ resource "aws" "lightsail" "disks" {
   }
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
+  relation "aws" "lightsail" "add_ons" {
+    ignore_in_tests = true
+  }
   user_relation "aws" "lightsail" "disk_snapshot" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.DiskSnapshot"
+    path            = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.DiskSnapshot"
+    ignore_in_tests = true
 
     column "tags" {
-      type              = "json"
-      generate_resolver = true
+      type = "json"
+      resolver "resolveTags" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+      }
     }
   }
 }
 
 
 resource "aws" "lightsail" "alarms" {
-  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Alarm"
+  path            = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.Alarm"
+  ignore_in_tests = true
+
   ignoreError "IgnoreAccessDenied" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
   }
@@ -243,6 +269,19 @@ resource "aws" "lightsail" "certificates" {
       "arn"
     ]
   }
+
+  ignore_columns_in_tests = [
+    "issued_at",
+    "not_after",
+    "not_before",
+    "renewal_summary_reason",
+    "renewal_summary_updated_at",
+    "revocation_reason",
+    "revoked_at",
+    "serial_number",
+    "renewal_summary_renewal_status_reason",
+  ]
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -260,8 +299,10 @@ resource "aws" "lightsail" "certificates" {
 
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   column "renewal_summary_renewal_status" {
@@ -273,12 +314,16 @@ resource "aws" "lightsail" "certificates" {
   }
 
   relation "aws" "lightsail" "domain_validation_records" {
+    ignore_in_tests = true
+
     column "resource_record" {
       skip_prefix = true
     }
   }
 
   relation "aws" "lightsail" "renewal_summary_domain_validation_records" {
+    ignore_in_tests = true
+
     column "resource_record" {
       skip_prefix = true
     }
@@ -327,8 +372,6 @@ resource "aws" "lightsail" "static_ips" {
 }
 
 
-
-
 resource "aws" "lightsail" "database_snapshots" {
   path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.RelationalDatabaseSnapshot"
   ignoreError "IgnoreAccessDenied" {
@@ -347,6 +390,9 @@ resource "aws" "lightsail" "database_snapshots" {
       "arn"
     ]
   }
+
+  ignore_in_tests = true
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -362,8 +408,10 @@ resource "aws" "lightsail" "database_snapshots" {
     }
   }
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
   column "location" {
     skip_prefix = true
@@ -407,8 +455,10 @@ resource "aws" "lightsail" "load_balancers" {
     }
   }
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
   }
 
   column "public_ports" {
@@ -423,15 +473,24 @@ resource "aws" "lightsail" "load_balancers" {
     skip = true
   }
 
-  column "resource_type"{
+  column "resource_type" {
     description = "Type of the lightsail resource"
   }
 
+
+  relation "aws" "lightsail" "tls_certificate_summaries" {
+    ignore_in_tests = true
+  }
+
   user_relation "aws" "lightsail" "tls_certificates" {
-    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancerTlsCertificate"
+    path            = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.LoadBalancerTlsCertificate"
+    ignore_in_tests = true
+
     column "tags" {
-      type              = "json"
-      generate_resolver = true
+      type = "json"
+      resolver "resolveTags" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+      }
     }
 
     column "renewal_summary_domain_validation_options" {
@@ -468,6 +527,12 @@ resource "aws" "lightsail" "databases" {
       "arn"
     ]
   }
+
+  ignore_columns_in_tests = [
+    "pending_modified_values",
+    "secondary_availability_zone",
+  ]
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -485,8 +550,13 @@ resource "aws" "lightsail" "databases" {
 
 
   column "tags" {
-    type              = "json"
-    generate_resolver = true
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
+  }
+  column "pending_modified_values" {
+    type = "json"
   }
 
   column "location" {
@@ -495,6 +565,10 @@ resource "aws" "lightsail" "databases" {
 
   column "region_name" {
     skip = true
+  }
+
+  relation "aws" "lightsail" "pending_maintenance_actions" {
+    ignore_columns_in_tests = ["current_apply_date"]
   }
 
   user_relation "aws" "lightsail" "parameters" {
@@ -514,7 +588,8 @@ resource "aws" "lightsail" "databases" {
   }
 
   user_relation "aws" "lightsail" "log_events" {
-    path = "github.com/cloudquery/cq-provider-aws/resources/services/lightsail.LogEventWrapper"
+    path            = "github.com/cloudquery/cq-provider-aws/resources/services/lightsail.LogEventWrapper"
+    ignore_in_tests = true
 
     column "log_event" {
       skip_prefix = true
@@ -541,6 +616,9 @@ resource "aws" "lightsail" "instance_snapshots" {
       "arn"
     ]
   }
+
+  ignore_in_tests = true
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -570,8 +648,158 @@ resource "aws" "lightsail" "instance_snapshots" {
 
   relation "aws" "lightsail" "from_attached_disks" {
     column "tags" {
-      type              = "json"
-      generate_resolver = true
+      type = "json"
+      resolver "resolveTags" {
+        path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+      }
     }
+  }
+}
+
+
+resource "aws" "lightsail" "distributions" {
+  path = "github.com/cloudquery/cq-provider-aws/resources/services/lightsail.DistributionWrapper"
+
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path = "github.com/cloudquery/cq-provider-aws/client.AccountMultiplex"
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountFilter"
+  }
+
+  ignore_in_tests = true
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "get_distribution_latest_cache_reset_output_create_time" {
+    rename = "cache_reset_create_time"
+  }
+
+  column "get_distribution_latest_cache_reset_output_status" {
+    rename = "cache_reset_status"
+  }
+
+  column "lightsail_distribution" {
+    skip_prefix = true
+  }
+
+  column "cache_behavior_settings" {
+    type = "json"
+  }
+
+  column "cache_behaviors" {
+    type = "json"
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+  column "region_name" {
+    skip = true
+  }
+
+  column "tags" {
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
+  }
+}
+
+
+resource "aws" "lightsail" "container_services" {
+  path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.ContainerService"
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["lightsail"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  ignore_columns_in_tests = [
+    "next_deployment_containers", "next_deployment_created_at", "next_deployment_public_endpoint_container_name",
+    "next_deployment_public_endpoint_container_port", "next_deployment_public_endpoint_health_check",
+    "next_deployment_version", "public_domain_names", "state_detail_message", "images"
+  ]
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "current_deployment_public_endpoint_health_check" {
+    type = "json"
+  }
+
+  column "next_deployment_public_endpoint_health_check" {
+    type = "json"
+  }
+
+  column "location" {
+    skip_prefix = true
+  }
+
+  column "region_name" {
+    skip = true
+  }
+
+  column "tags" {
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
+  }
+
+  user_relation "aws" "lightsail" "deployments" {
+    path = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.ContainerServiceDeployment"
+
+    column "public_endpoint_health_check" {
+      type = "json"
+    }
+  }
+
+
+  user_relation "aws" "lightsail" "images" {
+    path           = "github.com/aws/aws-sdk-go-v2/service/lightsail/types.ContainerImage"
   }
 }
