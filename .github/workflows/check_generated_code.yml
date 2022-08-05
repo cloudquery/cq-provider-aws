@@ -45,11 +45,11 @@ jobs:
       - name: go-generate
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         run: |
-          | for d in ./resources/services/*/ ; do
-          |   if grep -s -q '//check-for-changes' "$d"*.hcl; then
-          |    (cd $d && go generate);
-          |    fi
-          | done
+          for d in ./resources/services/*/ ; do
+            if grep -s -q '//check-for-changes' "$d"*.hcl; then
+             (cd $d && go generate);
+             fi
+          done
       - name: Fail if any files are changed
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         run: |
