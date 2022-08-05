@@ -52,18 +52,7 @@ jobs:
       - name: Run go generate on changed service directories
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         run: |
-          for d in ./resources/services/*/ ; do
-            # check whether directory changed in this branch
-            if git diff --quiet origin/main HEAD -- $d; then
-              echo "no changes in $d";
-              continue;
-            fi
-          
-            # regenerate if //check-for-changes is present in an .hcl file
-            if grep -s -q '//check-for-changes' "$d"*.hcl; then
-             (cd $d && go generate);
-            fi
-          done
+          ./scripts/regenerate-changed-directories.sh
       - name: Fail if any files are changed
         if: steps.changes.outputs.src == 'true' || github.event_name != 'pull_request'
         run: |
