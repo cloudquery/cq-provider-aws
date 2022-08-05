@@ -2,6 +2,7 @@ package codebuild
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/codebuild"
@@ -438,7 +439,7 @@ func CodebuildProjects() *schema.Table {
 				Name:        "webhook_filter_groups",
 				Description: "An array of arrays of WebhookFilter objects used to determine which webhooks are triggered",
 				Type:        schema.TypeJSON,
-				Resolver:    schema.PathResolver("Webhook.FilterGroups"),
+				Resolver:    resolveCodebuildProjectsWebhookFilterGroups,
 			},
 			{
 				Name:        "webhook_last_modified_secret",
@@ -721,4 +722,18 @@ func resolveCodebuildProjectsSecondarySourceVersions(ctx context.Context, meta s
 		j[*v.SourceIdentifier] = *v.SourceVersion
 	}
 	return diag.WrapError(resource.Set(c.Name, j))
+}
+
+// currently SDK is not able to support serializing [][]types.WebhookFilter
+// so it must be done manually
+func resolveCodebuildProjectsWebhookFilterGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	p := resource.Item.(types.Project)
+	if p.Webhook == nil {
+		return nil
+	}
+	data, err := json.Marshal(p.Webhook.FilterGroups)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, data))
 }
