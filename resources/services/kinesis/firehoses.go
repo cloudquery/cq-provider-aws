@@ -931,6 +931,12 @@ func Firehoses() *schema.Table {
 						Resolver:    schema.PathResolver("ProcessingConfiguration.Enabled"),
 					},
 					{
+						Name:        "request_configuration_common_attributes",
+						Description: "Describes the metadata sent to the HTTP endpoint destination",
+						Type:        schema.TypeJSON,
+						Resolver:    schema.PathResolver("RequestConfiguration.CommonAttributes"),
+					},
+					{
 						Name:        "request_configuration_content_encoding",
 						Description: "Kinesis Data Firehose uses the content encoding to compress the body of a request before sending the request to the destination",
 						Type:        schema.TypeString,
@@ -1024,31 +1030,6 @@ func Firehoses() *schema.Table {
 						Description: "The \"YYYY/MM/DD/HH\" time format prefix is automatically used for delivered Amazon S3 files",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("S3DestinationDescription.Prefix"),
-					},
-				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_kinesis_firehose_http_destination_request_configuration_common_attributes",
-						Description: "Describes the metadata that's delivered to the specified HTTP endpoint destination",
-						Resolver:    schema.PathTableResolver("RequestConfiguration.CommonAttributes"),
-						Columns: []schema.Column{
-							{
-								Name:        "firehose_http_destination_cq_id",
-								Description: "Unique CloudQuery ID of aws_kinesis_firehose_http_destination table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "attribute_name",
-								Description: "The name of the HTTP endpoint common attribute",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "attribute_value",
-								Description: "The value of the HTTP endpoint common attribute",
-								Type:        schema.TypeString,
-							},
-						},
 					},
 				},
 			},
