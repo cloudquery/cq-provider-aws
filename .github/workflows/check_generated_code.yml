@@ -52,7 +52,7 @@ jobs:
         run: |
           for d in ./resources/services/*/ ; do
             # check whether directory changed in this branch
-            if git diff --quiet -- $d; then
+            if git diff --quiet HEAD..origin/main -- $d; then
               echo "no changes in $d";
               continue;
             fi
