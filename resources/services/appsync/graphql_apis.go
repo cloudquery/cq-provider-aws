@@ -15,7 +15,7 @@ func AppSyncGraphqlApis() *schema.Table {
 		Name:         "aws_appsync_graphql_apis",
 		Description:  "Describes a GraphQL API",
 		Resolver:     fetchAppSyncGraphqlApis,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("ec2"),
+		Multiplex:    client.ServiceAccountRegionMultiplexer("appsync"),
 		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "id"}},
