@@ -14,7 +14,7 @@ resource "aws" "resourcegroups" "resource_groups" {
   }
   multiplex "AwsAccountRegion" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
-    params = ["resourcegroups"]
+    params = ["resource-groups"]
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"

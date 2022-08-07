@@ -17,7 +17,7 @@ func ResourceGroups() *schema.Table {
 		Name:                 "aws_resourcegroups_resource_groups",
 		Description:          "The unique identifiers for a resource group",
 		Resolver:             fetchResourcegroupsResourceGroups,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("resourcegroups"),
+		Multiplex:            client.ServiceAccountRegionMultiplexer("resource-groups"),
 		IgnoreError:          client.IgnoreCommonErrors,
 		DeleteFilter:         client.DeleteAccountRegionFilter,
 		PostResourceResolver: resolveGroupQuery,
