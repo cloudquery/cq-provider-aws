@@ -7,7 +7,7 @@ description_modifier "remove_read_only" {
 }
 
 resource "aws" "resourcegroups" "resource_groups" {
-  path = "github.com/aws/aws-sdk-go-v2/service/resourcegroups/types.GroupIdentifier"
+  path = "github.com/aws/aws-sdk-go-v2/service/resourcegroups/types.Group"
 
   ignoreError "IgnoreCommonErrors" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
@@ -26,9 +26,6 @@ resource "aws" "resourcegroups" "resource_groups" {
 
   column "group_arn" {
     rename = "arn"
-  }
-  column "group_name" {
-    rename = "name"
   }
 
   userDefinedColumn "account_id" {

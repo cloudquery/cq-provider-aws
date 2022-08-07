@@ -15,7 +15,7 @@ import (
 func ResourceGroups() *schema.Table {
 	return &schema.Table{
 		Name:                 "aws_resourcegroups_resource_groups",
-		Description:          "The unique identifiers for a resource group",
+		Description:          "A resource group that contains AWS resources",
 		Resolver:             fetchResourcegroupsResourceGroups,
 		Multiplex:            client.ServiceAccountRegionMultiplexer("resource-groups"),
 		IgnoreError:          client.IgnoreCommonErrors,
@@ -60,7 +60,11 @@ func ResourceGroups() *schema.Table {
 				Name:        "name",
 				Description: "The name of the resource group",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GroupName"),
+			},
+			{
+				Name:        "description",
+				Description: "The description of the resource group",
+				Type:        schema.TypeString,
 			},
 		},
 	}
@@ -71,6 +75,10 @@ func ResourceGroups() *schema.Table {
 // ====================================================================================================================
 
 func fetchResourcegroupsResourceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listResourceGroups, resourceGroupDetail))
+}
+
+func listResourceGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	var config resourcegroups.ListGroupsInput
 	c := meta.(*client.Client)
 	svc := c.Services().ResourceGroups
@@ -81,7 +89,9 @@ func fetchResourcegroupsResourceGroups(ctx context.Context, meta schema.ClientMe
 		if err != nil {
 			return diag.WrapError(err)
 		}
-		res <- output.GroupIdentifiers
+		for _, item := range output.GroupIdentifiers {
+			detailChan <- item.GroupArn
+		}
 		if aws.ToString(output.NextToken) == "" {
 			break
 		}
@@ -90,8 +100,25 @@ func fetchResourcegroupsResourceGroups(ctx context.Context, meta schema.ClientMe
 	return nil
 }
 
+func resourceGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
+	c := meta.(*client.Client)
+	groupArn := listInfo.(*string)
+	svc := c.Services().ResourceGroups
+	groupResponse, err := svc.GetGroup(ctx, &resourcegroups.GetGroupInput{
+		Group: groupArn,
+	})
+	if err != nil {
+		if c.IsNotFoundError(err) {
+			return
+		}
+		errorChan <- diag.WrapError(err)
+		return
+	}
+	resultsChan <- groupResponse.Group
+}
+
 func resolveGroupQuery(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	group := resource.Item.(types.GroupIdentifier)
+	group := resource.Item.(*types.Group)
 	cl := meta.(*client.Client)
 	svc := cl.Services().ResourceGroups
 	input := resourcegroups.GetGroupQueryInput{
@@ -112,7 +139,7 @@ func resolveGroupQuery(ctx context.Context, meta schema.ClientMeta, resource *sc
 func resolveResourcegroupsResourceGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().ResourceGroups
-	group := resource.Item.(types.GroupIdentifier)
+	group := resource.Item.(*types.Group)
 	input := resourcegroups.GetTagsInput{
 		Arn: group.GroupArn,
 	}

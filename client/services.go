@@ -782,6 +782,7 @@ type KinesisClient interface {
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_resourcegroups.go . ResourceGroupsClient
 type ResourceGroupsClient interface {
+	GetGroup(ctx context.Context, params *resourcegroups.GetGroupInput, optFns ...func(*resourcegroups.Options)) (*resourcegroups.GetGroupOutput, error)
 	GetGroupQuery(ctx context.Context, params *resourcegroups.GetGroupQueryInput, optFns ...func(*resourcegroups.Options)) (*resourcegroups.GetGroupQueryOutput, error)
 	GetTags(ctx context.Context, params *resourcegroups.GetTagsInput, optFns ...func(*resourcegroups.Options)) (*resourcegroups.GetTagsOutput, error)
 	ListGroups(ctx context.Context, params *resourcegroups.ListGroupsInput, optFns ...func(*resourcegroups.Options)) (*resourcegroups.ListGroupsOutput, error)
