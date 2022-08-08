@@ -7,7 +7,7 @@ description_modifier "remove_read_only" {
 }
 
 resource "aws" "resourcegroups" "resource_groups" {
-  path = "github.com/aws/aws-sdk-go-v2/service/resourcegroups/types.Group"
+  path = "../resourcegroups.ResourceGroupWrapper"
 
   ignoreError "IgnoreCommonErrors" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
@@ -28,6 +28,10 @@ resource "aws" "resourcegroups" "resource_groups" {
     rename = "arn"
   }
 
+  column "group_name" {
+    rename = "group"
+  }
+
   userDefinedColumn "account_id" {
     type        = "string"
     description = "The AWS Account ID of the resource."
@@ -45,18 +49,5 @@ resource "aws" "resourcegroups" "resource_groups" {
   userDefinedColumn "tags" {
     type              = "json"
     generate_resolver = true
-  }
-
-  postResourceResolver "resolveGroupQuery" {
-    path     = "github.com/cloudquery/cq-provider-sdk/provider/schema.RowResolver"
-    generate = true
-  }
-  userDefinedColumn "resource_query_type" {
-    description = "The type of the query."
-    type        = "string"
-  }
-  userDefinedColumn "resource_query" {
-    description = "The query that defines a group or a search."
-    type        = "string"
   }
 }
