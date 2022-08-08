@@ -7,6 +7,10 @@ description_modifier "remove_read_only" {
   words = ["  This member is required."]
 }
 
+description_modifier "remove_extra_info" {
+  regex = "([*].+)"
+}
+
 resource "aws" "codepipeline" "pipelines" {
   path = "github.com/aws/aws-sdk-go-v2/service/codepipeline.GetPipelineOutput"
   ignoreError "IgnoreCommonErrors" {

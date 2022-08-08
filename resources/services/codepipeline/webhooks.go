@@ -35,7 +35,7 @@ func Webhooks() *schema.Table {
 			},
 			{
 				Name:        "authentication",
-				Description: "Supported options are GITHUB_HMAC, IP, and UNAUTHENTICATED  * For information about the authentication scheme implemented by GITHUB_HMAC, see Securing your webhooks (https://developergithubcom/webhooks/securing/) on the GitHub Developer website  * IP rejects webhooks trigger requests unless they originate from an IP address in the IP range whitelisted in the authentication configuration  * UNAUTHENTICATED accepts all webhook trigger requests regardless of origin",
+				Description: "Supported options are GITHUB_HMAC, IP, and UNAUTHENTICATED",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Definition.Authentication"),
 			},
