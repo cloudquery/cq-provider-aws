@@ -14,14 +14,12 @@ import (
 //go:generate cq-gen --resource resource_groups --config gen.hcl --output .
 func ResourceGroups() *schema.Table {
 	return &schema.Table{
-		Name:                 "aws_resourcegroups_resource_groups",
-		Description:          "A resource group that contains AWS resources",
-		Resolver:             fetchResourcegroupsResourceGroups,
-		Multiplex:            client.ServiceAccountRegionMultiplexer("resource-groups"),
-		IgnoreError:          client.IgnoreCommonErrors,
-		DeleteFilter:         client.DeleteAccountRegionFilter,
-		PostResourceResolver: resolveGroupQuery,
-		Options:              schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
+		Name:         "aws_resourcegroups_resource_groups",
+		Resolver:     fetchResourcegroupsResourceGroups,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("resource-groups"),
+		IgnoreError:  client.IgnoreCommonErrors,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -41,30 +39,34 @@ func ResourceGroups() *schema.Table {
 				Resolver: resolveResourcegroupsResourceGroupTags,
 			},
 			{
-				Name:        "resource_query_type",
-				Description: "The type of the query.",
-				Type:        schema.TypeString,
-			},
-			{
-				Name:        "resource_query",
-				Description: "The query that defines a group or a search.",
-				Type:        schema.TypeString,
-			},
-			{
 				Name:        "arn",
 				Description: "The ARN of the resource group",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("GroupArn"),
+				Resolver:    schema.PathResolver("Group.GroupArn"),
 			},
 			{
-				Name:        "name",
+				Name:        "group_name",
 				Description: "The name of the resource group",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("Group.Name"),
 			},
 			{
-				Name:        "description",
+				Name:        "group_description",
 				Description: "The description of the resource group",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("Group.Description"),
+			},
+			{
+				Name:        "resource_query",
+				Description: "The query that defines a group or a search",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ResourceQuery.Query"),
+			},
+			{
+				Name:        "resource_query_type",
+				Description: "The type of the query",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("ResourceQuery.Type"),
 			},
 		},
 	}
@@ -76,6 +78,30 @@ func ResourceGroups() *schema.Table {
 
 func fetchResourcegroupsResourceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listResourceGroups, resourceGroupDetail))
+}
+func resolveResourcegroupsResourceGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	svc := cl.Services().ResourceGroups
+	group := resource.Item.(ResourceGroupWrapper)
+	input := resourcegroups.GetTagsInput{
+		Arn: group.GroupArn,
+	}
+	output, err := svc.GetTags(ctx, &input, func(options *resourcegroups.Options) {
+		options.Region = cl.Region
+	})
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, output.Tags))
+}
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
+type ResourceGroupWrapper struct {
+	*types.Group
+	*types.ResourceQuery
 }
 
 func listResourceGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
@@ -99,7 +125,6 @@ func listResourceGroups(ctx context.Context, meta schema.ClientMeta, detailChan 
 	}
 	return nil
 }
-
 func resourceGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
 	c := meta.(*client.Client)
 	groupArn := listInfo.(*string)
@@ -111,43 +136,19 @@ func resourceGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsCha
 		if c.IsNotFoundError(err) {
 			return
 		}
-		errorChan <- diag.WrapError(err)
+
 		return
 	}
-	resultsChan <- groupResponse.Group
-}
 
-func resolveGroupQuery(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	group := resource.Item.(*types.Group)
-	cl := meta.(*client.Client)
-	svc := cl.Services().ResourceGroups
 	input := resourcegroups.GetGroupQueryInput{
-		Group: group.GroupArn,
+		Group: groupResponse.Group.GroupArn,
 	}
-	output, err := svc.GetGroupQuery(ctx, &input, func(options *resourcegroups.Options) {
-		options.Region = cl.Region
-	})
+	output, err := svc.GetGroupQuery(ctx, &input)
 	if err != nil {
-		return diag.WrapError(err)
+		errorChan <- diag.WrapError(err)
 	}
-	if err := resource.Set("resource_query_type", output.GroupQuery.ResourceQuery.Type); err != nil {
-		return diag.WrapError(err)
+	resultsChan <- ResourceGroupWrapper{
+		groupResponse.Group,
+		output.GroupQuery.ResourceQuery,
 	}
-	return diag.WrapError(resource.Set("resource_query", output.GroupQuery.ResourceQuery.Query))
-}
-
-func resolveResourcegroupsResourceGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	cl := meta.(*client.Client)
-	svc := cl.Services().ResourceGroups
-	group := resource.Item.(*types.Group)
-	input := resourcegroups.GetTagsInput{
-		Arn: group.GroupArn,
-	}
-	output, err := svc.GetTags(ctx, &input, func(options *resourcegroups.Options) {
-		options.Region = cl.Region
-	})
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, output.Tags))
 }
