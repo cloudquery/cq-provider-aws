@@ -375,7 +375,7 @@ func Functions() *schema.Table {
 				Name:          "tags",
 				Description:   "The function's tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html).",
 				Type:          schema.TypeJSON,
-				Resolver:      client.ResolveTags,
+				Resolver:      schema.PathResolver("Tags"),
 				IgnoreInTests: true,
 			},
 		},
