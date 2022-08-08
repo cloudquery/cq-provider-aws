@@ -9,7 +9,7 @@ description_modifier "remove_read_only" {
 
 resource "aws" "codepipeline" "pipelines" {
   path = "github.com/aws/aws-sdk-go-v2/service/codepipeline.GetPipelineOutput"
-  ignoreError "IgnoreAccessDenied" {
+  ignoreError "IgnoreCommonErrors" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
@@ -108,13 +108,12 @@ resource "aws" "codepipeline" "pipelines" {
     generate_resolver = true
     description       = "The tags associated with the pipeline."
   }
-
 }
 
 resource "aws" "codepipeline" "webhooks" {
   path = "github.com/aws/aws-sdk-go-v2/service/codepipeline/types.ListWebhookItem"
-  ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  ignoreError "IgnoreCommonErrors" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
@@ -123,7 +122,6 @@ resource "aws" "codepipeline" "webhooks" {
     path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
     params = ["codepipeline"]
   }
-
 
   options {
     primary_keys = ["arn"]
@@ -155,8 +153,9 @@ resource "aws" "codepipeline" "webhooks" {
 
   column "tags" {
     type = "JSON"
-    generate_resolver = true
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
     description = "The tags associated with the webhook."
   }
-
 }
