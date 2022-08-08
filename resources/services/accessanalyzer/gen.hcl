@@ -9,7 +9,7 @@ description_modifier "remove_read_only" {
 resource "aws" "access_analyzer" "analyzers" {
   path = "github.com/aws/aws-sdk-go-v2/service/accessanalyzer/types.AnalyzerSummary"
   ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   multiplex "AwsAccount" {
     path = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
