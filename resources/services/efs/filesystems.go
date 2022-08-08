@@ -179,9 +179,7 @@ func ResolveEfsFilesystemBackupPolicyStatus(ctx context.Context, meta schema.Cli
 	}
 	cl := meta.(*client.Client)
 	svc := cl.Services().EFS
-	response, err := svc.DescribeBackupPolicy(ctx, &config, func(options *efs.Options) {
-		options.Region = cl.Region
-	})
+	response, err := svc.DescribeBackupPolicy(ctx, &config)
 	if err != nil {
 		if cl.IsNotFoundError(err) {
 			return diag.WrapError(resource.Set(c.Name, types.StatusDisabled))

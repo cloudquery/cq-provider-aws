@@ -819,9 +819,7 @@ func resolveRedshiftClusterLoggingStatus(ctx context.Context, meta schema.Client
 	cfg := redshift.DescribeLoggingStatusInput{
 		ClusterIdentifier: r.ClusterIdentifier,
 	}
-	response, err := svc.DescribeLoggingStatus(ctx, &cfg, func(o *redshift.Options) {
-		o.Region = cl.Region
-	})
+	response, err := svc.DescribeLoggingStatus(ctx, &cfg)
 	if err != nil {
 		return diag.WrapError(err)
 	}

@@ -417,9 +417,7 @@ func resolveGlueCrawlerTags(ctx context.Context, meta schema.ClientMeta, resourc
 		ResourceArn: aws.String(crawlerARN(cl, aws.ToString(resource.Item.(types.Crawler).Name))),
 	}
 
-	response, err := svc.GetTags(ctx, &input, func(options *glue.Options) {
-		options.Region = cl.Region
-	})
+	response, err := svc.GetTags(ctx, &input)
 	if err != nil {
 		return diag.WrapError(err)
 	}

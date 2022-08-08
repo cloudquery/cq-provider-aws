@@ -412,9 +412,7 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 	}
 	c := meta.(*client.Client)
 	svc := c.Services().Lightsail
-	streams, err := svc.GetRelationalDatabaseLogStreams(ctx, &input, func(options *lightsail.Options) {
-		options.Region = c.Region
-	})
+	streams, err := svc.GetRelationalDatabaseLogStreams(ctx, &input)
 	if err != nil {
 		return diag.WrapError(err)
 	}

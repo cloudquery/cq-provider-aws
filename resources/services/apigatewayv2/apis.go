@@ -891,9 +891,7 @@ func fetchApigatewayv2Apis(ctx context.Context, meta schema.ClientMeta, parent *
 	c := meta.(*client.Client)
 	svc := c.Services().Apigatewayv2
 	for {
-		response, err := svc.GetApis(ctx, &config, func(o *apigatewayv2.Options) {
-			// o.Region = c.Region
-		})
+		response, err := svc.GetApis(ctx, &config)
 
 		if err != nil {
 			return diag.WrapError(err)

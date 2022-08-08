@@ -195,9 +195,7 @@ func resolveSagemakerNotebookInstanceTags(ctx context.Context, meta schema.Clien
 	config := sagemaker.ListTagsInput{
 		ResourceArn: &r.NotebookInstanceArn,
 	}
-	response, err := svc.ListTags(ctx, &config, func(options *sagemaker.Options) {
-		options.Region = c.Region
-	})
+	response, err := svc.ListTags(ctx, &config)
 	if err != nil {
 		return diag.WrapError(err)
 	}

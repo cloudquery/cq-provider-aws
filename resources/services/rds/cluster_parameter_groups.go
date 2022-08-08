@@ -182,9 +182,7 @@ func resolveRdsClusterParameterGroupTags(ctx context.Context, meta schema.Client
 	g := resource.Item.(types.DBClusterParameterGroup)
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBClusterParameterGroupArn}, func(o *rds.Options) {
-		o.Region = cl.Region
-	})
+	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBClusterParameterGroupArn})
 	if err != nil {
 		return diag.WrapError(err)
 	}

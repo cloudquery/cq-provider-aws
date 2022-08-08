@@ -121,9 +121,7 @@ func resolveRdsDbSecurityGroupTags(ctx context.Context, meta schema.ClientMeta, 
 	g := resource.Item.(types.DBSecurityGroup)
 	cl := meta.(*client.Client)
 	svc := cl.Services().RDS
-	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBSecurityGroupArn}, func(o *rds.Options) {
-		o.Region = cl.Region
-	})
+	out, err := svc.ListTagsForResource(ctx, &rds.ListTagsForResourceInput{ResourceName: g.DBSecurityGroupArn})
 	if err != nil {
 		return diag.WrapError(err)
 	}

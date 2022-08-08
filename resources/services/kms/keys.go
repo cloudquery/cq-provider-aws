@@ -269,9 +269,7 @@ func resolveKeysRotationEnabled(ctx context.Context, meta schema.ClientMeta, res
 	if key.Origin == "EXTERNAL" || key.KeyManager == "AWS" {
 		return nil
 	}
-	result, err := svc.GetKeyRotationStatus(ctx, &kms.GetKeyRotationStatusInput{KeyId: key.KeyId}, func(options *kms.Options) {
-		options.Region = cl.Region
-	})
+	result, err := svc.GetKeyRotationStatus(ctx, &kms.GetKeyRotationStatusInput{KeyId: key.KeyId})
 	if err != nil {
 		return diag.WrapError(err)
 	}

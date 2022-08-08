@@ -193,9 +193,7 @@ func fetchSecretsmanagerSecretPolicy(ctx context.Context, meta schema.ClientMeta
 	cfg := secretsmanager.GetResourcePolicyInput{
 		SecretId: r.ARN,
 	}
-	response, err := svc.GetResourcePolicy(ctx, &cfg, func(options *secretsmanager.Options) {
-		options.Region = cl.Region
-	})
+	response, err := svc.GetResourcePolicy(ctx, &cfg)
 	if err != nil {
 		return diag.WrapError(err)
 	}

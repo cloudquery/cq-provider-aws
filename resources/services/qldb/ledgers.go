@@ -289,8 +289,6 @@ func ResolveQldbLedgerTags(ctx context.Context, meta schema.ClientMeta, resource
 	svc := cl.Services().QLDB
 	response, err := svc.ListTagsForResource(ctx, &qldb.ListTagsForResourceInput{
 		ResourceArn: ledger.Arn,
-	}, func(options *qldb.Options) {
-		options.Region = cl.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)

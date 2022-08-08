@@ -1138,8 +1138,6 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 
 	response, err := svc.GetPolicy(ctx, &lambda.GetPolicyInput{
 		FunctionName: r.Configuration.FunctionName,
-	}, func(options *lambda.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		if client.IsAWSError(err, "ResourceNotFoundException") {
@@ -1171,8 +1169,6 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 
 	functionSigning, err := svc.GetFunctionCodeSigningConfig(ctx, &lambda.GetFunctionCodeSigningConfigInput{
 		FunctionName: r.Configuration.FunctionName,
-	}, func(options *lambda.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)
@@ -1183,8 +1179,6 @@ func resolvePolicyCodeSigningConfig(ctx context.Context, meta schema.ClientMeta,
 
 	signing, err := svc.GetCodeSigningConfig(ctx, &lambda.GetCodeSigningConfigInput{
 		CodeSigningConfigArn: functionSigning.CodeSigningConfigArn,
-	}, func(options *lambda.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		if c.IsNotFoundError(err) {

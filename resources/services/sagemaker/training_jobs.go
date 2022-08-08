@@ -571,9 +571,7 @@ func sagemakerTrainingJobsDetail(ctx context.Context, meta schema.ClientMeta, re
 	config := sagemaker.DescribeTrainingJobInput{
 		TrainingJobName: n.TrainingJobName,
 	}
-	response, err := svc.DescribeTrainingJob(ctx, &config, func(options *sagemaker.Options) {
-		options.Region = c.Region
-	})
+	response, err := svc.DescribeTrainingJob(ctx, &config)
 	if err != nil {
 		errorChan <- diag.WrapError(err)
 		return
@@ -806,9 +804,7 @@ func resolveSagemakerTrainingJobTags(ctx context.Context, meta schema.ClientMeta
 	config := sagemaker.ListTagsInput{
 		ResourceArn: r.TrainingJobArn,
 	}
-	response, err := svc.ListTags(ctx, &config, func(options *sagemaker.Options) {
-		options.Region = c.Region
-	})
+	response, err := svc.ListTags(ctx, &config)
 	if err != nil {
 		return diag.WrapError(err)
 	}
