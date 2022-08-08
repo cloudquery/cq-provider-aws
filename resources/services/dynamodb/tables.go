@@ -303,7 +303,7 @@ func DynamodbTables() *schema.Table {
 			{
 				Name:        "aws_dynamodb_table_local_secondary_indexes",
 				Description: "Represents the properties of a local secondary index.",
-				Resolver:    schema.PathTableResolver("LocalSecondaryIndexes."),
+				Resolver:    schema.PathTableResolver("LocalSecondaryIndexes"),
 				Columns: []schema.Column{
 					{
 						Name:        "table_cq_id",
