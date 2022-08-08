@@ -259,13 +259,3 @@ func resolveRDSDBSnapshotAttributes(ctx context.Context, meta schema.ClientMeta,
 	}
 	return diag.WrapError(resource.Set(column.Name, b))
 }
-
-func resolveRDSDBSnapshotProcessorFeatures(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, column schema.Column) error {
-	s := resource.Item.(types.DBSnapshot)
-
-	b, err := json.Marshal(s.ProcessorFeatures)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(column.Name, b))
-}
