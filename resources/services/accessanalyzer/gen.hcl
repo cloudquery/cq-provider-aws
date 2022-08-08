@@ -43,11 +43,6 @@ resource "aws" "access_analyzer" "analyzers" {
   }
 
   user_relation "aws" "access_analyzer" "findings" {
-    options {
-      primary_keys = [
-        "analyzer_cq_id", "id"
-      ]
-    }
     path = "github.com/aws/aws-sdk-go-v2/service/accessanalyzer/types.FindingSummary"
   }
 
