@@ -134,7 +134,7 @@ func RdsDbSnapshots() *schema.Table {
 				Name:        "processor_features",
 				Description: "The number of CPU cores and the number of threads per core for the DB instance class of the DB instance when the DB snapshot was created.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveRDSDBSnapshotProcessorFeatures,
+				Resolver:    schema.PathResolver("ProcessorFeatures"),
 			},
 			{
 				Name:        "snapshot_create_time",

@@ -983,7 +983,7 @@ func Functions() *schema.Table {
 						Name:        "criteria_filters",
 						Description: "A list of filters.",
 						Type:        schema.TypeStringArray,
-						Resolver:    resolveFunctionEventSourceMappingsCriteriaFilters,
+						Resolver:    schema.PathResolver("FilterCriteria.Filters.Pattern"),
 					},
 					{
 						Name:        "function_arn",
@@ -1371,17 +1371,4 @@ func fetchLambdaFunctionEventSourceMappings(ctx context.Context, meta schema.Cli
 		config.Marker = output.NextMarker
 	}
 	return nil
-}
-func resolveFunctionEventSourceMappingsCriteriaFilters(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	p := resource.Item.(types.EventSourceMappingConfiguration)
-	if p.FilterCriteria == nil {
-		return nil
-	}
-
-	filters := make([]string, 0, len(p.FilterCriteria.Filters))
-	for _, f := range p.FilterCriteria.Filters {
-		filters = append(filters, *f.Pattern)
-	}
-
-	return diag.WrapError(resource.Set(c.Name, filters))
 }

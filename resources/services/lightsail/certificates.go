@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
-	"github.com/aws/aws-sdk-go-v2/service/lightsail/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -253,23 +252,5 @@ func fetchLightsailCertificates(ctx context.Context, meta schema.ClientMeta, par
 	for _, cer := range response.Certificates {
 		res <- cer.CertificateDetail
 	}
-	return nil
-}
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func fetchLightsailCertificateDomainValidationRecords(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(*types.Certificate)
-	res <- r.DomainValidationRecords
-	return nil
-}
-func fetchLightsailCertificateRenewalSummaryDomainValidationRecords(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(*types.Certificate)
-	if r.RenewalSummary == nil {
-		return nil
-	}
-	res <- r.RenewalSummary.DomainValidationRecords
 	return nil
 }

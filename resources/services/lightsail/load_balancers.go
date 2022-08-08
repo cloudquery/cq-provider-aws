@@ -380,18 +380,3 @@ func fetchLightsailLoadBalancerTlsCertificates(ctx context.Context, meta schema.
 	res <- response.TlsCertificates
 	return nil
 }
-
-// ====================================================================================================================
-//                                                  User Defined Helpers
-// ====================================================================================================================
-
-func fetchLightsailLoadBalancerInstanceHealthSummaries(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.LoadBalancer)
-	res <- r.InstanceHealthSummary
-	return nil
-}
-func fetchLightsailLoadBalancerTlsCertificateSummaries(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.LoadBalancer)
-	res <- r.TlsCertificateSummaries
-	return nil
-}
