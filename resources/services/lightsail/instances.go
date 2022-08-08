@@ -12,7 +12,6 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource instances --config gen.hcl --output .
 func Instances() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_lightsail_instances",

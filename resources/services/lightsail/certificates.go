@@ -56,7 +56,7 @@ func Certificates() *schema.Table {
 			{
 				Name:        "in_use_resource_count",
 				Description: "The number of Lightsail resources that the certificate is attached to",
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBigInt,
 			},
 			{
 				Name:          "issued_at",
@@ -161,7 +161,7 @@ func Certificates() *schema.Table {
 			{
 				Name:          "aws_lightsail_certificate_domain_validation_records",
 				Description:   "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
-				Resolver:      fetchLightsailCertificateDomainValidationRecords,
+				Resolver:      schema.PathTableResolver("DomainValidationRecords"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -198,7 +198,7 @@ func Certificates() *schema.Table {
 			{
 				Name:          "aws_lightsail_certificate_renewal_summary_domain_validation_records",
 				Description:   "Describes the domain validation records of an Amazon Lightsail SSL/TLS certificate",
-				Resolver:      fetchLightsailCertificateRenewalSummaryDomainValidationRecords,
+				Resolver:      schema.PathTableResolver("RenewalSummary.DomainValidationRecords"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -255,6 +255,11 @@ func fetchLightsailCertificates(ctx context.Context, meta schema.ClientMeta, par
 	}
 	return nil
 }
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
 func fetchLightsailCertificateDomainValidationRecords(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(*types.Certificate)
 	res <- r.DomainValidationRecords

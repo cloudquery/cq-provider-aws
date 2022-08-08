@@ -429,6 +429,10 @@ func fetchLightsailDatabaseLogEvents(ctx context.Context, meta schema.ClientMeta
 	return nil
 }
 
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
 func fetchLogEvents(ctx context.Context, res chan<- interface{}, c *client.Client, database, stream string, startTime, endTime time.Time) error {
 	svc := c.Services().Lightsail
 	input := lightsail.GetRelationalDatabaseLogEventsInput{

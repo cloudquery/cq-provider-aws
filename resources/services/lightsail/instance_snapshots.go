@@ -94,7 +94,7 @@ func InstanceSnapshots() *schema.Table {
 			{
 				Name:        "size_in_gb",
 				Description: "The size in GB of the SSD",
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBigInt,
 			},
 			{
 				Name:        "state",
@@ -117,7 +117,7 @@ func InstanceSnapshots() *schema.Table {
 			{
 				Name:        "aws_lightsail_instance_snapshot_from_attached_disks",
 				Description: "Describes a block storage disk",
-				Resolver:    fetchLightsailInstanceSnapshotFromAttachedDisks,
+				Resolver:    schema.PathTableResolver("FromAttachedDisks"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_snapshot_cq_id",
@@ -148,12 +148,12 @@ func InstanceSnapshots() *schema.Table {
 					{
 						Name:        "gb_in_use",
 						Description: "(Deprecated) The number of GB in use by the disk",
-						Type:        schema.TypeInt,
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "iops",
 						Description: "The input/output operations per second (IOPS) of the disk",
-						Type:        schema.TypeInt,
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "is_attached",
@@ -195,7 +195,7 @@ func InstanceSnapshots() *schema.Table {
 					{
 						Name:        "size_in_gb",
 						Description: "The size of the disk in GB",
-						Type:        schema.TypeInt,
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "state",
@@ -218,7 +218,7 @@ func InstanceSnapshots() *schema.Table {
 					{
 						Name:        "aws_lightsail_instance_snapshot_from_attached_disk_add_ons",
 						Description: "Describes an add-on that is enabled for an Amazon Lightsail resource",
-						Resolver:    fetchLightsailInstanceSnapshotFromAttachedDiskAddOns,
+						Resolver:    schema.PathTableResolver("AddOns"),
 						Columns: []schema.Column{
 							{
 								Name:        "instance_snapshot_from_attached_disk_cq_id",
@@ -281,6 +281,11 @@ func resolveInstanceSnapshotsTags(ctx context.Context, meta schema.ClientMeta, r
 	client.TagsIntoMap(r.Tags, tags)
 	return diag.WrapError(resource.Set(c.Name, tags))
 }
+
+// ====================================================================================================================
+//                                                  User Defined Helpers
+// ====================================================================================================================
+
 func fetchLightsailInstanceSnapshotFromAttachedDisks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	r := parent.Item.(types.InstanceSnapshot)
 	res <- r.FromAttachedDisks
