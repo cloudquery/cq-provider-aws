@@ -3,13 +3,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'resources/services/**/*'
   pull_request:
     branches:
       - main
-    paths:
-      - 'resources/services/**/*'
 jobs:
   check_generated_code_drift:
     name: Check Generated Code for Drift
