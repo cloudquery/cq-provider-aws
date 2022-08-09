@@ -129,13 +129,13 @@ func Ec2VpcEndpointServiceConfigurations() *schema.Table {
 				Name:        "service_type",
 				Description: "The type of service.",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveEc2VpcEndpointServiceConfigurationServiceType,
+				Resolver:    schema.PathResolver("ServiceType.ServiceType"),
 			},
 			{
 				Name:        "tags",
 				Description: "Any tags assigned to the service.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEc2VpcEndpointServiceConfigurationTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 	}
@@ -149,9 +149,7 @@ func fetchEc2VpcEndpointServiceConfigurations(ctx context.Context, meta schema.C
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeVpcEndpointServiceConfigurations(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeVpcEndpointServiceConfigurations(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -162,16 +160,4 @@ func fetchEc2VpcEndpointServiceConfigurations(ctx context.Context, meta schema.C
 		config.NextToken = output.NextToken
 	}
 	return nil
-}
-func resolveEc2VpcEndpointServiceConfigurationServiceType(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ServiceConfiguration)
-	st := make([]string, 0, len(r.ServiceType))
-	for _, std := range r.ServiceType {
-		st = append(st, string(std.ServiceType))
-	}
-	return diag.WrapError(resource.Set(c.Name, st))
-}
-func resolveEc2VpcEndpointServiceConfigurationTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.ServiceConfiguration)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
 }

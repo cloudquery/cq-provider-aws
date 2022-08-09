@@ -2,7 +2,6 @@ package ec2
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -161,7 +160,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "groups",
 				Description: "The tags assigned to the egress-only internet gateway.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveNetworkInterfacesGroups,
+				Resolver:    schema.PathResolver("Groups"),
 			},
 			{
 				Name:        "interface_type",
@@ -172,7 +171,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "ipv4_prefixes",
 				Description: "Describes an IPv4 prefix.",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveNetworkInterfacesIpv4Prefixes,
+				Resolver:    schema.PathResolver("Ipv4Prefixes.Ipv4Prefix"),
 			},
 			{
 				Name:          "ipv6_address",
@@ -184,7 +183,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "ipv6_addresses",
 				Description: "Describes an IPv6 address associated with a network interface.",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveNetworkInterfacesIpv6Addresses,
+				Resolver:    schema.PathResolver("Ipv6Addresses.Ipv6Address"),
 			},
 			{
 				Name:          "ipv6_native",
@@ -196,7 +195,7 @@ func NetworkInterfaces() *schema.Table {
 				Name:        "ipv6_prefixes",
 				Description: "Describes the IPv6 prefix.",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveNetworkInterfacesIpv6Prefixes,
+				Resolver:    schema.PathResolver("Ipv6Prefixes.Ipv6Prefix"),
 			},
 			{
 				Name:        "mac_address",
@@ -265,7 +264,7 @@ func NetworkInterfaces() *schema.Table {
 			{
 				Name:        "aws_ec2_network_interface_private_ip_addresses",
 				Description: "Describes the private IPv4 address of a network interface.",
-				Resolver:    fetchEc2NetworkInterfacePrivateIpAddresses,
+				Resolver:    schema.PathTableResolver("PrivateIpAddresses"),
 				Columns: []schema.Column{
 					{
 						Name:        "network_interface_cq_id",
@@ -359,43 +358,5 @@ func fetchEc2NetworkInterfaces(ctx context.Context, meta schema.ClientMeta, pare
 		}
 		input.NextToken = output.NextToken
 	}
-	return nil
-}
-func resolveNetworkInterfacesGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ni := resource.Item.(types.NetworkInterface)
-	b, err := json.Marshal(ni.Groups)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-
-	return diag.WrapError(resource.Set(c.Name, b))
-}
-func resolveNetworkInterfacesIpv4Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ni := resource.Item.(types.NetworkInterface)
-	ipv4 := make([]*string, 0)
-	for _, i := range ni.Ipv4Prefixes {
-		ipv4 = append(ipv4, i.Ipv4Prefix)
-	}
-	return diag.WrapError(resource.Set(c.Name, ipv4))
-}
-func resolveNetworkInterfacesIpv6Addresses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ni := resource.Item.(types.NetworkInterface)
-	ipv6 := make([]*string, 0)
-	for _, i := range ni.Ipv6Addresses {
-		ipv6 = append(ipv6, i.Ipv6Address)
-	}
-	return diag.WrapError(resource.Set(c.Name, ipv6))
-}
-func resolveNetworkInterfacesIpv6Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	ni := resource.Item.(types.NetworkInterface)
-	ipv6 := make([]*string, 0)
-	for _, i := range ni.Ipv6Prefixes {
-		ipv6 = append(ipv6, i.Ipv6Prefix)
-	}
-	return diag.WrapError(resource.Set(c.Name, ipv6))
-}
-func fetchEc2NetworkInterfacePrivateIpAddresses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	ni := parent.Item.(types.NetworkInterface)
-	res <- ni.PrivateIpAddresses
 	return nil
 }

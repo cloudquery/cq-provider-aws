@@ -223,7 +223,7 @@ func IotJobs() *schema.Table {
 			{
 				Name:        "aws_iot_job_abort_config_criteria_list",
 				Description: "The criteria that determine when and how a job abort takes place.",
-				Resolver:    fetchIotJobAbortConfigCriteriaLists,
+				Resolver:    schema.PathTableResolver("AbortConfig.CriteriaList"),
 				Columns: []schema.Column{
 					{
 						Name:        "job_cq_id",
@@ -269,9 +269,7 @@ func fetchIotJobs(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	}
 
 	for {
-		response, err := svc.ListJobs(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListJobs(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -305,9 +303,7 @@ func ResolveIotJobTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 	tags := make(map[string]string)
 
 	for {
-		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTagsForResource(ctx, &input)
 
 		if err != nil {
 			return diag.WrapError(err)
@@ -321,12 +317,4 @@ func ResolveIotJobTags(ctx context.Context, meta schema.ClientMeta, resource *sc
 		input.NextToken = response.NextToken
 	}
 	return diag.WrapError(resource.Set(c.Name, tags))
-}
-func fetchIotJobAbortConfigCriteriaLists(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	i := parent.Item.(*types.Job)
-	if i.AbortConfig == nil {
-		return nil
-	}
-	res <- i.AbortConfig.CriteriaList
-	return nil
 }

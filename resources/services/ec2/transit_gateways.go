@@ -90,7 +90,7 @@ func Ec2TransitGateways() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveEc2TransitGatewayTags,
+				Resolver: client.ResolveTags,
 			},
 			{
 				Name:        "arn",
@@ -158,7 +158,7 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name:     "tags",
 						Type:     schema.TypeJSON,
-						Resolver: resolveEc2TransitGatewayAttachmentTags,
+						Resolver: client.ResolveTags,
 					},
 					{
 						Name: "transit_gateway_owner_id",
@@ -195,7 +195,7 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name:     "tags",
 						Type:     schema.TypeJSON,
-						Resolver: resolveEc2TransitGatewayRouteTableTags,
+						Resolver: client.ResolveTags,
 					},
 					{
 						Name: "transit_gateway_route_table_id",
@@ -239,7 +239,7 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name:     "tags",
 						Type:     schema.TypeJSON,
-						Resolver: resolveEc2TransitGatewayVpcAttachmentTags,
+						Resolver: client.ResolveTags,
 					},
 					{
 						Name: "transit_gateway_attachment_id",
@@ -316,7 +316,7 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name:     "tags",
 						Type:     schema.TypeJSON,
-						Resolver: resolveEc2TransitGatewayPeeringAttachmentTags,
+						Resolver: client.ResolveTags,
 					},
 					{
 						Name: "transit_gateway_attachment_id",
@@ -364,7 +364,7 @@ func Ec2TransitGateways() *schema.Table {
 					{
 						Name:     "tags",
 						Type:     schema.TypeJSON,
-						Resolver: resolveEc2TransitGatewayMulticastDomainTags,
+						Resolver: client.ResolveTags,
 					},
 					{
 						Name: "transit_gateway_multicast_domain_arn",
@@ -388,9 +388,7 @@ func fetchEc2TransitGateways(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGateways(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGateways(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -417,9 +415,7 @@ func fetchEc2TransitGatewayAttachments(ctx context.Context, meta schema.ClientMe
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGatewayAttachments(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGatewayAttachments(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -446,9 +442,7 @@ func fetchEc2TransitGatewayRouteTables(ctx context.Context, meta schema.ClientMe
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGatewayRouteTables(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGatewayRouteTables(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -475,9 +469,7 @@ func fetchEc2TransitGatewayVpcAttachments(ctx context.Context, meta schema.Clien
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGatewayVpcAttachments(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGatewayVpcAttachments(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -505,9 +497,7 @@ func fetchEc2TransitGatewayPeeringAttachments(ctx context.Context, meta schema.C
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGatewayPeeringAttachments(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGatewayPeeringAttachments(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -535,9 +525,7 @@ func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.Cli
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeTransitGatewayMulticastDomains(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeTransitGatewayMulticastDomains(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -548,58 +536,4 @@ func fetchEc2TransitGatewayMulticastDomains(ctx context.Context, meta schema.Cli
 		config.NextToken = output.NextToken
 	}
 	return nil
-}
-
-func resolveEc2TransitGatewayTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGateway)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-
-func resolveEc2TransitGatewayAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGatewayAttachment)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-
-func resolveEc2TransitGatewayRouteTableTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGatewayRouteTable)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-
-func resolveEc2TransitGatewayVpcAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGatewayVpcAttachment)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-
-func resolveEc2TransitGatewayPeeringAttachmentTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGatewayPeeringAttachment)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-
-func resolveEc2TransitGatewayMulticastDomainTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.TransitGatewayMulticastDomain)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigateway"
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/appsync"
 	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/backup"
@@ -95,6 +96,7 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":               apigatewayv2.Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                  apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":         applicationautoscaling.ApplicationautoscalingPolicies(),
+			"appsync.graphql_apis":                    appsync.GraphqlApis(),
 			"athena.data_catalogs":                    athena.DataCatalogs(),
 			"athena.work_groups":                      athena.WorkGroups(),
 			"autoscaling.groups":                      autoscaling.AutoscalingGroups(),
@@ -169,12 +171,15 @@ func Provider() *provider.Provider {
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
 			"fsx.backups":                             fsx.FsxBackups(),
+			"glue.classifiers":                        glue.Classifiers(),
+			"glue.connections":                        glue.Connections(),
 			"glue.crawlers":                           glue.Crawlers(),
 			"glue.databases":                          glue.Databases(),
 			"glue.datacatalog_encryption_settings":    glue.DatacatalogEncryptionSettings(),
 			"glue.dev_endpoints":                      glue.DevEndpoints(),
 			"glue.jobs":                               glue.Jobs(),
 			"glue.ml_transforms":                      glue.MlTransforms(),
+			"glue.registries":                         glue.Registries(),
 			"glue.triggers":                           glue.Triggers(),
 			"glue.security_configurations":            glue.SecurityConfigurations(),
 			"glue.workflows":                          glue.Workflows(),
