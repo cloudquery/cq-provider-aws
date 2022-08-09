@@ -24,11 +24,6 @@ func buildDatabasesMock(t *testing.T, ctrl *gomock.Controller) client.Services {
 	tb.NextToken = nil
 	m.EXPECT().GetTables(gomock.Any(), gomock.Any()).Return(&tb, nil)
 
-	p := glue.GetPartitionsOutput{}
-	require.NoError(t, faker.FakeData(&p))
-	p.NextToken = nil
-	m.EXPECT().GetPartitions(gomock.Any(), gomock.Any()).Return(&p, nil)
-
 	i := glue.GetPartitionIndexesOutput{}
 	require.NoError(t, faker.FakeData(&i))
 	i.NextToken = nil
