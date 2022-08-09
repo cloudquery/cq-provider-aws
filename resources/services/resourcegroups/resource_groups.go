@@ -11,6 +11,11 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
+type ResourceGroupWrapper struct {
+	*types.Group
+	*types.ResourceQuery
+}
+
 //go:generate cq-gen --resource resource_groups --config gen.hcl --output .
 func ResourceGroups() *schema.Table {
 	return &schema.Table{
@@ -99,11 +104,6 @@ func resolveResourcegroupsResourceGroupTags(ctx context.Context, meta schema.Cli
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-type ResourceGroupWrapper struct {
-	*types.Group
-	*types.ResourceQuery
-}
-
 func listResourceGroups(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	var config resourcegroups.ListGroupsInput
 	c := meta.(*client.Client)
@@ -136,6 +136,7 @@ func resourceGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsCha
 		if c.IsNotFoundError(err) {
 			return
 		}
+		errorChan <- diag.WrapError(err)
 		return
 	}
 
@@ -145,6 +146,7 @@ func resourceGroupDetail(ctx context.Context, meta schema.ClientMeta, resultsCha
 	output, err := svc.GetGroupQuery(ctx, &input)
 	if err != nil {
 		errorChan <- diag.WrapError(err)
+		return
 	}
 	resultsChan <- ResourceGroupWrapper{
 		groupResponse.Group,
