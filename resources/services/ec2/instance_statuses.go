@@ -98,7 +98,7 @@ func Ec2InstanceStatuses() *schema.Table {
 			{
 				Name:          "aws_ec2_instance_status_events",
 				Description:   "Any scheduled events associated with the instance.",
-				Resolver:      fetchEc2InstanceStatusEvents,
+				Resolver:      schema.PathTableResolver("Events"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -153,9 +153,7 @@ func fetchEc2InstanceStatuses(ctx context.Context, meta schema.ClientMeta, paren
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
 	for {
-		output, err := svc.DescribeInstanceStatus(ctx, &config, func(options *ec2.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeInstanceStatus(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -165,10 +163,5 @@ func fetchEc2InstanceStatuses(ctx context.Context, meta schema.ClientMeta, paren
 		}
 		config.NextToken = output.NextToken
 	}
-	return nil
-}
-func fetchEc2InstanceStatusEvents(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.InstanceStatus)
-	res <- r.Events
 	return nil
 }
