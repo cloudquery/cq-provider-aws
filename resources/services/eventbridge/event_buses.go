@@ -17,7 +17,7 @@ func EventBuses() *schema.Table {
 		Name:         "aws_eventbridge_event_buses",
 		Description:  "An event bus receives events from a source and routes them to rules associated with that event bus",
 		Resolver:     fetchEventbridgeEventBuses,
-		Multiplex:    client.ServiceAccountRegionMultiplexer("appsync"),
+		Multiplex:    client.ServiceAccountRegionMultiplexer("events"),
 		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
