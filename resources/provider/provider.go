@@ -31,6 +31,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/ecs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/efs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/eks"
+	"github.com/cloudquery/cq-provider-aws/resources/services/elasticache"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticsearch"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv1"
@@ -51,6 +52,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
 	"github.com/cloudquery/cq-provider-aws/resources/services/rds"
 	"github.com/cloudquery/cq-provider-aws/resources/services/redshift"
+	"github.com/cloudquery/cq-provider-aws/resources/services/resourcegroups"
 	"github.com/cloudquery/cq-provider-aws/resources/services/route53"
 	"github.com/cloudquery/cq-provider-aws/resources/services/s3"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sagemaker"
@@ -162,6 +164,7 @@ func Provider() *provider.Provider {
 			"ecs.task_definitions":                    ecs.EcsTaskDefinitions(),
 			"efs.filesystems":                         efs.EfsFilesystems(),
 			"eks.clusters":                            eks.EksClusters(),
+			"elasticache.clusters":                    elasticache.Clusters(),
 			"elasticbeanstalk.application_versions":   elasticbeanstalk.ApplicationVersions(),
 			"elasticbeanstalk.applications":           elasticbeanstalk.ElasticbeanstalkApplications(),
 			"elasticbeanstalk.environments":           elasticbeanstalk.ElasticbeanstalkEnvironments(),
@@ -238,6 +241,7 @@ func Provider() *provider.Provider {
 			"redshift.clusters":                       redshift.RedshiftClusters(),
 			"redshift.event_subscriptions":            redshift.EventSubscriptions(),
 			"redshift.subnet_groups":                  redshift.RedshiftSubnetGroups(),
+			"resourcegroups.resource_groups":          resourcegroups.ResourceGroups(),
 			"route53.domains":                         route53.Route53Domains(),
 			"route53.health_checks":                   route53.Route53HealthChecks(),
 			"route53.hosted_zones":                    route53.Route53HostedZones(),

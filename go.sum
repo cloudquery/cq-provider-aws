@@ -140,6 +140,8 @@ github.com/aws/aws-sdk-go-v2/service/efs v1.17.6 h1:xLqD17d7IITbgpcwAowvpadKnlhd
 github.com/aws/aws-sdk-go-v2/service/efs v1.17.6/go.mod h1:rbtsxZFwOmj0xOlKwlgQb22SDSbNbLxy/gMcbSup4r8=
 github.com/aws/aws-sdk-go-v2/service/eks v1.21.4 h1:qmKWieiIiYwD46GRD6nxFc1KsyR0ChGRid8emb7rDEY=
 github.com/aws/aws-sdk-go-v2/service/eks v1.21.4/go.mod h1:Th2+t6mwi0bZayXUOFOTuyWR2nwRUVcadDy4WGE8C2E=
+github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.1 h1:ctpT3Cl9LCSnzfDsulH5kECwXLL0jMXAnjukWeIdSZ4=
+github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.1/go.mod h1:1Yuus60M9YJNgRxEYkfcAZs8NIyK2QAutQX2uYFbA+s=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.8 h1:NaAcC6RHMqsLpXF63W6ReZowBUu/Q3Iew5fyzUSzXfM=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.8/go.mod h1:OxtRjhqiKW0MVldgF7m8n/7Osragp0Sy4IWDDwurt2k=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.14.7 h1:nlby2V7Qa/p8aP18M7L3lWfYQ57Bm6HTB6MJR5q3oIk=
@@ -192,6 +194,8 @@ github.com/aws/aws-sdk-go-v2/service/rds v1.21.5 h1:FxgP8Ty+UMcnFfLDYATBxBBwNqxd
 github.com/aws/aws-sdk-go-v2/service/rds v1.21.5/go.mod h1:CETZ4xhuVW6rXcYVl9UIDaRPF1RDSjbr5IfTTCHswDM=
 github.com/aws/aws-sdk-go-v2/service/redshift v1.25.1 h1:pt62Je9eCVqDdlfB25LF9bnsuW24jyHqlpwpdQ4AEio=
 github.com/aws/aws-sdk-go-v2/service/redshift v1.25.1/go.mod h1:hb7YE8ERBjqEn3FV+xx4TVA1i/qX9aazglk+KBZK5lc=
+github.com/aws/aws-sdk-go-v2/service/resourcegroups v1.12.9 h1:kz3eatV1DyQs28XMufhi7/Gk98F86pJm7liA430CiOA=
+github.com/aws/aws-sdk-go-v2/service/resourcegroups v1.12.9/go.mod h1:kawkSDK0FqSCkzy89C6WQ+CsDixssVsPGe/Guh69N94=
 github.com/aws/aws-sdk-go-v2/service/route53 v1.21.2 h1:t7yn/jSMOVFAlCpJqFzivixMRPI/MySAcD0LhXdjbf4=
 github.com/aws/aws-sdk-go-v2/service/route53 v1.21.2/go.mod h1:ZBOkwr2JviKbUwZjhaUjQFaIbSx9XL0pQxNHaCqlMAU=
 github.com/aws/aws-sdk-go-v2/service/route53domains v1.12.7 h1:myfNXFwvCde6JZAfy6YoI9VMKhefNDjhMQTVGQWJ3nY=

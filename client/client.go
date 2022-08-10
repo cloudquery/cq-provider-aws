@@ -41,6 +41,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -61,6 +62,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/qldb"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
+	"github.com/aws/aws-sdk-go-v2/service/resourcegroups"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -148,6 +150,7 @@ type Services struct {
 	ECS                    EcsClient
 	EFS                    EfsClient
 	Eks                    EksClient
+	ElastiCache            ElastiCache
 	ElasticBeanstalk       ElasticbeanstalkClient
 	ElasticSearch          ElasticSearch
 	ELBv1                  ElbV1Client
@@ -168,6 +171,7 @@ type Services struct {
 	QLDB                   QLDBClient
 	RDS                    RdsClient
 	Redshift               RedshiftClient
+	ResourceGroups         ResourceGroupsClient
 	Route53                Route53Client
 	Route53Domains         Route53DomainsClient
 	S3                     S3Client
@@ -648,6 +652,7 @@ func initServices(region string, c aws.Config) Services {
 		ECS:                    ecs.NewFromConfig(awsCfg),
 		EFS:                    efs.NewFromConfig(awsCfg),
 		Eks:                    eks.NewFromConfig(awsCfg),
+		ElastiCache:            elasticache.NewFromConfig(awsCfg),
 		ElasticBeanstalk:       elasticbeanstalk.NewFromConfig(awsCfg),
 		ElasticSearch:          elasticsearchservice.NewFromConfig(awsCfg),
 		ELBv1:                  elbv1.NewFromConfig(awsCfg),
@@ -667,6 +672,7 @@ func initServices(region string, c aws.Config) Services {
 		Organizations:          organizations.NewFromConfig(awsCfg),
 		QLDB:                   qldb.NewFromConfig(awsCfg),
 		RDS:                    rds.NewFromConfig(awsCfg),
+		ResourceGroups:         resourcegroups.NewFromConfig(awsCfg),
 		Redshift:               redshift.NewFromConfig(awsCfg),
 		Route53:                route53.NewFromConfig(awsCfg),
 		Route53Domains:         route53domains.NewFromConfig(awsCfg),
