@@ -41,6 +41,8 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/glue"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iam"
+	"github.com/cloudquery/cq-provider-aws/resources/services/inspector"
+	"github.com/cloudquery/cq-provider-aws/resources/services/inspector2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
 	"github.com/cloudquery/cq-provider-aws/resources/services/kinesis"
 	"github.com/cloudquery/cq-provider-aws/resources/services/kms"
@@ -197,6 +199,8 @@ func Provider() *provider.Provider {
 			"iam.server_certificates":                 iam.IamServerCertificates(),
 			"iam.users":                               iam.IamUsers(),
 			"iam.virtual_mfa_devices":                 iam.IamVirtualMfaDevices(),
+			"inspector.findings":                      inspector.Findings(),
+			"inspector2.findings":                     inspector2.Findings(),
 			"iot.billing_groups":                      iot.IotBillingGroups(),
 			"iot.ca_certificates":                     iot.IotCaCertificates(),
 			"iot.certificates":                        iot.IotCertificates(),
