@@ -129,10 +129,11 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      // resolver "resolveProcessors" {
-      //   path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
-      //   params = ["ProcessingConfiguration.Processors"]
-      // }
+      description = "Describes a data processing configuration"
+      resolver "resolveProcessors" {
+        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        params = ["ProcessingConfiguration.Processors"]
+      }
     }
   }
   user_relation "aws" "kinesis" "elasticsearch_destination" {
@@ -153,7 +154,7 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
         path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
         params = ["ProcessingConfiguration.Processors"]
@@ -193,7 +194,7 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
         path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
         params = ["ProcessingConfiguration.Processors"]
@@ -218,7 +219,7 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
         path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
         params = ["ProcessingConfiguration.Processors"]
@@ -262,7 +263,7 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
         path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
         params = ["ProcessingConfiguration.Processors"]
@@ -288,7 +289,7 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
+      description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
         path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
         params = ["ProcessingConfiguration.Processors"]

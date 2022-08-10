@@ -18,7 +18,7 @@ func Firehoses() *schema.Table {
 		Description:  "Contains information about a delivery stream",
 		Resolver:     fetchKinesisFirehoses,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("firehose"),
-		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
@@ -155,7 +155,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
@@ -339,7 +339,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
@@ -533,7 +533,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
@@ -878,7 +878,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
@@ -1046,7 +1046,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
@@ -1279,7 +1279,7 @@ func Firehoses() *schema.Table {
 					},
 					{
 						Name:        "processing_configuration_processors",
-						Description: "The Amazon Resource Name (ARN) of the delivery stream",
+						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
 						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
 					},
