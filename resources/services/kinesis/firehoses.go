@@ -157,7 +157,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:     "buffering_hints_interval_in_seconds",
@@ -341,7 +341,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "buffering_hints_interval_in_seconds",
@@ -535,7 +535,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "bucket_arn",
@@ -880,7 +880,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "buffering_hints_interval_in_seconds",
@@ -1048,7 +1048,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "cluster_j_db_c_url",
@@ -1281,7 +1281,7 @@ func Firehoses() *schema.Table {
 						Name:        "processing_configuration_processors",
 						Description: "Describes a data processing configuration",
 						Type:        schema.TypeJSON,
-						Resolver:    client.ResolvePathJson("ProcessingConfiguration.Processors"),
+						Resolver:    schema.PathResolver("ProcessingConfiguration.Processors"),
 					},
 					{
 						Name:        "cloud_watch_logging_options_enabled",

@@ -131,7 +131,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
@@ -156,7 +156,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
@@ -196,7 +196,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
@@ -221,7 +221,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
@@ -265,7 +265,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
@@ -291,7 +291,7 @@ resource "aws" "kinesis" "firehoses" {
       type        = "json"
       description = "Describes a data processing configuration"
       resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+        path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
         params = ["ProcessingConfiguration.Processors"]
       }
     }
