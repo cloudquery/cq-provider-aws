@@ -30,6 +30,7 @@ linters-settings:
   wrapcheck:
     ignoreSigs:
       - diag.WrapError
+
   revive:
     enable-all-rules: true
     rules:
@@ -73,8 +74,6 @@ linters-settings:
         disabled: true
       - name: nested-structs
         disabled: true
-  gofmt:
-    simplify: false
 
 linters:
   enable:
