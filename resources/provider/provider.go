@@ -169,6 +169,7 @@ func Provider() *provider.Provider {
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
 			"fsx.backups":                             fsx.Backups(),
+			"fsx.data_repo_associations":              fsx.DataRepoAssociations(),
 			"fsx.data_repo_tasks":                     fsx.DataRepoTasks(),
 			"fsx.filesystems":                         fsx.Filesystems(),
 			"fsx.snapshots":                           fsx.Snapshots(),
