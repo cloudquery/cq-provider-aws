@@ -17,6 +17,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/appsync"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
@@ -40,6 +41,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -123,6 +125,7 @@ type Services struct {
 	Apigateway             ApigatewayClient
 	Apigatewayv2           Apigatewayv2Client
 	ApplicationAutoscaling ApplicationAutoscalingClient
+	AppSync                AppSyncClient
 	Athena                 AthenaClient
 	Autoscaling            AutoscalingClient
 	Backup                 BackupClient
@@ -145,6 +148,7 @@ type Services struct {
 	ECS                    EcsClient
 	EFS                    EfsClient
 	Eks                    EksClient
+	ElastiCache            ElastiCache
 	ElasticBeanstalk       ElasticbeanstalkClient
 	ElasticSearch          ElasticSearch
 	ELBv1                  ElbV1Client
@@ -621,6 +625,7 @@ func initServices(region string, c aws.Config) Services {
 		Apigateway:             apigateway.NewFromConfig(awsCfg),
 		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
 		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
+		AppSync:                appsync.NewFromConfig(awsCfg),
 		Athena:                 athena.NewFromConfig(awsCfg),
 		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
 		Backup:                 backup.NewFromConfig(awsCfg),
@@ -643,6 +648,7 @@ func initServices(region string, c aws.Config) Services {
 		ECS:                    ecs.NewFromConfig(awsCfg),
 		EFS:                    efs.NewFromConfig(awsCfg),
 		Eks:                    eks.NewFromConfig(awsCfg),
+		ElastiCache:            elasticache.NewFromConfig(awsCfg),
 		ElasticBeanstalk:       elasticbeanstalk.NewFromConfig(awsCfg),
 		ElasticSearch:          elasticsearchservice.NewFromConfig(awsCfg),
 		ELBv1:                  elbv1.NewFromConfig(awsCfg),

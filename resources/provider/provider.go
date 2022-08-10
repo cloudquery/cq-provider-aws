@@ -9,6 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigateway"
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/appsync"
 	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/backup"
@@ -30,6 +31,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/ecs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/efs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/eks"
+	"github.com/cloudquery/cq-provider-aws/resources/services/elasticache"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticsearch"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv1"
@@ -95,6 +97,7 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":               apigatewayv2.Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                  apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":         applicationautoscaling.ApplicationautoscalingPolicies(),
+			"appsync.graphql_apis":                    appsync.GraphqlApis(),
 			"athena.data_catalogs":                    athena.DataCatalogs(),
 			"athena.work_groups":                      athena.WorkGroups(),
 			"autoscaling.groups":                      autoscaling.AutoscalingGroups(),
@@ -159,6 +162,7 @@ func Provider() *provider.Provider {
 			"ecs.task_definitions":                    ecs.EcsTaskDefinitions(),
 			"efs.filesystems":                         efs.EfsFilesystems(),
 			"eks.clusters":                            eks.EksClusters(),
+			"elasticache.clusters":                    elasticache.Clusters(),
 			"elasticbeanstalk.application_versions":   elasticbeanstalk.ApplicationVersions(),
 			"elasticbeanstalk.applications":           elasticbeanstalk.ElasticbeanstalkApplications(),
 			"elasticbeanstalk.environments":           elasticbeanstalk.ElasticbeanstalkEnvironments(),

@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/appsync"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
@@ -30,6 +31,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -130,6 +132,11 @@ type Apigatewayv2Client interface {
 	GetVpcLinks(ctx context.Context, params *apigatewayv2.GetVpcLinksInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetVpcLinksOutput, error)
 	GetDomainNames(ctx context.Context, params *apigatewayv2.GetDomainNamesInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetDomainNamesOutput, error)
 	GetTags(ctx context.Context, params *apigatewayv2.GetTagsInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_appsync.go . AppSyncClient
+type AppSyncClient interface {
+	ListGraphqlApis(ctx context.Context, params *appsync.ListGraphqlApisInput, optFns ...func(*appsync.Options)) (*appsync.ListGraphqlApisOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_athena.go . AthenaClient
@@ -491,6 +498,11 @@ type ElasticSearch interface {
 	ListDomainNames(ctx context.Context, params *elasticsearchservice.ListDomainNamesInput, optFns ...func(*elasticsearchservice.Options)) (*elasticsearchservice.ListDomainNamesOutput, error)
 	DescribeElasticsearchDomain(ctx context.Context, params *elasticsearchservice.DescribeElasticsearchDomainInput, optFns ...func(*elasticsearchservice.Options)) (*elasticsearchservice.DescribeElasticsearchDomainOutput, error)
 	ListTags(ctx context.Context, params *elasticsearchservice.ListTagsInput, optFns ...func(*elasticsearchservice.Options)) (*elasticsearchservice.ListTagsOutput, error)
+}
+
+// go:generate mockgen -package=mocks -destination=./mocks/mock_elasticache.go . ElastiCache
+type ElastiCache interface {
+	DescribeCacheClusters(ctx context.Context, params *elasticache.DescribeCacheClustersInput, optFns ...func(*elasticache.Options)) (*elasticache.DescribeCacheClustersOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_eks.go . EksClient
