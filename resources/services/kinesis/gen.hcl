@@ -8,8 +8,8 @@ description_modifier "remove_read_only" {
 }
 resource "aws" "kinesis" "streams" {
   path = "github.com/aws/aws-sdk-go-v2/service/kinesis/types.StreamDescriptionSummary"
-  ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  ignoreError "IgnoreCommonErrors" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
@@ -53,8 +53,8 @@ resource "aws" "kinesis" "streams" {
 
 resource "aws" "kinesis" "firehoses" {
   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.DeliveryStreamDescription"
-  ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  ignoreError "IgnoreCommonErrors" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
@@ -129,11 +129,10 @@ resource "aws" "kinesis" "firehoses" {
     }
     userDefinedColumn "processing_configuration_processors" {
       type        = "json"
-      description = "The Amazon Resource Name (ARN) of the delivery stream"
-      resolver "resolveProcessors" {
-        path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
-        params = ["ProcessingConfiguration.Processors"]
-      }
+      // resolver "resolveProcessors" {
+      //   path   = "github.com/cloudquery/cq-provider-aws/client.ResolvePathJson"
+      //   params = ["ProcessingConfiguration.Processors"]
+      // }
     }
   }
   user_relation "aws" "kinesis" "elasticsearch_destination" {
