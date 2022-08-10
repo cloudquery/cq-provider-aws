@@ -5,7 +5,7 @@
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
-|processing_configuration_processors|jsonb|The Amazon Resource Name (ARN) of the delivery stream|
+|processing_configuration_processors|jsonb|Describes a data processing configuration|
 |buffering_hints_interval_in_seconds|bigint||
 |buffering_hints_size_in_mb_s|bigint||
 |cloud_watch_logging_options_enabled|boolean|Enables or disables CloudWatch logging|

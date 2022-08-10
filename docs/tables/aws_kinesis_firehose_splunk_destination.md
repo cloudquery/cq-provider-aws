@@ -5,7 +5,7 @@ Describes a destination in Splunk
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
-|processing_configuration_processors|jsonb|The Amazon Resource Name (ARN) of the delivery stream|
+|processing_configuration_processors|jsonb|Describes a data processing configuration|
 |cloud_watch_logging_options_enabled|boolean|Enables or disables CloudWatch logging|
 |cloud_watch_logging_options_log_group_name|text|The CloudWatch group name for logging|
 |cloud_watch_logging_options_log_stream_name|text|The CloudWatch log stream name for logging|

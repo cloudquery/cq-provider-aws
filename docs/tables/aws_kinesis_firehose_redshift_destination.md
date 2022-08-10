@@ -5,7 +5,7 @@ Describes a destination in Amazon Redshift
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
 |firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
-|processing_configuration_processors|jsonb|The Amazon Resource Name (ARN) of the delivery stream|
+|processing_configuration_processors|jsonb|Describes a data processing configuration|
 |cluster_j_db_c_url|text|The database connection string|
 |copy_command_data_table_name|text|The name of the target table|
 |copy_command_copy_options|text|Optional parameters to use with the Amazon Redshift COPY command|
