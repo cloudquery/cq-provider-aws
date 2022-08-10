@@ -90,6 +90,8 @@ github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8 h1:OQZODVKX58BBVtiGHdQ
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8/go.mod h1:YXBCG4l+2VBAd1a634Pz/iJvlTwKaTkdkj/BmtdS4X4=
 github.com/aws/aws-sdk-go-v2/service/applicationautoscaling v1.15.8 h1:obyX/RxIav+YBLkfW8wfD6f5XlHowqjJ9vYAwx+aogs=
 github.com/aws/aws-sdk-go-v2/service/applicationautoscaling v1.15.8/go.mod h1:289SWqwukb06IipOqjpcZYNiPNW4SH3wYKQPfpJXa1M=
+github.com/aws/aws-sdk-go-v2/service/appsync v1.15.1 h1:Y6aON7pWXCv8Y68WF66qjE9ZPnTOWaAh32RG/Lcb2cI=
+github.com/aws/aws-sdk-go-v2/service/appsync v1.15.1/go.mod h1:TfdM7u85zDQdH2WoGf07FBhNIL3jrBD8AYHAlab96aA=
 github.com/aws/aws-sdk-go-v2/service/athena v1.16.0 h1:QAejbkyqK2Z8bOtitlUt7/I/uTV08PvEiAzccfmGTkM=
 github.com/aws/aws-sdk-go-v2/service/athena v1.16.0/go.mod h1:uJUguNgKmnxoP19GOdVbPvEFNku5uV9guO0Dt+V3oB4=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.23.5 h1:bOzF892bRTvBgcN3qgZ4KZZCAp8Gl7pWUxivVeJlR/0=
@@ -134,6 +136,8 @@ github.com/aws/aws-sdk-go-v2/service/efs v1.17.6 h1:xLqD17d7IITbgpcwAowvpadKnlhd
 github.com/aws/aws-sdk-go-v2/service/efs v1.17.6/go.mod h1:rbtsxZFwOmj0xOlKwlgQb22SDSbNbLxy/gMcbSup4r8=
 github.com/aws/aws-sdk-go-v2/service/eks v1.21.4 h1:qmKWieiIiYwD46GRD6nxFc1KsyR0ChGRid8emb7rDEY=
 github.com/aws/aws-sdk-go-v2/service/eks v1.21.4/go.mod h1:Th2+t6mwi0bZayXUOFOTuyWR2nwRUVcadDy4WGE8C2E=
+github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.1 h1:ctpT3Cl9LCSnzfDsulH5kECwXLL0jMXAnjukWeIdSZ4=
+github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.1/go.mod h1:1Yuus60M9YJNgRxEYkfcAZs8NIyK2QAutQX2uYFbA+s=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.8 h1:NaAcC6RHMqsLpXF63W6ReZowBUu/Q3Iew5fyzUSzXfM=
 github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.14.8/go.mod h1:OxtRjhqiKW0MVldgF7m8n/7Osragp0Sy4IWDDwurt2k=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing v1.14.7 h1:nlby2V7Qa/p8aP18M7L3lWfYQ57Bm6HTB6MJR5q3oIk=

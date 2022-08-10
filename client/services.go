@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/appsync"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
@@ -30,6 +31,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
@@ -131,6 +133,11 @@ type Apigatewayv2Client interface {
 	GetVpcLinks(ctx context.Context, params *apigatewayv2.GetVpcLinksInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetVpcLinksOutput, error)
 	GetDomainNames(ctx context.Context, params *apigatewayv2.GetDomainNamesInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetDomainNamesOutput, error)
 	GetTags(ctx context.Context, params *apigatewayv2.GetTagsInput, optFns ...func(*apigatewayv2.Options)) (*apigatewayv2.GetTagsOutput, error)
+}
+
+//go:generate mockgen -package=mocks -destination=./mocks/mock_appsync.go . AppSyncClient
+type AppSyncClient interface {
+	ListGraphqlApis(ctx context.Context, params *appsync.ListGraphqlApisInput, optFns ...func(*appsync.Options)) (*appsync.ListGraphqlApisOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/mock_athena.go . AthenaClient
@@ -494,6 +501,11 @@ type ElasticSearch interface {
 	ListTags(ctx context.Context, params *elasticsearchservice.ListTagsInput, optFns ...func(*elasticsearchservice.Options)) (*elasticsearchservice.ListTagsOutput, error)
 }
 
+// go:generate mockgen -package=mocks -destination=./mocks/mock_elasticache.go . ElastiCache
+type ElastiCache interface {
+	DescribeCacheClusters(ctx context.Context, params *elasticache.DescribeCacheClustersInput, optFns ...func(*elasticache.Options)) (*elasticache.DescribeCacheClustersOutput, error)
+}
+
 //go:generate mockgen -package=mocks -destination=./mocks/mock_eks.go . EksClient
 type EksClient interface {
 	ListClusters(ctx context.Context, params *eks.ListClustersInput, optFns ...func(*eks.Options)) (*eks.ListClustersOutput, error)
@@ -766,6 +778,12 @@ type GlueClient interface {
 	GetMLTransforms(ctx context.Context, params *glue.GetMLTransformsInput, optFns ...func(*glue.Options)) (*glue.GetMLTransformsOutput, error)
 	GetMLTaskRuns(ctx context.Context, params *glue.GetMLTaskRunsInput, optFns ...func(*glue.Options)) (*glue.GetMLTaskRunsOutput, error)
 	GetDataCatalogEncryptionSettings(ctx context.Context, params *glue.GetDataCatalogEncryptionSettingsInput, optFns ...func(*glue.Options)) (*glue.GetDataCatalogEncryptionSettingsOutput, error)
+	ListRegistries(ctx context.Context, params *glue.ListRegistriesInput, optFns ...func(*glue.Options)) (*glue.ListRegistriesOutput, error)
+	ListSchemas(ctx context.Context, params *glue.ListSchemasInput, optFns ...func(*glue.Options)) (*glue.ListSchemasOutput, error)
+	GetSchema(ctx context.Context, params *glue.GetSchemaInput, optFns ...func(*glue.Options)) (*glue.GetSchemaOutput, error)
+	ListSchemaVersions(ctx context.Context, params *glue.ListSchemaVersionsInput, optFns ...func(*glue.Options)) (*glue.ListSchemaVersionsOutput, error)
+	GetSchemaVersion(ctx context.Context, params *glue.GetSchemaVersionInput, optFns ...func(*glue.Options)) (*glue.GetSchemaVersionOutput, error)
+	QuerySchemaVersionMetadata(ctx context.Context, params *glue.QuerySchemaVersionMetadataInput, optFns ...func(*glue.Options)) (*glue.QuerySchemaVersionMetadataOutput, error)
 	GetDevEndpoints(ctx context.Context, params *glue.GetDevEndpointsInput, optFns ...func(*glue.Options)) (*glue.GetDevEndpointsOutput, error)
 	GetCrawlers(ctx context.Context, params *glue.GetCrawlersInput, optFns ...func(*glue.Options)) (*glue.GetCrawlersOutput, error)
 	GetSecurityConfigurations(ctx context.Context, params *glue.GetSecurityConfigurationsInput, optFns ...func(*glue.Options)) (*glue.GetSecurityConfigurationsOutput, error)

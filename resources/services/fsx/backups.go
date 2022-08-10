@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
-	"github.com/aws/aws-sdk-go-v2/service/fsx/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -95,7 +94,7 @@ func FsxBackups() *schema.Table {
 				Name:        "tags",
 				Description: "Tags associated with a particular file system.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveFsxBackupTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 	}
@@ -109,9 +108,7 @@ func fetchFsxBackups(ctx context.Context, meta schema.ClientMeta, parent *schema
 	c := meta.(*client.Client)
 	svc := c.Services().FSX
 	for {
-		response, err := svc.DescribeBackups(ctx, &config, func(options *fsx.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.DescribeBackups(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -122,12 +119,4 @@ func fetchFsxBackups(ctx context.Context, meta schema.ClientMeta, parent *schema
 		config.NextToken = response.NextToken
 	}
 	return nil
-}
-func resolveFsxBackupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.Backup)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set(c.Name, tags))
 }
