@@ -170,6 +170,7 @@ func Provider() *provider.Provider {
 			"emr.clusters":                            emr.EmrClusters(),
 			"fsx.backups":                             fsx.Backups(),
 			"fsx.filesystems":                         fsx.Filesystems(),
+			"fsx.snapshots":                           fsx.Snapshots(),
 			"glue.classifiers":                        glue.Classifiers(),
 			"glue.connections":                        glue.Connections(),
 			"glue.crawlers":                           glue.Crawlers(),
