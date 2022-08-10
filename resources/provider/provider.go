@@ -36,6 +36,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv1"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/emr"
+	"github.com/cloudquery/cq-provider-aws/resources/services/eventbridge"
 	"github.com/cloudquery/cq-provider-aws/resources/services/fsx"
 	"github.com/cloudquery/cq-provider-aws/resources/services/glue"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
@@ -170,6 +171,7 @@ func Provider() *provider.Provider {
 			"elbv2.target_groups":                     elbv2.Elbv2TargetGroups(),
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
+			"eventbridge.event_buses":                 eventbridge.EventBuses(),
 			"fsx.backups":                             fsx.FsxBackups(),
 			"glue.classifiers":                        glue.Classifiers(),
 			"glue.connections":                        glue.Connections(),
