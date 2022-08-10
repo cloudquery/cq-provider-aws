@@ -60,6 +60,10 @@ resource "aws" "fsx" "filesystems" {
       path = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathTableResolver"
       params = ["LustreConfiguration"]
     }
+
+    column "data_repository_configuration" {
+      rename = "data_repo_cfg"
+    }
   }
 
   column "ontap_configuration" {
