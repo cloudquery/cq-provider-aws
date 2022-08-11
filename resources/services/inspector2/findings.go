@@ -13,9 +13,9 @@ import (
 //go:generate cq-gen --resource findings --config gen.hcl --output .
 func Findings() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_inspector_findings",
+		Name:         "aws_inspector2_findings",
 		Description:  "Details about an Amazon Inspector finding",
-		Resolver:     fetchInspectorFindings,
+		Resolver:     fetchInspector2Findings,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("inspector2"),
 		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -117,13 +117,13 @@ func Findings() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:        "aws_inspector_finding_resources",
+				Name:        "aws_inspector2_finding_resources",
 				Description: "Details about the resource involved in a finding",
 				Resolver:    schema.PathTableResolver("Resources"),
 				Columns: []schema.Column{
 					{
 						Name:        "finding_cq_id",
-						Description: "Unique CloudQuery ID of aws_inspector_findings table (FK)",
+						Description: "Unique CloudQuery ID of aws_inspector2_findings table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -176,7 +176,7 @@ func Findings() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchInspectorFindings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchInspector2Findings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().InspectorV2
 	input := inspector2.ListFindingsInput{MaxResults: aws.Int32(100)}

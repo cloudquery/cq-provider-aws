@@ -7,7 +7,7 @@ description_modifier "remove_read_only" {
   words = ["  This member is required."]
 }
 
-resource "aws" "inspector" "findings" {
+resource "aws" "inspector2" "findings" {
   path = "github.com/aws/aws-sdk-go-v2/service/inspector2/types.Finding"
   ignoreError "IgnoreCommonErrors" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
