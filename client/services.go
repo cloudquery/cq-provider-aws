@@ -762,6 +762,8 @@ type ShieldClient interface {
 type SESClient interface {
 	GetEmailTemplate(ctx context.Context, params *sesv2.GetEmailTemplateInput, optFns ...func(*sesv2.Options)) (*sesv2.GetEmailTemplateOutput, error)
 	ListEmailTemplates(ctx context.Context, params *sesv2.ListEmailTemplatesInput, optFns ...func(*sesv2.Options)) (*sesv2.ListEmailTemplatesOutput, error)
+	ListEmailIdentities(ctx context.Context, params *sesv2.ListEmailIdentitiesInput, optFns ...func(*sesv2.Options)) (*sesv2.ListEmailIdentitiesOutput, error)
+	GetEmailIdentity(ctx context.Context, params *sesv2.GetEmailIdentityInput, optFns ...func(*sesv2.Options)) (*sesv2.GetEmailIdentityOutput, error)
 }
 
 //go:generate mockgen -package=mocks -destination=./mocks/glue.go . GlueClient

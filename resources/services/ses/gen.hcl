@@ -61,3 +61,57 @@ resource "aws" "ses" "templates" {
     }
   }
 }
+
+
+resource "aws" "ses" "email_identities" {
+  path = "github.com/aws/aws-sdk-go-v2/service/sesv2.GetEmailIdentityOutput"
+  #  description = "Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers to send mail from within any application."
+  ignoreError "IgnoreAccessDenied" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  }
+  multiplex "AwsAccountRegion" {
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["email"]
+  }
+  deleteFilter "AccountRegionFilter" {
+    path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
+  }
+
+  options {
+    primary_keys = [
+      "arn"
+    ]
+  }
+
+  userDefinedColumn "arn" {
+    type              = "string"
+    description       = "The Amazon Resource Name (ARN) for the resource."
+    generate_resolver = true
+  }
+
+  userDefinedColumn "account_id" {
+    type        = "string"
+    description = "The AWS Account ID of the resource."
+    resolver "resolveAWSAccount" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSAccount"
+    }
+  }
+  userDefinedColumn "region" {
+    type        = "string"
+    description = "The AWS Region of the resource."
+    resolver "resolveAWSRegion" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveAWSRegion"
+    }
+  }
+
+  column "mail_from_attributes" {
+    skip_prefix = true
+  }
+
+  column "tags" {
+    type = "json"
+    resolver "resolveTags" {
+      path = "github.com/cloudquery/cq-provider-aws/client.ResolveTags"
+    }
+  }
+}
