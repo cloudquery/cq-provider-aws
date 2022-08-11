@@ -4,10 +4,11 @@ Details about an Amazon Inspector finding
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
+|arn|text|The Amazon Resource Name (ARN) of the finding|
 |region|text|The AWS Region of the resource|
 |account_id|text|The Amazon Web Services account ID associated with the finding|
 |description|text|The description of the finding|
-|arn|text|The Amazon Resource Number (ARN) of the finding|
+|finding_arn|text|The Amazon Resource Number (ARN) of the finding|
 |first_observed_at|timestamp without time zone|The date and time that the finding was first observed|
 |last_observed_at|timestamp without time zone|The date and time that the finding was last observed|
 |remediation_recommendation_text|text|The recommended course of action to remediate the finding|

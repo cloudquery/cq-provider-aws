@@ -22,6 +22,12 @@ func Findings() *schema.Table {
 		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
+				Name:        "arn",
+				Description: "The Amazon Resource Name (ARN) of the finding",
+				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FindingArn"),
+			},
+			{
 				Name:        "region",
 				Description: "The AWS Region of the resource",
 				Type:        schema.TypeString,
@@ -39,10 +45,9 @@ func Findings() *schema.Table {
 				Type:        schema.TypeString,
 			},
 			{
-				Name:        "arn",
+				Name:        "finding_arn",
 				Description: "The Amazon Resource Number (ARN) of the finding",
 				Type:        schema.TypeString,
-				Resolver:    schema.PathResolver("FindingArn"),
 			},
 			{
 				Name:        "first_observed_at",

@@ -26,8 +26,13 @@ resource "aws" "inspector2" "findings" {
     ]
   }
 
-  column "finding_arn" {
-    rename = "arn"
+  userDefinedColumn "arn" {
+    type = "string"
+    description = "The Amazon Resource Name (ARN) of the finding"
+    resolver "resolveStreamArn" {
+      path   = "github.com/cloudquery/cq-provider-sdk/provider/schema.PathResolver"
+      params = ["FindingArn"]
+    }
   }
 
   column "aws_account_id" {
