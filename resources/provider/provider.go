@@ -61,6 +61,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/sns"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sqs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/ssm"
+	"github.com/cloudquery/cq-provider-aws/resources/services/transfer"
 	"github.com/cloudquery/cq-provider-aws/resources/services/waf"
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafregional"
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
@@ -262,6 +263,7 @@ func Provider() *provider.Provider {
 			"sqs.queues":                              sqs.SQSQueues(),
 			"ssm.documents":                           ssm.SsmDocuments(),
 			"ssm.instances":                           ssm.SsmInstances(),
+			"transfer.servers":                        transfer.Servers(),
 			"waf.rule_groups":                         waf.WafRuleGroups(),
 			"waf.rules":                               waf.WafRules(),
 			"waf.subscribed_rule_groups":              waf.WafSubscribedRuleGroups(),
