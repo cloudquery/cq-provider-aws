@@ -1449,6 +1449,7 @@ func resolveFirehoseDeliveryStreamTags(ctx context.Context, meta schema.ClientMe
 // ====================================================================================================================
 //                                                  User Defined Helpers
 // ====================================================================================================================
+
 func listDeliveryStreams(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Firehose
