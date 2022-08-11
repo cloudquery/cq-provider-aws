@@ -52,19 +52,22 @@ func Filesystems() *schema.Table {
 				Resolver:    schema.PathResolver("FailureDetails.Message"),
 			},
 			{
-				Name:        "file_system_id",
+				Name:        "id",
 				Description: "The system-generated, unique 17-digit ID of the file system.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemId"),
 			},
 			{
-				Name:        "file_system_type",
+				Name:        "type",
 				Description: "The type of Amazon FSx file system, which can be LUSTRE, WINDOWS, ONTAP, or OPENZFS.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemType"),
 			},
 			{
-				Name:        "file_system_type_version",
+				Name:        "version",
 				Description: "The Lustre version of the Amazon FSx for Lustre file system, either 2.10 or 2.12.",
 				Type:        schema.TypeString,
+				Resolver:    schema.PathResolver("FileSystemTypeVersion"),
 			},
 			{
 				Name:        "kms_key_id",
@@ -409,6 +412,11 @@ func Filesystems() *schema.Table {
 						Type:        schema.TypeString,
 					},
 					{
+						Name:        "aliases",
+						Description: "An array of one or more DNS aliases that are currently associated with the Amazon FSx file system",
+						Type:        schema.TypeJSON,
+					},
+					{
 						Name:        "audit_log_configuration_file_access_audit_log_level",
 						Description: "Sets which attempt type is logged by Amazon FSx for file and folder accesses.  * SUCCESS_ONLY - only successful attempts to access files or folders are logged.  * FAILURE_ONLY - only failed attempts to access files or folders are logged.  * SUCCESS_AND_FAILURE - both successful attempts and failed attempts to access files or folders are logged.  * DISABLED - access auditing of files and folders is turned off.  This member is required.",
 						Type:        schema.TypeString,
@@ -505,31 +513,6 @@ func Filesystems() *schema.Table {
 						Name:        "weekly_maintenance_start_time",
 						Description: "The preferred start time to perform weekly maintenance, formatted d:HH:MM in the UTC time zone",
 						Type:        schema.TypeString,
-					},
-				},
-				Relations: []*schema.Table{
-					{
-						Name:        "aws_fsx_filesystem_windows_configuration_aliases",
-						Description: "A DNS alias that is associated with the file system",
-						Resolver:    schema.PathTableResolver("Aliases"),
-						Columns: []schema.Column{
-							{
-								Name:        "filesystem_windows_configuration_cq_id",
-								Description: "Unique CloudQuery ID of aws_fsx_filesystem_windows_configuration table (FK)",
-								Type:        schema.TypeUUID,
-								Resolver:    schema.ParentIdResolver,
-							},
-							{
-								Name:        "lifecycle",
-								Description: "Describes the state of the DNS alias.  * AVAILABLE - The DNS alias is associated with an Amazon FSx file system.  * CREATING - Amazon FSx is creating the DNS alias and associating it with the file system.  * CREATE_FAILED - Amazon FSx was unable to associate the DNS alias with the file system.  * DELETING - Amazon FSx is disassociating the DNS alias from the file system and deleting it.  * DELETE_FAILED - Amazon FSx was unable to disassociate the DNS alias from the file system.",
-								Type:        schema.TypeString,
-							},
-							{
-								Name:        "name",
-								Description: "The name of the DNS alias",
-								Type:        schema.TypeString,
-							},
-						},
 					},
 				},
 			},

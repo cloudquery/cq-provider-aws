@@ -9,9 +9,9 @@ A description of a specific Amazon FSx file system.
 |creation_time|timestamp without time zone|The time that the file system was created, in seconds (since 1970-01-01T00:00:00Z), also known as Unix time.|
 |dns_name|text|The Domain Name System (DNS) name for the file system.|
 |failure_details_message|text|A message describing any failures that occurred during file system creation.|
-|file_system_id|text|The system-generated, unique 17-digit ID of the file system.|
-|file_system_type|text|The type of Amazon FSx file system, which can be LUSTRE, WINDOWS, ONTAP, or OPENZFS.|
-|file_system_type_version|text|The Lustre version of the Amazon FSx for Lustre file system, either 2.10 or 2.12.|
+|id|text|The system-generated, unique 17-digit ID of the file system.|
+|type|text|The type of Amazon FSx file system, which can be LUSTRE, WINDOWS, ONTAP, or OPENZFS.|
+|version|text|The Lustre version of the Amazon FSx for Lustre file system, either 2.10 or 2.12.|
 |kms_key_id|text|The ID of the Key Management Service (KMS) key used to encrypt Amazon FSx file system data|
 |lifecycle|text|The lifecycle status of the file system|
 |network_interface_ids|text[]|The IDs of the elastic network interfaces from which a specific file system is accessible|

@@ -37,6 +37,18 @@ resource "aws" "fsx" "filesystems" {
     }
   }
 
+  column "file_system_id" {
+    rename = "id"
+  }
+
+  column "file_system_type" {
+    rename = "type"
+  }
+
+  column "file_system_type_version" {
+    rename = "version"
+  }
+
   column "resource_arn" {
     rename = "arn"
   }
@@ -103,6 +115,10 @@ resource "aws" "fsx" "filesystems" {
 
     column "self_managed_active_directory_configuration" {
       rename = "self_managed_ad_config"
+    }
+
+    column "aliases" {
+      type = "json"
     }
   }
 }
