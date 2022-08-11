@@ -1,4 +1,4 @@
-package kinesis
+package firehose
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 )
 
 //go:generate cq-gen --resource firehoses --config gen.hcl --output .
-func Firehoses() *schema.Table {
+func DeliveryStreams() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_kinesis_firehoses",
 		Description:  "Contains information about a delivery stream",

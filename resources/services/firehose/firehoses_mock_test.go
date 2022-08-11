@@ -1,4 +1,4 @@
-package kinesis
+package firehose
 
 import (
 	"testing"
@@ -48,5 +48,5 @@ func buildKinesisFirehoses(t *testing.T, ctrl *gomock.Controller) client.Service
 }
 
 func TestFirehoses(t *testing.T) {
-	client.AwsMockTestHelper(t, Firehoses(), buildKinesisFirehoses, client.TestOptions{})
+	client.AwsMockTestHelper(t, DeliveryStreams(), buildKinesisFirehoses, client.TestOptions{})
 }
