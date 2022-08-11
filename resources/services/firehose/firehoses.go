@@ -4,19 +4,19 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/firehose"
 	"github.com/aws/aws-sdk-go-v2/service/firehose/types"
+	"github.com/aws/aws-sdk-go/service/firehose"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource firehoses --config gen.hcl --output .
+//go:generate cq-gen --resource delivery_streams --config gen.hcl --output .
 func DeliveryStreams() *schema.Table {
 	return &schema.Table{
-		Name:         "aws_kinesis_firehoses",
+		Name:         "aws_firehose_delivery_streams",
 		Description:  "Contains information about a delivery stream",
-		Resolver:     fetchKinesisFirehoses,
+		Resolver:     fetchFirehoseDeliveryStreams,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("firehose"),
 		IgnoreError:  client.IgnoreCommonErrors,
 		DeleteFilter: client.DeleteAccountRegionFilter,
@@ -37,7 +37,7 @@ func DeliveryStreams() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveKinesisFirehoseTags,
+				Resolver: resolveFirehoseDeliveryStreamTags,
 			},
 			{
 				Name:        "arn",
@@ -144,12 +144,12 @@ func DeliveryStreams() *schema.Table {
 		},
 		Relations: []*schema.Table{
 			{
-				Name:     "aws_kinesis_firehose_open_search_destination",
+				Name:     "aws_firehose_delivery_stream_open_search_destination",
 				Resolver: schema.PathTableResolver("Destinations.AmazonopensearchserviceDestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -327,13 +327,13 @@ func DeliveryStreams() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_kinesis_firehose_elasticsearch_destination",
+				Name:        "aws_firehose_delivery_stream_elasticsearch_destination",
 				Description: "The destination description in Amazon ES",
 				Resolver:    schema.PathTableResolver("Destinations.ElasticsearchDestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -521,13 +521,13 @@ func DeliveryStreams() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_kinesis_firehose_extended_s3_destination",
+				Name:        "aws_firehose_delivery_stream_extended_s3_destination",
 				Description: "Describes a destination in Amazon S3",
 				Resolver:    schema.PathTableResolver("Destinations.ExtendedS3DestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -866,13 +866,13 @@ func DeliveryStreams() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_kinesis_firehose_http_destination",
+				Name:        "aws_firehose_delivery_stream_http_destination",
 				Description: "Describes the HTTP endpoint destination",
 				Resolver:    schema.PathTableResolver("Destinations.HttpEndpointDestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -1034,13 +1034,13 @@ func DeliveryStreams() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_kinesis_firehose_redshift_destination",
+				Name:        "aws_firehose_delivery_stream_redshift_destination",
 				Description: "Describes a destination in Amazon Redshift",
 				Resolver:    schema.PathTableResolver("Destinations.RedshiftDestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -1267,13 +1267,13 @@ func DeliveryStreams() *schema.Table {
 				},
 			},
 			{
-				Name:        "aws_kinesis_firehose_splunk_destination",
+				Name:        "aws_firehose_delivery_stream_splunk_destination",
 				Description: "Describes a destination in Splunk",
 				Resolver:    schema.PathTableResolver("Destinations.SplunkDestinationDescription"),
 				Columns: []schema.Column{
 					{
-						Name:        "firehose_cq_id",
-						Description: "Unique CloudQuery ID of aws_kinesis_firehoses table (FK)",
+						Name:        "delivery_stream_cq_id",
+						Description: "Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)",
 						Type:        schema.TypeUUID,
 						Resolver:    schema.ParentIdResolver,
 					},
@@ -1421,10 +1421,10 @@ func DeliveryStreams() *schema.Table {
 //                                               Table Resolver Functions
 // ====================================================================================================================
 
-func fetchKinesisFirehoses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchFirehoseDeliveryStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDeliveryStreams, deliveryStreamDetail))
 }
-func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveFirehoseDeliveryStreamTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Firehose
 	summary := resource.Item.(*types.DeliveryStreamDescription)
@@ -1449,7 +1449,6 @@ func resolveKinesisFirehoseTags(ctx context.Context, meta schema.ClientMeta, res
 // ====================================================================================================================
 //                                                  User Defined Helpers
 // ====================================================================================================================
-
 func listDeliveryStreams(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
 	c := meta.(*client.Client)
 	svc := c.Services().Firehose

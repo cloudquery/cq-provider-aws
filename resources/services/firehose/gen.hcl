@@ -8,7 +8,7 @@ description_modifier "remove_read_only" {
 }
 
 
-resource "aws" "kinesis" "firehoses" {
+resource "aws" "firehose" "delivery_streams" {
   path = "github.com/aws/aws-sdk-go-v2/service/firehose/types.DeliveryStreamDescription"
   ignoreError "IgnoreCommonErrors" {
     path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
