@@ -252,6 +252,7 @@ func Provider() *provider.Provider {
 			"sagemaker.notebook_instances":            sagemaker.SagemakerNotebookInstances(),
 			"sagemaker.training_jobs":                 sagemaker.SagemakerTrainingJobs(),
 			"secretsmanager.secrets":                  secretsmanager.SecretsmanagerSecrets(),
+			"ses.email_identities":                    ses.EmailIdentities(),
 			"ses.templates":                           ses.Templates(),
 			"shield.attacks":                          shield.Attacks(),
 			"shield.protections_groups":               shield.ProtectionGroups(),
