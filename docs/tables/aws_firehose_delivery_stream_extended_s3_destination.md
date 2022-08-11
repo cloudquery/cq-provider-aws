@@ -1,10 +1,10 @@
 
-# Table: aws_kinesis_firehose_extended_s3_destination
+# Table: aws_firehose_delivery_stream_extended_s3_destination
 Describes a destination in Amazon S3
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
+|delivery_stream_cq_id|uuid|Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)|
 |processing_configuration_processors|jsonb|Describes a data processing configuration|
 |bucket_arn|text|The ARN of the S3 bucket|
 |buffering_hints_interval_in_seconds|bigint|Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination|

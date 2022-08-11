@@ -1,5 +1,5 @@
 
-# Table: aws_kinesis_firehoses
+# Table: aws_firehose_delivery_streams
 Contains information about a delivery stream
 ## Columns
 | Name        | Type           | Description  |

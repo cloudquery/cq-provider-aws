@@ -1,10 +1,10 @@
 
-# Table: aws_kinesis_firehose_open_search_destination
+# Table: aws_firehose_delivery_stream_open_search_destination
 
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
+|delivery_stream_cq_id|uuid|Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)|
 |processing_configuration_processors|jsonb|Describes a data processing configuration|
 |buffering_hints_interval_in_seconds|bigint||
 |buffering_hints_size_in_mb_s|bigint||

@@ -1,24 +1,21 @@
 
-# Table: aws_kinesis_firehose_http_destination
-Describes the HTTP endpoint destination
+# Table: aws_firehose_delivery_stream_splunk_destination
+Describes a destination in Splunk
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
+|delivery_stream_cq_id|uuid|Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)|
 |processing_configuration_processors|jsonb|Describes a data processing configuration|
-|buffering_hints_interval_in_seconds|bigint|Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination|
-|buffering_hints_size_in_mb_s|bigint|Buffer incoming data to the specified size, in MBs, before delivering it to the destination|
 |cloud_watch_logging_options_enabled|boolean|Enables or disables CloudWatch logging|
 |cloud_watch_logging_options_log_group_name|text|The CloudWatch group name for logging|
 |cloud_watch_logging_options_log_stream_name|text|The CloudWatch log stream name for logging|
-|endpoint_configuration_name|text|The name of the HTTP endpoint selected as the destination|
-|endpoint_configuration_url|text|The URL of the HTTP endpoint selected as the destination|
+|h_e_ca_cknowledgment_timeout_in_seconds|bigint|The amount of time that Kinesis Data Firehose waits to receive an acknowledgment from Splunk after it sends it data|
+|h_e_c_endpoint|text|The HTTP Event Collector (HEC) endpoint to which Kinesis Data Firehose sends your data|
+|h_e_c_endpoint_type|text|This type can be either "Raw" or "Event"|
+|h_e_c_token|text|A GUID you obtain from your Splunk cluster when you create a new HEC endpoint|
 |processing_configuration_enabled|boolean|Enables or disables data processing|
-|request_configuration_common_attributes|jsonb|Describes the metadata sent to the HTTP endpoint destination|
-|request_configuration_content_encoding|text|Kinesis Data Firehose uses the content encoding to compress the body of a request before sending the request to the destination|
 |retry_options_duration_in_seconds|bigint|The total amount of time that Kinesis Data Firehose spends on retries|
-|role_arn|text|Kinesis Data Firehose uses this IAM role for all the permissions that the delivery stream needs|
-|s3_backup_mode|text|Describes the S3 bucket backup options for the data that Kinesis Firehose delivers to the HTTP endpoint destination|
+|s3_backup_mode|text|Defines how documents should be delivered to Amazon S3|
 |s3_destination_bucket_arn|text|The ARN of the S3 bucket|
 |s3_destination_buffering_hints_interval_in_seconds|bigint|Buffer incoming data for the specified period of time, in seconds, before delivering it to the destination|
 |s3_destination_buffering_hints_size_in_mb_s|bigint|Buffer incoming data to the specified size, in MiBs, before delivering it to the destination|

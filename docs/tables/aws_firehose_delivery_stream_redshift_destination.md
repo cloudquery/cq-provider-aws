@@ -1,10 +1,10 @@
 
-# Table: aws_kinesis_firehose_redshift_destination
+# Table: aws_firehose_delivery_stream_redshift_destination
 Describes a destination in Amazon Redshift
 ## Columns
 | Name        | Type           | Description  |
 | ------------- | ------------- | -----  |
-|firehose_cq_id|uuid|Unique CloudQuery ID of aws_kinesis_firehoses table (FK)|
+|delivery_stream_cq_id|uuid|Unique CloudQuery ID of aws_firehose_delivery_streams table (FK)|
 |processing_configuration_processors|jsonb|Describes a data processing configuration|
 |cluster_j_db_c_url|text|The database connection string|
 |copy_command_data_table_name|text|The name of the target table|
