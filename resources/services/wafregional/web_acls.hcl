@@ -1,14 +1,16 @@
-service = "aws"
-
+service          = "aws"
 output_directory = "."
+add_generate     = true
 
 resource "aws" "wafregional" "web_acls" {
-  path = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.WebACL"
+  path        = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.WebACL"
+  description = "Contains the Rules that identify the requests that you want to allow, block, or count."
   multiplex "ServiceAccountRegionMultiplexer" {
-    path = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["waf-regional"]
   }
-  ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  ignoreError "IgnoreCommonErrors" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
@@ -46,26 +48,28 @@ resource "aws" "wafregional" "web_acls" {
   }
 
   userDefinedColumn "tags" {
-    type = "json"
+    type              = "json"
     generate_resolver = true
-    description = "Web ACL tags."
+    description       = "Web ACL tags."
   }
 
   relation "aws" "wafregional" "rules" {
-    path = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.ActivatedRule"
+    path        = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.ActivatedRule"
     description = "The action for each Rule in a WebACL"
+
+    ignore_columns_in_tests = ["override_action_type"]
 
     column "action_type" {
       rename = "action"
     }
 
     column "override_action_type" {
-      rename = "override_action"
+      rename      = "override_action"
       description = "Describes an override action for the rule."
     }
 
     column "excluded_rules" {
-      type = "stringarray"
+      type              = "stringarray"
       generate_resolver = true
     }
   }
