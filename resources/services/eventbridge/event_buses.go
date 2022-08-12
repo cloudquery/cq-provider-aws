@@ -60,7 +60,6 @@ func EventBuses() *schema.Table {
 				Name:        "aws_eventbridge_event_bus_rules",
 				Description: "Contains information about a rule in Amazon EventBridge",
 				Resolver:    fetchEventbridgeEventBusRules,
-				Options:     schema.TableCreationOptions{PrimaryKeys: []string{"event_bus_cq_id", "arn"}},
 				Columns: []schema.Column{
 					{
 						Name:        "event_bus_cq_id",
