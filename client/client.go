@@ -47,8 +47,8 @@ import (
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
-	"github.com/aws/aws-sdk-go-v2/service/firehose"
 	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
+	"github.com/aws/aws-sdk-go-v2/service/firehose"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 	"github.com/aws/aws-sdk-go-v2/service/glue"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
@@ -659,7 +659,7 @@ func initServices(region string, c aws.Config) Services {
 		ElasticSearch:          elasticsearchservice.NewFromConfig(awsCfg),
 		ELBv1:                  elbv1.NewFromConfig(awsCfg),
 		ELBv2:                  elbv2.NewFromConfig(awsCfg),
-		EMR:                    emr.NewFromConfig(awsCfg),		
+		EMR:                    emr.NewFromConfig(awsCfg),
 		EventBridge:            eventbridge.NewFromConfig(awsCfg),
 		Firehose:               firehose.NewFromConfig(awsCfg),
 		FSX:                    fsx.NewFromConfig(awsCfg),
