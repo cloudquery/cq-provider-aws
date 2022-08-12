@@ -46,12 +46,6 @@ resource "aws" "eventbridge" "event_buses" {
 
   user_relation "aws" "eventbridge" "rules" {
     path = "github.com/aws/aws-sdk-go-v2/service/eventbridge/types.Rule"
-    options {
-      primary_keys = [
-        "event_bus_cq_id",
-        "arn"
-      ]
-    }
 
     userDefinedColumn "tags" {
       type              = "json"
