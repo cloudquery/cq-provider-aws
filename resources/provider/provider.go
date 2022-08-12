@@ -38,6 +38,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/emr"
 	"github.com/cloudquery/cq-provider-aws/resources/services/eventbridge"
+	"github.com/cloudquery/cq-provider-aws/resources/services/firehose"
 	"github.com/cloudquery/cq-provider-aws/resources/services/fsx"
 	"github.com/cloudquery/cq-provider-aws/resources/services/glue"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
@@ -213,6 +214,7 @@ func Provider() *provider.Provider {
 			"iot.things":                              iot.IotThings(),
 			"iot.topic_rules":                         iot.IotTopicRules(),
 			"kinesis.data_streams":                    kinesis.Streams(),
+			"firehose.delivery_streams":               firehose.DeliveryStreams(),
 			"kms.keys":                                kms.Keys(),
 			"lambda.functions":                        lambda.Functions(),
 			"lambda.layers":                           lambda.LambdaLayers(),
