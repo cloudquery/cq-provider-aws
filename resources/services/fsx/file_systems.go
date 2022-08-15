@@ -693,3 +693,13 @@ func fetchFsxFileSystemOpenZFSConfigs(ctx context.Context, meta schema.ClientMet
 	res <- fs.OpenZFSConfiguration
 	return nil
 }
+
+func resolveFsxFileSystemTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	r := resource.Item.(types.FileSystem)
+	tags := map[string]*string{}
+	for _, t := range r.Tags {
+		tags[*t.Key] = t.Value
+	}
+
+	return diag.WrapError(resource.Set(c.Name, tags))
+}

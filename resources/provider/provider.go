@@ -166,6 +166,7 @@ func Provider() *provider.Provider {
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
 			"fsx.backups":                             fsx.FsxBackups(),
+			"fsx.filesystems":                         fsx.FsxFileSystems(),
 			"guardduty.detectors":                     guardduty.GuarddutyDetectors(),
 			"iam.accounts":                            iam.IamAccounts(),
 			"iam.groups":                              iam.IamGroups(),
