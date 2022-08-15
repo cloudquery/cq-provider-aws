@@ -21,9 +21,11 @@ var (
 
 	requestIdRegex = regexp.MustCompile(`\s([Rr]equest[ _]{0,1}(ID|Id|id):)\s[A-Za-z0-9-]+`)
 	hostIdRegex    = regexp.MustCompile(`\sHostID: [A-Za-z0-9+/_=-]+`)
-	arnIdRegex     = regexp.MustCompile(`(\s)(arn:aws[A-Za-z0-9-]*:)[^ \.\(\)\[\]\{\}\;\,]+(\s?)`)
-	urlRegex       = regexp.MustCompile(`([\s"])http(s?):\/\/[a-z0-9_\-\./]+([":\s]?)`)
-	lookupRegex    = regexp.MustCompile(
+	arnIdRegex     = regexp.MustCompile(
+		`\b(arn:aws[A-Za-z0-9-]*:)` + // "arn:aws:"
+			`[^ \.\(\)\[\]\{\}\;\,'"]+`) // continuation in the form of a bunch of characters except space, dot, brackets, square brackets, curly brackets, semicolon, comma and single/double quotes
+	urlRegex    = regexp.MustCompile(`([\s"])http(s?):\/\/[a-z0-9_\-\./]+([":\s]?)`)
+	lookupRegex = regexp.MustCompile(
 		`\blookup\s[-A-Za-z0-9\.]+\s` + // " lookup host.name "
 			`on\s\S+:\d+`, // "on 123.123.123.123:53"
 	)
@@ -42,6 +44,7 @@ var (
 	resourceNotExistsRegex   = regexp.MustCompile(`(\sThe )([A-Za-z0-9 -]+ )'([A-Za-z0-9-]+?)'( does not exist)`)
 	resourceNotFoundRegex    = regexp.MustCompile(`([A-Za-z0-9 -]+)( name not found - Could not find )([A-Za-z0-9 -]+)( named )'([A-Za-z0-9-]+?)'`)
 	autoscalingGroupNotFound = regexp.MustCompile(`(ValidationError: Group ).+( not found)`)
+	dnsErrorRegex            = regexp.MustCompile(`dial (?:tcp|udp): lookup .* on .*: [^:]+$`)
 )
 
 var errorCodeDescriptions = map[string]string{
@@ -53,6 +56,7 @@ var errorCodeDescriptions = map[string]string{
 	"AccessDenied":                  "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
 	"AuthorizationError":            "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
 	"AuthFailure":                   "You are not authorized to perform this operation. Check your IAM policies, and ensure that you are using the correct access keys.",
+	"InvalidToken":                  "The provided token is malformed or otherwise invalid.",
 }
 
 var throttleCodes = map[string]struct{}{
@@ -76,7 +80,7 @@ func classifyError(err error, fallbackType diag.Type, accounts []string, opts ..
 	var ae smithy.APIError
 	if errors.As(err, &ae) {
 		switch ae.ErrorCode() {
-		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure", "ExpiredToken", "ExpiredTokenException", "FailedResourceAccessException":
+		case "AccessDenied", "AccessDeniedException", "UnauthorizedOperation", "AuthorizationError", "OptInRequired", "SubscriptionRequiredException", "InvalidClientTokenId", "AuthFailure", "ExpiredToken", "ExpiredTokenException", "FailedResourceAccessException", "InvalidToken":
 			return diag.Diagnostics{
 				RedactError(accounts, diag.NewBaseError(err,
 					diag.ACCESS,
@@ -182,6 +186,19 @@ func classifyError(err error, fallbackType diag.Type, accounts []string, opts ..
 			),
 		}
 	}
+	if dnsErrorRegex.MatchString(err.Error()) {
+		return diag.Diagnostics{
+			RedactError(accounts, diag.NewBaseError(err,
+				diag.USER,
+				append(opts,
+					diag.WithType(diag.USER),
+					diag.WithSeverity(diag.ERROR),
+					ParseSummaryMessage(err),
+					diag.WithDetails("Encountered a DNS error. Please check your DNS and networking settings and try again."),
+				)...),
+			),
+		}
+	}
 
 	// Take over from SDK and always return diagnostics, redacting PII
 	if d, ok := err.(diag.Diagnostic); ok {
@@ -262,7 +279,7 @@ func removePII(aa []string, msg string) string {
 	}
 	msg = requestIdRegex.ReplaceAllString(msg, " ${1} xxxx")
 	msg = hostIdRegex.ReplaceAllString(msg, " HostID: xxxx")
-	msg = arnIdRegex.ReplaceAllString(msg, "${1}${2}xxxx${3}")
+	msg = arnIdRegex.ReplaceAllString(msg, "${1}xxxx${2}")
 	msg = urlRegex.ReplaceAllString(msg, "${1}http${2}://xxxx${3}")
 	msg = lookupRegex.ReplaceAllString(msg, "lookup xxxx on xxxx:xx")
 	msg = readXonYRegex.ReplaceAllString(msg, "read $1 xxxx:xx->xxxx:xx")

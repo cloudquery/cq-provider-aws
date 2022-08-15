@@ -110,7 +110,7 @@ func Ec2Eips() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the Elastic IP address.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEc2eipTags,
+				Resolver:    client.ResolveTags,
 			},
 		},
 	}
@@ -124,20 +124,10 @@ func fetchEc2Eips(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	svc := c.Services().EC2
 	output, err := svc.DescribeAddresses(ctx, &ec2.DescribeAddressesInput{
 		Filters: []types.Filter{{Name: aws.String("domain"), Values: []string{"vpc"}}},
-	}, func(options *ec2.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		return diag.WrapError(err)
 	}
 	res <- output.Addresses
 	return nil
-}
-func resolveEc2eipTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.Address)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
 }

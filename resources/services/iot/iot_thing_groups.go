@@ -2,7 +2,6 @@ package iot
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
@@ -103,7 +102,7 @@ func IotThingGroups() *schema.Table {
 				Name:        "root_to_parent_thing_groups",
 				Description: "The root parent thing group.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveIotThingGroupsRootToParentThingGroups,
+				Resolver:    schema.PathResolver("ThingGroupMetadata.RootToParentThingGroups"),
 			},
 			{
 				Name:        "name",
@@ -150,9 +149,7 @@ func fetchIotThingGroups(ctx context.Context, meta schema.ClientMeta, parent *sc
 
 	svc := c.Services().IOT
 	for {
-		response, err := svc.ListThingGroups(ctx, &input, func(options *iot.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListThingGroups(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -186,9 +183,7 @@ func ResolveIotThingGroupThingsInGroup(ctx context.Context, meta schema.ClientMe
 
 	var things []string
 	for {
-		response, err := svc.ListThingsInThingGroup(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListThingsInThingGroup(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -213,9 +208,7 @@ func ResolveIotThingGroupPolicies(ctx context.Context, meta schema.ClientMeta, r
 
 	var policies []string
 	for {
-		response, err := svc.ListAttachedPolicies(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListAttachedPolicies(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -241,9 +234,7 @@ func ResolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resou
 	tags := make(map[string]string)
 
 	for {
-		response, err := svc.ListTagsForResource(ctx, &input, func(options *iot.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTagsForResource(ctx, &input)
 
 		if err != nil {
 			return diag.WrapError(err)
@@ -257,17 +248,4 @@ func ResolveIotThingGroupTags(ctx context.Context, meta schema.ClientMeta, resou
 		input.NextToken = response.NextToken
 	}
 	return diag.WrapError(resource.Set(c.Name, tags))
-}
-func resolveIotThingGroupsRootToParentThingGroups(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	i := resource.Item.(*iot.DescribeThingGroupOutput)
-	if i.ThingGroupMetadata == nil {
-		return nil
-	}
-
-	data, err := json.Marshal(i.ThingGroupMetadata.RootToParentThingGroups)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-
-	return diag.WrapError(resource.Set(c.Name, data))
 }

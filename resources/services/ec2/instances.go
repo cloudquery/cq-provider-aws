@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/cloudquery/cq-provider-aws/client"
@@ -190,7 +191,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "licenses",
 				Description: "The license configurations.",
 				Type:        schema.TypeStringArray,
-				Resolver:    resolveEc2InstancesLicenses,
+				Resolver:    schema.PathResolver("Licenses.LicenseConfigurationArn"),
 			},
 			{
 				Name:        "metadata_options_http_endpoint",
@@ -386,7 +387,7 @@ func Ec2Instances() *schema.Table {
 				Name:        "tags",
 				Description: "Any tags assigned to the instance.",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveEc2InstancesTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "virtualization_type",
@@ -403,7 +404,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:        "aws_ec2_instance_block_device_mappings",
 				Description: "Describes a block device mapping.",
-				Resolver:    fetchEc2InstanceBlockDeviceMappings,
+				Resolver:    schema.PathTableResolver("BlockDeviceMappings"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -445,7 +446,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:          "aws_ec2_instance_elastic_gpu_associations",
 				Description:   "Describes the association between an instance and an Elastic Graphics accelerator.",
-				Resolver:      fetchEc2InstanceElasticGpuAssociations,
+				Resolver:      schema.PathTableResolver("ElasticGpuAssociations"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -480,7 +481,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:          "aws_ec2_instance_elastic_inference_accelerator_associations",
 				Description:   "Describes the association between an instance and an elastic inference accelerator.",
-				Resolver:      fetchEc2InstanceElasticInferenceAcceleratorAssociations,
+				Resolver:      schema.PathTableResolver("ElasticInferenceAcceleratorAssociations"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -514,7 +515,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:        "aws_ec2_instance_network_interfaces",
 				Description: "Describes a network interface.",
-				Resolver:    fetchEc2InstanceNetworkInterfaces,
+				Resolver:    schema.PathTableResolver("NetworkInterfaces"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -608,13 +609,13 @@ func Ec2Instances() *schema.Table {
 						Name:        "ipv4_prefixes",
 						Description: "The IPv4 delegated prefixes that are assigned to the network interface.",
 						Type:        schema.TypeStringArray,
-						Resolver:    resolveEc2InstanceNetworkInterfacesIpv4Prefixes,
+						Resolver:    schema.PathResolver("Ipv4Prefixes.Ipv4Prefix"),
 					},
 					{
 						Name:        "ipv6_prefixes",
 						Description: "The IPv6 delegated prefixes that are assigned to the network interface.",
 						Type:        schema.TypeStringArray,
-						Resolver:    resolveEc2InstanceNetworkInterfacesIpv6Prefixes,
+						Resolver:    schema.PathResolver("Ipv6Prefixes.Ipv6Prefix"),
 					},
 					{
 						Name:        "mac_address",
@@ -667,7 +668,7 @@ func Ec2Instances() *schema.Table {
 					{
 						Name:        "aws_ec2_instance_network_interface_groups",
 						Description: "Describes a security group.",
-						Resolver:    fetchEc2InstanceNetworkInterfaceGroups,
+						Resolver:    schema.PathTableResolver("Groups"),
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
@@ -696,7 +697,7 @@ func Ec2Instances() *schema.Table {
 					{
 						Name:          "aws_ec2_instance_network_interface_ipv6_addresses",
 						Description:   "Describes an IPv6 address.",
-						Resolver:      fetchEc2InstanceNetworkInterfaceIpv6Addresses,
+						Resolver:      schema.PathTableResolver("Ipv6Addresses"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -715,7 +716,7 @@ func Ec2Instances() *schema.Table {
 					{
 						Name:        "aws_ec2_instance_network_interface_private_ip_addresses",
 						Description: "Describes a private IPv4 address.",
-						Resolver:    fetchEc2InstanceNetworkInterfacePrivateIpAddresses,
+						Resolver:    schema.PathTableResolver("PrivateIpAddresses"),
 						Columns: []schema.Column{
 							{
 								Name:        "instance_network_interface_cq_id",
@@ -774,7 +775,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:          "aws_ec2_instance_product_codes",
 				Description:   "Describes a product code.",
-				Resolver:      fetchEc2InstanceProductCodes,
+				Resolver:      schema.PathTableResolver("ProductCodes"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -798,7 +799,7 @@ func Ec2Instances() *schema.Table {
 			{
 				Name:        "aws_ec2_instance_security_groups",
 				Description: "Describes a security group.",
-				Resolver:    fetchEc2InstanceSecurityGroups,
+				Resolver:    schema.PathTableResolver("SecurityGroups"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -827,20 +828,25 @@ func Ec2Instances() *schema.Table {
 // ====================================================================================================================
 
 func fetchEc2Instances(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var config ec2.DescribeInstancesInput
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
+	for {
+		output, err := svc.DescribeInstances(ctx, &config, func(options *ec2.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, reservation := range output.Reservations {
+			res <- reservation.Instances
+		}
 
-	response, err := svc.DescribeInstances(ctx, &ec2.DescribeInstancesInput{}, func(o *ec2.Options) {
-		o.Region = c.Region
-	})
-	if err != nil {
-		return diag.WrapError(err)
+		if aws.ToString(output.NextToken) == "" {
+			break
+		}
+		config.NextToken = output.NextToken
 	}
-
-	for _, reservation := range response.Reservations {
-		res <- reservation.Instances
-	}
-
 	return nil
 }
 func resolveEc2InstanceStateTransitionReasonTime(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -861,81 +867,4 @@ func resolveEc2InstanceStateTransitionReasonTime(ctx context.Context, meta schem
 		return nil
 	}
 	return diag.WrapError(resource.Set(c.Name, tm))
-}
-func resolveEc2InstancesLicenses(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	instance := resource.Item.(types.Instance)
-	licenses := make([]string, len(instance.Licenses))
-	for i, l := range instance.Licenses {
-		licenses[i] = *l.LicenseConfigurationArn
-	}
-	return diag.WrapError(resource.Set(c.Name, licenses))
-}
-func resolveEc2InstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.Instance)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-func fetchEc2InstanceBlockDeviceMappings(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.BlockDeviceMappings
-	return nil
-}
-func fetchEc2InstanceElasticGpuAssociations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.ElasticGpuAssociations
-	return nil
-}
-func fetchEc2InstanceElasticInferenceAcceleratorAssociations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.ElasticInferenceAcceleratorAssociations
-	return nil
-}
-func fetchEc2InstanceNetworkInterfaces(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.NetworkInterfaces
-	return nil
-}
-func resolveEc2InstanceNetworkInterfacesIpv4Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	instanceNetworkInterface := resource.Item.(types.InstanceNetworkInterface)
-	ips := make([]string, 0, len(instanceNetworkInterface.Ipv4Prefixes))
-	for _, p := range instanceNetworkInterface.Ipv4Prefixes {
-		ips = append(ips, *p.Ipv4Prefix)
-	}
-	return diag.WrapError(resource.Set(c.Name, ips))
-}
-func resolveEc2InstanceNetworkInterfacesIpv6Prefixes(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	instanceNetworkInterface := resource.Item.(types.InstanceNetworkInterface)
-	ips := make([]string, 0, len(instanceNetworkInterface.Ipv6Prefixes))
-	for _, p := range instanceNetworkInterface.Ipv6Prefixes {
-		ips = append(ips, *p.Ipv6Prefix)
-	}
-	return diag.WrapError(resource.Set(c.Name, ips))
-}
-func fetchEc2InstanceNetworkInterfaceGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instanceNetworkInterface := parent.Item.(types.InstanceNetworkInterface)
-	res <- instanceNetworkInterface.Groups
-	return nil
-}
-func fetchEc2InstanceNetworkInterfaceIpv6Addresses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instanceNetworkInterface := parent.Item.(types.InstanceNetworkInterface)
-	res <- instanceNetworkInterface.Ipv6Addresses
-	return nil
-}
-func fetchEc2InstanceNetworkInterfacePrivateIpAddresses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instanceNetworkInterface := parent.Item.(types.InstanceNetworkInterface)
-	res <- instanceNetworkInterface.PrivateIpAddresses
-	return nil
-}
-func fetchEc2InstanceProductCodes(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.ProductCodes
-	return nil
-}
-func fetchEc2InstanceSecurityGroups(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.SecurityGroups
-	return nil
 }

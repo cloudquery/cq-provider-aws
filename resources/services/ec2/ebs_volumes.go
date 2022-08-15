@@ -91,7 +91,7 @@ func Ec2EbsVolumes() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveEc2EbsVolumeTags,
+				Resolver: client.ResolveTags,
 			},
 			{
 				Name:          "throughput",
@@ -106,7 +106,7 @@ func Ec2EbsVolumes() *schema.Table {
 		Relations: []*schema.Table{
 			{
 				Name:     "aws_ec2_ebs_volume_attachments",
-				Resolver: fetchEc2EbsVolumeAttachments,
+				Resolver: schema.PathTableResolver("Attachments"),
 				Columns: []schema.Column{
 					{
 						Name:     "ebs_volume_cq_id",
@@ -151,9 +151,7 @@ func fetchEc2EbsVolumes(ctx context.Context, meta schema.ClientMeta, _ *schema.R
 	svc := c.Services().EC2
 	config := ec2.DescribeVolumesInput{}
 	for {
-		response, err := svc.DescribeVolumes(ctx, &config, func(o *ec2.Options) {
-			o.Region = c.Region
-		})
+		response, err := svc.DescribeVolumes(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -163,19 +161,6 @@ func fetchEc2EbsVolumes(ctx context.Context, meta schema.ClientMeta, _ *schema.R
 		}
 		config.NextToken = response.NextToken
 	}
-	return nil
-}
-func resolveEc2EbsVolumeTags(_ context.Context, _ schema.ClientMeta, resource *schema.Resource, _ schema.Column) error {
-	r := resource.Item.(types.Volume)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
-}
-func fetchEc2EbsVolumeAttachments(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	volume := parent.Item.(types.Volume)
-	res <- volume.Attachments
 	return nil
 }
 

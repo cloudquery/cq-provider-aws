@@ -9,11 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
-	"golang.org/x/sync/errgroup"
-	"golang.org/x/sync/semaphore"
 )
-
-const MAX_GOROUTINES = 10
 
 //go:generate cq-gen --resource data_catalogs --config gen.hcl --output .
 func DataCatalogs() *schema.Table {
@@ -42,13 +38,13 @@ func DataCatalogs() *schema.Table {
 				Name:        "arn",
 				Description: "ARN of the resource.",
 				Type:        schema.TypeString,
-				Resolver:    ResolveAthenaDataCatalogArn,
+				Resolver:    resolveAthenaDataCatalogArn,
 			},
 			{
-				Name:          "tags",
-				Type:          schema.TypeJSON,
-				Resolver:      ResolveAthenaDataCatalogTags,
-				IgnoreInTests: true,
+				Name:        "tags",
+				Description: "Tags associated with the Athena data catalog.",
+				Type:        schema.TypeJSON,
+				Resolver:    resolveAthenaDataCatalogTags,
 			},
 			{
 				Name:        "name",
@@ -147,7 +143,7 @@ func DataCatalogs() *schema.Table {
 							{
 								Name:          "aws_athena_data_catalog_database_table_columns",
 								Description:   "Contains metadata for a column in a table",
-								Resolver:      fetchAthenaDataCatalogDatabaseTableColumns,
+								Resolver:      schema.PathTableResolver("Columns"),
 								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
@@ -176,7 +172,7 @@ func DataCatalogs() *schema.Table {
 							{
 								Name:          "aws_athena_data_catalog_database_table_partition_keys",
 								Description:   "Contains metadata for a column in a table",
-								Resolver:      fetchAthenaDataCatalogDatabaseTablePartitionKeys,
+								Resolver:      schema.PathTableResolver("PartitionKeys"),
 								IgnoreInTests: true,
 								Columns: []schema.Column{
 									{
@@ -215,46 +211,14 @@ func DataCatalogs() *schema.Table {
 // ====================================================================================================================
 
 func fetchAthenaDataCatalogs(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	c := meta.(*client.Client)
-	svc := c.Services().Athena
-	input := athena.ListDataCatalogsInput{}
-	var sem = semaphore.NewWeighted(int64(MAX_GOROUTINES))
-	for {
-		response, err := svc.ListDataCatalogs(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
-		if err != nil {
-			return diag.WrapError(err)
-		}
-		errs, ctx := errgroup.WithContext(ctx)
-		for _, d := range response.DataCatalogsSummary {
-			if err := sem.Acquire(ctx, 1); err != nil {
-				return diag.WrapError(err)
-			}
-			func(summary types.DataCatalogSummary) {
-				errs.Go(func() error {
-					defer sem.Release(1)
-					return fetchDataCatalog(ctx, res, c, summary)
-				})
-			}(d)
-		}
-		err = errs.Wait()
-		if err != nil {
-			return diag.WrapError(err)
-		}
-		if aws.ToString(response.NextToken) == "" {
-			break
-		}
-		input.NextToken = response.NextToken
-	}
-	return nil
+	return diag.WrapError(client.ListAndDetailResolver(ctx, meta, res, listDataCatalogs, dataCatalogDetail))
 }
-func ResolveAthenaDataCatalogArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveAthenaDataCatalogArn(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	dc := resource.Item.(types.DataCatalog)
 	return diag.WrapError(resource.Set(c.Name, createDataCatalogArn(cl, *dc.Name)))
 }
-func ResolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveAthenaDataCatalogTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	svc := cl.Services().Athena
 	dc := resource.Item.(types.DataCatalog)
@@ -284,9 +248,7 @@ func fetchAthenaDataCatalogDatabases(ctx context.Context, meta schema.ClientMeta
 		CatalogName: parent.Item.(types.DataCatalog).Name,
 	}
 	for {
-		response, err := svc.ListDatabases(ctx, &input, func(options *athena.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListDatabases(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -307,9 +269,7 @@ func fetchAthenaDataCatalogDatabaseTables(ctx context.Context, meta schema.Clien
 		DatabaseName: parent.Item.(types.Database).Name,
 	}
 	for {
-		response, err := svc.ListTableMetadata(ctx, &input, func(options *athena.Options) {
-			options.Region = cl.Region
-		})
+		response, err := svc.ListTableMetadata(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -322,42 +282,54 @@ func fetchAthenaDataCatalogDatabaseTables(ctx context.Context, meta schema.Clien
 	}
 	return nil
 }
-func fetchAthenaDataCatalogDatabaseTableColumns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	res <- parent.Item.(types.TableMetadata).Columns
-	return nil
-}
-func fetchAthenaDataCatalogDatabaseTablePartitionKeys(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	res <- parent.Item.(types.TableMetadata).PartitionKeys
-	return nil
-}
 
 // ====================================================================================================================
 //                                                  User Defined Helpers
 // ====================================================================================================================
 
-func fetchDataCatalog(ctx context.Context, res chan<- interface{}, c *client.Client, catalogSummary types.DataCatalogSummary) error {
+func listDataCatalogs(ctx context.Context, meta schema.ClientMeta, detailChan chan<- interface{}) error {
+	c := meta.(*client.Client)
+	svc := c.Services().Athena
+	input := athena.ListDataCatalogsInput{}
+	for {
+		response, err := svc.ListDataCatalogs(ctx, &input, func(options *athena.Options) {
+			options.Region = c.Region
+		})
+		if err != nil {
+			return diag.WrapError(err)
+		}
+		for _, item := range response.DataCatalogsSummary {
+			detailChan <- item
+		}
+		if aws.ToString(response.NextToken) == "" {
+			break
+		}
+		input.NextToken = response.NextToken
+	}
+	return nil
+}
+func dataCatalogDetail(ctx context.Context, meta schema.ClientMeta, resultsChan chan<- interface{}, errorChan chan<- error, listInfo interface{}) {
+	c := meta.(*client.Client)
+	catalogSummary := listInfo.(types.DataCatalogSummary)
 	svc := c.Services().Athena
 	dc, err := svc.GetDataCatalog(ctx, &athena.GetDataCatalogInput{
 		Name: catalogSummary.CatalogName,
-	}, func(options *athena.Options) {
-		options.Region = c.Region
 	})
 	if err != nil {
 		// retrieving of default data catalog (AwsDataCatalog) returns "not found error" but it exists and its
 		// relations can be fetched by its name
 		if *catalogSummary.CatalogName == "AwsDataCatalog" {
-			res <- types.DataCatalog{Name: catalogSummary.CatalogName, Type: catalogSummary.Type}
-			return nil
+			resultsChan <- types.DataCatalog{Name: catalogSummary.CatalogName, Type: catalogSummary.Type}
+			return
 		}
 		if c.IsNotFoundError(err) {
-			return nil
+			return
 		}
-		return diag.WrapError(err)
+		errorChan <- diag.WrapError(err)
+		return
 	}
-	res <- *dc.DataCatalog
-	return nil
+	resultsChan <- *dc.DataCatalog
 }
-
 func createDataCatalogArn(cl *client.Client, catalogName string) string {
 	return cl.ARN(client.Athena, "datacatalog", catalogName)
 }

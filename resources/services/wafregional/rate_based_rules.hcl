@@ -1,14 +1,16 @@
-service = "aws"
-
+service          = "aws"
 output_directory = "."
+add_generate     = true
 
 resource "aws" "wafregional" "rate_based_rules" {
-  path = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.RateBasedRule"
+  path        = "github.com/aws/aws-sdk-go-v2/service/wafregional/types.RateBasedRule"
+  description = "A combination of identifiers for web requests that you want to allow, block, or count, including rate limit."
   multiplex "ServiceAccountRegionMultiplexer" {
-    path = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    path   = "github.com/cloudquery/cq-provider-aws/client.ServiceAccountRegionMultiplexer"
+    params = ["waf-regional"]
   }
-  ignoreError "IgnoreAccessDenied" {
-    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreAccessDeniedServiceDisabled"
+  ignoreError "IgnoreCommonErrors" {
+    path = "github.com/cloudquery/cq-provider-aws/client.IgnoreCommonErrors"
   }
   deleteFilter "AccountRegionFilter" {
     path = "github.com/cloudquery/cq-provider-aws/client.DeleteAccountRegionFilter"
@@ -38,14 +40,18 @@ resource "aws" "wafregional" "rate_based_rules" {
   }
 
   userDefinedColumn "arn" {
-    type = "string"
-    description = "ARN of the rate based rule."
+    type              = "string"
+    description       = "ARN of the rate based rule."
     generate_resolver = true
   }
 
   userDefinedColumn "tags" {
-    type = "json"
+    type              = "json"
     generate_resolver = true
-    description = "Rule tags."
+    description       = "Rule tags."
+  }
+
+  relation "aws" "wafregional" "match_predicates" {
+    description = "Contains one Predicate element for each ByteMatchSet, IPSet, or SqlInjectionMatchSet object that you want to include in a RateBasedRule."
   }
 }

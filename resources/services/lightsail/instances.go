@@ -2,6 +2,7 @@ package lightsail
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
@@ -11,11 +12,10 @@ import (
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
 )
 
-//go:generate cq-gen --resource instances --config resources/services/lightsail/gen.hcl --output .
 func Instances() *schema.Table {
 	return &schema.Table{
 		Name:         "aws_lightsail_instances",
-		Description:  "Describes an instance (a virtual private server).",
+		Description:  "Describes an instance (a virtual private server)",
 		Resolver:     fetchLightsailInstances,
 		Multiplex:    client.ServiceAccountRegionMultiplexer("lightsail"),
 		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
@@ -35,39 +35,44 @@ func Instances() *schema.Table {
 				Resolver:    client.ResolveAWSRegion,
 			},
 			{
+				Name:     "access_details",
+				Type:     schema.TypeJSON,
+				Resolver: resolveLightsailInstanceAccessDetails,
+			},
+			{
 				Name:        "arn",
-				Description: "The Amazon Resource Name (ARN) of the instance (e.g., arn:aws:lightsail:us-east-2:123456789101:Instance/244ad76f-8aad-4741-809f-12345EXAMPLE).",
+				Description: "The Amazon Resource Name (ARN) of the instance (eg, arn:aws:lightsail:us-east-2:123456789101:Instance/244ad76f-8aad-4741-809f-12345EXAMPLE)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "blueprint_id",
-				Description: "The blueprint ID (e.g., os_amlinux_2016_03).",
+				Description: "The blueprint ID (eg, os_amlinux_2016_03)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "blueprint_name",
-				Description: "The friendly name of the blueprint (e.g., Amazon Linux).",
+				Description: "The friendly name of the blueprint (eg, Amazon Linux)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "bundle_id",
-				Description: "The bundle for the instance (e.g., micro_1_0).",
+				Description: "The bundle for the instance (eg, micro_1_0)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "created_at",
-				Description: "The timestamp when the instance was created (e.g., 1479734909.17) in Unix time format.",
+				Description: "The timestamp when the instance was created (eg, 147973490917) in Unix time format",
 				Type:        schema.TypeTimestamp,
 			},
 			{
 				Name:        "hardware_cpu_count",
-				Description: "The number of vCPUs the instance has.",
-				Type:        schema.TypeInt,
+				Description: "The number of vCPUs the instance has",
+				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("Hardware.CpuCount"),
 			},
 			{
 				Name:        "hardware_ram_size_in_gb",
-				Description: "The amount of RAM in GB on the instance (e.g., 1.0).",
+				Description: "The amount of RAM in GB on the instance (eg, 10)",
 				Type:        schema.TypeFloat,
 				Resolver:    schema.PathResolver("Hardware.RamSizeInGb"),
 			},
@@ -78,12 +83,12 @@ func Instances() *schema.Table {
 			},
 			{
 				Name:        "ipv6_addresses",
-				Description: "The IPv6 addresses of the instance.",
+				Description: "The IPv6 addresses of the instance",
 				Type:        schema.TypeStringArray,
 			},
 			{
 				Name:        "is_static_ip",
-				Description: "A Boolean value indicating whether this instance has a static IP assigned to it.",
+				Description: "A Boolean value indicating whether this instance has a static IP assigned to it",
 				Type:        schema.TypeBool,
 			},
 			{
@@ -94,50 +99,50 @@ func Instances() *schema.Table {
 			},
 			{
 				Name:        "location_region_name",
-				Description: "The AWS Region name.",
+				Description: "The AWS Region name",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("Location.RegionName"),
 			},
 			{
 				Name:        "name",
-				Description: "The name the user gave the instance (e.g., Amazon_Linux-1GB-Ohio-1).",
+				Description: "The name the user gave the instance (eg, Amazon_Linux-1GB-Ohio-1)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "networking_monthly_transfer_gb_per_month_allocated",
-				Description: "The amount allocated per month (in GB).",
-				Type:        schema.TypeInt,
+				Description: "The amount allocated per month (in GB)",
+				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("Networking.MonthlyTransfer.GbPerMonthAllocated"),
 			},
 			{
 				Name:        "private_ip_address",
-				Description: "The private IP address of the instance.",
+				Description: "The private IP address of the instance",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "public_ip_address",
-				Description: "The public IP address of the instance.",
+				Description: "The public IP address of the instance",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "resource_type",
-				Description: "The type of resource (usually Instance).",
+				Description: "The type of resource (usually Instance)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "ssh_key_name",
-				Description: "The name of the SSH key being used to connect to the instance (e.g., LightsailDefaultKeyPair).",
+				Description: "The name of the SSH key being used to connect to the instance (eg, LightsailDefaultKeyPair)",
 				Type:        schema.TypeString,
 			},
 			{
 				Name:        "state_code",
-				Description: "The status code for the instance.",
-				Type:        schema.TypeInt,
+				Description: "The status code for the instance",
+				Type:        schema.TypeBigInt,
 				Resolver:    schema.PathResolver("State.Code"),
 			},
 			{
 				Name:        "state_name",
-				Description: "The state of the instance (e.g., running or pending).",
+				Description: "The state of the instance (eg, running or pending)",
 				Type:        schema.TypeString,
 				Resolver:    schema.PathResolver("State.Name"),
 			},
@@ -150,19 +155,19 @@ func Instances() *schema.Table {
 				Name:        "tags",
 				Description: "The tag keys and optional values for the resource",
 				Type:        schema.TypeJSON,
-				Resolver:    resolveInstancesTags,
+				Resolver:    client.ResolveTags,
 			},
 			{
 				Name:        "username",
-				Description: "The user name for connecting to the instance (e.g., ec2-user).",
+				Description: "The user name for connecting to the instance (eg, ec2-user)",
 				Type:        schema.TypeString,
 			},
 		},
 		Relations: []*schema.Table{
 			{
 				Name:          "aws_lightsail_instance_add_ons",
-				Description:   "Describes an add-on that is enabled for an Amazon Lightsail resource.",
-				Resolver:      fetchLightsailInstanceAddOns,
+				Description:   "Describes an add-on that is enabled for an Amazon Lightsail resource",
+				Resolver:      schema.PathTableResolver("AddOns"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -173,7 +178,7 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "name",
-						Description: "The name of the add-on.",
+						Description: "The name of the add-on",
 						Type:        schema.TypeString,
 					},
 					{
@@ -188,15 +193,15 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "status",
-						Description: "The status of the add-on.",
+						Description: "The status of the add-on",
 						Type:        schema.TypeString,
 					},
 				},
 			},
 			{
 				Name:        "aws_lightsail_instance_hardware_disks",
-				Description: "Describes a block storage disk.",
-				Resolver:    fetchLightsailInstanceHardwareDisks,
+				Description: "Describes a block storage disk",
+				Resolver:    schema.PathTableResolver("Hardware.Disks"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -206,32 +211,38 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "arn",
-						Description: "The Amazon Resource Name (ARN) of the disk.",
+						Description: "The Amazon Resource Name (ARN) of the disk",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "attached_to",
-						Description: "The resources to which the disk is attached.",
+						Description: "The resources to which the disk is attached",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "created_at",
-						Description: "The date when the disk was created.",
+						Description: "The date when the disk was created",
 						Type:        schema.TypeTimestamp,
 					},
 					{
+						Name:          "gb_in_use",
+						Description:   "(Deprecated) The number of GB in use by the disk",
+						Type:          schema.TypeBigInt,
+						IgnoreInTests: true,
+					},
+					{
 						Name:        "iops",
-						Description: "The input/output operations per second (IOPS) of the disk.",
-						Type:        schema.TypeInt,
+						Description: "The input/output operations per second (IOPS) of the disk",
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "is_attached",
-						Description: "A Boolean value indicating whether the disk is attached.",
+						Description: "A Boolean value indicating whether the disk is attached",
 						Type:        schema.TypeBool,
 					},
 					{
 						Name:        "is_system_disk",
-						Description: "A Boolean value indicating whether this disk is a system disk (has an operating system loaded on it).",
+						Description: "A Boolean value indicating whether this disk is a system disk (has an operating system loaded on it)",
 						Type:        schema.TypeBool,
 					},
 					{
@@ -242,33 +253,33 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "location_region_name",
-						Description: "The AWS Region name.",
+						Description: "The AWS Region name",
 						Type:        schema.TypeString,
 						Resolver:    schema.PathResolver("Location.RegionName"),
 					},
 					{
 						Name:        "name",
-						Description: "The unique name of the disk.",
+						Description: "The unique name of the disk",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "path",
-						Description: "The disk path.",
+						Description: "The disk path",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "resource_type",
-						Description: "The Lightsail resource type (e.g., Disk).",
+						Description: "The Lightsail resource type (eg, Disk)",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "size_in_gb",
-						Description: "The size of the disk in GB.",
-						Type:        schema.TypeInt,
+						Description: "The size of the disk in GB",
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "state",
-						Description: "Describes the status of the disk.",
+						Description: "Describes the status of the disk",
 						Type:        schema.TypeString,
 					},
 					{
@@ -280,14 +291,14 @@ func Instances() *schema.Table {
 						Name:        "tags",
 						Description: "The tag keys and optional values for the resource",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveInstanceHardwareDisksTags,
+						Resolver:    client.ResolveTags,
 					},
 				},
 				Relations: []*schema.Table{
 					{
 						Name:          "aws_lightsail_instance_hardware_disk_add_ons",
-						Description:   "Describes an add-on that is enabled for an Amazon Lightsail resource.",
-						Resolver:      fetchLightsailInstanceHardwareDiskAddOns,
+						Description:   "Describes an add-on that is enabled for an Amazon Lightsail resource",
+						Resolver:      schema.PathTableResolver("AddOns"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -298,7 +309,7 @@ func Instances() *schema.Table {
 							},
 							{
 								Name:        "name",
-								Description: "The name of the add-on.",
+								Description: "The name of the add-on",
 								Type:        schema.TypeString,
 							},
 							{
@@ -313,7 +324,7 @@ func Instances() *schema.Table {
 							},
 							{
 								Name:        "status",
-								Description: "The status of the add-on.",
+								Description: "The status of the add-on",
 								Type:        schema.TypeString,
 							},
 						},
@@ -322,8 +333,8 @@ func Instances() *schema.Table {
 			},
 			{
 				Name:        "aws_lightsail_instance_networking_ports",
-				Description: "Describes information about ports for an Amazon Lightsail instance.",
-				Resolver:    fetchLightsailInstanceNetworkingPorts,
+				Description: "Describes information about ports for an Amazon Lightsail instance",
+				Resolver:    schema.PathTableResolver("Networking.Ports"),
 				Columns: []schema.Column{
 					{
 						Name:        "instance_cq_id",
@@ -343,7 +354,7 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "access_type",
-						Description: "The type of access (Public or Private).",
+						Description: "The type of access (Public or Private)",
 						Type:        schema.TypeString,
 					},
 					{
@@ -358,13 +369,13 @@ func Instances() *schema.Table {
 					},
 					{
 						Name:        "common_name",
-						Description: "The common name of the port information.",
+						Description: "The common name of the port information",
 						Type:        schema.TypeString,
 					},
 					{
 						Name:        "from_port",
 						Description: "The first port in a range of open ports on an instance",
-						Type:        schema.TypeInt,
+						Type:        schema.TypeBigInt,
 					},
 					{
 						Name:        "ipv6_cidrs",
@@ -379,7 +390,55 @@ func Instances() *schema.Table {
 					{
 						Name:        "to_port",
 						Description: "The last port in a range of open ports on an instance",
-						Type:        schema.TypeInt,
+						Type:        schema.TypeBigInt,
+					},
+				},
+			},
+			{
+				Name:        "aws_lightsail_instance_port_states",
+				Description: "Describes open ports on an instance, the IP addresses allowed to connect to the instance through the ports, and the protocol",
+				Resolver:    fetchLightsailInstancePortStates,
+				Columns: []schema.Column{
+					{
+						Name:        "instance_cq_id",
+						Description: "Unique CloudQuery ID of aws_lightsail_instances table (FK)",
+						Type:        schema.TypeUUID,
+						Resolver:    schema.ParentIdResolver,
+					},
+					{
+						Name:        "cidr_list_aliases",
+						Description: "An alias that defines access for a preconfigured range of IP addresses",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "cidrs",
+						Description: "The IPv4 address, or range of IPv4 addresses (in CIDR notation) that are allowed to connect to an instance through the ports, and the protocol",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "from_port",
+						Description: "The first port in a range of open ports on an instance",
+						Type:        schema.TypeBigInt,
+					},
+					{
+						Name:        "ipv6_cidrs",
+						Description: "The IPv6 address, or range of IPv6 addresses (in CIDR notation) that are allowed to connect to an instance through the ports, and the protocol",
+						Type:        schema.TypeStringArray,
+					},
+					{
+						Name:        "protocol",
+						Description: "The IP protocol name",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "state",
+						Description: "Specifies whether the instance port is open or closed",
+						Type:        schema.TypeString,
+					},
+					{
+						Name:        "to_port",
+						Description: "The last port in a range of open ports on an instance",
+						Type:        schema.TypeBigInt,
 					},
 				},
 			},
@@ -396,9 +455,7 @@ func fetchLightsailInstances(ctx context.Context, meta schema.ClientMeta, parent
 	svc := c.Services().Lightsail
 	input := lightsail.GetInstancesInput{}
 	for {
-		output, err := svc.GetInstances(ctx, &input, func(o *lightsail.Options) {
-			o.Region = c.Region
-		})
+		output, err := svc.GetInstances(ctx, &input)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -411,43 +468,31 @@ func fetchLightsailInstances(ctx context.Context, meta schema.ClientMeta, parent
 	}
 	return nil
 }
-
-func fetchLightsailInstanceAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	res <- instance.AddOns
-	return nil
-}
-
-func fetchLightsailInstanceHardwareDisks(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	if instance.Hardware == nil {
-		return nil
-	}
-	res <- instance.Hardware.Disks
-	return nil
-}
-
-func fetchLightsailInstanceHardwareDiskAddOns(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	disk := parent.Item.(types.Disk)
-	res <- disk.AddOns
-	return nil
-}
-
-func fetchLightsailInstanceNetworkingPorts(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	instance := parent.Item.(types.Instance)
-	if instance.Networking == nil {
-		return nil
-	}
-	res <- instance.Networking.Ports
-	return nil
-}
-
-func resolveInstancesTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+func resolveLightsailInstanceAccessDetails(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	r := resource.Item.(types.Instance)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
+	cli := meta.(*client.Client)
+	svc := cli.Services().Lightsail
+	input := lightsail.GetInstanceAccessDetailsInput{InstanceName: r.Name}
+	output, err := svc.GetInstanceAccessDetails(ctx, &input)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	j, err := json.Marshal(output.AccessDetails)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, j))
 }
+func fetchLightsailInstancePortStates(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	r := parent.Item.(types.Instance)
+	cli := meta.(*client.Client)
+	svc := cli.Services().Lightsail
+	input := lightsail.GetInstancePortStatesInput{InstanceName: r.Name}
+	output, err := svc.GetInstancePortStates(ctx, &input)
+	if err != nil {
+		return diag.WrapError(err)
+	}
 
-func resolveInstanceHardwareDisksTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.Disk)
-	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(r.Tags)))
+	res <- output.PortStates
+	return nil
 }

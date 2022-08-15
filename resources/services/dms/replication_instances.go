@@ -205,7 +205,7 @@ func DmsReplicationInstances() *schema.Table {
 			{
 				Name:          "aws_dms_replication_instance_replication_subnet_group_subnets",
 				Description:   "In response to a request by the DescribeReplicationSubnetGroups operation, this object identifies a subnet by its given Availability Zone, subnet identifier, and status.",
-				Resolver:      fetchDmsReplicationInstanceReplicationSubnetGroupSubnets,
+				Resolver:      schema.PathTableResolver("ReplicationSubnetGroup.Subnets"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -235,7 +235,7 @@ func DmsReplicationInstances() *schema.Table {
 			{
 				Name:          "aws_dms_replication_instance_vpc_security_groups",
 				Description:   "Describes the status of a security group associated with the virtual private cloud (VPC) hosting your replication and DB instances.",
-				Resolver:      fetchDmsReplicationInstanceVpcSecurityGroups,
+				Resolver:      schema.PathTableResolver("VpcSecurityGroups"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -268,9 +268,7 @@ func fetchDmsReplicationInstances(ctx context.Context, meta schema.ClientMeta, _
 	svc := c.Services().DMS
 
 	var describeReplicationInstancesInput *databasemigrationservice.DescribeReplicationInstancesInput
-	describeReplicationInstancesOutput, err := svc.DescribeReplicationInstances(ctx, describeReplicationInstancesInput, func(options *databasemigrationservice.Options) {
-		options.Region = c.Region
-	})
+	describeReplicationInstancesOutput, err := svc.DescribeReplicationInstances(ctx, describeReplicationInstancesInput)
 	if err != nil {
 		return diag.WrapError(err)
 	}
@@ -283,9 +281,7 @@ func fetchDmsReplicationInstances(ctx context.Context, meta schema.ClientMeta, _
 		listTagsForResourceInput.ResourceArnList = append(listTagsForResourceInput.ResourceArnList, *replicationInstance.ReplicationInstanceArn)
 	}
 	var listTagsForResourceOutput *databasemigrationservice.ListTagsForResourceOutput
-	listTagsForResourceOutput, err = svc.ListTagsForResource(ctx, &listTagsForResourceInput, func(options *databasemigrationservice.Options) {
-		options.Region = c.Region
-	})
+	listTagsForResourceOutput, err = svc.ListTagsForResource(ctx, &listTagsForResourceInput)
 	if err != nil {
 		return diag.WrapError(err)
 	}
@@ -304,17 +300,5 @@ func fetchDmsReplicationInstances(ctx context.Context, meta schema.ClientMeta, _
 		}
 		res <- wrapper
 	}
-	return nil
-}
-
-func fetchDmsReplicationInstanceReplicationSubnetGroupSubnets(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	replicationInstance := parent.Item.(DmsReplicationInstanceWrapper)
-	res <- replicationInstance.ReplicationSubnetGroup.Subnets
-	return nil
-}
-
-func fetchDmsReplicationInstanceVpcSecurityGroups(_ context.Context, _ schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	replicationInstance := parent.Item.(DmsReplicationInstanceWrapper)
-	res <- replicationInstance.VpcSecurityGroups
 	return nil
 }

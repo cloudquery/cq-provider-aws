@@ -143,7 +143,7 @@ func Elbv2LoadBalancers() *schema.Table {
 			{
 				Name:        "aws_elbv2_load_balancer_availability_zones",
 				Description: "Information about an Availability Zone.",
-				Resolver:    fetchElbv2LoadBalancerAvailabilityZones,
+				Resolver:    schema.PathTableResolver("AvailabilityZones"),
 				Columns: []schema.Column{
 					{
 						Name:        "load_balancer_cq_id",
@@ -178,7 +178,7 @@ func Elbv2LoadBalancers() *schema.Table {
 					{
 						Name:          "aws_elbv2_load_balancer_availability_zone_addresses",
 						Description:   "Information about a static IP address for a load balancer.",
-						Resolver:      fetchElbv2LoadBalancerAvailabilityZoneAddresses,
+						Resolver:      schema.PathTableResolver("LoadBalancerAddresses"),
 						IgnoreInTests: true,
 						Columns: []schema.Column{
 							{
@@ -310,9 +310,7 @@ func fetchElbv2LoadBalancers(ctx context.Context, meta schema.ClientMeta, parent
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv2
 	for {
-		response, err := svc.DescribeLoadBalancers(ctx, &config, func(options *elbv2.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.DescribeLoadBalancers(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -379,16 +377,6 @@ func resolveElbv2loadBalancerTags(ctx context.Context, meta schema.ClientMeta, r
 
 	return diag.WrapError(resource.Set(c.Name, tags))
 }
-func fetchElbv2LoadBalancerAvailabilityZones(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.LoadBalancer)
-	res <- p.AvailabilityZones
-	return nil
-}
-func fetchElbv2LoadBalancerAvailabilityZoneAddresses(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	p := parent.Item.(types.AvailabilityZone)
-	res <- p.LoadBalancerAddresses
-	return nil
-}
 
 // ====================================================================================================================
 //                                                  User Defined Helpers
@@ -398,9 +386,7 @@ func fetchElbv2LoadBalancerAttributes(ctx context.Context, meta schema.ClientMet
 	lb := parent.Item.(types.LoadBalancer)
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv2
-	result, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv2.DescribeLoadBalancerAttributesInput{LoadBalancerArn: lb.LoadBalancerArn}, func(options *elbv2.Options) {
-		options.Region = c.Region
-	})
+	result, err := svc.DescribeLoadBalancerAttributes(ctx, &elbv2.DescribeLoadBalancerAttributesInput{LoadBalancerArn: lb.LoadBalancerArn})
 	if err != nil {
 		return diag.WrapError(err)
 	}

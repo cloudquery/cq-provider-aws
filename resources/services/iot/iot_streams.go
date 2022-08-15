@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
-	"github.com/aws/aws-sdk-go-v2/service/iot/types"
 	"github.com/cloudquery/cq-provider-aws/client"
 	"github.com/cloudquery/cq-provider-sdk/provider/diag"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -77,7 +76,7 @@ func IotStreams() *schema.Table {
 			{
 				Name:        "aws_iot_stream_files",
 				Description: "Represents a file to stream.",
-				Resolver:    fetchIotStreamFiles,
+				Resolver:    schema.PathTableResolver("Files"),
 				Columns: []schema.Column{
 					{
 						Name:        "stream_cq_id",
@@ -119,6 +118,7 @@ func IotStreams() *schema.Table {
 // ====================================================================================================================
 
 func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+	var diags diag.Diagnostics
 	input := iot.ListStreamsInput{
 		MaxResults: aws.Int32(250),
 	}
@@ -126,11 +126,9 @@ func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema
 
 	svc := c.Services().IOT
 	for {
-		response, err := svc.ListStreams(ctx, &input, func(options *iot.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.ListStreams(ctx, &input)
 		if err != nil {
-			return diag.WrapError(err)
+			return diags.Add(diag.FromError(diag.WrapError(err), diag.RESOLVING, diag.WithSeverity(diag.ERROR)))
 		}
 		for _, s := range response.Streams {
 			stream, err := svc.DescribeStream(ctx, &iot.DescribeStreamInput{
@@ -139,7 +137,9 @@ func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema
 				options.Region = c.Region
 			})
 			if err != nil {
-				return diag.WrapError(err)
+				// A single `Describe` call error should not end resolving of table
+				diags = diags.Add(diag.FromError(err, diag.RESOLVING, diag.WithSeverity(diag.WARNING)))
+				continue
 			}
 			res <- stream.StreamInfo
 		}
@@ -148,11 +148,5 @@ func fetchIotStreams(ctx context.Context, meta schema.ClientMeta, parent *schema
 		}
 		input.NextToken = response.NextToken
 	}
-	return nil
-}
-func fetchIotStreamFiles(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	i := parent.Item.(*types.StreamInfo)
-
-	res <- i.Files
-	return nil
+	return diags
 }

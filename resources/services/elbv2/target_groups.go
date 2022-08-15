@@ -202,9 +202,7 @@ func fetchElbv2TargetGroups(ctx context.Context, meta schema.ClientMeta, parent 
 	c := meta.(*client.Client)
 	svc := c.Services().ELBv2
 	for {
-		response, err := svc.DescribeTargetGroups(ctx, &config, func(options *elbv2.Options) {
-			options.Region = c.Region
-		})
+		response, err := svc.DescribeTargetGroups(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -217,6 +215,7 @@ func fetchElbv2TargetGroups(ctx context.Context, meta schema.ClientMeta, parent 
 	return nil
 }
 func resolveElbv2targetGroupTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
 	region := meta.(*client.Client).Region
 	svc := meta.(*client.Client).Services().ELBv2
 	targetGroup := resource.Item.(types.TargetGroup)
@@ -228,6 +227,9 @@ func resolveElbv2targetGroupTags(ctx context.Context, meta schema.ClientMeta, re
 		o.Region = region
 	})
 	if err != nil {
+		if cl.IsNotFoundError(err) {
+			return nil
+		}
 		return diag.WrapError(err)
 	}
 	if len(tagsOutput.TagDescriptions) == 0 {

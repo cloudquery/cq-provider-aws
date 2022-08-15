@@ -17,6 +17,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 	"github.com/aws/aws-sdk-go-v2/service/applicationautoscaling"
+	"github.com/aws/aws-sdk-go-v2/service/appsync"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/backup"
@@ -40,15 +41,22 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/eks"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 	elbv1 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/emr"
+	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
+	"github.com/aws/aws-sdk-go-v2/service/firehose"
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
+	"github.com/aws/aws-sdk-go-v2/service/glue"
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/inspector"
+	"github.com/aws/aws-sdk-go-v2/service/inspector2"
 	"github.com/aws/aws-sdk-go-v2/service/iot"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lightsail"
@@ -57,6 +65,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/qldb"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
+	"github.com/aws/aws-sdk-go-v2/service/resourcegroups"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -121,6 +130,7 @@ type Services struct {
 	Apigateway             ApigatewayClient
 	Apigatewayv2           Apigatewayv2Client
 	ApplicationAutoscaling ApplicationAutoscalingClient
+	AppSync                AppSyncClient
 	Athena                 AthenaClient
 	Autoscaling            AutoscalingClient
 	Backup                 BackupClient
@@ -135,23 +145,30 @@ type Services struct {
 	CognitoUserPools       CognitoUserPoolsClient
 	ConfigService          ConfigServiceClient
 	DAX                    DAXClient
-	DMS                    DatabasemigrationserviceClient
 	Directconnect          DirectconnectClient
+	DMS                    DatabasemigrationserviceClient
 	DynamoDB               DynamoDBClient
 	EC2                    Ec2Client
 	ECR                    EcrClient
 	ECS                    EcsClient
 	EFS                    EfsClient
+	Eks                    EksClient
+	ElastiCache            ElastiCache
+	ElasticBeanstalk       ElasticbeanstalkClient
+	ElasticSearch          ElasticSearch
 	ELBv1                  ElbV1Client
 	ELBv2                  ElbV2Client
 	EMR                    EmrClient
-	Eks                    EksClient
-	ElasticBeanstalk       ElasticbeanstalkClient
-	ElasticSearch          ElasticSearch
+	EventBridge            EventBridgeClient
+	Firehose               FirehoseClient
 	FSX                    FsxClient
+	Glue                   GlueClient
 	GuardDuty              GuardDutyClient
 	IAM                    IamClient
+	Inspector              InspectorClient
+	InspectorV2            InspectorV2Client
 	IOT                    IOTClient
+	Kinesis                KinesisClient
 	KMS                    KmsClient
 	Lambda                 LambdaClient
 	Lightsail              LightsailClient
@@ -160,21 +177,22 @@ type Services struct {
 	QLDB                   QLDBClient
 	RDS                    RdsClient
 	Redshift               RedshiftClient
+	ResourceGroups         ResourceGroupsClient
 	Route53                Route53Client
 	Route53Domains         Route53DomainsClient
 	S3                     S3Client
 	S3Control              S3ControlClient
 	S3Manager              S3ManagerClient
+	SageMaker              SageMakerClient
+	SecretsManager         SecretsManagerClient
 	SES                    SESClient
 	Shield                 ShieldClient
 	SNS                    SnsClient
 	SQS                    SQSClient
 	SSM                    SSMClient
-	SageMaker              SageMakerClient
-	SecretsManager         SecretsManagerClient
 	Waf                    WafClient
-	WafV2                  WafV2Client
 	WafRegional            WafRegionalClient
+	WafV2                  WafV2Client
 	Workspaces             WorkspacesClient
 	Xray                   XrayClient
 }
@@ -617,18 +635,19 @@ func initServices(region string, c aws.Config) Services {
 		Apigateway:             apigateway.NewFromConfig(awsCfg),
 		Apigatewayv2:           apigatewayv2.NewFromConfig(awsCfg),
 		ApplicationAutoscaling: applicationautoscaling.NewFromConfig(awsCfg),
-		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
+		AppSync:                appsync.NewFromConfig(awsCfg),
 		Athena:                 athena.NewFromConfig(awsCfg),
+		Autoscaling:            autoscaling.NewFromConfig(awsCfg),
 		Backup:                 backup.NewFromConfig(awsCfg),
+		Cloudformation:         cloudformation.NewFromConfig(awsCfg),
 		Cloudfront:             cloudfront.NewFromConfig(awsCfg),
 		Cloudtrail:             cloudtrail.NewFromConfig(awsCfg),
 		Cloudwatch:             cloudwatch.NewFromConfig(awsCfg),
 		CloudwatchLogs:         cloudwatchlogs.NewFromConfig(awsCfg),
-		Cloudformation:         cloudformation.NewFromConfig(awsCfg),
-		CognitoIdentityPools:   cognitoidentity.NewFromConfig(awsCfg),
-		CognitoUserPools:       cognitoidentityprovider.NewFromConfig(awsCfg),
 		Codebuild:              codebuild.NewFromConfig(awsCfg),
 		CodePipeline:           codepipeline.NewFromConfig(awsCfg),
+		CognitoIdentityPools:   cognitoidentity.NewFromConfig(awsCfg),
+		CognitoUserPools:       cognitoidentityprovider.NewFromConfig(awsCfg),
 		ConfigService:          configservice.NewFromConfig(awsCfg),
 		DAX:                    dax.NewFromConfig(awsCfg),
 		Directconnect:          directconnect.NewFromConfig(awsCfg),
@@ -639,14 +658,22 @@ func initServices(region string, c aws.Config) Services {
 		ECS:                    ecs.NewFromConfig(awsCfg),
 		EFS:                    efs.NewFromConfig(awsCfg),
 		Eks:                    eks.NewFromConfig(awsCfg),
+		ElastiCache:            elasticache.NewFromConfig(awsCfg),
 		ElasticBeanstalk:       elasticbeanstalk.NewFromConfig(awsCfg),
 		ElasticSearch:          elasticsearchservice.NewFromConfig(awsCfg),
 		ELBv1:                  elbv1.NewFromConfig(awsCfg),
 		ELBv2:                  elbv2.NewFromConfig(awsCfg),
 		EMR:                    emr.NewFromConfig(awsCfg),
+		EventBridge:            eventbridge.NewFromConfig(awsCfg),
+		Firehose:               firehose.NewFromConfig(awsCfg),
 		FSX:                    fsx.NewFromConfig(awsCfg),
+		Glue:                   glue.NewFromConfig(awsCfg),
 		GuardDuty:              guardduty.NewFromConfig(awsCfg),
 		IAM:                    iam.NewFromConfig(awsCfg),
+		Inspector:              inspector.NewFromConfig(awsCfg),
+		InspectorV2:            inspector2.NewFromConfig(awsCfg),
+		IOT:                    iot.NewFromConfig(awsCfg),
+		Kinesis:                kinesis.NewFromConfig(awsCfg),
 		KMS:                    kms.NewFromConfig(awsCfg),
 		Lambda:                 lambda.NewFromConfig(awsCfg),
 		Lightsail:              lightsail.NewFromConfig(awsCfg),
@@ -654,6 +681,7 @@ func initServices(region string, c aws.Config) Services {
 		Organizations:          organizations.NewFromConfig(awsCfg),
 		QLDB:                   qldb.NewFromConfig(awsCfg),
 		RDS:                    rds.NewFromConfig(awsCfg),
+		ResourceGroups:         resourcegroups.NewFromConfig(awsCfg),
 		Redshift:               redshift.NewFromConfig(awsCfg),
 		Route53:                route53.NewFromConfig(awsCfg),
 		Route53Domains:         route53domains.NewFromConfig(awsCfg),
@@ -665,13 +693,12 @@ func initServices(region string, c aws.Config) Services {
 		SES:                    sesv2.NewFromConfig(awsCfg),
 		Shield:                 shield.NewFromConfig(awsCfg),
 		SNS:                    sns.NewFromConfig(awsCfg),
-		SSM:                    ssm.NewFromConfig(awsCfg),
 		SQS:                    sqs.NewFromConfig(awsCfg),
+		SSM:                    ssm.NewFromConfig(awsCfg),
 		Waf:                    waf.NewFromConfig(awsCfg),
-		WafV2:                  wafv2.NewFromConfig(awsCfg),
 		WafRegional:            wafregional.NewFromConfig(awsCfg),
+		WafV2:                  wafv2.NewFromConfig(awsCfg),
 		Workspaces:             workspaces.NewFromConfig(awsCfg),
-		IOT:                    iot.NewFromConfig(awsCfg),
 		Xray:                   xray.NewFromConfig(awsCfg),
 	}
 }

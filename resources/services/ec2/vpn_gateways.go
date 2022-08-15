@@ -53,7 +53,7 @@ func Ec2VpnGateways() *schema.Table {
 			{
 				Name:     "tags",
 				Type:     schema.TypeJSON,
-				Resolver: resolveEc2VpnGatewayTags,
+				Resolver: client.ResolveTags,
 			},
 			{
 				Name: "type",
@@ -68,7 +68,7 @@ func Ec2VpnGateways() *schema.Table {
 		Relations: []*schema.Table{
 			{
 				Name:          "aws_ec2_vpc_attachment",
-				Resolver:      fetchEc2VpcAttachments,
+				Resolver:      schema.PathTableResolver("VpcAttachments"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -97,25 +97,10 @@ func fetchEc2VpnGateways(ctx context.Context, meta schema.ClientMeta, parent *sc
 	var config ec2.DescribeVpnGatewaysInput
 	c := meta.(*client.Client)
 	svc := c.Services().EC2
-	output, err := svc.DescribeVpnGateways(ctx, &config, func(options *ec2.Options) {
-		options.Region = c.Region
-	})
+	output, err := svc.DescribeVpnGateways(ctx, &config)
 	if err != nil {
 		return diag.WrapError(err)
 	}
 	res <- output.VpnGateways
 	return nil
-}
-func fetchEc2VpcAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	r := parent.Item.(types.VpnGateway)
-	res <- r.VpcAttachments
-	return nil
-}
-func resolveEc2VpnGatewayTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	r := resource.Item.(types.VpnGateway)
-	tags := map[string]*string{}
-	for _, t := range r.Tags {
-		tags[*t.Key] = t.Value
-	}
-	return diag.WrapError(resource.Set("tags", tags))
 }

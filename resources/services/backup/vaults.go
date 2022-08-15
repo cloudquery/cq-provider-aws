@@ -2,7 +2,6 @@ package backup
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"strings"
 
@@ -160,7 +159,7 @@ func Vaults() *schema.Table {
 						Name:        "created_by",
 						Description: "Contains identifying information about the creation of a recovery point.",
 						Type:        schema.TypeJSON,
-						Resolver:    resolveVaultRecoveryPointCreatedBy,
+						Resolver:    schema.PathResolver("CreatedBy"),
 					},
 					{
 						Name:        "creation_date",
@@ -251,9 +250,7 @@ func fetchBackupVaults(ctx context.Context, meta schema.ClientMeta, parent *sche
 	svc := cl.Services().Backup
 	params := backup.ListBackupVaultsInput{MaxResults: aws.Int32(1000)} // maximum value from https://docs.aws.amazon.com/aws-backup/latest/devguide/API_ListBackupVaults.html
 	for {
-		result, err := svc.ListBackupVaults(ctx, &params, func(o *backup.Options) {
-			o.Region = cl.Region
-		})
+		result, err := svc.ListBackupVaults(ctx, &params)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -341,9 +338,7 @@ func fetchVaultRecoveryPoints(ctx context.Context, meta schema.ClientMeta, paren
 	vault := parent.Item.(types.BackupVaultListMember)
 	params := backup.ListRecoveryPointsByBackupVaultInput{BackupVaultName: vault.BackupVaultName, MaxResults: aws.Int32(100)}
 	for {
-		result, err := svc.ListRecoveryPointsByBackupVault(ctx, &params, func(o *backup.Options) {
-			o.Region = cl.Region
-		})
+		result, err := svc.ListRecoveryPointsByBackupVault(ctx, &params)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -354,15 +349,6 @@ func fetchVaultRecoveryPoints(ctx context.Context, meta schema.ClientMeta, paren
 		params.NextToken = result.NextToken
 	}
 	return nil
-}
-
-func resolveVaultRecoveryPointCreatedBy(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
-	rp := resource.Item.(types.RecoveryPointByBackupVault)
-	b, err := json.Marshal(rp.CreatedBy)
-	if err != nil {
-		return diag.WrapError(err)
-	}
-	return diag.WrapError(resource.Set(c.Name, b))
 }
 
 func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
@@ -395,6 +381,10 @@ func resolveRecoveryPointTags(ctx context.Context, meta schema.ClientMeta, resou
 	for {
 		result, err := svc.ListTags(ctx, &params, func(o *backup.Options) { o.Region = cl.Region })
 		if err != nil {
+			if client.IsAWSError(err, "ERROR_2603") {
+				// ignoring "ERROR_2603: Cannot find recovery point."
+				return nil
+			}
 			if resourceARN.Service == string(client.DynamoDBService) && client.IsAWSError(err, "ERROR_3930") {
 				// advanced backup features are not enabled for dynamodb
 				return nil

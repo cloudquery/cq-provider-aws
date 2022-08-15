@@ -9,6 +9,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigateway"
 	"github.com/cloudquery/cq-provider-aws/resources/services/apigatewayv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/applicationautoscaling"
+	"github.com/cloudquery/cq-provider-aws/resources/services/appsync"
 	"github.com/cloudquery/cq-provider-aws/resources/services/athena"
 	"github.com/cloudquery/cq-provider-aws/resources/services/autoscaling"
 	"github.com/cloudquery/cq-provider-aws/resources/services/backup"
@@ -30,15 +31,22 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/ecs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/efs"
 	"github.com/cloudquery/cq-provider-aws/resources/services/eks"
+	"github.com/cloudquery/cq-provider-aws/resources/services/elasticache"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticbeanstalk"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elasticsearch"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv1"
 	"github.com/cloudquery/cq-provider-aws/resources/services/elbv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/emr"
+	"github.com/cloudquery/cq-provider-aws/resources/services/eventbridge"
+	"github.com/cloudquery/cq-provider-aws/resources/services/firehose"
 	"github.com/cloudquery/cq-provider-aws/resources/services/fsx"
+	"github.com/cloudquery/cq-provider-aws/resources/services/glue"
 	"github.com/cloudquery/cq-provider-aws/resources/services/guardduty"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iam"
+	"github.com/cloudquery/cq-provider-aws/resources/services/inspector"
+	"github.com/cloudquery/cq-provider-aws/resources/services/inspector2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/iot"
+	"github.com/cloudquery/cq-provider-aws/resources/services/kinesis"
 	"github.com/cloudquery/cq-provider-aws/resources/services/kms"
 	"github.com/cloudquery/cq-provider-aws/resources/services/lambda"
 	"github.com/cloudquery/cq-provider-aws/resources/services/lightsail"
@@ -47,6 +55,7 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/qldb"
 	"github.com/cloudquery/cq-provider-aws/resources/services/rds"
 	"github.com/cloudquery/cq-provider-aws/resources/services/redshift"
+	"github.com/cloudquery/cq-provider-aws/resources/services/resourcegroups"
 	"github.com/cloudquery/cq-provider-aws/resources/services/route53"
 	"github.com/cloudquery/cq-provider-aws/resources/services/s3"
 	"github.com/cloudquery/cq-provider-aws/resources/services/sagemaker"
@@ -61,7 +70,6 @@ import (
 	"github.com/cloudquery/cq-provider-aws/resources/services/wafv2"
 	"github.com/cloudquery/cq-provider-aws/resources/services/workspaces"
 	"github.com/cloudquery/cq-provider-aws/resources/services/xray"
-	"github.com/cloudquery/cq-provider-sdk/cqproto"
 	"github.com/cloudquery/cq-provider-sdk/provider"
 	"github.com/cloudquery/cq-provider-sdk/provider/module"
 	"github.com/cloudquery/cq-provider-sdk/provider/schema"
@@ -94,22 +102,24 @@ func Provider() *provider.Provider {
 			"apigatewayv2.domain_names":               apigatewayv2.Apigatewayv2DomainNames(),
 			"apigatewayv2.vpc_links":                  apigatewayv2.Apigatewayv2VpcLinks(),
 			"applicationautoscaling.policies":         applicationautoscaling.ApplicationautoscalingPolicies(),
+			"appsync.graphql_apis":                    appsync.GraphqlApis(),
 			"athena.data_catalogs":                    athena.DataCatalogs(),
 			"athena.work_groups":                      athena.WorkGroups(),
 			"autoscaling.groups":                      autoscaling.AutoscalingGroups(),
 			"autoscaling.launch_configurations":       autoscaling.AutoscalingLaunchConfigurations(),
 			"autoscaling.scheduled_actions":           autoscaling.AutoscalingScheduledActions(),
 			"aws.regions":                             ec2.AwsRegions(),
-			"backup.plans":                            backup.Plans(),
-			"backup.vaults":                           backup.Vaults(),
 			"backup.global_settings":                  backup.GlobalSettings(),
+			"backup.plans":                            backup.Plans(),
 			"backup.region_settings":                  backup.RegionSettings(),
+			"backup.vaults":                           backup.Vaults(),
 			"cloudformation.stacks":                   cloudformation.Stacks(),
 			"cloudfront.cache_policies":               cloudfront.CloudfrontCachePolicies(),
 			"cloudfront.distributions":                cloudfront.CloudfrontDistributions(),
 			"cloudtrail.trails":                       cloudtrail.CloudtrailTrails(),
 			"cloudwatch.alarms":                       cloudwatch.CloudwatchAlarms(),
 			"cloudwatchlogs.filters":                  cloudwatchlogs.CloudwatchlogsFilters(),
+			"cloudwatchlogs.log_groups":               cloudwatchlogs.LogGroups(),
 			"codebuild.projects":                      codebuild.CodebuildProjects(),
 			"codepipeline.pipelines":                  codepipeline.Pipelines(),
 			"codepipeline.webhooks":                   codepipeline.Webhooks(),
@@ -131,15 +141,16 @@ func Provider() *provider.Provider {
 			"ec2.ebs_volumes":                         ec2.Ec2EbsVolumes(),
 			"ec2.egress_only_internet_gateways":       ec2.EgressOnlyInternetGateways(),
 			"ec2.eips":                                ec2.Ec2Eips(),
-			"ec2.hosts":                               ec2.Hosts(),
 			"ec2.flow_logs":                           ec2.Ec2FlowLogs(),
+			"ec2.hosts":                               ec2.Hosts(),
 			"ec2.images":                              ec2.Ec2Images(),
 			"ec2.instance_statuses":                   ec2.Ec2InstanceStatuses(),
+			"ec2.instance_types":                      ec2.InstanceTypes(),
 			"ec2.instances":                           ec2.Ec2Instances(),
 			"ec2.internet_gateways":                   ec2.Ec2InternetGateways(),
-			"ec2.network_interfaces":                  ec2.NetworkInterfaces(),
 			"ec2.nat_gateways":                        ec2.Ec2NatGateways(),
 			"ec2.network_acls":                        ec2.Ec2NetworkAcls(),
+			"ec2.network_interfaces":                  ec2.NetworkInterfaces(),
 			"ec2.regional_config":                     ec2.Ec2RegionalConfig(),
 			"ec2.route_tables":                        ec2.Ec2RouteTables(),
 			"ec2.security_groups":                     ec2.Ec2SecurityGroups(),
@@ -156,8 +167,9 @@ func Provider() *provider.Provider {
 			"ecs.task_definitions":                    ecs.EcsTaskDefinitions(),
 			"efs.filesystems":                         efs.EfsFilesystems(),
 			"eks.clusters":                            eks.EksClusters(),
-			"elasticbeanstalk.applications":           elasticbeanstalk.ElasticbeanstalkApplications(),
+			"elasticache.clusters":                    elasticache.Clusters(),
 			"elasticbeanstalk.application_versions":   elasticbeanstalk.ApplicationVersions(),
+			"elasticbeanstalk.applications":           elasticbeanstalk.ElasticbeanstalkApplications(),
 			"elasticbeanstalk.environments":           elasticbeanstalk.ElasticbeanstalkEnvironments(),
 			"elasticsearch.domains":                   elasticsearch.ElasticsearchDomains(),
 			"elbv1.load_balancers":                    elbv1.Elbv1LoadBalancers(),
@@ -165,8 +177,21 @@ func Provider() *provider.Provider {
 			"elbv2.target_groups":                     elbv2.Elbv2TargetGroups(),
 			"emr.block_public_access_configs":         emr.EmrBlockPublicAccessConfigs(),
 			"emr.clusters":                            emr.EmrClusters(),
+			"eventbridge.event_buses":                 eventbridge.EventBuses(),
 			"fsx.backups":                             fsx.FsxBackups(),
 			"fsx.filesystems":                         fsx.FsxFileSystems(),
+			"glue.classifiers":                        glue.Classifiers(),
+			"glue.connections":                        glue.Connections(),
+			"glue.crawlers":                           glue.Crawlers(),
+			"glue.databases":                          glue.Databases(),
+			"glue.datacatalog_encryption_settings":    glue.DatacatalogEncryptionSettings(),
+			"glue.dev_endpoints":                      glue.DevEndpoints(),
+			"glue.jobs":                               glue.Jobs(),
+			"glue.ml_transforms":                      glue.MlTransforms(),
+			"glue.registries":                         glue.Registries(),
+			"glue.triggers":                           glue.Triggers(),
+			"glue.security_configurations":            glue.SecurityConfigurations(),
+			"glue.workflows":                          glue.Workflows(),
 			"guardduty.detectors":                     guardduty.GuarddutyDetectors(),
 			"iam.accounts":                            iam.IamAccounts(),
 			"iam.groups":                              iam.IamGroups(),
@@ -178,6 +203,8 @@ func Provider() *provider.Provider {
 			"iam.server_certificates":                 iam.IamServerCertificates(),
 			"iam.users":                               iam.IamUsers(),
 			"iam.virtual_mfa_devices":                 iam.IamVirtualMfaDevices(),
+			"inspector.findings":                      inspector.Findings(),
+			"inspector2.findings":                     inspector2.Findings(),
 			"iot.billing_groups":                      iot.IotBillingGroups(),
 			"iot.ca_certificates":                     iot.IotCaCertificates(),
 			"iot.certificates":                        iot.IotCertificates(),
@@ -187,11 +214,24 @@ func Provider() *provider.Provider {
 			"iot.thing_types":                         iot.IotThingTypes(),
 			"iot.things":                              iot.IotThings(),
 			"iot.topic_rules":                         iot.IotTopicRules(),
+			"kinesis.data_streams":                    kinesis.Streams(),
+			"firehose.delivery_streams":               firehose.DeliveryStreams(),
 			"kms.keys":                                kms.Keys(),
 			"lambda.functions":                        lambda.Functions(),
 			"lambda.layers":                           lambda.LambdaLayers(),
 			"lambda.runtimes":                         lambda.LambdaRuntimes(),
+			"lightsail.alarms":                        lightsail.Alarms(),
+			"lightsail.buckets":                       lightsail.Buckets(),
+			"lightsail.certificates":                  lightsail.Certificates(),
+			"lightsail.container_services":            lightsail.ContainerServices(),
+			"lightsail.database_snapshots":            lightsail.DatabaseSnapshots(),
+			"lightsail.databases":                     lightsail.Databases(),
+			"lightsail.disks":                         lightsail.Disks(),
+			"lightsail.distributions":                 lightsail.Distributions(),
+			"lightsail.instance_snapshots":            lightsail.InstanceSnapshots(),
 			"lightsail.instances":                     lightsail.Instances(),
+			"lightsail.load_balancers":                lightsail.LoadBalancers(),
+			"lightsail.static_ips":                    lightsail.StaticIps(),
 			"mq.brokers":                              mq.Brokers(),
 			"organizations.accounts":                  organizations.Accounts(),
 			"qldb.ledgers":                            qldb.Ledgers(),
@@ -205,9 +245,10 @@ func Provider() *provider.Provider {
 			"rds.db_subnet_groups":                    rds.RdsSubnetGroups(),
 			"rds.event_subscriptions":                 rds.RdsEventSubscriptions(),
 			"rds.instances":                           rds.RdsInstances(),
-			"redshift.event_subscriptions":            redshift.EventSubscriptions(),
 			"redshift.clusters":                       redshift.RedshiftClusters(),
+			"redshift.event_subscriptions":            redshift.EventSubscriptions(),
 			"redshift.subnet_groups":                  redshift.RedshiftSubnetGroups(),
+			"resourcegroups.resource_groups":          resourcegroups.ResourceGroups(),
 			"route53.domains":                         route53.Route53Domains(),
 			"route53.health_checks":                   route53.Route53HealthChecks(),
 			"route53.hosted_zones":                    route53.Route53HostedZones(),
@@ -222,9 +263,9 @@ func Provider() *provider.Provider {
 			"secretsmanager.secrets":                  secretsmanager.SecretsmanagerSecrets(),
 			"ses.templates":                           ses.Templates(),
 			"shield.attacks":                          shield.Attacks(),
-			"shield.subscriptions":                    shield.Subscriptions(),
 			"shield.protections_groups":               shield.ProtectionGroups(),
 			"shield.protections":                      shield.Protections(),
+			"shield.subscriptions":                    shield.Subscriptions(),
 			"sns.subscriptions":                       sns.SnsSubscriptions(),
 			"sns.topics":                              sns.SnsTopics(),
 			"sqs.queues":                              sqs.SQSQueues(),
@@ -234,24 +275,24 @@ func Provider() *provider.Provider {
 			"waf.rules":                               waf.WafRules(),
 			"waf.subscribed_rule_groups":              waf.WafSubscribedRuleGroups(),
 			"waf.web_acls":                            waf.WafWebAcls(),
+			"wafregional.rate_based_rules":            wafregional.RateBasedRules(),
+			"wafregional.rule_groups":                 wafregional.RuleGroups(),
+			"wafregional.rules":                       wafregional.Rules(),
+			"wafregional.web_acls":                    wafregional.WebAcls(),
 			"wafv2.ipsets":                            wafv2.Ipsets(),
 			"wafv2.managed_rule_groups":               wafv2.Wafv2ManagedRuleGroups(),
 			"wafv2.regex_pattern_sets":                wafv2.RegexPatternSets(),
 			"wafv2.rule_groups":                       wafv2.Wafv2RuleGroups(),
 			"wafv2.web_acls":                          wafv2.Wafv2WebAcls(),
-			"wafregional.rate_based_rules":            wafregional.RateBasedRules(),
-			"wafregional.rule_groups":                 wafregional.RuleGroups(),
-			"wafregional.rules":                       wafregional.Rules(),
-			"wafregional.web_acls":                    wafregional.WebAcls(),
-			"workspaces.workspaces":                   workspaces.Workspaces(),
 			"workspaces.directories":                  workspaces.Directories(),
+			"workspaces.workspaces":                   workspaces.Workspaces(),
 			"xray.encryption_config":                  xray.EncryptionConfigs(),
 			"xray.groups":                             xray.Groups(),
 			"xray.sampling_rules":                     xray.SamplingRules(),
 			//"iot.security_profiles": 				 iot.IotSecurityProfiles(), //TODO disabled because of api error NotFoundException: No method found matching route security-profiles for http method GET.
 		},
-		Config: func(f cqproto.ConfigFormat) provider.Config {
-			return client.NewConfig(f)
+		Config: func() provider.Config {
+			return &client.Config{}
 		},
 	}
 }

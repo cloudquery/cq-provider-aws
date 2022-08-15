@@ -13,20 +13,24 @@ import (
 
 func CloudwatchAlarms() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_cloudwatch_alarms",
-		Description:   "The details about a metric alarm.",
-		Resolver:      fetchCloudwatchAlarms,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("logs"),
-		IgnoreError:   client.IgnoreAccessDeniedServiceDisabled,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
-		IgnoreInTests: true,
+		Name:         "aws_cloudwatch_alarms",
+		Description:  "The details about a metric alarm.",
+		Resolver:     fetchCloudwatchAlarms,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("logs"),
+		IgnoreError:  client.IgnoreAccessDeniedServiceDisabled,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
 				Description: "The AWS Account ID of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSAccount,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveCloudwatchAlarmTags,
 			},
 			{
 				Name:        "region",
@@ -176,7 +180,7 @@ func CloudwatchAlarms() *schema.Table {
 			{
 				Name:          "aws_cloudwatch_alarm_metrics",
 				Description:   "This structure is used in both GetMetricData and PutMetricAlarm.",
-				Resolver:      fetchCloudwatchAlarmMetrics,
+				Resolver:      schema.PathTableResolver("Metrics"),
 				IgnoreInTests: true,
 				Columns: []schema.Column{
 					{
@@ -273,9 +277,7 @@ func fetchCloudwatchAlarms(ctx context.Context, meta schema.ClientMeta, parent *
 	c := meta.(*client.Client)
 	svc := c.Services().Cloudwatch
 	for {
-		response, err := svc.DescribeAlarms(ctx, &config, func(o *cloudwatch.Options) {
-			o.Region = c.Region
-		})
+		response, err := svc.DescribeAlarms(ctx, &config)
 
 		if err != nil {
 			return diag.WrapError(err)
@@ -296,11 +298,7 @@ func resolveCloudwatchAlarmDimensions(ctx context.Context, meta schema.ClientMet
 	}
 	return diag.WrapError(resource.Set("dimensions", dimensions))
 }
-func fetchCloudwatchAlarmMetrics(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
-	alarm := parent.Item.(types.MetricAlarm)
-	res <- alarm.Metrics
-	return nil
-}
+
 func resolveCloudwatchAlarmMetricMetricStatMetricDimensions(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	metric := resource.Item.(types.MetricDataQuery)
 	if metric.MetricStat == nil || metric.MetricStat.Metric == nil {
@@ -311,4 +309,19 @@ func resolveCloudwatchAlarmMetricMetricStatMetricDimensions(ctx context.Context,
 		dimensions[*d.Name] = d.Value
 	}
 	return diag.WrapError(resource.Set("metric_stat_metric_dimensions", dimensions))
+}
+
+func resolveCloudwatchAlarmTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	svc := cl.Services().Cloudwatch
+	alarm := resource.Item.(types.MetricAlarm)
+
+	input := cloudwatch.ListTagsForResourceInput{
+		ResourceARN: alarm.AlarmArn,
+	}
+	output, err := svc.ListTagsForResource(ctx, &input)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(output.Tags)))
 }

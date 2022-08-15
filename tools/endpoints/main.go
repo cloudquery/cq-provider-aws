@@ -3,15 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/cloudquery/cq-provider-aws/client"
-)
-
-const (
-	awsEndpointFile = "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/main/codegen/smithy-aws-go-codegen/src/main/resources/software/amazon/smithy/aws/go/codegen/endpoints.json"
 )
 
 type supportedServicesData struct {
@@ -27,6 +23,10 @@ type supportedServicesData struct {
 		} `json:"services"`
 	} `json:"partitions"`
 }
+
+const (
+	awsEndpointFile = "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/main/codegen/smithy-aws-go-codegen/src/main/resources/software/amazon/smithy/aws/go/codegen/endpoints.json"
+)
 
 func getPartitionRegionServiceData() (*client.SupportedServiceRegionsData, error) {
 	// fetch the aws endpoints json file
@@ -81,7 +81,7 @@ func saveToJsonFile(data *client.SupportedServiceRegionsData, filePath string) e
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filePath, b, 0644)
+	return os.WriteFile(filePath, b, 0644)
 }
 
 func partitionRegionServiceGenerator() error {

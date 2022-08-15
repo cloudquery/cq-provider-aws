@@ -13,14 +13,13 @@ import (
 
 func Repositories() *schema.Table {
 	return &schema.Table{
-		Name:          "aws_ecr_repositories",
-		Description:   "An object representing a repository.",
-		Resolver:      fetchEcrRepositories,
-		Multiplex:     client.ServiceAccountRegionMultiplexer("api.ecr"),
-		IgnoreError:   client.IgnoreCommonErrors,
-		DeleteFilter:  client.DeleteAccountRegionFilter,
-		Options:       schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
-		IgnoreInTests: true,
+		Name:         "aws_ecr_repositories",
+		Description:  "An object representing a repository.",
+		Resolver:     fetchEcrRepositories,
+		Multiplex:    client.ServiceAccountRegionMultiplexer("api.ecr"),
+		IgnoreError:  client.IgnoreCommonErrors,
+		DeleteFilter: client.DeleteAccountRegionFilter,
+		Options:      schema.TableCreationOptions{PrimaryKeys: []string{"account_id", "arn"}},
 		Columns: []schema.Column{
 			{
 				Name:        "account_id",
@@ -33,6 +32,11 @@ func Repositories() *schema.Table {
 				Description: "The AWS Region of the resource.",
 				Type:        schema.TypeString,
 				Resolver:    client.ResolveAWSRegion,
+			},
+			{
+				Name:     "tags",
+				Type:     schema.TypeJSON,
+				Resolver: resolveEcrRepositoryTags,
 			},
 			{
 				Name:        "created_at",
@@ -203,9 +207,7 @@ func fetchEcrRepositories(ctx context.Context, meta schema.ClientMeta, parent *s
 	c := meta.(*client.Client)
 	svc := c.Services().ECR
 	for {
-		output, err := svc.DescribeRepositories(ctx, &config, func(options *ecr.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeRepositories(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
@@ -217,6 +219,21 @@ func fetchEcrRepositories(ctx context.Context, meta schema.ClientMeta, parent *s
 	}
 	return nil
 }
+func resolveEcrRepositoryTags(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
+	cl := meta.(*client.Client)
+	svc := cl.Services().ECR
+	repo := resource.Item.(types.Repository)
+
+	input := ecr.ListTagsForResourceInput{
+		ResourceArn: repo.RepositoryArn,
+	}
+	output, err := svc.ListTagsForResource(ctx, &input)
+	if err != nil {
+		return diag.WrapError(err)
+	}
+	return diag.WrapError(resource.Set(c.Name, client.TagsToMap(output.Tags)))
+}
+
 func fetchEcrRepositoryImages(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	maxResults := int32(1000)
 	p := parent.Item.(types.Repository)
@@ -227,9 +244,7 @@ func fetchEcrRepositoryImages(ctx context.Context, meta schema.ClientMeta, paren
 	c := meta.(*client.Client)
 	svc := c.Services().ECR
 	for {
-		output, err := svc.DescribeImages(ctx, &config, func(options *ecr.Options) {
-			options.Region = c.Region
-		})
+		output, err := svc.DescribeImages(ctx, &config)
 		if err != nil {
 			return diag.WrapError(err)
 		}
