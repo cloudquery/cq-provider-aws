@@ -1,8 +1,4 @@
-<p align="center">
-<a href="https://cloudquery.io">
-<img alt="cloudquery logo" width=75% src="https://github.com/cloudquery/cloudquery/raw/main/docs/images/logo.png" />
-</a>
-</p>
+This moved to CloudQuery monorepo https://github.com/cloudquery/cloudquery
 
 CloudQuery AWS Provider ![BuildStatus](https://img.shields.io/github/workflow/status/cloudquery/cq-provider-aws/test?style=flat-square) ![License](https://img.shields.io/github/license/cloudquery/cloudquery?style=flat-square)
 ==================================
